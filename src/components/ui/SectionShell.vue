@@ -10,7 +10,7 @@ import { useReveal } from '@/composables/useReveal'
  * 也保证「所有区块的间距、标题字号、进场节奏」始终一致。
  */
 interface Props {
-  /** 锚点 id，必须与 config/site.ts 中 navItems 的 href 对应（去掉 #） */
+  /** 区块锚点 id，供页内跳转（/production#flow 这类）与顶栏滚动高亮定位使用 */
   id: string
   /** 区块主标题 */
   heading: string

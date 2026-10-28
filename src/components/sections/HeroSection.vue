@@ -53,8 +53,9 @@ import { siteConfig } from '@/config/site'
         <BaseButton :href="siteConfig.contact.ctaHref" size="lg" class="w-full sm:w-auto">
           {{ siteConfig.hero.primaryCta }}
         </BaseButton>
+        <!-- 次按钮跳「生产管理」页：传 to 走前端路由，不再用锚点 -->
         <BaseButton
-          :href="siteConfig.navItems[1].href"
+          :to="siteConfig.hero.secondaryCtaTo"
           variant="outline"
           size="lg"
           class="w-full sm:w-auto"

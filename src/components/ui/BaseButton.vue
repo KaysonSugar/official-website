@@ -1,15 +1,23 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 
 /**
- * 通用按钮（渲染为 <a>，因为官网上的按钮都是跳转，不是提交表单）
+ * 通用按钮
  *
  * 原型图里只有一种主按钮：品牌橙底 + 白字 + 小圆角。
  * 另外预留 outline / ghost 两种次要态，供后续模块使用，避免各处重复写类名。
+ *
+ * 两种跳转方式：
+ *   · to   —— 站内路由，渲染成 <RouterLink>，切页不刷新浏览器
+ *   · href —— 站外链接或 tel: / mailto:，渲染成普通 <a>
+ * 两者只能传一个，都不传时渲染成不可点的占位（仍保留交互样式，供设计稿比对用）。
  */
 interface Props {
-  /** 跳转地址，支持锚点（#contact）或 tel: / https: 协议 */
-  href: string
+  /** 站内路由路径，如 /production；传了它就用 RouterLink */
+  to?: string
+  /** 站外链接、锚点或 tel: 协议 */
+  href?: string
   /** 视觉变体：primary 主行动；outline 次要；ghost 纯文字 */
   variant?: 'primary' | 'outline' | 'ghost'
   /** 尺寸：sm 用于导航栏，md 用于正文区块，lg 用于首屏 */
@@ -19,6 +27,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  to: '',
+  href: '',
   variant: 'primary',
   size: 'md',
   block: false,
@@ -54,11 +64,19 @@ const classes = computed(() => [
   sizeClass[props.size],
   props.block ? 'w-full' : '',
 ])
+
+// 有 to 走路由、否则走原生 a 标签
+const isRoute = computed(() => props.to !== '')
 </script>
 
 <template>
-  <a :href="props.href" :class="classes">
+  <!-- 标签按 isRoute 动态切换：RouterLink 会用 history.pushState 切页，不会整页刷新 -->
+  <component
+    :is="isRoute ? RouterLink : 'a'"
+    v-bind="isRoute ? { to: props.to } : { href: props.href }"
+    :class="classes"
+  >
     <!-- 默认插槽：按钮文字由调用方决定，便于文案改动不涉及本组件 -->
     <slot />
-  </a>
+  </component>
 </template>

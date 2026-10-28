@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
 import logoText from '@/assets/logo-text.webp'
 import { siteConfig } from '@/config/site'
 
@@ -40,12 +41,12 @@ import { siteConfig } from '@/config/site'
           <h3 class="mb-4 text-sm font-semibold text-ink-900">快速导航</h3>
           <!-- 列表：flex-col 纵向；gap-3 每项间距 0.75rem -->
           <ul class="flex flex-col gap-3">
-            <li v-for="item in siteConfig.navItems" :key="item.href">
-              <!-- 链接：text-sm 小字；text-ink-600 弱化；悬停变品牌橙 -->
-              <a
-                :href="item.href"
+            <li v-for="item in siteConfig.navItems" :key="item.to">
+              <!-- 链接：text-sm 小字；text-ink-600 弱化；悬停变品牌橙；RouterLink 走前端路由 -->
+              <RouterLink
+                :to="item.to"
                 class="text-sm text-ink-600 transition-colors duration-200 hover:text-brand-500"
-                >{{ item.label }}</a
+                >{{ item.label }}</RouterLink
               >
             </li>
           </ul>

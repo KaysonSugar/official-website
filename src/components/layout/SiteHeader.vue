@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
 import BrandLogo from '@/components/brand/BrandLogo.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
-import { useActiveSection } from '@/composables/useActiveSection'
 import { siteConfig } from '@/config/site'
 
 /**
@@ -11,12 +11,16 @@ import { siteConfig } from '@/config/site'
  * 三段式布局：左侧品牌标识 / 中间主导航 / 右侧电话 + 预约演示按钮。
  * 断点策略：≥1024px 显示完整导航；<1024px 收进汉堡菜单（5 个导航项 + 电话 + 按钮
  * 在 768~1023px 宽度下会互相挤压，所以不降到 md 断点）。
+ *
+ * 高亮逻辑：5 个导航项各对应一个独立路由，所以直接比对当前路由 path，
+ * 不再需要滚动监听反查区块（原 useActiveSection 已移除）。
  */
 const scrolled = ref(false)
 const menuOpen = ref(false)
+const route = useRoute()
 
-// 当前浏览区块，用于给导航项加高亮（对应原型里"首页"的加粗黑色态）
-const active = useActiveSection(siteConfig.navItems.map((item) => item.href))
+// 当前路由，用于给导航项加高亮（对应原型里"首页"的加粗黑色态）
+const activePath = computed(() => route.path)
 
 const onScroll = () => {
   scrolled.value = window.scrollY > 8
@@ -71,19 +75,20 @@ onUnmounted(() => {
            gap-8 项间距 2rem，xl:gap-10 在 ≥1280px 放宽到 2.5rem -->
       <nav class="hidden items-center gap-8 lg:flex xl:gap-10" aria-label="主导航">
         <!-- 导航项：text-[15px] 微调字号贴合原型；relative 为下划线定位；
-             当前项 font-semibold + text-ink-900（黑粗），其余 text-ink-600 且悬停变品牌橙 -->
-        <a
+             当前项 font-semibold + text-ink-900（黑粗），其余 text-ink-600 且悬停变品牌橙；
+             RouterLink 走前端路由切页，不整页刷新 -->
+        <RouterLink
           v-for="item in siteConfig.navItems"
-          :key="item.href"
-          :href="item.href"
+          :key="item.to"
+          :to="item.to"
           class="relative py-2 text-[15px] transition-colors duration-200"
           :class="
-            active === item.href
+            activePath === item.to
               ? 'font-semibold text-ink-900'
               : 'text-ink-600 hover:text-brand-500'
           "
-          :aria-current="active === item.href ? 'true' : undefined"
-          >{{ item.label }}</a
+          :aria-current="activePath === item.to ? 'page' : undefined"
+          >{{ item.label }}</RouterLink
         >
       </nav>
 
@@ -155,19 +160,19 @@ onUnmounted(() => {
       <!-- 内容同样套 container-page，保证手机端菜单项与 logo 左边缘对齐 -->
       <div class="container-page">
         <!-- 菜单项：block 独占一行；py-3 上下内边距 0.75rem 保证触控高度；border-b 用细线分隔
-             当前项加粗为品牌橙，与桌面端高亮逻辑一致 -->
-        <a
+             当前项加粗为品牌橙，与桌面端高亮逻辑一致；点击后同时收起菜单 -->
+        <RouterLink
           v-for="item in siteConfig.navItems"
-          :key="item.href"
-          :href="item.href"
+          :key="item.to"
+          :to="item.to"
           class="block border-b border-ink-100 py-3 text-base transition-colors duration-200 last:border-b-0"
           :class="
-            active === item.href
+            activePath === item.to
               ? 'font-semibold text-brand-500'
               : 'text-ink-700 hover:text-brand-500'
           "
           @click="closeMenu"
-          >{{ item.label }}</a
+          >{{ item.label }}</RouterLink
         >
 
         <!-- 菜单底部行动区：与顶栏右侧严格互补，同一个入口全局只出现一份 ——

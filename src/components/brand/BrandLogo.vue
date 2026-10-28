@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
 import logoMark from '@/assets/logo.webp'
 
 /**
@@ -23,9 +24,10 @@ const props = withDefaults(defineProps<Props>(), { size: 'md' })
 
 <template>
   <!-- 整体：flex 横向排列；items-center 垂直居中；
-       gap-2 图形与文字间距 0.5rem，lg:gap-4 桌面 1rem（原型实测图形右边缘到中文左边缘 16px） -->
-  <a
-    href="#home"
+       gap-2 图形与文字间距 0.5rem，lg:gap-4 桌面 1rem（原型实测图形右边缘到中文左边缘 16px）；
+       RouterLink to="/" 走前端路由回首页，不会整页刷新 -->
+  <RouterLink
+    to="/"
     class="flex shrink-0 items-center gap-2 lg:gap-4"
     :aria-label="`${props.name} 首页`"
   >
@@ -62,5 +64,5 @@ const props = withDefaults(defineProps<Props>(), { size: 'md' })
         >{{ props.nameEn }}</span
       >
     </span>
-  </a>
+  </RouterLink>
 </template>
