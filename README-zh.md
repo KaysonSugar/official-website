@@ -170,6 +170,7 @@ npm run format
 | logo 图形 | 36 × 36 | `BrandLogo.vue` → `lg:h-9 lg:w-9` |
 | 品牌中文名 | 19px / 行高 28 / 宽 95 | `BrandLogo.vue` → `lg:text-[19px] lg:leading-[28px]` |
 | 品牌英文名 | 8px / 宽 95（`tracking-[0.135em]` 调校值） | `BrandLogo.vue` |
+| 中文 ↔ 英文间距 | 4px（`mt-1`）；中文行框还自带约 4.5px 下沿空白，视觉缺口约 8.5px | `BrandLogo.vue` |
 | 导航项 | 15px | `SiteHeader.vue` → `text-[15px]` |
 | 电话号码 | 14px | `SiteHeader.vue` → `lg:text-[14px]` |
 | 「预约演示」按钮 | 104 × 44 | `BaseButton.vue` → `size="md"` |
@@ -182,6 +183,18 @@ npm run format
 | 顶栏高度 | `layout/SiteHeader.vue` → `h-16 lg:h-[84px]` |
 | 内容区顶部让位 | `App.vue` → `main` 的 `pt-16 lg:pt-[84px]` |
 | 锚点偏移 | `style.css` 的 `scroll-padding-top` + `SectionShell.vue` 的 `scroll-mt-16 lg:scroll-mt-[84px]` |
+
+### 顶栏背景两态（固定导航的遮挡规则）
+
+固定导航下内容从导航下方滚过是官网通用行为，但导航本身必须把内容**挡住**，不能让它"透"出来：
+
+| 状态 | 类名 | 意图 |
+| --- | --- | --- |
+| 页面在顶部（`scrollY ≤ 8`） | `border-transparent bg-white/95 backdrop-blur` | 白底微微透出首屏浅橙渐变，顶栏与首屏连成一体 |
+| 已滚动 | `border-ink-100 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]` | **纯实心**白底 + 浅灰分隔线 + 投影，滚动内容被 100% 遮住 |
+
+> ⚠️ 滚动态不要再用 `bg-white/95` 之类的半透明值：哪怕只留 5% 透明，
+> 文字从导航栏下方滑过时仍会隐约透出，加上浅色边框会让人误以为内容"穿透"了导航栏。
 
 > ⚠️ 不要用 `max-w-7xl px-8` 这类组合替代：`max-w-7xl` 是 1280 的**容器**宽，再加 `px-8`(32px) 内边距后，
 > 内容实际从 112px 才开始，比原型整体内缩 32px（顶栏 logo 偏右、按钮偏左就是这么来的）。
