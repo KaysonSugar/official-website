@@ -99,14 +99,15 @@ const router = createRouter({
  * 按路由切换浏览器标题
  *
  * 每个页面有独立 title 是切页式官网的前提之一（也便于被搜索引擎单独收录）。
- * 内页格式为「页面名 - 品牌名」；首页回落到品牌名 + 定位语，与 index.html 里的静态 title 保持一致，
- * 避免首页加载完成后标题突然跳变。
+ * 全站统一用「页面名 - 品牌名」的短横线分隔（首页即为「品牌名 - 定位语」），
+ * 不要混用全角竖线「｜」—— 两个不同分隔符出现在同一站点的标题里会显得随意。
+ * 首页标题与 index.html 里的静态 title 保持一致，避免加载完成后标题突然跳变。
  */
 router.afterEach((to) => {
   const pageTitle = to.meta.title as string | undefined
   document.title = pageTitle
     ? `${pageTitle} - ${siteConfig.brand.name}`
-    : `${siteConfig.brand.name}｜企业级解决方案与服务`
+    : `${siteConfig.brand.name} - 企业级解决方案与服务`
 })
 
 export default router

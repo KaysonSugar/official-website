@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CtaBanner from '@/components/sections/CtaBanner.vue'
 import { RouterLink } from 'vue-router'
 import PageHero from '@/components/sections/PageHero.vue'
 import { getPage, siteConfig } from '@/config/site'
@@ -65,4 +66,6 @@ const productLines = siteConfig.navItems.find((item) => item.to === '/products')
       </ul>
     </div>
   </section>
+  <!-- 底部行动号召：所有内页共用同一份文案（config/site.ts 的 cta） -->
+  <CtaBanner />
 </template>

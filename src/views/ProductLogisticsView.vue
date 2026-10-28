@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CtaBanner from '@/components/sections/CtaBanner.vue'
 import PageHero from '@/components/sections/PageHero.vue'
 import { getPage } from '@/config/site'
 
@@ -17,4 +18,6 @@ const page = getPage('/products/logistics')
 <template>
   <PageHero :eyebrow="page.eyebrow" :title="page.title" :desc="page.desc" :align="page.align" />
   <!-- TODO: 本页其余区块（按原型画板「威易达物流：调度与合规」） -->
+  <!-- 底部行动号召：所有内页共用同一份文案（config/site.ts 的 cta） -->
+  <CtaBanner />
 </template>

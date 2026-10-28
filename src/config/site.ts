@@ -41,22 +41,6 @@ export interface PageIntro {
   align: 'left' | 'center'
 }
 
-/** 通用区块元信息：标题 + 副标题（临时占位区块使用） */
-export interface SectionMeta {
-  /** 区块主标题 */
-  heading: string
-  /** 标题下方的一句话说明 */
-  desc: string
-}
-
-/** 能力 / 产品卡片（临时占位区块使用） */
-export interface CardItem {
-  /** 卡片标题 */
-  title: string
-  /** 卡片描述，建议控制在 40 字以内，过长会撑高同一行的所有卡片 */
-  desc: string
-}
-
 /** 站点整体配置 */
 export interface SiteConfig {
   /** 品牌信息：导航栏与页脚共用 */
@@ -94,6 +78,13 @@ export interface SiteConfig {
     /** 次按钮跳转的路由 */
     secondaryCtaTo: string
   }
+  /** 页面底部的行动号召区（首页与全部内页共用同一份文案） */
+  cta: {
+    /** 主标题 */
+    title: string
+    /** 一句话说明 */
+    desc: string
+  }
   /** 页脚 */
   footer: {
     /** 版权声明，年份建议写死避免每次构建变化 */
@@ -101,16 +92,6 @@ export interface SiteConfig {
     /** 公司地址 */
     address: string
   }
-  // ↓ 以下 4 组是首页的临时占位区块文案：原型首页的 16 个区块还没拆完，
-  //   先留着让首页不至于只有一屏；按原型重建首页时整组删掉
-  /** 临时占位：平台架构区块 */
-  platform: SectionMeta & { items: CardItem[] }
-  /** 临时占位：产品矩阵区块 */
-  products: SectionMeta & { items: CardItem[] }
-  /** 临时占位：解决方案区块 */
-  solutions: SectionMeta & { items: CardItem[] }
-  /** 临时占位：关于我们区块 */
-  about: SectionMeta
 }
 
 /**
@@ -214,41 +195,13 @@ export const siteConfig: SiteConfig = {
     secondaryCta: '了解平台架构',
     secondaryCtaTo: '/platform',
   },
+  cta: {
+    title: '约一次 30 分钟的线上演示',
+    desc: '按你的产线、仓库与运输线路走一遍实际操作，看完再判断值不值得推进。',
+  },
   footer: {
     copyright: '© 2026 威易达化工 版权所有',
     address: '公司地址占位，上线前替换',
-  },
-  // ↓ 临时占位区块文案（首页用），按原型重建首页时整组删除
-  platform: {
-    heading: '平台架构',
-    desc: '统一的底座与数据中台，支撑上层业务快速扩展。',
-    items: [
-      { title: '统一数据底座', desc: '打通 ERP、MES、WMS 等系统，形成唯一数据源。' },
-      { title: '模块化能力', desc: '按需组合生产、仓储、质量、设备等业务模块。' },
-      { title: '开放集成接口', desc: '标准 API 与消息总线，兼容现有系统与第三方平台。' },
-    ],
-  },
-  products: {
-    heading: '产品矩阵',
-    desc: '覆盖生产执行、质量追溯、供应链协同的完整产品线。',
-    items: [
-      { title: '生产执行系统', desc: '工单、排程、报工与在制品管理一体化。' },
-      { title: '质量追溯系统', desc: '批次级正向反向追溯，异常快速定位。' },
-      { title: '供应链协同', desc: '采购、库存、物流全流程在线协同。' },
-    ],
-  },
-  solutions: {
-    heading: '解决方案',
-    desc: '面向不同规模与工艺场景的落地实践。',
-    items: [
-      { title: '精细化工', desc: '配方管理、批次管控与合规审计。' },
-      { title: '新材料', desc: '研发到量产的数据贯通与工艺沉淀。' },
-      { title: '集团多工厂', desc: '多组织协同与跨工厂指标对标。' },
-    ],
-  },
-  about: {
-    heading: '关于我们',
-    desc: '威易达化工专注化工行业数字化建设，为生产企业提供从规划到落地的整体服务。',
   },
 }
 

@@ -18,8 +18,8 @@ interface Props {
   to?: string
   /** 站外链接、锚点或 tel: 协议 */
   href?: string
-  /** 视觉变体：primary 主行动；outline 次要；ghost 纯文字 */
-  variant?: 'primary' | 'outline' | 'ghost'
+  /** 视觉变体：primary 主行动；outline 次要；ghost 纯文字；light 深底/橙底上的反白按钮 */
+  variant?: 'primary' | 'outline' | 'ghost' | 'light'
   /** 尺寸：sm 用于导航栏，md 用于正文区块，lg 用于首屏 */
   size?: 'sm' | 'md' | 'lg'
   /** 占满父容器宽度，移动端菜单里使用 */
@@ -41,6 +41,10 @@ const variantClass: Record<NonNullable<Props['variant']>, string> = {
   outline:
     'border border-ink-200 text-ink-900 hover:border-brand-500 hover:text-brand-500 focus-visible:outline-brand-500',
   ghost: 'text-ink-700 hover:text-brand-500 focus-visible:outline-brand-500',
+  // 反白按钮：白底 + 深橙字，专供橙色 CTA 横幅（primary 在橙底上会与背景糊在一起）；
+  // 用 brand-700 而非 brand-500 是为了在白底上拿到 4.17:1 的对比度，纯品牌橙只有 2.6:1
+  light:
+    'bg-white text-brand-700 shadow-sm shadow-ink-900/10 hover:bg-brand-50 focus-visible:outline-white',
 }
 
 // 尺寸样式：sm 导航栏小号用，md 区块用，lg 首屏用

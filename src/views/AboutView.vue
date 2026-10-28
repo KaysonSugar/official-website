@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CtaBanner from '@/components/sections/CtaBanner.vue'
 import PageHero from '@/components/sections/PageHero.vue'
 import { getPage } from '@/config/site'
 
@@ -14,4 +15,6 @@ const page = getPage('/about')
 <template>
   <PageHero :eyebrow="page.eyebrow" :title="page.title" :desc="page.desc" :align="page.align" />
   <!-- TODO: 关于我们页其余区块（等原型画板） -->
+  <!-- 底部行动号召：所有内页共用同一份文案（config/site.ts 的 cta） -->
+  <CtaBanner />
 </template>
