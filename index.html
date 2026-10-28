@@ -5,28 +5,28 @@
     <!--  viewport：移动端按设备宽度渲染、初始不缩放，响应式适配的前提 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- 页面标题：搜索结果里显示的蓝色大标题，建议 30 字以内；上线前替换为真实品牌名 -->
-    <title>WYD 官网｜企业级解决方案与服务</title>
+    <!-- 页面标题：搜索结果里显示的蓝色大标题，建议 30 字以内 -->
+    <title>威易达化工｜企业级解决方案与服务</title>
 
     <!-- 描述：搜索结果摘要，建议 80~120 字，自然包含核心业务关键词（不要堆砌） -->
     <meta
       name="description"
-      content="WYD 官方网站，提供面向企业的数字化解决方案与产品能力介绍，帮助团队提升效率、降低协作成本。"
+      content="威易达化工官方网站，提供化工行业数字化平台架构、产品矩阵与解决方案介绍，帮助企业提升生产效率、降低运营成本。"
     />
     <!-- 关键词：现代搜索引擎权重很低，保留仅用于部分内网/老式搜索引擎 -->
-    <meta name="keywords" content="WYD,官网,数字化解决方案,企业服务,产品能力" />
-    <meta name="author" content="WYD" />
+    <meta name="keywords" content="威易达化工,WEIYIDA,化工,数字化平台,解决方案,产品矩阵" />
+    <meta name="author" content="威易达化工" />
 
     <!-- canonical：声明页面唯一地址，避免被重复收录（上线时替换为正式域名） -->
     <link rel="canonical" href="https://example.com/" />
 
     <!-- Open Graph：微信、飞书、LinkedIn、X 等平台分享时生成的卡片信息 -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="WYD" />
-    <meta property="og:title" content="WYD 官网｜企业级解决方案与服务" />
+    <meta property="og:site_name" content="威易达化工" />
+    <meta property="og:title" content="威易达化工｜企业级解决方案与服务" />
     <meta
       property="og:description"
-      content="WYD 官方网站，提供面向企业的数字化解决方案与产品能力介绍。"
+      content="威易达化工官方网站，提供化工行业数字化平台架构、产品矩阵与解决方案介绍。"
     />
     <meta property="og:url" content="https://example.com/" />
     <!-- 分享封面图：需为绝对地址，建议 1200×630；上传后替换此路径 -->
@@ -34,18 +34,20 @@
 
     <!-- Twitter / X 卡片：summary_large_image 表示大图卡片 -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="WYD 官网｜企业级解决方案与服务" />
+    <meta name="twitter:title" content="威易达化工｜企业级解决方案与服务" />
     <meta
       name="twitter:description"
-      content="WYD 官方网站，提供面向企业的数字化解决方案与产品能力介绍。"
+      content="威易达化工官方网站，提供化工行业数字化平台架构、产品矩阵与解决方案介绍。"
     />
     <meta name="twitter:image" content="https://example.com/og-cover.png" />
 
-    <!-- 移动端浏览器地址栏配色，与品牌主色 brand-600 (#2563eb) 保持一致 -->
-    <meta name="theme-color" content="#2563eb" />
+    <!-- 移动端浏览器地址栏配色，与品牌主色 brand-500 (#FF833F) 保持一致 -->
+    <meta name="theme-color" content="#FF833F" />
 
-    <!-- 站点图标：SVG 格式，现代浏览器优先使用；文件位于 public/ 下，构建后拷贝到根目录 -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- 站点图标：由 src/assets/logo.webp（品牌图形 mark）导出，构建后从 public/ 拷贝到根目录 -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <!-- iOS 添加到主屏时使用的图标，建议 180×180，当前复用同一张图 -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   </head>
   <body>
     <!-- Vue 应用挂载点，对应 main.ts 中的 mount('#app') -->

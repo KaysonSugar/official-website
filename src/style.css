@@ -2,40 +2,81 @@
 @import 'tailwindcss';
 
 /* 设计 token：@theme 中定义的变量会自动生成对应的工具类，例如
-   --color-brand-600 可用于 bg-brand-600 / text-brand-600 / border-brand-600 */
+   --color-brand-500 可用于 bg-brand-500 / text-brand-500 / border-brand-500 */
 @theme {
   /* 字体：优先 Inter，中文回退苹方 / 微软雅黑 */
   --font-sans: 'Inter', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
 
-  /* 品牌色阶：50 最浅 → 900 最深，业务中常用 brand-50 做底色、brand-600 做主色 */
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-200: #bfdbfe;
-  --color-brand-400: #60a5fa;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --color-brand-900: #1e3a8a;
+  /* 品牌橙：取自 logo 渐变的中间值 #FF833F，50 最浅 → 900 最深
+     常用搭配：brand-50 做浅底、brand-500 主色（按钮/图标）、brand-600 悬停态 */
+  --color-brand-50: #fff7f2;
+  --color-brand-100: #ffe9dc;
+  --color-brand-200: #ffd0b5;
+  --color-brand-300: #ffb388;
+  --color-brand-400: #ff9b62;
+  --color-brand-500: #ff833f;
+  --color-brand-600: #f26a21;
+  --color-brand-700: #d25413;
+  --color-brand-800: #a8400e;
+  --color-brand-900: #7d300b;
 
-  /* 文字色阶：ink-900 主标题、ink-600 正文、ink-400 弱化信息（页脚等） */
-  --color-ink-50: #f8fafc;
-  --color-ink-100: #f1f5f9;
-  --color-ink-400: #94a3b8;
-  --color-ink-600: #475569;
-  --color-ink-900: #0f172a;
+  /* 中性墨色：ink-900 主标题、ink-700 强调正文、ink-600 正文、ink-400 弱化信息、ink-100 分隔线 */
+  --color-ink-50: #fafafa;
+  --color-ink-100: #f2f2f2;
+  --color-ink-200: #e6e6e6;
+  --color-ink-400: #9e9e9e;
+  --color-ink-600: #6b6b6b;
+  --color-ink-700: #4a4a4a;
+  --color-ink-900: #1a1a1a;
+}
+
+/* 组件层：可复用的结构类。优先级低于工具类，组件里再写 px-* 仍可覆盖 */
+@layer components {
+  /* 页面内容容器：顶栏 / 首屏 / 各区块 / 页脚共用同一条左右基准线。
+
+     数值来源：原型稿按 1440px 画板出图，实测 logo 左边缘与首屏标题左边缘都在
+     距画板左侧 80px 处、预约演示按钮右边缘距右侧 80px，即内容区宽度 1280px。
+     所以容器最大宽取 1440px、≥1440 时左右内边距 80px —— 这样「内容边缘」正好落在 80px，
+     而不是「容器边缘 80px + 内边距 32px = 112px」（之前顶栏用 max-w-7xl + px-8 就是这么偏的）。
+
+     断点收敛：<640 16px → ≥640 24px → ≥1024 48px → ≥1440 80px */
+  .container-page {
+    width: 100%;
+    max-width: 90rem; /* 1440px：与原型画板同宽，超出后内容居中不再拉宽 */
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-page {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-page {
+      padding-inline: 3rem;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .container-page {
+      padding-inline: 5rem;
+    }
+  }
 }
 
 /* 基础样式层：优先级低于工具类，可被组件中的 Tailwind 类名覆盖 */
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* 锚点跳转时预留顶栏高度：手机 3.5rem、≥640px 为 4rem，与顶栏 h-14 / sm:h-16 对应 */
-    scroll-padding-top: 3.5rem;
+    /* 锚点跳转时预留顶栏高度：小屏 4rem、≥1024px 为 5rem，与顶栏 h-16 / lg:h-20 对应 */
+    scroll-padding-top: 4rem;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 1024px) {
     html {
-      scroll-padding-top: 4rem;
+      scroll-padding-top: 5rem;
     }
   }
 
@@ -44,6 +85,8 @@
     color: var(--color-ink-900);
     background-color: #ffffff;
     -webkit-font-smoothing: antialiased;
+    /* 中文长句在小屏容易撑破容器，禁止横向滚动作为兜底 */
+    overflow-x: hidden;
   }
 
   /* 无障碍：用户在系统开启"减弱动效"时，关闭平滑滚动并将所有动画压到接近 0 */
