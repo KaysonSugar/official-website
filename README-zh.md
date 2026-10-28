@@ -214,6 +214,18 @@ Windows / Linux 的系统默认滚动条 15~17px 宽、深灰实心、无圆角�
 | 轨道 | 透明 | 不切灰带，背景连成一片 |
 | Firefox | `@supports not selector(::-webkit-scrollbar)` 内写 `scrollbar-width: thin` | 必须隔离；Chromium 121+ 也认标准属性，同时写会顶掉 WebKit 定制 |
 
+### 滚动落点（刷新 / 锚点）
+
+| 场景 | 期望行为 | 实现位置 |
+| --- | --- | --- |
+| 按 F5 刷新（URL 无锚点） | 回到页面顶部 | `main.ts` → `history.scrollRestoration = 'manual'` + `scrollTo({ top: 0, behavior: 'instant' })` |
+| 带锚点访问 `/#products` | 定位到该区块并让出顶栏 | `style.css` 的 `scroll-padding-top` + `SectionShell.vue` 的 `scroll-mt-16 lg:scroll-mt-[84px]` |
+| 点击导航项 | 平滑滚动到区块 | `html { scroll-behavior: smooth }` |
+
+> ⚠️ 浏览器默认 `scrollRestoration = 'auto'`，刷新会停在上一位置，单页官网必须显式改成 `'manual'`。
+> 跳顶部务必带 `behavior: 'instant'`：否则会被 `html { scroll-behavior: smooth }` 接管，
+> 变成"从页面中部一路滑回首屏"的动画；跳顶部与定位锚点后再归零要区分开，带 hash 时不能强制回顶。
+
 ### 样式写法（三条规范）
 
 1. **布局、间距、字号、颜色、响应式 → 一律用 Tailwind 工具类**
