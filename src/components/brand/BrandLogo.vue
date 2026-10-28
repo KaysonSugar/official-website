@@ -43,8 +43,7 @@ const props = withDefaults(defineProps<Props>(), { size: 'md' })
     <span class="flex flex-col items-start">
       <!-- 中文名：font-bold 加粗；不加字距（tracking-normal 由默认值提供），
            19px × 5 个汉字 = 95px，与设计稿标的「宽 95、高 28」一致；
-           leading-[28px] 是设计稿标定行高，28 + 8(英文行高) = 36px，
-           正好与左侧 36px 图形等高，视觉上成为一个方块 -->
+           leading-[28px] 是设计稿标定行高 -->
       <span
         class="font-bold text-ink-900"
         :class="props.size === 'md' ? 'text-base lg:text-[19px] lg:leading-[28px]' : 'text-sm'"
@@ -52,9 +51,13 @@ const props = withDefaults(defineProps<Props>(), { size: 'md' })
       >
       <!-- 英文名：8px 极小号 + 0.135em 宽字距（实测调校值），15 个字母横向总宽 95px，
            与上方 5 个中文（19px × 5 = 95px）正好齐宽，形成整齐的方块感；
-           text-ink-400 弱化色；mt-0 不加间距——中文 28px 行高自带的上下留白已经够用 -->
+           text-ink-400 弱化色；
+           mt-1 上间距 4px —— 19px 中文在 28px 行框里本身只留出约 4.5px 的下沿空白，
+           英文若紧贴会像"糊"在中文底部（实测观感过挤），补 4px 后视觉缺口约 8.5px，
+           恰是 8px 小字与 19px 大字的合理呼吸；同时整体高度 28+4+8=40px，
+           与左侧 36px 图形基本等高，不破坏方块感 -->
       <span
-        class="font-medium leading-none tracking-[0.135em] text-ink-400"
+        class="mt-1 font-medium leading-none tracking-[0.135em] text-ink-400"
         :class="props.size === 'md' ? 'text-[8px]' : 'text-[8px]'"
         >{{ props.nameEn }}</span
       >
