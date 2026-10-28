@@ -6,34 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- ── 首帧防闪烁：关键内联样式 ───────────────────────────────────────
-         这三条必须在样式表之前就生效，否则会先闪一帧"没穿衣服"的页面。
+         这几条必须在样式表之前就生效，否则会先闪一帧"没穿衣服"的页面。
 
-         1) html 底色先给白：加载期不会露出透明/深色底，与 body 的 #fff 对齐；
-         2) #app 为空时隐藏：开发环境 Vite 的 CSS 是 JS 注入的，样式到位前文字会
-            裸露在外；生产构建虽然把 CSS 提成了 <link>，但懒加载的路由分包仍有空窗期；
-         3) #boot 顶替空窗期：一个极简的品牌色加载环，避免用户对着纯白屏猜"是不是卡了"。
+         1) html 底色用 brand-50 (#fff7f2) 而不是纯白：它和首屏渐变同一个底色，
+            刷新时视觉上像"回到首页重新展开"，比从深色页脚硬切到纯白柔和得多，
+            滚动条槽透出的也是这层暖白，不会在深色页脚旁划出一条冷白边；
+         2) #app 用 opacity 而不是 visibility：可以过渡，页面是淡入而不是硬切；
+            开发环境 Vite 的 CSS 是 JS 注入的，样式到位前文字会裸露，这条同时挡掉；
+         3) #boot 顶替空窗期：加载环用品牌橙，加粗到 3px —— 之前的 2px 浅色环在
+            白底上几乎看不见，用户只会觉得"白了一下"。
 
          ⚠️ #app 必须写成不换行、内部无空白的形式 —— CSS 的 :empty 不忽略空白文本节点，
-            一旦格式化成多行，第一条规则就永远不生效了。 -->
+            一旦格式化成多行，第 2 条规则就永远不生效。 -->
     <style>
       html {
-        background-color: #fff;
+        background-color: #fff7f2;
+      }
+      #app {
+        transition: opacity 0.14s ease-out;
       }
       #app:empty {
-        visibility: hidden;
+        opacity: 0;
       }
       #boot {
         position: fixed;
         inset: 0;
         display: grid;
         place-items: center;
+        pointer-events: none;
+        /* 默认不可见，延迟 150ms 才淡入：加载够快时用户根本看不到转圈，
+           只感受到"暖白一闪 → 内容淡入"；超过 150ms 才出现，说明确实在等 */
+        opacity: 0;
+        animation: boot-fade-in 0.16s ease-out 0.15s forwards;
       }
       #boot::after {
         content: '';
         box-sizing: border-box;
-        width: 28px;
-        height: 28px;
-        border: 2px solid #ffe9dc;
+        width: 32px;
+        height: 32px;
+        border: 3px solid #ffd0b5;
         border-top-color: #ff833f;
         border-radius: 50%;
         animation: boot-spin 0.7s linear infinite;
@@ -43,9 +54,15 @@
           transform: rotate(1turn);
         }
       }
-      /* 挂载完成（#app 有内容）即收起加载环，与上面 #app:empty 是同一开关 */
+      @keyframes boot-fade-in {
+        to {
+          opacity: 1;
+        }
+      }
+      /* 挂载完成（#app 有内容）后收起加载环：撤掉动画即回到默认的 opacity: 0 */
       #app:not(:empty) ~ #boot {
-        display: none;
+        animation: none;
+        opacity: 0;
       }
       /* 系统开启"减弱动效"时放慢，不做无限高速旋转 */
       @media (prefers-reduced-motion: reduce) {
@@ -71,7 +88,7 @@
     <noscript>
       <style>
         #app:empty {
-          visibility: visible;
+          opacity: 1;
         }
         #boot {
           display: none;

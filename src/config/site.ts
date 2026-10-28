@@ -85,12 +85,28 @@ export interface SiteConfig {
     /** 一句话说明 */
     desc: string
   }
-  /** 页脚 */
+  /** 页脚（对应原型底部的深色收尾区，1440 画板下高 343） */
   footer: {
-    /** 版权声明，年份建议写死避免每次构建变化 */
+    /** 品牌描述：一行一句，最多两句，超出会在左列折行 */
+    desc: string[]
+    /** 品牌理念短语：页脚中四个短语用「·」连成一行展示 */
+    slogan: string[]
+    /**
+     * 链接分栏
+     *
+     * 页脚的入口比导航栏更细，便于访客直接落到具体业务。
+     * `to` 既可以是路由路径（走 RouterLink，不刷新），也可以是 `tel:` 这类外链（走原生 a）。
+     */
+    linkGroups: {
+      /** 分栏标题 */
+      title: string
+      /** 条目 */
+      items: { label: string; to: string }[]
+    }[]
+    /** 版权声明（底部左侧） */
     copyright: string
-    /** 公司地址 */
-    address: string
+    /** 定位语（底部右侧） */
+    tagline: string
   }
 }
 
@@ -200,8 +216,40 @@ export const siteConfig: SiteConfig = {
     desc: '按你的产线、仓库与运输线路走一遍实际操作，看完再判断值不值得推进。',
   },
   footer: {
-    copyright: '© 2026 威易达化工 版权所有',
-    address: '公司地址占位，上线前替换',
+    desc: ['化工生产 + 危化运输一体化平台，全链路数字化、全流程规范化、全方位安全化。'],
+    slogan: ['市场为源', '客户为心', '应用而创', '携手同行'],
+    linkGroups: [
+      {
+        title: '产品',
+        items: [
+          { label: '威易达化工', to: '/products/chemical' },
+          { label: '威易达物流', to: '/products/logistics' },
+          { label: '威易达司机', to: '/products/driver' },
+          // 报表看板尚无独立页面，先指向平台架构（数据能力所在）；后续补页时改这里
+          { label: '报表与数据看板', to: '/platform' },
+        ],
+      },
+      {
+        title: '解决方案',
+        items: [
+          { label: '化工生产管理', to: '/products/chemical' },
+          { label: '危化运输调度', to: '/products/logistics' },
+          { label: '合规与全程追溯', to: '/solutions' },
+          { label: '平台架构', to: '/platform' },
+        ],
+      },
+      {
+        title: '关于威易达',
+        items: [
+          { label: '公司介绍', to: '/about' },
+          { label: '实施与服务', to: '/about' },
+          // 设计稿为「联系我们」，站内暂无联系页，直接拨号更实用
+          { label: '联系我们', to: 'tel:4000018355' },
+        ],
+      },
+    ],
+    copyright: '2026 苏州羿瑞成信息科技有限公司　版权所有',
+    tagline: '威易达化工 · 化工生产与危化运输一体化平台',
   },
 }
 

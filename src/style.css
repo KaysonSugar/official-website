@@ -7,6 +7,11 @@
   /* 字体：优先 Inter，中文回退苹方 / 微软雅黑 */
   --font-sans: 'Inter', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
 
+  /* 注：不要在这里加自定义断点（--breakpoint-*）来写 1440 的版式。
+     Tailwind v4 会把自定义断点的媒体查询排在核心断点（sm/md/lg）之前，
+     结果是 lg: 的规则反而覆盖 wide:，1440 下拿不到想要的布局。
+     需要 1440 专属版式时，用组件内的 <style scoped> 原生 @media（见 SiteFooter.vue）。 */
+
   /* 品牌橙：取自 logo 渐变的中间值 #FF833F，50 最浅 → 900 最深
      常用搭配：brand-50 做浅底、brand-500 主色（按钮/图标）、brand-600 悬停态 */
   --color-brand-50: #fff7f2;
@@ -28,6 +33,15 @@
   --color-ink-600: #6b6b6b;
   --color-ink-700: #4a4a4a;
   --color-ink-900: #1a1a1a;
+
+  /* 夜色（深色收尾区）：取自设计稿页脚，是带绿的墨黑而非纯黑 ——
+     纯黑在暖色调的官网上会显得生硬，这层绿让它和品牌橙形成冷热对照。
+     900 底色 / 800 分隔线 / 300 次要文字 / 400 最弱文字，
+     四个值都是设计稿像素取色结果，不要随手调。 */
+  --color-night-900: #0f211b; /* 页脚底色 */
+  --color-night-800: #22392f; /* 分隔线、细边 */
+  --color-night-400: #5f7a70; /* 最弱文字：版权、品牌理念 */
+  --color-night-300: #8fa8a0; /* 次要文字：描述、列表项、二维码标签 */
 }
 
 /* 组件层：可复用的结构类。优先级低于工具类，组件里再写 px-* 仍可覆盖 */
@@ -97,7 +111,10 @@
      Windows / Linux 的系统默认滚动条约 15~17px 宽、深灰实心、没有圆角，
      在一屏浅色官网里非常"抢镜"，会凭空切出一条灰色竖带。
      这里改成细窄圆角条：
-       · 槽（track）完全透明 —— 不切灰带，页面背景连成一片；
+       · 槽（track）用 4.5% 半透明黑 —— 不用完全透明的原因：页面底部是
+         #0f211b 的深色页脚，透明槽会透出 html 的浅色底，在深色页脚旁
+         划出一条醒目的白边（滚到底部时尤其明显）。半透明黑在白底上是
+         几乎看不出的一层浅灰，在深色底上自动融进去，两种底色都成立；
        · 滑块（thumb）视觉宽 6px、中性半透明灰、两端 999px 圆角；
        · 悬停 / 拖拽时加深，给"这里可以抓"的反馈。
      6px 的由来：滚动条槽宽 10px，滑块加 2px 全透明边框 + background-clip: content-box，
@@ -111,7 +128,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background-color: rgba(0, 0, 0, 0.045);
   }
 
   ::-webkit-scrollbar-thumb {
@@ -139,7 +156,7 @@
   @supports not selector(::-webkit-scrollbar) {
     html {
       scrollbar-width: thin; /* 细滚动条，约为默认的一半 */
-      scrollbar-color: rgba(0, 0, 0, 0.16) transparent; /* 滑块 / 槽 */
+      scrollbar-color: rgba(0, 0, 0, 0.16) rgba(0, 0, 0, 0.045); /* 滑块 / 槽，与 WebKit 分支同一套色 */
     }
   }
 

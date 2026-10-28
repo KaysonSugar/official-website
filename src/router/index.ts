@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '@/views/HomeView.vue'
 import { siteConfig } from '@/config/site'
 
 /**
@@ -28,9 +29,12 @@ const router = createRouter({
   routes: [
     {
       // 首页不设 meta.title：标题回落到 afterEach 里的品牌标语，避免出现「首页 - 威易达化工」这种无信息量的标题
+      // 首页组件同步引入（其余页面懒加载）：它只有 1.4KB，拆成独立 chunk 反而让首屏多一次
+      // 「index.js 下载执行 → 才知道要请求 HomeView → 等它返回」的串行 round-trip，
+      // 而 router.isReady() 必须等这条链走完才能挂载，白屏时间被白白拉长
       path: '/',
       name: 'home',
-      component: () => import('@/views/HomeView.vue'),
+      component: HomeView,
     },
     {
       path: '/platform',
