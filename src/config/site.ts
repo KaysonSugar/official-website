@@ -86,10 +86,10 @@ export const siteConfig: SiteConfig = {
     nameEn: 'WEIYIDA HUAGONG',
   },
   contact: {
-    phone: '400-828-1988',
-    phoneHref: 'tel:4008281988',
+    phone: '400-001-8355',
+    phoneHref: 'tel:4000018355',
     ctaLabel: '预约演示',
-    ctaHref: 'tel:4008281988',
+    ctaHref: 'tel:4000018355',
   },
   // 顺序与原型图一致：首页 / 平台架构 / 产品矩阵 / 解决方案 / 关于我们
   navItems: [

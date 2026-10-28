@@ -83,11 +83,12 @@ onUnmounted(() => {
       <!-- 右侧：电话 + 主按钮 + 移动端汉堡 -->
       <div class="flex shrink-0 items-center gap-3 lg:gap-6">
         <!-- 电话号码：hidden 手机隐藏，md:block ≥768px 显示；font-medium 中粗让数字更清晰；
-             lg:text-[15px] 桌面 15px —— 按原型实测「400-828-1988」整体宽约 99px 标定；
+             lg:text-[14px] 桌面 14px（设计稿标定）；
+             与右侧「预约演示」间距由外层容器的 lg:gap-6 = 24px 提供（设计稿标定 24px）；
              hover:text-brand-500 悬停变品牌橙，提示可点击拨号 -->
         <a
           :href="siteConfig.contact.phoneHref"
-          class="hidden font-medium text-ink-900 transition-colors duration-200 hover:text-brand-500 md:block lg:text-[15px]"
+          class="hidden font-medium text-ink-900 transition-colors duration-200 hover:text-brand-500 md:block lg:text-[14px]"
           >{{ siteConfig.contact.phone }}</a
         >
 

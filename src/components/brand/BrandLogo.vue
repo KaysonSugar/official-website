@@ -30,29 +30,32 @@ const props = withDefaults(defineProps<Props>(), { size: 'md' })
     :aria-label="`${props.name} 首页`"
   >
     <!-- 图形 mark：shrink-0 防止在窄屏被压缩变形；object-contain 保持原始比例（259×260 近似正方形）；
-         h-7 w-7 尺寸 1.75rem(28px) —— 原型稿里图形约 27×26px，与 20px 中文名约为 1.35 倍关系 -->
+         桌面 h-9 w-9 = 36px（设计稿标定 logo 尺寸 36×36），移动端 h-7 w-7 = 28px 收敛体积 -->
     <img
       :src="logoMark"
       :alt="props.name"
       class="shrink-0 object-contain"
-      :class="props.size === 'md' ? 'h-7 w-7' : 'h-6 w-6'"
+      :class="props.size === 'md' ? 'h-7 w-7 lg:h-9 lg:w-9' : 'h-6 w-6'"
       decoding="async"
     />
-    <!-- 中英文上下堆叠：flex-col 纵向排列；leading-none 去掉行高避免上下留白过大 -->
-    <span class="flex flex-col">
-      <!-- 中文名：font-bold 加粗；tracking-tight 收紧字距让标识更紧凑；
-           text-xl 桌面 1.25rem(20px)，与原型中文名实测高度一致 -->
+    <!-- 中英文上下堆叠：flex-col 纵向排列；items-start 让两行各自按内容宽度收缩，
+         不被父级拉满——否则测量出来的宽度是父级宽度，看不出文字真实尺寸 -->
+    <span class="flex flex-col items-start">
+      <!-- 中文名：font-bold 加粗；不加字距（tracking-normal 由默认值提供），
+           19px × 5 个汉字 = 95px，与设计稿标的「宽 95、高 28」一致；
+           leading-[28px] 是设计稿标定行高，28 + 8(英文行高) = 36px，
+           正好与左侧 36px 图形等高，视觉上成为一个方块 -->
       <span
-        class="font-bold leading-none tracking-tight text-ink-900"
-        :class="props.size === 'md' ? 'text-base lg:text-xl' : 'text-sm'"
+        class="font-bold text-ink-900"
+        :class="props.size === 'md' ? 'text-base lg:text-[19px] lg:leading-[28px]' : 'text-sm'"
         >{{ props.name }}</span
       >
-      <!-- 英文名：lg:text-[9px] 极小号 + lg:tracking-[0.1em] 宽字距，
-           让 15 个字母整体宽度（约 95px）与上方 5 个中文（约 100px）基本齐平，形成方块感；
-           text-ink-400 弱化色；mt-1 与中文留 0.25rem 间隙 -->
+      <!-- 英文名：8px 极小号 + 0.135em 宽字距（实测调校值），15 个字母横向总宽 95px，
+           与上方 5 个中文（19px × 5 = 95px）正好齐宽，形成整齐的方块感；
+           text-ink-400 弱化色；mt-0 不加间距——中文 28px 行高自带的上下留白已经够用 -->
       <span
-        class="mt-1 font-medium leading-none tracking-[0.16em] text-ink-400 lg:tracking-[0.1em]"
-        :class="props.size === 'md' ? 'text-[8px] lg:text-[9px]' : 'text-[8px]'"
+        class="font-medium leading-none tracking-[0.135em] text-ink-400"
+        :class="props.size === 'md' ? 'text-[8px]' : 'text-[8px]'"
         >{{ props.nameEn }}</span
       >
     </span>
