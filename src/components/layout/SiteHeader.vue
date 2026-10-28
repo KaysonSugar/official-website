@@ -92,7 +92,8 @@ onUnmounted(() => {
         <!-- 电话号码：hidden 手机隐藏，md:block ≥768px 显示；font-medium 中粗让数字更清晰；
              lg:text-[14px] 桌面 14px（设计稿标定）；
              与右侧「预约演示」间距由外层容器的 lg:gap-6 = 24px 提供（设计稿标定 24px）；
-             hover:text-brand-500 悬停变品牌橙，提示可点击拨号 -->
+             hover:text-brand-500 悬停变品牌橙，提示可点击拨号。
+             与移动端菜单互补：这里 ≥768 显示，菜单里就只在 <768 补一份，避免同屏出现两个相同入口 -->
         <a
           :href="siteConfig.contact.phoneHref"
           class="hidden font-medium text-ink-900 transition-colors duration-200 hover:text-brand-500 md:block lg:text-[14px]"
@@ -101,7 +102,8 @@ onUnmounted(() => {
 
         <!-- 主按钮「预约演示」：外层 div 负责断点显隐（<640px 隐藏），
              不能把 hidden 直接写在 BaseButton 上——组件内部基础类含 inline-flex，
-             同属 display 属性且无媒体查询，会把 hidden 覆盖掉（实测 375px 下按钮仍显示） -->
+             同属 display 属性且无媒体查询，会把 hidden 覆盖掉（实测 375px 下按钮仍显示）。
+             同样与菜单互补：这里 ≥640 显示，菜单里就只在 <640 补一份 -->
         <div class="hidden sm:block">
           <BaseButton :href="siteConfig.contact.ctaHref" size="md">
             {{ siteConfig.contact.ctaLabel }}
@@ -168,16 +170,26 @@ onUnmounted(() => {
           >{{ item.label }}</a
         >
 
-        <!-- 菜单底部行动区：mt-5 与导航列表拉开 1.25rem；flex-col 纵向排列；gap-3 间距 0.75rem -->
-        <div class="mt-5 flex flex-col gap-3">
-          <!-- 电话做成描边按钮，与右侧主按钮区分主次 -->
+        <!-- 菜单底部行动区：与顶栏右侧严格互补，同一个入口全局只出现一份 ——
+             · 电话：顶栏 md(≥768) 起常驻，所以菜单里只在 <768 补充 → 整个动作区 md:hidden
+             · 预约演示：顶栏 sm(≥640) 起常驻，所以菜单里只在 <640 补充 → 按钮外面套 sm:hidden
+             结果：≥768 顶栏已有「电话 + 预约演示」，展开菜单不会出现第二份；
+                   640~767 顶栏只剩「预约演示」，菜单补电话；
+                   <640 顶栏只剩 logo + 汉堡，菜单补电话 + 预约演示。
+             md:hidden 能覆盖 flex：媒体查询里的 display:none 后置，优先级高于无媒体查询的 flex -->
+        <div class="mt-5 flex flex-col gap-3 md:hidden">
+          <!-- 电话做成描边按钮，与顶栏主按钮区分主次 -->
           <BaseButton :href="siteConfig.contact.phoneHref" variant="outline" block>
             {{ siteConfig.contact.phone }}
           </BaseButton>
-          <!-- 主行动按钮：block 占满整行，便于单手点击 -->
-          <BaseButton :href="siteConfig.contact.ctaHref" block @click="closeMenu">
-            {{ siteConfig.contact.ctaLabel }}
-          </BaseButton>
+          <!-- 主行动按钮：外层 div 负责断点显隐（<640 才出现在菜单里）。
+               注意不能把 sm:hidden 直接写在 BaseButton 上 —— 组件基础类含 inline-flex，
+               同属 display 属性且无媒体查询，会把 hidden 覆盖掉 -->
+          <div class="sm:hidden">
+            <BaseButton :href="siteConfig.contact.ctaHref" block @click="closeMenu">
+              {{ siteConfig.contact.ctaLabel }}
+            </BaseButton>
+          </div>
         </div>
       </div>
     </nav>
