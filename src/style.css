@@ -1,8 +1,13 @@
-@import "tailwindcss";
+/* Tailwind v4 入口：引入核心样式（无需 tailwind.config.js） */
+@import 'tailwindcss';
 
+/* 设计 token：@theme 中定义的变量会自动生成对应的工具类，例如
+   --color-brand-600 可用于 bg-brand-600 / text-brand-600 / border-brand-600 */
 @theme {
-  --font-sans: "Inter", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  /* 字体：优先 Inter，中文回退苹方 / 微软雅黑 */
+  --font-sans: 'Inter', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
 
+  /* 品牌色阶：50 最浅 → 900 最深，业务中常用 brand-50 做底色、brand-600 做主色 */
   --color-brand-50: #eff6ff;
   --color-brand-100: #dbeafe;
   --color-brand-200: #bfdbfe;
@@ -12,6 +17,7 @@
   --color-brand-700: #1d4ed8;
   --color-brand-900: #1e3a8a;
 
+  /* 文字色阶：ink-900 主标题、ink-600 正文、ink-400 弱化信息（页脚等） */
   --color-ink-50: #f8fafc;
   --color-ink-100: #f1f5f9;
   --color-ink-400: #94a3b8;
@@ -19,10 +25,18 @@
   --color-ink-900: #0f172a;
 }
 
+/* 基础样式层：优先级低于工具类，可被组件中的 Tailwind 类名覆盖 */
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 4rem;
+    /* 锚点跳转时预留顶栏高度：手机 3.5rem、≥640px 为 4rem，与顶栏 h-14 / sm:h-16 对应 */
+    scroll-padding-top: 3.5rem;
+  }
+
+  @media (min-width: 640px) {
+    html {
+      scroll-padding-top: 4rem;
+    }
   }
 
   body {
@@ -32,6 +46,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* 无障碍：用户在系统开启"减弱动效"时，关闭平滑滚动并将所有动画压到接近 0 */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;

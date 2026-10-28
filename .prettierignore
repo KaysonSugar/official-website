@@ -1,0 +1,6 @@
+# 依赖与构建产物
+node_modules
+dist
+
+# 锁文件由 npm 维护，不做格式化
+package-lock.json

@@ -1,4 +1,6 @@
 {
+  // 根配置：自身不编译文件，只做项目引用（Project References）
+  // 好处：应用代码与构建脚本用不同环境配置，互不干扰，且 vue-tsc -b 可增量编译
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },

@@ -1,23 +1,30 @@
 {
+  // 应用源码配置：覆盖 src 目录下的 .ts / .tsx / .vue
   "compilerOptions": {
     "target": "ES2022",
     "useDefineForClassFields": true,
     "module": "ESNext",
+    // bundler 模式：配合 Vite 的打包解析规则（允许省略扩展名导入）
     "moduleResolution": "bundler",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
+    // 增量编译缓存文件位置，放在 node_modules 内避免污染仓库
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "allowImportingTsExtensions": true,
+    // 严格保留 import/export 写法，类型导入必须显式写 import type
     "verbatimModuleSyntax": true,
+    // 只做类型检查不产出 JS，实际编译交给 Vite
     "noEmit": true,
     "jsx": "preserve",
+    // 严格模式总开关（下面若干检查项也一并开启）
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
+    // 路径别名：必须与 vite.config.ts 的 resolve.alias 保持一致，否则运行时找不到模块
     "paths": {
       "@/*": ["./src/*"]
     }
