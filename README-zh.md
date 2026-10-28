@@ -25,10 +25,16 @@ wyd-official-website/
 ├── tsconfig.node.json      # Node 层（vite.config.ts）TS 配置
 └── src/
     ├── main.ts             # 应用入口，挂载 #app 并引入全局样式
-    ├── App.vue             # 根组件（导航 / Hero / 能力 / 方案 / 关于 / 页脚）
-    ├── style.css           # 全局样式入口，@import "tailwindcss"
+    ├── App.vue             # 根组件，负责页面区块编排
+    ├── style.css           # 全局样式入口 + 设计 token（@theme）+ 基础样式
     ├── vite-env.d.ts       # Vite 类型声明
-    └── components/         # 公共组件目录（预留）
+    ├── config/
+    │   └── site.ts         # 站点文案与导航配置（改文案只改这里）
+    └── components/
+        ├── SiteHeader.vue  # 顶部导航（含移动端汉堡菜单、滚动态变化）
+        ├── HeroSection.vue # 首屏 Hero
+        ├── FeatureCard.vue # 能力卡片
+        └── SiteFooter.vue  # 页脚
 ```
 
 ## 环境要求
@@ -71,6 +77,10 @@ npm run preview
 ## 开发约定
 
 - **路径别名**：`@` 指向 `src/` 目录（`vite.config.ts` 与 `tsconfig.app.json` 已同步配置）
+- **设计 token**：品牌色 `brand-*`（50~900）与文字色 `ink-*` 定义在 `src/style.css` 的 `@theme` 中，业务代码统一使用语义化类名（如 `text-brand-600`），不写死色值
+- **文案配置化**：所有页面文案集中在 `src/config/site.ts`，修改内容无需改动组件
+- **锚点偏移**：固定顶栏高 4rem，已通过 `scroll-padding-top` 与各区块 `scroll-mt-16` 修正跳转遮挡
+- **动效无障碍**：全局尊重 `prefers-reduced-motion`，系统开启减弱动效时自动关闭过渡
 - **Tailwind v4**：无需 `tailwind.config.js`，主题扩展使用 CSS 的 `@theme` 指令（在 `src/style.css` 中）
 - **TypeScript**：新组件统一使用 `<script setup lang="ts">`，数据结构优先定义 `interface` 并导出复用
 - **构建产物**：输出至 `dist/`，已通过 `.gitignore` 排除版本管理
