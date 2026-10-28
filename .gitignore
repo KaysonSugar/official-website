@@ -13,3 +13,6 @@ dist-ssr
 *.sw?
 *.local
 .DS_Store
+
+# WorkBuddy 工作区数据（仅本地使用，不提交）
+.workbuddy/
