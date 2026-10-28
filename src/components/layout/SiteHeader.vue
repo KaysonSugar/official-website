@@ -152,18 +152,23 @@ onUnmounted(() => {
             </svg>
           </RouterLink>
 
-          <!-- 下拉面板：absolute 相对导航项定位；left-1/2 + -translate-x-1/2 以导航项为中心展开；
-               top-full 贴在顶栏下沿；pt-2 留 8px 视觉间隙（这块透明区仍在容器内，
-               鼠标从文字移到面板上不会触发 mouseleave，面板不会闪退）；
-               w-72 宽 18rem；rounded-xl 圆角；
-               阴影用 24px 大偏移 + 18% 黑，首屏底色接近白、浅阴影分不出边界，必须压重一点才立得住 -->
+          <!-- 下拉面板：与顶栏「连体」的一块，而不是浮在下面的独立卡片。
+               定位：absolute + left-1/2 + -translate-x-1/2 以导航项为中心展开；
+                     top-full 让顶边落在顶栏下沿；
+                     -mt-px 再向上压 1px，把顶栏自己的 border-b 盖住 —— 否则滚动态下
+                     那条 #f2f2f2 的分隔线会横穿面板顶部，一眼看出是两块东西。
+               造型（连体的关键三条）：顶部圆角 0（rounded-b-xl 只留底部）、
+                     去掉 border-t（只留左右和下）、沿用顶栏的白底，
+                     视觉上就是从导航栏「长」下来的一片白，而不是另一张卡片。
+               鼠标从文字移到面板中间没有透明间隙，不会触发 mouseleave 闪退；
+               即使有 1px 的位移误差，那 1px 仍落在导航项容器内部（含 1px 重叠），依然安全。 -->
           <div
             v-if="item.children"
             v-show="openDropdown === item.to"
-            class="absolute left-1/2 top-full z-10 w-72 -translate-x-1/2 pt-2"
+            class="absolute left-1/2 top-full z-10 -mt-px w-72 -translate-x-1/2"
           >
             <div
-              class="rounded-xl border border-ink-100 bg-white p-2 shadow-[0_16px_40px_-8px_rgba(26,26,26,0.18)]"
+              class="rounded-b-xl border-x border-b border-ink-100 bg-white p-2 shadow-[0_16px_40px_-8px_rgba(26,26,26,0.18)]"
             >
               <!-- 子项：block 整块可点；px-4 py-2.5 保证触控高度；hover:bg-ink-50 浅灰反馈；
                    当前所在子页用 bg-ink-50 + 品牌橙文字标识 -->
