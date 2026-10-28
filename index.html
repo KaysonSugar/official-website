@@ -5,6 +5,80 @@
     <!--  viewport：移动端按设备宽度渲染、初始不缩放，响应式适配的前提 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- ── 首帧防闪烁：关键内联样式 ───────────────────────────────────────
+         这三条必须在样式表之前就生效，否则会先闪一帧"没穿衣服"的页面。
+
+         1) html 底色先给白：加载期不会露出透明/深色底，与 body 的 #fff 对齐；
+         2) #app 为空时隐藏：开发环境 Vite 的 CSS 是 JS 注入的，样式到位前文字会
+            裸露在外；生产构建虽然把 CSS 提成了 <link>，但懒加载的路由分包仍有空窗期；
+         3) #boot 顶替空窗期：一个极简的品牌色加载环，避免用户对着纯白屏猜"是不是卡了"。
+
+         ⚠️ #app 必须写成不换行、内部无空白的形式 —— CSS 的 :empty 不忽略空白文本节点，
+            一旦格式化成多行，第一条规则就永远不生效了。 -->
+    <style>
+      html {
+        background-color: #fff;
+      }
+      #app:empty {
+        visibility: hidden;
+      }
+      #boot {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+      }
+      #boot::after {
+        content: '';
+        box-sizing: border-box;
+        width: 28px;
+        height: 28px;
+        border: 2px solid #ffe9dc;
+        border-top-color: #ff833f;
+        border-radius: 50%;
+        animation: boot-spin 0.7s linear infinite;
+      }
+      @keyframes boot-spin {
+        to {
+          transform: rotate(1turn);
+        }
+      }
+      /* 挂载完成（#app 有内容）即收起加载环，与上面 #app:empty 是同一开关 */
+      #app:not(:empty) ~ #boot {
+        display: none;
+      }
+      /* 系统开启"减弱动效"时放慢，不做无限高速旋转 */
+      @media (prefers-reduced-motion: reduce) {
+        #boot::after {
+          animation-duration: 2.4s;
+        }
+      }
+    </style>
+
+    <!-- ── 首帧防闪烁：抢在浏览器恢复滚动位置之前接管落点 ──────────────────
+         history.scrollRestoration 默认是 'auto'：刷新时浏览器会把滚动位置还原到
+         刷新前的位置。在长页面上，这会先画出页面中段（看到底部的橙色横幅、深色页脚），
+         再由脚本拉回顶部 —— 也就是那一下闪烁 + "文字穿透"的观感。
+
+         必须写在 <head> 里的同步脚本中：main.ts 是 type="module"（等效 defer），
+         等它执行时浏览器早已恢复过位置，那时再改 manual 已经晚了。
+         这里只关掉自动恢复，具体落点仍由 main.ts / router.scrollBehavior 决定。 -->
+    <script>
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+    </script>
+
+    <!-- 脚本被禁用时，上面的隐藏规则会让页面一直空着，这里补一句说明 -->
+    <noscript>
+      <style>
+        #app:empty {
+          visibility: visible;
+        }
+        #boot {
+          display: none;
+        }
+      </style>
+    </noscript>
+
     <!-- 页面标题：搜索结果里显示的蓝色大标题，建议 30 字以内 -->
     <title>威易达化工 - 企业级解决方案与服务</title>
 
@@ -50,8 +124,31 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   </head>
   <body>
-    <!-- Vue 应用挂载点，对应 main.ts 中的 mount('#app') -->
+    <!-- 兜底提示：上面的 #app:empty 规则会在脚本不可用时一直隐藏页面，
+         这里给禁用 JS 的访客一个说明，避免面对一片空白无从下手 -->
+    <noscript>
+      <div
+        style="
+          margin: 0;
+          padding: 24px 16px;
+          font-family: system-ui, sans-serif;
+          font-size: 15px;
+          line-height: 1.7;
+          color: #1a1a1a;
+          background: #fff7f2;
+          border-bottom: 1px solid #ffe9dc;
+        "
+      >
+        本站需要启用 JavaScript 才能正常浏览，请开启后刷新页面。
+      </div>
+    </noscript>
+
+    <!-- Vue 应用挂载点，对应 main.ts 中的 mount('#app')。
+         保持单行无空白：上面的 #app:empty 防闪烁规则依赖它 -->
     <div id="app"></div>
+    <!-- 加载指示器：挂在 #app 之后，#app 一旦有内容就被隐藏。
+         纯 CSS 绘制，无图片、无脚本，首帧就能显示 -->
+    <div id="boot" aria-hidden="true"></div>
     <!-- 入口脚本：type="module" 启用 ES 模块，开发时由 Vite 实时编译 -->
     <script type="module" src="/src/main.ts"></script>
   </body>

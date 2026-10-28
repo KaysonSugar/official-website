@@ -23,7 +23,7 @@
 
 ```
 wyd-official-website/
-├── index.html                  # HTML 入口（含 SEO / 分享卡元信息 / favicon）
+├── index.html                  # HTML 入口（含 SEO / 分享卡元信息 / favicon / 首帧防闪烁内联资源）
 ├── vite.config.ts              # Vite 配置（Vue + Tailwind 插件、@ 别名）
 ├── tsconfig.json               # TS 项目引用配置
 ├── tsconfig.app.json           # 应用代码 TS 配置（严格模式）
@@ -34,7 +34,7 @@ wyd-official-website/
 │   ├── favicon.png             # 站点图标（由 assets/logo.webp 导出）
 │   └── apple-touch-icon.png    # iOS 添加到主屏图标
 └── src/
-    ├── main.ts                 # 应用入口，挂载路由与 #app，引入全局样式
+    ├── main.ts                 # 应用入口，等路由就绪后挂载 #app，引入全局样式
     ├── App.vue                 # 根组件：顶栏 + RouterView + 页脚（无样式、无文案）
     ├── style.css               # 全局样式入口 + 设计 token（@theme）+ 基础样式
     ├── vite-env.d.ts           # Vite 类型声明
@@ -303,17 +303,53 @@ Windows / Linux 的系统默认滚动条 15~17px 宽、深灰实心、无圆角�
 
 ### 滚动落点（刷新 / 切页 / 锚点）
 
-| 场景                      | 期望行为                     | 实现位置                                                                    |
-| ------------------------- | ---------------------------- | --------------------------------------------------------------------------- |
-| 按 F5 刷新                | 不停在上次位置               | `main.ts` → `history.scrollRestoration = 'manual'`                          |
-| 刷新/首屏进入             | 回到页面顶部                 | `router/index.ts` → `scrollBehavior` 返回 `{ top: 0, behavior: 'instant' }` |
-| 点击导航切页              | 新页面从顶部开始             | 同上                                                                        |
-| 前进/后退                 | 还原上次位置                 | `scrollBehavior` 返回 `savedPosition`                                       |
-| 带锚点 `/production#flow` | 定位到该元素并让出 84px 顶栏 | `scrollBehavior` 返回 `{ el: to.hash, top: 84 }`                            |
+| 场景                      | 期望行为                     | 实现位置                                                                   |
+| ------------------------- | ---------------------------- | -------------------------------------------------------------------------- |
+| 按 F5 刷新                | 不停在上次位置               | `index.html` 的 `<head>` 内联脚本 → `history.scrollRestoration = 'manual'` |
+| 刷新/首屏进入             | 回到页面顶部                 | `main.ts` 挂载前兜底 + `router/index.ts` → `scrollBehavior` 返回 `top: 0`  |
+| 点击导航切页              | 新页面从顶部开始             | 同上                                                                       |
+| 前进/后退                 | 还原上次位置                 | `scrollBehavior` 返回 `savedPosition`                                      |
+| 带锚点 `/production#flow` | 定位到该元素并让出 84px 顶栏 | `scrollBehavior` 返回 `{ el: to.hash, top: 84 }`                           |
 
 > ⚠️ 浏览器默认 `scrollRestoration = 'auto'`，刷新会停在上一位置，长滚动官网必须显式改成 `'manual'`。
+> **这句必须写在 `index.html` 的 `<head>` 同步脚本里，不能只写在 `main.ts`** ——
+> `main.ts` 是 `type="module"`（等效 defer），执行时浏览器早已恢复过滚动位置，改 manual 属于亡羊补牢。
+> `main.ts` 里保留一份只为兜底（入口被别的宿主内联时仍能生效）。
+>
 > 回顶部务必带 `behavior: 'instant'`：否则会被 `html { scroll-behavior: smooth }` 接管，
-> 变成"从页面中部一路滑回首屏"的动画。
+> 变成"从页面中部一路滑回首屏"的动画。带 hash 时不能归零，要让浏览器按锚点定位。
+
+### 首帧防闪烁（加载态）
+
+刷新时那一下"闪烁 + 文字穿透"，实际是三件事叠加，三件都要治：
+
+| 现象                                 | 成因                                                                  | 处理                                                                                |
+| ------------------------------------ | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| 先停在页面中段（看到底部横幅、页脚） | 浏览器按 `scrollRestoration='auto'` 恢复了上次位置                    | `index.html` head 内联脚本改 `manual`，执行早于浏览器恢复                           |
+| 文字没有样式的裸露                   | 开发环境 Vite 的 CSS 由 JS 注入，样式到位前会有一帧裸文本             | `#app:empty { visibility: hidden }`——挂载前不渲染，挂载后规则自动失效，无需 JS 参与 |
+| 顶栏直接压着页脚闪一下               | 直接 `mount` 时 `RouterView` 还是空的（路由组件懒加载中），页面被压扁 | `router.isReady()` 后再 `mount`，首帧就是完整页面，空窗期由 `#boot` 加载环占位      |
+
+`#boot` 是纯 CSS 画的品牌色加载环（无图片、无脚本，首帧即可显示），`#app` 一旦有内容就自动隐藏：
+
+```html
+<div id="app"></div>
+<div id="boot" aria-hidden="true"></div>
+```
+
+```css
+#app:empty {
+  visibility: hidden;
+} /* 挂载前隐藏 */
+#app:not(:empty) ~ #boot {
+  display: none;
+} /* 挂载后收起加载环 */
+```
+
+> ⚠️ `<div id="app"></div>` 必须保持**单行无空白**。CSS 的 `:empty` 不忽略空白文本节点，
+> 一旦格式化成多行，上面两条规则就全部失效，闪烁会原样回来。
+>
+> 实测（dev + 生产构建，1440×900）：刷新前 `scrollY=500` → 刷新后 `0`；
+> 挂载后的所有帧里"页面高度不足一屏"的帧数为 **0**，首帧直接是完整页面。
 
 ### 样式写法（三条规范）
 
