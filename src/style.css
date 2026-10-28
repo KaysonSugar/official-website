@@ -93,6 +93,56 @@
     overflow-x: hidden;
   }
 
+  /* ── 滚动条 ──────────────────────────────────────────────────────────
+     Windows / Linux 的系统默认滚动条约 15~17px 宽、深灰实心、没有圆角，
+     在一屏浅色官网里非常"抢镜"，会凭空切出一条灰色竖带。
+     这里改成细窄圆角条：
+       · 槽（track）完全透明 —— 不切灰带，页面背景连成一片；
+       · 滑块（thumb）视觉宽 6px、中性半透明灰、两端 999px 圆角；
+       · 悬停 / 拖拽时加深，给"这里可以抓"的反馈。
+     6px 的由来：滚动条槽宽 10px，滑块加 2px 全透明边框 + background-clip: content-box，
+     实际着色区只有 10 - 2×2 = 6px；比直接设 6px 槽更好，因为槽变窄会贴着内容，
+     留 2px 呼吸边滑块不会顶到卡片边界。
+     颜色用 rgba 而非 ink 色阶：滚动条要浮在白色、浅橙渐变、深色页脚之上，
+     只有中性半透明黑的叠加效果在三种底色上都成立，且深浅可随交互平滑过渡。 */
+  ::-webkit-scrollbar {
+    width: 10px; /* 纵向滚动条槽宽 10px（原系统值 15~17px） */
+    height: 10px; /* 横向滚动条同宽，防止出现时高度不统一 */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 2px solid transparent; /* 两侧各 2px 透明边，把着色区收到 6px */
+    border-radius: 999px;
+    background-color: rgba(0, 0, 0, 0.16); /* 静止态：约 #d6d6d6，可见但不抢眼 */
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3); /* 悬停加深，提示可拖拽 */
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background-color: rgba(0, 0, 0, 0.42); /* 拖拽中再深一档 */
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent; /* 横纵滚动条交汇的方块，默认是白块需清掉 */
+  }
+
+  /* Firefox 只认标准属性，且 Chromium 121+ 也实现了它们 —— 若不加 @supports 隔离，
+     标准属性和上面的 ::-webkit-scrollbar 会同时生效、互相顶掉。
+     用 selector() 探测：认识 ::-webkit-scrollbar 的浏览器跳过这段，只走上面的 WebKit 定制 */
+  @supports not selector(::-webkit-scrollbar) {
+    html {
+      scrollbar-width: thin; /* 细滚动条，约为默认的一半 */
+      scrollbar-color: rgba(0, 0, 0, 0.16) transparent; /* 滑块 / 槽 */
+    }
+  }
+
   /* 无障碍：用户在系统开启"减弱动效"时，关闭平滑滚动并将所有动画压到接近 0 */
   @media (prefers-reduced-motion: reduce) {
     html {

@@ -201,6 +201,19 @@ npm run format
 >
 > 纯文字段落需要更窄时，在 `container-page` 上叠 `max-w-3xl` 即可（工具类优先级高于组件层）。
 
+### 滚动条（全局基础样式）
+
+Windows / Linux 的系统默认滚动条 15~17px 宽、深灰实心、无圆角，会在一屏浅色页面的右侧凭空切出一条灰带。
+统一收成细窄圆角半透明条，实现位置 `src/style.css` 的 `@layer base`：
+
+| 项 | 值 | 说明 |
+| --- | --- | --- |
+| 槽宽 | 10px | 系统默认 15~17px，约减半 |
+| 滑块着色宽 | 6px | 槽 10px − 左右各 2px 透明边框（`background-clip: content-box`） |
+| 滑块色 | `rgba(0,0,0,.16)` → hover `.3` → active `.42` | 用半透明黑而非 ink 色阶：白底/浅橙渐变/深色页脚上都成立 |
+| 轨道 | 透明 | 不切灰带，背景连成一片 |
+| Firefox | `@supports not selector(::-webkit-scrollbar)` 内写 `scrollbar-width: thin` | 必须隔离；Chromium 121+ 也认标准属性，同时写会顶掉 WebKit 定制 |
+
 ### 样式写法（三条规范）
 
 1. **布局、间距、字号、颜色、响应式 → 一律用 Tailwind 工具类**
