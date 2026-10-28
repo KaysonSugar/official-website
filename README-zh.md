@@ -128,7 +128,7 @@ npm run format
 | --- | --- | --- | --- | --- |
 | 默认 | < 640px（如 375） | 1 列 | 汉堡菜单 | 64px |
 | `sm:` | ≥ 640px（如 768） | 2 列 | 汉堡菜单 | 64px |
-| `lg:` | ≥ 1024px（如 1440） | 3 列 | 横向导航 | 80px |
+| `lg:` | ≥ 1024px（如 1440） | 3 列 | 横向导航 | 84px |
 
 > 导航在 768~1023px 仍用汉堡：5 个导航项 + 电话 + 按钮在该区间会互相挤压，
 > 因此完整导航从 `lg`（1024px）才展开，不降到 `md`。
@@ -151,12 +151,21 @@ npm run format
 
 ### 布局基准：`container-page`
 
-原型稿按 **1440px 画板**出图，实测内容区宽度 **1280px**，即左右各留 **80px**。这个基准由 `src/style.css` 中的 `.container-page` 统一提供，**顶栏、首屏、各内容区块、页脚都必须套这一层**，保证 logo 左边缘、首屏标题左边缘、卡片左边缘落在同一条垂直线上。
+原型稿按 **1440 × 84** 出图（宽 1440、顶栏高 84），内容区宽度 **1280px**，即左右各留 **80px**。这个基准由 `src/style.css` 中的 `.container-page` 统一提供，**顶栏、首屏、各内容区块、页脚都必须套这一层**，保证 logo 左边缘、首屏标题左边缘、卡片左边缘落在同一条垂直线上。
 
 ```
 断点：  <640px  16px   |   ≥640px  24px  |  ≥1024px  48px  |  ≥1440px  80px
 容器：  max-width: 1440px（90rem），内容区 = 1440 - 80×2 = 1280px
+顶栏：  <1024px  h-16 (64px)  |  ≥1024px  h-[84px]
 ```
+
+三类高度必须三处同步改，否则锚点跳转会被顶栏挡住：
+
+| 位置 | 文件 |
+| --- | --- |
+| 顶栏高度 | `layout/SiteHeader.vue` → `h-16 lg:h-[84px]` |
+| 内容区顶部让位 | `App.vue` → `main` 的 `pt-16 lg:pt-[84px]` |
+| 锚点偏移 | `style.css` 的 `scroll-padding-top` + `SectionShell.vue` 的 `scroll-mt-16 lg:scroll-mt-[84px]` |
 
 > ⚠️ 不要用 `max-w-7xl px-8` 这类组合替代：`max-w-7xl` 是 1280 的**容器**宽，再加 `px-8`(32px) 内边距后，
 > 内容实际从 112px 才开始，比原型整体内缩 32px（顶栏 logo 偏右、按钮偏左就是这么来的）。
@@ -190,7 +199,7 @@ npm run format
 - **路径别名**：`@` 指向 `src/` 目录（`vite.config.ts` 与 `tsconfig.app.json` 已同步配置）
 - **文案配置化**：所有页面文案集中在 `src/config/site.ts`，修改内容无需改动组件
 - **导航高亮**：`useActiveSection` 用 IntersectionObserver 判断当前区块，自动给导航项加粗
-- **锚点偏移**：`scroll-padding-top` 与各区块 `scroll-mt-16 / lg:scroll-mt-20` 已与顶栏高度对齐
+- **锚点偏移**：`scroll-padding-top` 与各区块 `scroll-mt-16 / lg:scroll-mt-[84px]` 已与顶栏高度（64 / 84px）对齐
 - **滚动动效**：`useReveal` 实现进场淡入，只触发一次；卡片通过 `delay` 错峰 100ms
 - **动效无障碍**：全局尊重 `prefers-reduced-motion`，系统开启减弱动效时自动关闭过渡并直接显示内容
 - **SEO**：`index.html` 内含 title / description / canonical / Open Graph / Twitter 卡片 / theme-color；上线前需替换 `example.com` 域名与分享封面图 `og-cover.png`（建议 1200×630）

@@ -33,8 +33,9 @@ const rootEl = useTemplateRef<HTMLElement>('root')
 const visible = useReveal(rootEl)
 
 const sectionClass = computed(() => [
-  // scroll-mt-16 / lg:scroll-mt-20 锚点跳转时预留顶栏高度（4rem / 5rem），避免标题被固定导航遮住
-  'scroll-mt-16 lg:scroll-mt-20',
+  // scroll-mt-16 / lg:scroll-mt-[84px] 锚点跳转时预留顶栏高度（4rem / 84px），
+  // 与 App.vue 中 main 的 pt-*、SiteHeader 的 h-* 三处保持一致，避免标题被固定导航遮住
+  'scroll-mt-16 lg:scroll-mt-[84px]',
   // py-14 手机上下内边距 3.5rem，sm:py-20 为 5rem，lg:py-24 为 6rem
   'py-14 sm:py-20 lg:py-24',
   // transition-all duration-700 ease-out：进场过渡 700ms，缓出曲线，观感不生硬

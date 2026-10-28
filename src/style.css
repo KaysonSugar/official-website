@@ -70,13 +70,14 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* 锚点跳转时预留顶栏高度：小屏 4rem、≥1024px 为 5rem，与顶栏 h-16 / lg:h-20 对应 */
+    /* 锚点跳转时预留顶栏高度：小屏 4rem、≥1024px 为 5.25rem(84px)，
+       与顶栏 h-16 / lg:h-[84px] 严格一致，否则标题会被固定导航盖住 */
     scroll-padding-top: 4rem;
   }
 
   @media (min-width: 1024px) {
     html {
-      scroll-padding-top: 5rem;
+      scroll-padding-top: 5.25rem; /* 84px */
     }
   }
 

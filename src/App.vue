@@ -17,11 +17,11 @@ import AboutSection from '@/components/sections/AboutSection.vue'
 </script>
 
 <template>
-  <!-- 固定顶栏：高度 h-16 / lg:h-20，由组件自身管理 -->
+  <!-- 固定顶栏：高度 h-16 / lg:h-[84px]（原型 1440×84），由组件自身管理 -->
   <SiteHeader />
 
-  <!-- 主内容区：pt-16 / lg:pt-20 与顶栏高度严格一致，避免首屏被固定导航遮住 -->
-  <main class="pt-16 lg:pt-20">
+  <!-- 主内容区：pt-16 / lg:pt-[84px] 与顶栏高度严格一致，避免首屏被固定导航遮住 -->
+  <main class="pt-16 lg:pt-[84px]">
     <HeroSection />
     <PlatformSection />
     <ProductsSection />

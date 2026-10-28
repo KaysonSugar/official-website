@@ -45,11 +45,12 @@ onUnmounted(() => {
 
 <template>
   <!-- 顶栏：fixed 固定在顶部；inset-x-0 横向铺满；z-50 层级高于所有内容；
-       h-16 手机/平板 4rem，lg:h-20 桌面 5rem；border-b 底部分隔线；
+       高度按原型标定：h-16 手机/平板 4rem(64px)，lg:h-[84px] 桌面 84px（画板 1440×84）；
+       border-b 底部分隔线；
        bg-white/95 + backdrop-blur 九成透明白底 + 毛玻璃，滚动时内容不会糊成一片；
        transition-shadow 只为阴影加过渡，避免切换时整块重绘 -->
   <header
-    class="fixed inset-x-0 top-0 z-50 h-16 border-b border-ink-100 bg-white/95 backdrop-blur transition-shadow duration-300 lg:h-20"
+    class="fixed inset-x-0 top-0 z-50 h-16 border-b border-ink-100 bg-white/95 backdrop-blur transition-shadow duration-300 lg:h-[84px]"
     :class="scrolled ? 'shadow-[0_2px_16px_rgba(0,0,0,0.06)]' : ''"
   >
     <!-- 导航容器：container-page 是全局内容容器（见 style.css），
