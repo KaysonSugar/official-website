@@ -44,24 +44,27 @@ wyd-official-website/
     ├── config/
     │   └── site.ts             # 站点唯一数据源：品牌、导航、各页面首屏文案
     ├── router/
-    │   └── index.ts            # 路由表（5 个页面 + 兜底）+ 切页落点 + 标题同步
+    │   └── index.ts            # 路由表（8 个页面 + 兜底）+ 切页落点 + 标题同步
     ├── views/                  # 路由页面：一页一个文件，只做区块编排
-    │   ├── HomeView.vue        # /
-    │   ├── ProductionView.vue  # /production  生产管理
-    │   ├── DispatchView.vue    # /dispatch    调度合规
-    │   ├── DriverView.vue      # /driver      接单作业
-    │   └── SolutionsView.vue   # /solutions   解决方案
+    │   ├── HomeView.vue            # /
+    │   ├── PlatformView.vue        # /platform             平台架构
+    │   ├── ProductsView.vue        # /products             产品矩阵（三条业务线总览）
+    │   ├── ProductChemicalView.vue # /products/chemical    化工生产
+    │   ├── ProductLogisticsView.vue# /products/logistics   物流调度
+    │   ├── ProductDriverView.vue   # /products/driver      司机作业
+    │   ├── SolutionsView.vue       # /solutions            解决方案
+    │   └── AboutView.vue           # /about                关于我们
     ├── composables/
     │   └── useReveal.ts        # 滚动进场动效（IntersectionObserver，只触发一次）
     └── components/
         ├── brand/
         │   └── BrandLogo.vue   # 品牌标识：图形 + 中文 + 英文（对应原型左上角）
         ├── layout/
-        │   ├── SiteHeader.vue  # 固定顶栏：品牌 / 导航 / 电话 / 预约演示 / 汉堡菜单
+        │   ├── SiteHeader.vue  # 固定顶栏：品牌 / 导航（含悬停下拉）/ 电话 / 预约演示 / 汉堡菜单
         │   └── SiteFooter.vue  # 页脚：组合标 / 快速导航 / 联系方式 / 版权
         ├── sections/
         │   ├── HeroSection.vue      # 首页首屏（首页 Hero 尚未按原型改两栏）
-        │   ├── PageHero.vue         # 内页首屏（4 个内页共用，左对齐 / 居中对齐两态）
+        │   ├── PageHero.vue         # 内页首屏（7 个内页共用，左对齐 / 居中对齐两态）
         │   ├── PlatformSection.vue  # ⚠️ 临时占位，按原型重建首页时删除
         │   ├── ProductsSection.vue  # ⚠️ 临时占位
         │   ├── SolutionsSection.vue # ⚠️ 临时占位
@@ -118,28 +121,45 @@ npm run format
 
 ## 页面结构
 
-**5 个导航项 = 5 个独立路由页**，点击切换页面，页面内部各自滚动。
+**一级导航 5 项，其中「产品矩阵」带二级下拉，共 8 个路由页**，点击切换页面，页面内部各自滚动。
 
-这个结论来自原型画板本身：`01 首页` 是一张 1440×约 10600 的长画板，里面没有「生产管理 / 调度合规 / 接单作业 / 解决方案」这四个标题；这四项各自对应另外一张画板（宽高比 1:1.87 / 1:2.63 / 1:1.38 / 1:1.65），所以不是锚点单页。
+这个结论来自原型画板本身：`01 首页` 是一张 1440×约 10600 的长画板，里面没有化工 / 物流 / 司机 / 解决方案这些标题；后四项各自对应另外一张画板（宽高比 1:1.87 / 1:2.63 / 1:1.38 / 1:1.65）。其中化工/物流/司机三张是**三条业务线**，挂在「产品矩阵」之下，不是一级导航。
 
-| 页面     | 路由          | 组件                       | 原型画板                   |
-| -------- | ------------- | -------------------------- | -------------------------- |
-| 首页     | `/`           | `views/HomeView.vue`       | 01 首页（16 个区块，待铺） |
-| 生产管理 | `/production` | `views/ProductionView.vue` | 威易达化工：生产与经营管理 |
-| 调度合规 | `/dispatch`   | `views/DispatchView.vue`   | 威易达物流：调度与合规     |
-| 接单作业 | `/driver`     | `views/DriverView.vue`     | 威易达司机：接单与作业     |
-| 解决方案 | `/solutions`  | `views/SolutionsView.vue`  | 按角色区分的解决方案       |
+| 导航层级 | 页面     | 路由                  | 组件                       | 原型画板                       |
+| -------- | -------- | --------------------- | -------------------------- | ------------------------------ |
+| 一级     | 首页     | `/`                   | `HomeView.vue`             | 01 首页（16 个区块，待铺）     |
+| 一级     | 平台架构 | `/platform`           | `PlatformView.vue`         | 暂无画板（文案占位）           |
+| 一级     | 产品矩阵 | `/products`           | `ProductsView.vue`         | 暂无独立画板（三条业务线总览） |
+| └ 二级   | 化工生产 | `/products/chemical`  | `ProductChemicalView.vue`  | 威易达化工：生产与经营管理     |
+| └ 二级   | 物流调度 | `/products/logistics` | `ProductLogisticsView.vue` | 威易达物流：调度与合规         |
+| └ 二级   | 司机作业 | `/products/driver`    | `ProductDriverView.vue`    | 威易达司机：接单与作业         |
+| 一级     | 解决方案 | `/solutions`          | `SolutionsView.vue`        | 按角色区分的解决方案           |
+| 一级     | 关于我们 | `/about`              | `AboutView.vue`            | 暂无画板（文案占位）           |
 
-导航数据源仍是 `config/site.ts` 的 `navItems`（`label` + `to`）。`to` 必须与 `router/index.ts` 的 `path` 完全一致，改路由要两边同步。
+导航数据源是 `config/site.ts` 的 `navItems`：一级项 `{ label, to }`，带下拉的再挂 `children: NavChild[]`。`to` 必须与 `router/index.ts` 的 `path` 完全一致，改路由要两边同步；三条业务线在 `productLines` 里定义一次，导航下拉与 `/products` 页的卡片同源。
+
+### 导航下拉（产品矩阵）
+
+| 端              | 交互                                                                                                                                |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 桌面（≥1024px） | 鼠标悬停「产品矩阵」展开白色圆角面板，列出三条业务线（标题 + 一句定位）；移出收起；当前所在子页在下拉里高亮；父项在子页面上保持加粗 |
+| 移动（<1024px） | 汉堡菜单里一级项纵排，三条业务线缩进平铺在「产品矩阵」下方（只有 3 条，一屏能看完，不做二次折叠）                                   |
+
+实现要点：
+
+- 导航项外层用 `h-16 lg:h-[84px]` 撑满顶栏，面板的 `top-full` 才落在**顶栏下沿**而不是文字下沿；`pt-2` 的 8px 透明间隙仍在容器内，鼠标从文字移到面板不会触发 `mouseleave`，面板不会闪退。
+- 同时监听 `focusin` / `focusout`，键盘 Tab 也能展开与收起（`focusout` 里判断 `relatedTarget` 是否仍在容器内）。
+- 切页后 `watch(route.path)` 自动收起所有浮层（下拉 + 汉堡菜单）。
+- 只用 hover 不写 click 切换：鼠标用户不需要点两下，触屏用户走的是移动端菜单分支。
 
 ### 路由约定
 
-- **History 模式**：地址栏是 `/production` 而不是 `/#/production`。
+- **History 模式**：地址栏是 `/products/chemical` 而不是 `/#/products/chemical`。
 - **切换落点**：默认回页面顶部（`behavior: 'instant'`，绕开 `html { scroll-behavior: smooth }`，否则会从页底"滑行"回顶部）；带 hash 时定位到目标元素并预留 84px 顶栏；浏览器前进/后退还原上次位置。
 - **页面标题**：`afterEach` 统一写成「页面名 - 品牌名」，首页回落到品牌标语。
 - **兜底**：未匹配路径一律重定向回 `/`，避免空白页。
-- **站内跳转一律用 `RouterLink` / `BaseButton` 的 `to`**，不要写 `<a href="/production">`——那会整页刷新，丢掉 SPA 的切页体验。
-- **部署要求**：静态托管需要把未命中的路径回退到 `index.html`（Nginx `try_files $uri $uri/ /index.html;`，Vercel/Netlify 配 rewrite），否则直接访问 `/production` 会 404。
+- **站内跳转一律用 `RouterLink` / `BaseButton` 的 `to`**，不要写 `<a href="/products">`——那会整页刷新，丢掉 SPA 的切页体验。
+- **部署要求**：静态托管需要把未命中的路径回退到 `index.html`（Nginx `try_files $uri $uri/ /index.html;`，Vercel/Netlify 配 rewrite），否则直接访问 `/products/chemical` 会 404。
 
 ## 响应式断点
 

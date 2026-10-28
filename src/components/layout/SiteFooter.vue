@@ -48,6 +48,16 @@ import { siteConfig } from '@/config/site'
                 class="text-sm text-ink-600 transition-colors duration-200 hover:text-brand-500"
                 >{{ item.label }}</RouterLink
               >
+              <!-- 二级项（产品矩阵下的三条业务线）：缩进 + 更小字号，页脚也保持导航层级 -->
+              <ul v-if="item.children" class="mt-2 flex flex-col gap-2 pl-3">
+                <li v-for="child in item.children" :key="child.to">
+                  <RouterLink
+                    :to="child.to"
+                    class="text-xs text-ink-400 transition-colors duration-200 hover:text-brand-500"
+                    >{{ child.label }}</RouterLink
+                  >
+                </li>
+              </ul>
             </li>
           </ul>
         </nav>
