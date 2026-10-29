@@ -51,13 +51,8 @@ const props = withDefaults(defineProps<Props>(), { size: 'md' })
         :class="props.size === 'md' ? 'text-base lg:text-[19px] lg:leading-[28px]' : 'text-sm'"
         >{{ props.name }}</span
       >
-      <!-- 英文名：8px 极小号 + 0.135em 宽字距（实测调校值），15 个字母横向总宽 95px，
-           与上方 5 个中文（19px × 5 = 95px）正好齐宽，形成整齐的方块感；
-           text-ink-400 弱化色；
-           mt-1 上间距 4px —— 19px 中文在 28px 行框里本身只留出约 4.5px 的下沿空白，
-           英文若紧贴会像"糊"在中文底部（实测观感过挤），补 4px 后视觉缺口约 8.5px，
-           恰是 8px 小字与 19px 大字的合理呼吸；同时整体高度 28+4+8=40px，
-           与左侧 36px 图形基本等高，不破坏方块感 -->
+      <!-- 英文名：8px + 0.135em 字距，15 个字母总宽 95px，与上方 5 个中文齐宽。
+           mt-1 补 4px，避免紧贴中文显得拥挤 -->
       <span
         class="mt-1 font-medium leading-none tracking-[0.135em] text-ink-400"
         :class="props.size === 'md' ? 'text-[8px]' : 'text-[8px]'"

@@ -6,18 +6,11 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import { siteConfig, type NavItem } from '@/config/site'
 
 /**
- * 顶部导航（对应原型图 01 首页 的顶部条）
+ * 顶部导航（对应原型 01 首页的顶部条）
  *
- * 三段式布局：左侧品牌标识 / 中间主导航 / 右侧电话 + 预约演示按钮。
- * 断点策略：≥1024px 显示完整导航；<1024px 收进汉堡菜单（5 个导航项 + 电话 + 按钮
- * 在 768~1023px 宽度下会互相挤压，所以不降到 md 断点）。
- *
- * 一级导航固定 5 项：首页 / 平台架构 / 产品矩阵 / 解决方案 / 关于我们。
- * 「产品矩阵」是带二级项的父项 —— 桌面端鼠标悬停展开下拉面板（化工生产 / 物流调度 / 司机作业），
- * 移动端在汉堡菜单里缩进平铺展示（不用再点一次展开，3 个子项一屏能看完）。
- *
- * 高亮逻辑：直接比对当前路由，不再用滚动监听反查区块（原 useActiveSection 已移除）。
- * 位于子页面时，父项「产品矩阵」同样保持高亮。
+ * 三段式：品牌标识 / 主导航 / 电话 + 预约演示按钮。
+ * ≥1024px 显示完整导航，<1024px 收进汉堡菜单；「产品矩阵」带二级项，
+ * 桌面悬停展开、移动端在菜单里平铺。高亮直接比对当前路由。
  */
 const scrolled = ref(false)
 const menuOpen = ref(false)
@@ -83,14 +76,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <!-- 顶栏：fixed 固定在顶部；inset-x-0 横向铺满；z-50 层级高于所有内容；
-       高度按原型标定：h-16 手机/平板 4rem(64px)，lg:h-[84px] 桌面 84px（画板 1440×84）；
-       border-b 底部分隔线。
-       背景分两态（见下方 :class）：
-         · 页面在顶部时 —— bg-white/95 + backdrop-blur，白底微微透出首屏浅橙渐变，与首屏连成一体；
-         · 已滚动时 —— bg-white 纯实心，滚动上来的内容被 100% 遮住，不会出现"文字从导航栏里透出来"的错觉。
-       两态都用 duration-300 过渡，切到实心时不会突兀。
-       transition-[...] 只对背景/阴影/描边过渡，避免整块重绘 -->
+  <!-- 顶栏：fixed 固定在顶部，高度 h-16 / lg:h-[84px]（画板 1440×84）。
+       背景两态：顶部 bg-white/95 + backdrop-blur 透出首屏渐变，滚动后 bg-white 实心。
+       transition-[...] 只过渡背景/阴影/描边，避免整块重绘 -->
   <header
     class="fixed inset-x-0 top-0 z-50 h-16 border-b transition-[background-color,border-color,box-shadow] duration-300 lg:h-[84px]"
     :class="
@@ -152,16 +140,8 @@ onUnmounted(() => {
             </svg>
           </RouterLink>
 
-          <!-- 下拉面板：与顶栏「连体」的一块，而不是浮在下面的独立卡片。
-               定位：absolute + left-1/2 + -translate-x-1/2 以导航项为中心展开；
-                     top-full 让顶边落在顶栏下沿；
-                     -mt-px 再向上压 1px，把顶栏自己的 border-b 盖住 —— 否则滚动态下
-                     那条 #f2f2f2 的分隔线会横穿面板顶部，一眼看出是两块东西。
-               造型（连体的关键三条）：顶部圆角 0（rounded-b-xl 只留底部）、
-                     去掉 border-t（只留左右和下）、沿用顶栏的白底，
-                     视觉上就是从导航栏「长」下来的一片白，而不是另一张卡片。
-               鼠标从文字移到面板中间没有透明间隙，不会触发 mouseleave 闪退；
-               即使有 1px 的位移误差，那 1px 仍落在导航项容器内部（含 1px 重叠），依然安全。 -->
+          <!-- 下拉面板：与顶栏连体，不是浮在下面的独立卡片。
+               top-full + -mt-px 让顶边压住顶栏的 border-b；只留 rounded-b-xl 与左右下三边 -->
           <div
             v-if="item.children"
             v-show="openDropdown === item.to"
@@ -198,11 +178,7 @@ onUnmounted(() => {
 
       <!-- 右侧：电话 + 主按钮 + 移动端汉堡 -->
       <div class="flex shrink-0 items-center gap-3 lg:gap-6">
-        <!-- 电话号码：hidden 手机隐藏，md:block ≥768px 显示；font-medium 中粗让数字更清晰；
-             lg:text-[14px] 桌面 14px（设计稿标定）；
-             与右侧「预约演示」间距由外层容器的 lg:gap-6 = 24px 提供（设计稿标定 24px）；
-             hover:text-brand-500 悬停变品牌橙，提示可点击拨号。
-             与移动端菜单互补：这里 ≥768 显示，菜单里就只在 <768 补一份，避免同屏出现两个相同入口 -->
+        <!-- 电话号码：md:block ≥768px 显示，与移动端菜单互补，避免同屏出现两个入口 -->
         <a
           :href="siteConfig.contact.phoneHref"
           class="hidden font-medium text-ink-900 transition-colors duration-200 hover:text-brand-500 md:block lg:text-[14px]"
@@ -303,13 +279,8 @@ onUnmounted(() => {
           </ul>
         </div>
 
-        <!-- 菜单底部行动区：与顶栏右侧严格互补，同一个入口全局只出现一份 ——
-             · 电话：顶栏 md(≥768) 起常驻，所以菜单里只在 <768 补充 → 整个动作区 md:hidden
-             · 预约演示：顶栏 sm(≥640) 起常驻，所以菜单里只在 <640 补充 → 按钮外面套 sm:hidden
-             结果：≥768 顶栏已有「电话 + 预约演示」，展开菜单不会出现第二份；
-                   640~767 顶栏只剩「预约演示」，菜单补电话；
-                   <640 顶栏只剩 logo + 汉堡，菜单补电话 + 预约演示。
-             md:hidden 能覆盖 flex：媒体查询里的 display:none 后置，优先级高于无媒体查询的 flex -->
+        <!-- 菜单底部行动区：与顶栏右侧互补，同一个入口只出现一份。
+             电话 md:hidden（顶栏 ≥768 已常驻），预约演示 sm:hidden（顶栏 ≥640 已常驻） -->
         <div class="mt-5 flex flex-col gap-3 md:hidden">
           <!-- 电话做成描边按钮，与顶栏主按钮区分主次 -->
           <BaseButton :href="siteConfig.contact.phoneHref" variant="outline" block>
