@@ -1,26 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
+import PlatformView from '@/views/PlatformView.vue'
+import ProductsView from '@/views/ProductsView.vue'
+import ProductChemicalView from '@/views/ProductChemicalView.vue'
+import ProductLogisticsView from '@/views/ProductLogisticsView.vue'
+import ProductDriverView from '@/views/ProductDriverView.vue'
+import SolutionsView from '@/views/SolutionsView.vue'
+import AboutView from '@/views/AboutView.vue'
 import { siteConfig } from '@/config/site'
 
 /**
- * 路由表
+ * 路由表：URL 层级与导航层级一致
  *
- * 站点是「点击切换页面 + 每页内部滚动」，不是锚点单页 —— 依据是原型画板本身：
- * `01 首页` 是一张 1440×约 10600 的长画板，另外 4 张画板分别是
- * 「威易达化工：生产与经营管理 / 威易达物流：调度与合规 / 威易达司机：接单与作业 /
- *  按角色区分的解决方案」，后三张是「产品矩阵」下的三条业务线。
- *
- * URL 层级刻意与导航层级对齐：
- *   /                     首页
- *   /platform             平台架构
- *   /products             产品矩阵（三条业务线的总览页）
- *   /products/chemical    化工生产
- *   /products/logistics   物流调度
- *   /products/driver      司机作业
- *   /solutions            解决方案
- *   /about                关于我们
- *
- * 各页面统一懒加载：每页拆成独立 chunk，首屏只下载首页代码，切页时再取对应分包。
+ * 8 个页面全部同步引入 —— 单个页面只有几 KB，拆包换不来体积收益，
+ * 反而让内页刷新多一次「才知道要请求哪个 chunk」的串行往返。
  */
 const router = createRouter({
   // createWebHistory(import.meta.env.BASE_URL)：HTML5 History 模式，地址栏是干净的 /products/chemical
@@ -29,9 +22,6 @@ const router = createRouter({
   routes: [
     {
       // 首页不设 meta.title：标题回落到 afterEach 里的品牌标语，避免出现「首页 - 威易达化工」这种无信息量的标题
-      // 首页组件同步引入（其余页面懒加载）：它只有 1.4KB，拆成独立 chunk 反而让首屏多一次
-      // 「index.js 下载执行 → 才知道要请求 HomeView → 等它返回」的串行 round-trip，
-      // 而 router.isReady() 必须等这条链走完才能挂载，白屏时间被白白拉长
       path: '/',
       name: 'home',
       component: HomeView,
@@ -39,43 +29,43 @@ const router = createRouter({
     {
       path: '/platform',
       name: 'platform',
-      component: () => import('@/views/PlatformView.vue'),
+      component: PlatformView,
       meta: { title: '平台架构' },
     },
     {
       path: '/products',
       name: 'products',
-      component: () => import('@/views/ProductsView.vue'),
+      component: ProductsView,
       meta: { title: '产品矩阵' },
     },
     {
       path: '/products/chemical',
       name: 'products-chemical',
-      component: () => import('@/views/ProductChemicalView.vue'),
+      component: ProductChemicalView,
       meta: { title: '化工生产' },
     },
     {
       path: '/products/logistics',
       name: 'products-logistics',
-      component: () => import('@/views/ProductLogisticsView.vue'),
+      component: ProductLogisticsView,
       meta: { title: '物流调度' },
     },
     {
       path: '/products/driver',
       name: 'products-driver',
-      component: () => import('@/views/ProductDriverView.vue'),
+      component: ProductDriverView,
       meta: { title: '司机作业' },
     },
     {
       path: '/solutions',
       name: 'solutions',
-      component: () => import('@/views/SolutionsView.vue'),
+      component: SolutionsView,
       meta: { title: '解决方案' },
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('@/views/AboutView.vue'),
+      component: AboutView,
       meta: { title: '关于我们' },
     },
     // 兜底：非法路径回首页，避免出现空白页
@@ -83,14 +73,8 @@ const router = createRouter({
   ],
 
   /**
-   * 切页落点
-   *
-   * · 浏览器前进/后退 → 还原上次位置
-   * · 带锚点（/products/chemical#flow）→ 定位到目标元素，并预留桌面顶栏 84px
-   * · 其余 → 回到页面顶部
-   *
-   * behavior 必须显式写 instant：style.css 里有 html { scroll-behavior: smooth }，
-   * 不指定的话从页底切到新页面会先"滑行"一段再回到顶部，观感很怪。
+   * 切页落点：前进/后退还原上次位置，带锚点定位到目标元素，其余回到顶部。
+   * behavior 必须写 instant，否则会被 style.css 的 smooth 接管成滑行。
    */
   scrollBehavior(to, _from, savedPosition) {
     if (savedPosition) return savedPosition
@@ -99,14 +83,7 @@ const router = createRouter({
   },
 })
 
-/**
- * 按路由切换浏览器标题
- *
- * 每个页面有独立 title 是切页式官网的前提之一（也便于被搜索引擎单独收录）。
- * 全站统一用「页面名 - 品牌名」的短横线分隔（首页即为「品牌名 - 定位语」），
- * 不要混用全角竖线「｜」—— 两个不同分隔符出现在同一站点的标题里会显得随意。
- * 首页标题与 index.html 里的静态 title 保持一致，避免加载完成后标题突然跳变。
- */
+/** 按路由切换浏览器标题，统一「页面名 - 品牌名」格式 */
 router.afterEach((to) => {
   const pageTitle = to.meta.title as string | undefined
   document.title = pageTitle

@@ -4,10 +4,9 @@ import SiteHeader from '@/components/layout/SiteHeader.vue'
 import SiteFooter from '@/components/layout/SiteFooter.vue'
 
 /**
- * 根组件：只负责「顶栏 + 路由出口 + 页脚」这层外壳，不放任何样式与文案
+ * 根组件：顶栏 + 路由出口 + 页脚
  *
- * 顶栏与页脚在所有页面共用，切换路由时不会重建（滚动位置、菜单状态等自然保持）；
- * 中间的页面内容由 RouterView 按 src/router/index.ts 的路由表渲染。
+ * 顶栏与页脚所有页面共用，切换路由不会重建；内容由 RouterView 按路由表渲染。
  */
 </script>
 

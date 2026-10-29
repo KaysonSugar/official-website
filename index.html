@@ -5,96 +5,23 @@
     <!--  viewport：移动端按设备宽度渲染、初始不缩放，响应式适配的前提 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- ── 首帧防闪烁：关键内联样式 ───────────────────────────────────────
-         这几条必须在样式表之前就生效，否则会先闪一帧"没穿衣服"的页面。
-
-         1) html 底色用 brand-50 (#fff7f2) 而不是纯白：它和首屏渐变同一个底色，
-            刷新时视觉上像"回到首页重新展开"，比从深色页脚硬切到纯白柔和得多，
-            滚动条槽透出的也是这层暖白，不会在深色页脚旁划出一条冷白边；
-         2) #app 用 opacity 而不是 visibility：可以过渡，页面是淡入而不是硬切；
-            开发环境 Vite 的 CSS 是 JS 注入的，样式到位前文字会裸露，这条同时挡掉；
-         3) #boot 顶替空窗期：加载环用品牌橙，加粗到 3px —— 之前的 2px 浅色环在
-            白底上几乎看不见，用户只会觉得"白了一下"。
-
-         ⚠️ #app 必须写成不换行、内部无空白的形式 —— CSS 的 :empty 不忽略空白文本节点，
-            一旦格式化成多行，第 2 条规则就永远不生效。 -->
+    <!-- 空白期底色：brand-50 与首屏渐变同色，滚动条槽透出的也是这层暖白，
+         不会在深色页脚旁划出冷白边。
+         scrollbar-gutter: stable 预留滚动条槽位，避免内容变长时整页被挤窄 10px。
+         注意：这里不要给内容加任何淡入过渡，内容出现时就是最终样子。 -->
     <style>
       html {
         background-color: #fff7f2;
-      }
-      #app {
-        transition: opacity 0.14s ease-out;
-      }
-      #app:empty {
-        opacity: 0;
-      }
-      #boot {
-        position: fixed;
-        inset: 0;
-        display: grid;
-        place-items: center;
-        pointer-events: none;
-        /* 默认不可见，延迟 150ms 才淡入：加载够快时用户根本看不到转圈，
-           只感受到"暖白一闪 → 内容淡入"；超过 150ms 才出现，说明确实在等 */
-        opacity: 0;
-        animation: boot-fade-in 0.16s ease-out 0.15s forwards;
-      }
-      #boot::after {
-        content: '';
-        box-sizing: border-box;
-        width: 32px;
-        height: 32px;
-        border: 3px solid #ffd0b5;
-        border-top-color: #ff833f;
-        border-radius: 50%;
-        animation: boot-spin 0.7s linear infinite;
-      }
-      @keyframes boot-spin {
-        to {
-          transform: rotate(1turn);
-        }
-      }
-      @keyframes boot-fade-in {
-        to {
-          opacity: 1;
-        }
-      }
-      /* 挂载完成（#app 有内容）后收起加载环：撤掉动画即回到默认的 opacity: 0 */
-      #app:not(:empty) ~ #boot {
-        animation: none;
-        opacity: 0;
-      }
-      /* 系统开启"减弱动效"时放慢，不做无限高速旋转 */
-      @media (prefers-reduced-motion: reduce) {
-        #boot::after {
-          animation-duration: 2.4s;
-        }
+        scrollbar-gutter: stable;
       }
     </style>
 
-    <!-- ── 首帧防闪烁：抢在浏览器恢复滚动位置之前接管落点 ──────────────────
-         history.scrollRestoration 默认是 'auto'：刷新时浏览器会把滚动位置还原到
-         刷新前的位置。在长页面上，这会先画出页面中段（看到底部的橙色横幅、深色页脚），
-         再由脚本拉回顶部 —— 也就是那一下闪烁 + "文字穿透"的观感。
-
-         必须写在 <head> 里的同步脚本中：main.ts 是 type="module"（等效 defer），
-         等它执行时浏览器早已恢复过位置，那时再改 manual 已经晚了。
-         这里只关掉自动恢复，具体落点仍由 main.ts / router.scrollBehavior 决定。 -->
+    <!-- 关掉浏览器的自动滚动恢复，刷新后回到页面顶部。
+         必须写在 <head> 同步脚本里：main.ts 是 type="module"（等效 defer），
+         等它执行时浏览器已经恢复过位置了。 -->
     <script>
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
     </script>
-
-    <!-- 脚本被禁用时，上面的隐藏规则会让页面一直空着，这里补一句说明 -->
-    <noscript>
-      <style>
-        #app:empty {
-          opacity: 1;
-        }
-        #boot {
-          display: none;
-        }
-      </style>
-    </noscript>
 
     <!-- 页面标题：搜索结果里显示的蓝色大标题，建议 30 字以内 -->
     <title>威易达化工 - 企业级解决方案与服务</title>
@@ -139,6 +66,11 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <!-- iOS 添加到主屏时使用的图标，建议 180×180，当前复用同一张图 -->
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- 预加载顶栏 logo：它挂载后才渲染成 <img>，不提前取会比正文晚十几毫秒。
+         构建时 Vite 会把路径重写成带 hash 的产物。 -->
+    <link rel="preload" as="image" href="/src/assets/logo.webp" />
+    <link rel="preload" as="image" href="/src/assets/logo-text.webp" />
   </head>
   <body>
     <!-- 兜底提示：上面的 #app:empty 规则会在脚本不可用时一直隐藏页面，
@@ -160,12 +92,8 @@
       </div>
     </noscript>
 
-    <!-- Vue 应用挂载点，对应 main.ts 中的 mount('#app')。
-         保持单行无空白：上面的 #app:empty 防闪烁规则依赖它 -->
+    <!-- Vue 应用挂载点，对应 main.ts 中的 mount('#app') -->
     <div id="app"></div>
-    <!-- 加载指示器：挂在 #app 之后，#app 一旦有内容就被隐藏。
-         纯 CSS 绘制，无图片、无脚本，首帧就能显示 -->
-    <div id="boot" aria-hidden="true"></div>
     <!-- 入口脚本：type="module" 启用 ES 模块，开发时由 Vite 实时编译 -->
     <script type="module" src="/src/main.ts"></script>
   </body>
