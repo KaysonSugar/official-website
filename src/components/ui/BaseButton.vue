@@ -35,9 +35,11 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 // 变体样式：主按钮用品牌橙，悬停加深一级；focus-visible 只在键盘操作时显示焦点环
+// 阴影与首屏看板整图同一色系（rgba(26,26,26,0.28) 的中性柔影），
+// 几何按按钮尺寸等比缩小——看板是 0 28px 70px -24px，直接搬过来影子会和 50px 高的按钮脱节
 const variantClass: Record<NonNullable<Props['variant']>, string> = {
   primary:
-    'bg-brand-500 text-white shadow-sm shadow-brand-500/30 hover:bg-brand-600 focus-visible:outline-brand-500',
+    'bg-brand-500 text-white shadow-[0_10px_30px_-12px_rgba(26,26,26,0.28)] hover:bg-brand-600 focus-visible:outline-brand-500',
   outline:
     'border border-ink-200 text-ink-900 hover:border-brand-500 hover:text-brand-500 focus-visible:outline-brand-500',
   ghost: 'text-ink-700 hover:text-brand-500 focus-visible:outline-brand-500',
