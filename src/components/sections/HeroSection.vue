@@ -26,20 +26,9 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
 </script>
 
 <template>
-  <!-- 首屏：relative 给装饰同心圆定位；overflow-hidden 裁掉超出视口的圆环。
+  <!-- 首屏：relative + overflow-hidden（裁掉超出视口的圆环）。
        背景多层渐变见下方 .hero-bg（顶部暖橙 → 中段近白 → 左下薄荷绿），取自设计稿取色 -->
   <section id="home" class="hero-bg relative overflow-hidden">
-    <!-- 右上装饰同心圆：设计稿导出的大图，纯装饰不进无障碍树。
-         实测 800×800、圆心 (1062, 296)（外圈左缘 x=662、底缘 y=696 反推）→
-         right = 1440-662-800 = -22px、top = -104px。
-         小屏等比缩小到 576 宽、右上各 -96/-192，避免占满整屏 -->
-    <img
-      :src="ringsImg"
-      alt=""
-      aria-hidden="true"
-      class="pointer-events-none absolute -top-[96px] right-[-192px] w-[576px] max-w-none select-none lg:-top-[104px] lg:right-[-22px] lg:w-[800px]"
-    />
-
     <!-- 内容容器：与顶栏同一条左右基准线 -->
     <div class="container-page relative">
       <!-- 两栏：实测 660:596 ≈ 11:10，列距 24px；看板顶 y=67 → 顶部留白 67px；
@@ -115,6 +104,17 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
           class="relative mx-auto w-full max-w-[544px] sm:max-w-[608px] lg:mt-0 lg:max-w-none"
           aria-hidden="true"
         >
+          <!-- 右上装饰同心圆：设计稿导出的大图，纯装饰不进无障碍树，压在看板后面。
+               实测 800×800、圆心 (1062, 296)。定位/尺寸全部用看板的百分比
+               （左探看板 101px→-16.9%、上探 171px→-37.1%、800/596→134.2%），
+               窗口放大时跟随看板等比缩放，不会出现"圆环不动、内容拉伸"的错位 -->
+          <img
+            :src="ringsImg"
+            alt=""
+            aria-hidden="true"
+            class="pointer-events-none absolute left-[-16.9%] top-[-37.1%] w-[134.2%] max-w-none select-none"
+          />
+
           <!-- 「合规校验通过」浮层：实测卡体 188×63，左探看板 59px、底边压看板顶边 10px。
                素材 980×516，白卡体在 (116,116)-(863,359)，按 188 宽折算显示宽 246.6、
                投影边距 L/T 各 29 → left -88、top -82；全部用百分比跟随看板缩放 -->
