@@ -47,30 +47,31 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
       <div
         class="grid items-start gap-[56px] pt-[40px] sm:pt-[48px] lg:grid-cols-[11fr_10fr] lg:gap-[24px] lg:pt-[67px]"
       >
-        <!-- 左列：胶囊 → 标题 → 说明 → 主按钮 → 三个卖点（整块 660×426）。
-             顶部比看板低 8px（实测 84 vs 77），用 mt-2 补齐 -->
-        <div class="lg:mt-[8px]">
+        <!-- 左列：胶囊 → 标题 → 说明 → 主按钮 → 三个卖点。
+             顶部比看板顶低 10px（lg:mt-[10px]）；各段间距在实测值基础上加大过，
+             让左列底部与看板底部齐平（实测胶囊底 614 vs 看板底 610，差 4px） -->
+        <div class="lg:mt-[10px]">
           <!-- 法规对标胶囊：素材 924×128，显示高 32px 时宽 231 ≈ 实测 236 -->
           <img :src="badgeImg" alt="对标 2026 版《危险化学品安全法》" class="h-8 w-auto" />
 
           <!-- 主标题：实测字号 48px（单字格高 45）、行距 73px → leading-[1.5]；
                第二行品牌橙 -->
           <h1
-            class="mt-[28px] text-[28px] font-bold leading-[1.35] text-ink-900 sm:text-4xl lg:text-[48px] lg:leading-[1.5]"
+            class="mt-[30px] text-[28px] font-bold leading-[1.35] text-ink-900 sm:text-4xl lg:text-[48px] lg:leading-[1.5]"
           >
             {{ siteConfig.hero.title }}
-            <span class="block text-brand-500">{{ siteConfig.hero.titleAccent }}</span>
+            <span class="block mt-[5px] text-brand-500">{{ siteConfig.hero.titleAccent }}</span>
           </h1>
 
           <!-- 说明：实测行宽约 590px（max-w-[37rem]）、行距 26px → leading-[1.65] -->
           <p
-            class="mt-[24px] max-w-[592px] text-[15px] leading-relaxed text-ink-600 lg:text-base lg:leading-[1.65]"
+            class="mt-[40px] max-w-[592px] text-[15px] leading-relaxed text-ink-600 lg:text-base lg:leading-[1.65]"
           >
             {{ siteConfig.hero.desc }}
           </p>
 
-          <!-- 主按钮：实测 358×50（覆盖 lg 尺寸的 py），下方 28px 接卖点胶囊 -->
-          <div class="mt-[28px]">
+          <!-- 主按钮：实测 358×50（覆盖 lg 尺寸的 py），下方 36px 接卖点胶囊 -->
+          <div class="mt-[30px]">
             <BaseButton
               :href="siteConfig.contact.ctaHref"
               size="lg"
@@ -82,7 +83,7 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
 
           <!-- 三个卖点胶囊：白底半透明 + 细描边，对勾是纯线条绿勾（设计稿无圆底）。
                胶囊间距 10px、内边距 上7 左12 右14 -->
-          <ul class="mt-[28px] flex flex-wrap gap-[10px]">
+          <ul class="mt-[36px] flex flex-wrap gap-[10px]">
             <li
               v-for="feature in siteConfig.hero.features"
               :key="feature"
@@ -120,7 +121,7 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
           <img
             :src="complianceImg"
             alt=""
-            class="absolute left-[-14.8%] top-[-17.8%] z-10 w-[41.4%] select-none"
+            class="absolute left-[-11.8%] top-[-14.09%] z-10 w-[34.4%] select-none"
           />
 
           <!-- 看板整图：圆角 + 大范围柔和投影，浮起来但不抢文案的注意力 -->
@@ -136,7 +137,7 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
           <img
             :src="onTheWayImg"
             alt=""
-            class="absolute bottom-[-8.6%] left-[-25.1%] z-10 w-[36.8%] select-none"
+            class="absolute bottom-[-7.6%] left-[-22.1%] z-10 w-[30.8%] select-none"
           />
         </div>
       </div>

@@ -214,7 +214,7 @@ export const siteConfig: SiteConfig = {
     title: '威易达化工生产 + 危化运输',
     titleAccent: '一体化平台',
     desc: '覆盖销售订单、原料入库、工厂投产、成品发货与在途运输的全过程。业务数据一处录入、多处复用，合规记录随流程自动生成。',
-    primaryCta: '预约演示',
+    primaryCta: '预约产品演示',
     features: ['合规前置校验', '一物一码全链路追溯', '多端协同调度'],
     stats: [
       { value: '10', label: '大业务模块' },
