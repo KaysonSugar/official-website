@@ -53,7 +53,7 @@ onUnmounted(() => {
        两种背景——顶部时白 95% + 模糊，滚过 8px 变实心白加投影。
        transition 只列背景/描边/阴影，别写 transition-all，不然整块重绘 -->
   <header
-    class="fixed inset-x-0 top-0 z-50 h-16 border-b transition-[background-color,border-color,box-shadow] duration-300 lg:h-[84px]"
+    class="nav-in fixed inset-x-0 top-0 z-50 h-16 border-b transition-[background-color,border-color,box-shadow] duration-300 lg:h-[84px]"
     :class="
       scrolled
         ? 'border-ink-100 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]'
@@ -120,3 +120,18 @@ onUnmounted(() => {
     <MobileMenu :open="menuOpen" @close="closeMenu" />
   </header>
 </template>
+
+<style scoped>
+/* 入场：整条顶栏从上滑落 16px 淡入。曲线和时长对齐首屏那套，
+   不加 delay——顶栏要先落定，首屏内容 150ms 后再进场 */
+.nav-in {
+  animation: nav-drop 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@keyframes nav-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+</style>

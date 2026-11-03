@@ -22,13 +22,15 @@ const closeMenu = () => emit('close')
 
 <template>
   <!-- v-show 切 display，DOM 留着，开关不卡；absolute + top-full 紧贴顶栏下沿，横向铺满；
-       ≥1024 隐藏。限高 = 视口减 64（顶栏高度），内容多了内部滚动 -->
-  <nav
-    v-show="open"
-    id="mobile-menu"
-    class="absolute inset-x-0 top-full max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-ink-100 bg-white pb-6 pt-2 shadow-lg lg:hidden"
-    aria-label="移动端导航"
-  >
+       ≥1024 隐藏。限高 = 视口减 64（顶栏高度），内容多了内部滚动。
+       Transition 包在外面做下滑展开，v-show 还留在 nav 上 -->
+  <Transition name="menu">
+    <nav
+      v-show="open"
+      id="mobile-menu"
+      class="absolute inset-x-0 top-full max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-ink-100 bg-white pb-6 pt-2 shadow-lg lg:hidden"
+      aria-label="移动端导航"
+    >
     <!-- 菜单内容也套 container-page，跟 logo 左边缘对齐 -->
     <div class="container-page">
       <!-- 每项一组，分隔线画在组上（父项带子项算一组），最后一项不画 -->
@@ -85,5 +87,29 @@ const closeMenu = () => emit('close')
         </div>
       </div>
     </div>
-  </nav>
+    </nav>
+  </Transition>
 </template>
+
+<style scoped>
+/* 展开：跟着顶栏的下滑方向走，淡入 + 下滑 8px；收起反向。200ms 和桌面下拉一致 */
+.menu-enter-active,
+.menu-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.menu-enter-from,
+.menu-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-enter-active,
+  .menu-leave-active {
+    transition: none;
+  }
+}
+</style>
