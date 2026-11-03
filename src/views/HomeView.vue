@@ -10,8 +10,9 @@ import HeroSection from '@/components/sections/HeroSection.vue'
 import IndustrySection from '@/components/sections/IndustrySection.vue'
 import LightweightSection from '@/components/sections/LightweightSection.vue'
 import PlatformArchitectureSection from '@/components/sections/PlatformArchitectureSection.vue'
+import ProductMatrixSection from '@/components/sections/ProductMatrixSection.vue'
 
-// 首页。原型 16 个区块，做到第 4 屏，后面的等设计稿逐块补
+// 首页。原型 16 个区块，做到第 5 屏，后面的等设计稿逐块补
 </script>
 
 <template>
@@ -23,6 +24,8 @@ import PlatformArchitectureSection from '@/components/sections/PlatformArchitect
   <LightweightSection />
   <!-- 第四屏：平台功能结构，暗色六层架构图 -->
   <PlatformArchitectureSection />
+  <!-- 第五屏：三端业务运转模式，流程图 + 三张业务线卡 -->
+  <ProductMatrixSection />
   <!-- 底部行动号召：首页和内页共用一份文案 -->
   <CtaBanner />
 </template>

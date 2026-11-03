@@ -159,6 +159,35 @@ export interface SiteConfig {
     /** 底部提示条（绿点开头的一句长文案） */
     note: string
   }
+  /** 首页第五屏：三端业务运转模式（定稿原型 05，流程图整图 + 三张业务线卡片） */
+  matrix: {
+    /** 标题上方的橙色眉题（英文 / 中文） */
+    eyebrow: string
+    /** 板块主标题 */
+    title: string
+    /** 标题下的两行说明 */
+    desc: string
+    /**
+     * 三张业务线卡片，顺序决定装饰素材（光斑 / 圆环）的取用
+     * href 填外部系统地址（新窗口打开）；司机端未上线则不填，点击提示正在上线
+     */
+    cards: {
+      /** 卡片顶部的品牌图标，对应 assets/home/images 下的素材名 */
+      icon: 'chemical' | 'logistics' | 'driver'
+      /** 配色：orange 化工卡（暖橙）/ green 物流与司机卡（薄荷绿） */
+      tone: 'orange' | 'green'
+      /** 标题上方的小胶囊标签 */
+      label: string
+      /** 卡片标题 */
+      title: string
+      /** 卡片正文 */
+      desc: string
+      /** 能力小胶囊，一行放不下自动换行 */
+      tags: string[]
+      /** 「了解 XX」的跳转地址，不填则点击后提示正在上线 */
+      href?: string
+    }[]
+  }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案） */
   cta: {
     /** 主标题 */
@@ -448,6 +477,41 @@ export const siteConfig: SiteConfig = {
       },
     ],
     note: '新法的监管逻辑是源头防控、全程监督、智能预警、永久溯源。平台按这项顶层组织功能，生产与运输共用同一套客户、数据与算法。',
+  },
+  // 原型 05：三端业务运转模式。流程图是一整张透明底素材（matrix-flow.png），
+  // 卡片的 href 是三个外部系统入口；司机端还没上线，故意不给 href
+  matrix: {
+    eyebrow: 'PRODUCT MATRIX / 产品矩阵',
+    title: '三端业务运转模式',
+    desc: '化工企业用「威易达化工」管生产、合同与资金；货运公司用「威易达物流」管车辆、人员与调度；司机用「威易达司机」接单、报备、回单。三端共用同一套订单与数据。',
+    cards: [
+      {
+        icon: 'chemical',
+        tone: 'orange',
+        label: '化工生产企业',
+        title: '威易达化工',
+        desc: '把销售、采购、仓储、合同、资金、生产、质检与安检环节装进一套系统，订单驱动排产，BOM 精准算料，一物一码追溯从原料入厂到成品出库。',
+        tags: ['销售管理', '采购管理', '仓储管理', '生产 BOM', '质安检', '报表分析'],
+        href: 'https://prod.weihuayunshu.com/producer/',
+      },
+      {
+        icon: 'logistics',
+        tone: 'green',
+        label: '危化品运输企业',
+        title: '威易达物流',
+        desc: '把线下调度搬上系统：资质前置校验、智能派单、合规线路规划、在途动态监控全部线上完成，运单全程留痕，可随时导出对账。',
+        tags: ['运单调度', '车辆司机', '资质校验', '在途监控', '电子回单', '对账结算'],
+        href: 'https://prod.weihuayunshu.com/carrier/',
+      },
+      {
+        icon: 'driver',
+        tone: 'green',
+        label: '危化品运输司机',
+        title: '威易达司机',
+        desc: '一手货源看得见：一键接单、在线报备、电子回单、禁配与线路提示，把过去靠电话沟通的环节压缩成几次点击。',
+        tags: ['找货接单', '在线报备', '电子回单', '合规提示', '安全培训'],
+      },
+    ],
   },
   cta: {
     title: '约一次 30 分钟的线上演示',

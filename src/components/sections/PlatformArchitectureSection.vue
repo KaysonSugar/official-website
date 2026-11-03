@@ -50,7 +50,7 @@ onMounted(() => {
       :src="glowImg"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute -top-[320px] right-[-130px] w-[900px] select-none opacity-80 mix-blend-screen blur-[50px]"
+      class="pointer-events-none absolute -top-[230px] right-[-130px] w-[900px] select-none opacity-80 mix-blend-screen blur-[50px]"
     />
 
     <div class="container-page relative">
@@ -113,7 +113,7 @@ onMounted(() => {
             <div
               v-for="mod in layer.modules"
               :key="mod.title"
-              class="rounded-[10px] border border-[#7d5530] bg-[#5b391d] px-[12px] pb-[28px] pt-[12px]"
+              class="rounded-[10px] border border-[#7d5530] bg-[#5b391d] px-[12px] pb-[38px] pt-[12px]"
             >
               <h3 class="text-[15px] font-bold leading-[22px] text-white">{{ mod.title }}</h3>
               <p class="mt-[4px] text-[11px] leading-[16px] text-[#d9bd97]">（{{ mod.desc }}）</p>
