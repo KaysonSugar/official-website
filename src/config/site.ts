@@ -114,7 +114,7 @@ export interface SiteConfig {
  * 各页面首屏文案
  *
  * 有原型画板的直接用画板标题（威易达化工：生产与经营管理 / 威易达物流：调度与合规 /
- * 威易达司机：接单与作业 / 按角色区分的解决方案）；
+ * 威易达司机：接单与作业 / 服务支持）；
  * 平台架构、产品矩阵、关于我们三页的原型尚未提供，标题与描述为占位，上线前替换。
  */
 const pages: PageIntro[] = [
@@ -160,10 +160,10 @@ const pages: PageIntro[] = [
   },
   {
     to: '/solutions',
-    label: '解决方案',
-    eyebrow: '角色化方案',
-    title: '按角色区分的解决方案',
-    desc: '把老板、调度、司机各自的问题拆开，用同一套数据回答不同的关切。',
+    label: '服务支持',
+    eyebrow: '服务支持',
+    title: '服务支持',
+    desc: '从实施交付到培训与售后，全流程跟进保障，让平台在你的产线上真正用起来。',
     align: 'center',
   },
   {
@@ -195,12 +195,13 @@ export const siteConfig: SiteConfig = {
     ctaLabel: '预约演示',
     ctaHref: 'tel:4000018355',
   },
-  // 一级导航五项目；「产品矩阵」带下拉，化工 / 物流 / 司机是它的二级项，不是一级导航
+  // 一级导航四项（对应定稿原型 01 首页顶栏）；「产品矩阵」带下拉，
+  // 化工 / 物流 / 司机是它的二级项，不是一级导航。
+  // 「平台架构」不在导航里了，页面保留（页脚与首页次按钮还链过去）
   navItems: [
     { label: '首页', to: '/' },
-    { label: '平台架构', to: '/platform' },
     { label: '产品矩阵', to: '/products', children: productLines },
-    { label: '解决方案', to: '/solutions' },
+    { label: '服务支持', to: '/solutions' },
     { label: '关于我们', to: '/about' },
   ],
   pages,

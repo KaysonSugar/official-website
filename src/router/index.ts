@@ -60,7 +60,8 @@ const router = createRouter({
       path: '/solutions',
       name: 'solutions',
       component: SolutionsView,
-      meta: { title: '解决方案' },
+      // 定稿原型导航把「解决方案」改成「服务支持」，路由路径不动，只换标题
+      meta: { title: '服务支持' },
     },
     {
       path: '/about',
