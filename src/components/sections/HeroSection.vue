@@ -15,7 +15,8 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
  *
  * 左侧文案用 HTML 写（可改文案、可被搜索引擎读到），右侧看板整块用设计稿导出的图。
  * 实测基准（1440 稿，以 Hero.png 4 倍导出图逐像素校准）：文案区 660 宽、看板 596×461
- * （顶 y=67、左 x=763、右缘贴容器右边线）、合规卡 188×63（左探 59 / 底压看板顶 10）、
+ * （顶 y=67、左 x=763、右缘贴容器右边线）、合规卡 188×63（左探 59 / 原型底压看板顶 10，
+ *   实际渲染上抬至与看板顶齐平，给看板内 logo 图标让位）、
  * 在途卡 160×63（左探 120 / 底对齐看板底）、圆环 800×800 圆心 (1062,296)、
  * 分隔线 y=562、数字条顶 y=600；两列列距 24px。
  * 浮层卡定位全部用看板容器的百分比，窄窗口下跟随等比缩放不跑位；
@@ -102,7 +103,7 @@ onMounted(() => {
             <span class="block mt-[5px] text-brand-500">{{ siteConfig.hero.titleAccent }}</span>
           </h1>
 
-          <!-- 说明：实测行宽约 590px（max-w-[37rem]）、行距 26px → leading-[1.65] -->
+          <!-- 说明：实测行宽约 592px、行距 26px → leading-[1.65] -->
           <p
             class="rise mt-[40px] max-w-[592px] text-[15px] leading-relaxed text-ink-600 lg:text-base lg:leading-[1.65]"
             :style="{ animationDelay: '140ms' }"
@@ -166,14 +167,15 @@ onMounted(() => {
             class="breathe pointer-events-none absolute left-[-16.9%] top-[-37.1%] w-[134.2%] max-w-none select-none"
           />
 
-          <!-- 「合规校验通过」浮层：实测卡体 188×63，左探看板 59px、底边压看板顶边 10px。
-               素材 980×516，白卡体在 (116,116)-(863,359)，按 188 宽折算显示宽 246.6、
-               投影边距 L/T 各 29 → left -88、top -82；全部用百分比跟随看板缩放。
-               入场 450ms 后弹入（带一点回弹），像卡片落到位 -->
+          <!-- 「合规校验通过」浮层：原型卡体 188×63、左探看板 59px；实际渲染卡体略小（157 宽），
+               底边原压看板顶 12px，会蹭到看板内左上角的六边形 logo 图标（图标顶距看板顶仅 14px），
+               故整体上抬到卡底与看板顶基本齐平（top -17.1%），给图标让出余量；
+               素材 980×516，白卡体在 (116,116)-(863,359)，下缘投影还会再垂 ~14px，刚好压住看板顶边。
+               全部用百分比跟随看板缩放；入场 450ms 后弹入（带一点回弹），像卡片落到位 -->
           <img
             :src="complianceImg"
             alt=""
-            class="pop-in absolute left-[-11.8%] top-[-14.09%] z-10 w-[34.4%] select-none"
+            class="pop-in absolute left-[-11.8%] top-[-17.1%] z-10 w-[34.4%] select-none"
             :style="{ animationDelay: '450ms' }"
           />
 
@@ -188,9 +190,11 @@ onMounted(() => {
             :style="{ animationDelay: '150ms' }"
           />
 
-          <!-- 「在途运输」浮层：实测卡体 160×63，左探看板 120px、底边与看板底对齐。
-               素材 864×516，白卡体在 (116,116)-(747,359)，按 160 宽折算显示宽 219、
-               投影边距 L29 / B40 → left -150、bottom -40。入场比合规卡再晚 100ms -->
+          <!-- 「在途运输」浮层：原型卡体 160×63，左探看板 120px、底边与看板底对齐
+               （实际渲染和合规卡一样略小于原型，两卡保持同一比例）。
+               素材 864×516，白卡体在 (116,116)-(747,359)，下缘留了投影边距；
+               w / bottom 都写看板百分比（30.8% / -7.6%），跟随看板缩放不跑位。
+               入场比合规卡再晚 100ms -->
           <img
             :src="onTheWayImg"
             alt=""
@@ -212,17 +216,17 @@ onMounted(() => {
           class="rise mt-[32px] grid grid-cols-2 gap-y-[24px] sm:mt-[48px] sm:flex sm:flex-wrap sm:justify-between sm:gap-x-[32px] sm:gap-y-[24px] lg:mt-[38px] [font-variant-numeric:tabular-nums]"
           :style="{ animationDelay: '350ms' }"
         >
-          <div v-for="stat in stats" :key="stat.label">
+          <div v-for="stat in stats" :key="stat.label" class="flex flex-col-reverse">
             <!-- 数值：实测字格高 18 → 字号 24px 加粗。
+                 DOM 里 dt 在前（dl 规范要求 name 在 value 前），视觉上用 col-reverse 翻回来；
                  符合递增条件的值交给 count-up（data-* 传目标），否则原样渲染 -->
+            <dt class="mt-[10px] text-[13px] text-ink-400">{{ stat.label }}</dt>
             <dd class="text-2xl font-bold leading-none text-ink-900">
               <span v-if="stat.count" :data-num="stat.count.num" :data-rest="stat.count.rest">{{
                 stat.value
               }}</span>
               <template v-else>{{ stat.value }}</template>
             </dd>
-            <!-- 标签：13px 弱化灰，与数值拉开层级 -->
-            <dt class="mt-[10px] text-[13px] text-ink-400">{{ stat.label }}</dt>
           </div>
         </dl>
       </div>
