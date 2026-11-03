@@ -124,11 +124,13 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
             class="absolute left-[-11.8%] top-[-14.09%] z-10 w-[34.4%] select-none"
           />
 
-          <!-- 看板整图：圆角 + 大范围柔和投影，浮起来但不抢文案的注意力 -->
+          <!-- 看板整图：圆角 + 大范围柔和投影，浮起来但不抢文案的注意力。
+               relative 是必须的：圆环是 absolute 定位元素，普通流 img 会被它盖住，
+               加 relative 让看板参与定位绘制（DOM 在圆环后 → 画在上层） -->
           <img
             :src="workbenchImg"
             alt="威易达化工一体化平台工作台界面"
-            class="w-full rounded-xl shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] lg:rounded-2xl"
+            class="relative w-full rounded-xl shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] lg:rounded-2xl"
           />
 
           <!-- 「在途运输」浮层：实测卡体 160×63，左探看板 120px、底边与看板底对齐。
