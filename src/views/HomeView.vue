@@ -2,16 +2,12 @@
 import CtaBanner from '@/components/sections/CtaBanner.vue'
 import HeroSection from '@/components/sections/HeroSection.vue'
 
-/**
- * 首页 /
- *
- * 骨架态：原型共 16 个区块，当前只实现 Hero 与 CTA，其余待按原型拆分。
- */
+// 首页。原型 16 个区块，现在只有首屏和底部 CTA，中间的等设计稿逐块补
 </script>
 
 <template>
-  <!-- 首屏：按定稿原型「左侧文案 + 右侧工作台看板」两栏，含底部数字条 -->
+  <!-- 首屏：左文案 + 右看板，底下一排数字 -->
   <HeroSection />
-  <!-- 底部行动号召：原型第 15 区块，首页与内页共用 -->
+  <!-- 底部行动号召：首页和内页共用一份文案 -->
   <CtaBanner />
 </template>

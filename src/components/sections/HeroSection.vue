@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { siteConfig } from '@/config/site'
-// 首屏素材全部由设计稿导出（2 倍图），文案与看板内容都烘焙在图里，不再手工还原
+// 图都是设计稿导出的 2 倍图，看板和浮层卡里的文字已经烘焙在图里
 import badgeImg from '@/assets/home/images/badge.png'
 import workbenchImg from '@/assets/home/images/workbench-body.png'
 import complianceImg from '@/assets/home/images/compliance.png'
@@ -11,25 +11,15 @@ import ringsImg from '@/assets/home/images/rings.png'
 import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
 
 /**
- * 首屏 Hero（定稿原型 01，1440×704 画板逐项实测还原）
+ * 首屏 Hero，按 1440×704 画板量出来的：
+ * 文案区 660、看板 596×461（顶 67、左 763）、列距 24；
+ * 合规卡 188×63 左探 59，在途卡 160×63 左探 120，圆环 800×800；
+ * 分隔线 562，数字条顶 600。
  *
- * 左侧文案用 HTML 写（可改文案、可被搜索引擎读到），右侧看板整块用设计稿导出的图。
- * 实测基准（1440 稿，以 Hero.png 4 倍导出图逐像素校准）：文案区 660 宽、看板 596×461
- * （顶 y=67、左 x=763、右缘贴容器右边线）、合规卡 188×63（左探 59 / 原型底压看板顶 10，
- *   实际渲染上抬至与看板顶齐平，给看板内 logo 图标让位）、
- * 在途卡 160×63（左探 120 / 底对齐看板底）、圆环 800×800 圆心 (1062,296)、
- * 分隔线 y=562、数字条顶 y=600；两列列距 24px。
- * 两张浮层卡的定位是「百分比 + px 封顶」的混合写法（详见卡位注释）：
- * 合规卡顶恒定停在导航栏下方（1440 下 20px），尺寸用 min/max 封在 1440 稿附近，
- * 否则宽屏下卡会同比放大、要么顶到导航栏要么压到看板内 logo 图标（两者间距只有 70px）。
- * 在途卡同理封顶，避免 1920 下探出看板底压到分隔线。
- *
- * 间距约定：本区块的间距/尺寸一律写 px 字面值（如 mt-[28px]），不写 Tailwind 的 rem 档位，
- * 因为数值全部来自设计稿实测，写 px 才能直接对着稿子加减数字。
- * 换算备忘：1rem = 16px，Tailwind 的 mt-8 = 8 × 0.25rem = 32px。 */
+ * 本区块的间距尺寸一律写 px 字面值，方便直接对着稿子改数字（1rem = 16px）。
+ */
 
-/* 数字条 count-up：拆出「前导数字 + 余尾」，余尾不含数字才递增
-   （'10'、'7 天' 可以；'7×24' 的余尾带数字，原样显示不递增） */
+// 数字条：拆成「数字 + 尾巴」，尾巴里没有数字才做递增（10、7 天 行，7×24 不行）
 const statsEl = ref<HTMLDListElement | null>(null)
 
 const stats = computed(() =>
@@ -40,7 +30,7 @@ const stats = computed(() =>
 )
 
 onMounted(() => {
-  // 减弱动效偏好 / 无 IntersectionObserver：保持完整值，不跑递增
+  // 关了动效或者浏览器太老，就直接显示终值
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   if (!('IntersectionObserver' in window)) return
 
@@ -56,7 +46,7 @@ onMounted(() => {
         const num = Number(el.dataset.num)
         const rest = el.dataset.rest ?? ''
         const t0 = performance.now()
-        const DURATION = 900 // 递增 0.9s，easeOutCubic 先快后慢，比匀速自然
+        const DURATION = 900 // 0.9s，easeOutCubic 先快后慢，比匀速看着舒服
         const tick = (t: number) => {
           const p = Math.min((t - t0) / DURATION, 1)
           el.textContent = String(Math.round(num * (1 - Math.pow(1 - p, 3)))) + rest
@@ -65,29 +55,25 @@ onMounted(() => {
         requestAnimationFrame(tick)
       }
     },
-    { threshold: 0.5 }, // 数字条露出一半才开始，避免刚露头就跳
+    { threshold: 0.5 }, // 露出一半再数，不然刚露头就跳完了
   )
   els.forEach((el) => io.observe(el))
 })
 </script>
 
 <template>
-  <!-- 首屏：relative + overflow-hidden（裁掉超出视口的圆环）。
-       背景多层渐变见下方 .hero-bg（顶部暖橙 → 中段近白 → 左下薄荷绿），取自设计稿取色 -->
+  <!-- 首屏：relative 给装饰定位，overflow-hidden 裁掉探出视口的圆环；背景渐变见文件末尾 .hero-bg -->
   <section id="home" class="hero-bg relative overflow-hidden">
-    <!-- 内容容器：与顶栏同一条左右基准线 -->
+    <!-- 内容容器：和顶栏同一条左右基准线 -->
     <div class="container-page relative">
-      <!-- 两栏：实测 660:596 ≈ 11:10，列距 24px；看板顶 y=67 → 顶部留白 67px；
-           <1024px 上下堆叠（文案在前、看板在后） -->
+      <!-- 两栏 11:10，列距 24；看板顶 67 所以上留白 67；<1024 上下堆叠（文案在上） -->
       <div
         class="grid items-start gap-[56px] pt-[40px] sm:pt-[48px] lg:grid-cols-[11fr_10fr] lg:gap-[24px] lg:pt-[67px]"
       >
-        <!-- 左列：胶囊 → 标题 → 说明 → 主按钮 → 三个卖点。
-             顶部比看板顶低 10px（lg:mt-[10px]）；各段间距在实测值基础上加大过，
-             让左列底部与看板底部齐平（实测胶囊底 614 vs 看板底 610，差 4px） -->
+        <!-- 左列：胶囊 → 标题 → 说明 → 按钮 → 卖点。
+             比看板顶低 10px，几段间距都加过一点，让左列底部和看板底部齐平 -->
         <div class="lg:mt-[10px]">
-          <!-- 法规对标胶囊：素材 924×128，显示高 32px 时宽 231 ≈ 实测 236。
-               入场编排从它开始，后续元素每 70ms 递进一个 -->
+          <!-- 法规胶囊：素材 924×128，高 32 时宽 231（稿子 236）；入场动画从这里开始 -->
           <img
             :src="badgeImg"
             alt="对标 2026 版《危险化学品安全法》"
@@ -95,8 +81,7 @@ onMounted(() => {
             :style="{ animationDelay: '0ms' }"
           />
 
-          <!-- 主标题：实测字号 48px（单字格高 45）、行距 73px → leading-[1.5]；
-               第二行品牌橙 -->
+          <!-- 标题：48px、行距 73（leading-1.5），第二行品牌橙；手机上降到 28px -->
           <h1
             class="rise mt-[30px] text-[28px] font-bold leading-[1.35] text-ink-900 sm:text-4xl lg:text-[48px] lg:leading-[1.5]"
             :style="{ animationDelay: '70ms' }"
@@ -105,7 +90,7 @@ onMounted(() => {
             <span class="block mt-[5px] text-brand-500">{{ siteConfig.hero.titleAccent }}</span>
           </h1>
 
-          <!-- 说明：实测行宽约 592px、行距 26px → leading-[1.65] -->
+          <!-- 说明：一行最多 592，行距 26（leading-1.65） -->
           <p
             class="rise mt-[40px] max-w-[592px] text-[15px] leading-relaxed text-ink-600 lg:text-base lg:leading-[1.65]"
             :style="{ animationDelay: '140ms' }"
@@ -113,7 +98,7 @@ onMounted(() => {
             {{ siteConfig.hero.desc }}
           </p>
 
-          <!-- 主按钮：实测 358×50（覆盖 lg 尺寸的 py），下方 36px 接卖点胶囊 -->
+          <!-- 主按钮：稿子 358×50，所以用 lg 尺寸又把高度压到 50、宽度定 360 -->
           <div class="rise mt-[30px]" :style="{ animationDelay: '210ms' }">
             <BaseButton
               :href="siteConfig.contact.ctaHref"
@@ -124,15 +109,15 @@ onMounted(() => {
             </BaseButton>
           </div>
 
-          <!-- 三个卖点胶囊：白底半透明 + 细描边，对勾是纯线条绿勾（设计稿无圆底）。
-               胶囊间距 10px、内边距 上7 左12 右14；hover 描边变品牌浅橙 + 轻微上浮 -->
+          <!-- 卖点胶囊：白底半透明 + 细描边，间距 10，内边距 上7 左12 右14；
+               hover 描边转浅橙、上浮 0.5（2px） -->
           <ul class="rise mt-[36px] flex flex-wrap gap-[10px]" :style="{ animationDelay: '280ms' }">
             <li
               v-for="feature in siteConfig.hero.features"
               :key="feature"
               class="flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-sm font-medium text-ink-700 transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-brand-300"
             >
-              <!-- 对勾：纯线条 #2f9e6e，14px 与文字重心齐平 -->
+              <!-- 对勾：稿子里没有圆底，就是一根 #2f9e6e 的线条勾 -->
               <svg
                 class="h-[14px] w-[14px] shrink-0"
                 viewBox="0 0 14 14"
@@ -152,16 +137,13 @@ onMounted(() => {
           </ul>
         </div>
 
-        <!-- 右列：看板整图（596×462）+ 两张浮层。
-             整块是装饰性界面示意图，对读屏隐藏，避免念一堆表格数字 -->
+        <!-- 右列：看板整图 + 两张浮层卡。整块是示意图，对读屏隐藏免得念一堆数字 -->
         <div
           class="relative mx-auto w-full max-w-[544px] sm:max-w-[608px] lg:mt-0 lg:max-w-none"
           aria-hidden="true"
         >
-          <!-- 右上装饰同心圆：设计稿导出的大图，纯装饰不进无障碍树，压在看板后面。
-               实测 800×800、圆心 (1062, 296)。定位/尺寸全部用看板的百分比
-               （左探看板 101px→-16.9%、上探 171px→-37.1%、800/596→134.2%），
-               窗口放大时跟随看板等比缩放，不会出现"圆环不动、内容拉伸"的错位 -->
+          <!-- 右上同心圆：800×800，圆心 (1062,296)。尺寸位置都按看板的百分比写，
+               窗口变宽时跟着看板等比缩放，不然会出现圆环不动、内容拉伸 -->
           <img
             :src="ringsImg"
             alt=""
@@ -169,16 +151,11 @@ onMounted(() => {
             class="breathe pointer-events-none absolute left-[-16.9%] top-[-37.1%] w-[134.2%] max-w-none select-none"
           />
 
-          <!-- 「合规校验通过」浮层：原型卡体 188×63、左探看板 59px。
-               定位的两个坑：
-               ① 纯用百分比 top，看板在宽屏变高后卡片跟着往上涨，1920 下会顶到导航栏 ——
-                  所以 top 写成 calc(-47px - 5.25%)：px 项抵消「卡体在素材里的上边距随宽度变大」那部分，
-                  净效果是卡顶恒定停在导航栏下方（1440 下 20px），放大屏幕不再贴边；
-               ② 只锁顶部不锁尺寸的话，卡片变大后底边会压到看板内左上角的六边形 logo 图标
-                  （图标顶距看板顶仅 3% 板高），所以宽高/左探再加一层 px 封顶（min / max），
-                  宽屏下卡片不再跟着看板同比放大。
-               素材 980×516，白卡体在 (116,116)-(863,359)；下缘投影已做渐隐裁剪（见素材说明），
-               不会在图标上投出暗边。入场 450ms 后弹入（带一点回弹），像卡片落到位 -->
+          <!-- 合规卡：卡体 188×63，左探看板 59。
+               top 用 calc 是因为纯百分比的卡会跟着看板一起涨、1920 顶到导航栏，
+               px 那部分把它按住，卡顶恒定在导航栏下 20px；宽和左探用 min/max 封顶，
+               不然卡变大后底边会压到看板里的六边形 logo。
+               素材 980×516，白卡体 (116,116)-(863,359)，下缘投影已裁掉渐隐 -->
           <img
             :src="complianceImg"
             alt=""
@@ -186,10 +163,8 @@ onMounted(() => {
             :style="{ animationDelay: '450ms' }"
           />
 
-          <!-- 看板整图：圆角 + 大范围柔和投影，浮起来但不抢文案的注意力。
-               relative 是必须的：圆环是 absolute 定位元素，普通流 img 会被它盖住，
-               加 relative 让看板参与定位绘制（DOM 在圆环后 → 画在上层）。
-               入场从右侧滑入；hover 轻微抬升（只动 transform，不重排） -->
+          <!-- 看板整图：圆角 + 柔和投影浮起来。
+               relative 不能省：圆环是 absolute，普通流元素会被它盖住 -->
           <img
             :src="workbenchImg"
             alt="威易达化工一体化平台工作台界面"
@@ -197,12 +172,8 @@ onMounted(() => {
             :style="{ animationDelay: '150ms' }"
           />
 
-          <!-- 「在途运输」浮层：原型卡体 160×63，左探看板 120px、底边与看板底对齐
-               （实际渲染和合规卡一样略小于原型，两卡保持同一比例）。
-               素材 864×516，白卡体在 (116,116)-(747,359)。
-               定位同样加 px 封顶：不封的话 1920 下它会探出看板底 49px，压到下面 34px 处的分隔线。
-               bottom / left 用 max 封顶、w 用 min 封顶，宽屏下与合规卡一样保持恒定间距。
-               入场比合规卡再晚 100ms -->
+          <!-- 在途卡：卡体 160×63，左探看板 120、底边贴看板底。
+               同样 px 封顶，不然 1920 下会探出看板 49px、压到下面的分隔线 -->
           <img
             :src="onTheWayImg"
             alt=""
@@ -212,23 +183,22 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- 分隔线：看板底(528)→线(562) 间距 34px；线→数字条 38px；数字条→底部 50px -->
+      <!-- 分隔线：看板底 → 线 34，线 → 数字条 38，数字条 → 底 50 -->
       <div class="pb-[40px] lg:mt-[34px] lg:pb-[50px]">
         <img :src="dividerImg" alt="" aria-hidden="true" class="h-[2px] w-full" />
 
-        <!-- 四条数字：实测整块 1280×62，两端对齐（首列贴左、末列贴右）；
-             手机两列网格，≥640px 转一行 flex 两端对齐。
-             tabular-nums 让递增时数字等宽不抖动；进入视口后 JS 从 0 递增到目标值 -->
+        <!-- 四条数字：整块 1280×62，首末列贴两端；手机两列，≥640 转一行两端对齐。
+             tabular-nums 让递增时数字等宽，不然会左右抖 -->
         <dl
           ref="statsEl"
           class="rise mt-[32px] grid grid-cols-2 gap-y-[24px] sm:mt-[48px] sm:flex sm:flex-wrap sm:justify-between sm:gap-x-[32px] sm:gap-y-[24px] lg:mt-[38px] [font-variant-numeric:tabular-nums]"
           :style="{ animationDelay: '350ms' }"
         >
+          <!-- dl 规范要求 dt 在前，视觉上数值要在上面，所以面板翻过来排（col-reverse） -->
           <div v-for="stat in stats" :key="stat.label" class="flex flex-col-reverse">
-            <!-- 数值：实测字格高 18 → 字号 24px 加粗。
-                 DOM 里 dt 在前（dl 规范要求 name 在 value 前），视觉上用 col-reverse 翻回来；
-                 符合递增条件的值交给 count-up（data-* 传目标），否则原样渲染 -->
+            <!-- 标签：13px 弱化灰，离数值 10px -->
             <dt class="mt-[10px] text-[13px] text-ink-400">{{ stat.label }}</dt>
+            <!-- 数值：24px 加粗；能递增的交给 count-up，data-* 传目标和尾巴 -->
             <dd class="text-2xl font-bold leading-none text-ink-900">
               <span v-if="stat.count" :data-num="stat.count.num" :data-rest="stat.count.rest">{{
                 stat.value
@@ -243,11 +213,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* ── 入场编排 ──
-   只动 opacity/transform（GPU 合成，不触发重排重绘）；keyframes 只写 from，
-   终态就是元素自然状态；fill-mode 用 backwards：delay 期间保持 from（隐藏），
-   动画结束后完全释放，不挡后面的 hover transform（forwards 会一直覆盖）。
-   减弱动效偏好由 style.css 的全局规则压到 0.01ms，元素立即到位不会闪。 */
+/* 入场动画：只动 opacity/transform，不重排。
+   keyframes 只写 from，终态就是元素本身的样子；fill 用 backwards，
+   这样 delay 期间是隐藏的，播完又完全释放，不会压住 hover 的 transform（forwards 会压住） */
 @keyframes hero-rise {
   from {
     opacity: 0;
@@ -277,13 +245,12 @@ onMounted(() => {
   animation: hero-slide 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
-/* 轻微回弹曲线，浮层卡"落位"的手感 */
 .pop-in {
   animation: hero-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
 
-/* 圆环呼吸：4s 一个来回、幅度 3.5%，无限 alternate；
-   infinite 动画被全局 reduced-motion 压到 0.01ms 会疯狂空转，必须显式关掉 */
+/* 圆环呼吸：4s 一个来回，放大 3.5%。
+   infinite 动画必须自己关掉 reduced-motion —— 全局规则会把它压成 0.01ms，变成疯狂空转 */
 @keyframes hero-breathe {
   to {
     transform: scale(1.035);
@@ -300,10 +267,8 @@ onMounted(() => {
   }
 }
 
-/* 首屏背景：三层叠加，颜色从设计稿像素取样。
-   顺序 = 上层到下层：右上浓橙光晕 → 左下薄荷绿光晕 → 纵向暖橙到近白的底色。
-   写原生 CSS 而不是 Tailwind，是因为多层 radial-gradient 用工具类表达会很长，也不好读出意图 */
-/* 光晕尺寸同样写 px：右上橙 960×512 落在 (88%, -8%)，左下绿 880×480 落在 (0%, 108%) */
+/* 背景三层：右上橙光晕 960×512 → 左下绿光晕 880×480 → 纵向暖橙到近白。
+   颜色是从设计稿取的，多层渐变写成 CSS 比堆工具类清楚 */
 .hero-bg {
   background:
     radial-gradient(960px 512px at 88% -8%, rgba(255, 131, 63, 0.26), transparent 68%),

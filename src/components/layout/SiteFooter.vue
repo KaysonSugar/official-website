@@ -7,14 +7,10 @@ import qrKuaishou from '@/assets/footer/ewm-ks.jpg'
 import qrApp from '@/assets/footer/download-icon.png'
 import { siteConfig } from '@/config/site'
 
-/**
- * 页脚（对应原型底部的深色收尾区）
- *
- * 版式按设计稿 1440×343：五栏布局，二维码 100×100、间距 10。
- * 响应式：手机单列 → ≥640 两列 → ≥1024 五栏。
- */
+// 页脚，按设计稿 1440×343 还原：五栏、二维码 100×100、间距 10。
+// 响应式：手机单列 → ≥640 两列 → ≥1024 三列 → ≥1440 五栏（最后一档见文件末尾）
 
-/** 关注我们：四张二维码。图片在这里 import，Vite 才会做哈希命名 */
+/** 四张二维码。图在这里 import，Vite 才会做哈希命名 */
 const qrcodes = [
   { src: qrWechat, label: '微信公众号', alt: '威易达化工微信公众号二维码' },
   { src: qrDouyin, label: '官方抖音号', alt: '威易达官方抖音号二维码' },
@@ -22,24 +18,22 @@ const qrcodes = [
   { src: qrApp, label: '扫码下载 APP', alt: '威易达化工 App 下载二维码' },
 ]
 
-/** 页脚条目既可能是站内路由，也可能是 tel: 这类外链，据此决定渲染 RouterLink 还是原生 a */
+/** 页脚条目有可能是 tel:/mailto: 这类外链，据此决定渲染 RouterLink 还是 a */
 const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
 </script>
 
 <template>
-  <!-- 页脚：深色收尾。bg-night-900 是设计稿取色 #0f211b，
-       不直接用纯黑 —— 暖色调官网上纯黑会显得生硬，这层绿让它与品牌橙形成冷热对照 -->
+  <!-- 页脚：深色收尾，bg-night-900 是设计稿取的 #0f211b。
+       没用纯黑，暖色官网上纯黑太生硬，这层墨绿正好跟品牌橙对着来 -->
   <footer class="bg-night-900">
-    <!-- 内层容器：与顶栏、各区块共用同一条左右基准线（≥1440 时左右各 80px） -->
+    <!-- 容器：跟顶栏、各区块同一条基线（1440 下各 80px）；上面留 64 -->
     <div class="container-page pt-16">
-      <!-- 主区：<640 单列 → ≥640 两列 → ≥1024 三列 → ≥1440 五栏（见文件末尾的 scoped 样式）。
-           1440 这档必须用原生媒体查询：Tailwind v4 的自定义断点排在核心断点之前，会被 lg: 覆盖。
-           后四栏用 auto 由内容撑开，栏间距取 58px（auto 列比设计稿宽约 4px/栏） -->
+      <!-- 主区：手机单列 → ≥640 两列 → ≥1024 三列，≥1440 五栏在 scoped 里改。
+           手机纵向间距 40，≥640 横向 32 -->
       <div class="footer-main grid grid-cols-1 gap-y-10 sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-3">
-        <!-- 品牌栏：图形 + 中文名 + 描述 + 理念 -->
+        <!-- 品牌栏：图 + 中文名 + 两行描述 + 理念 -->
         <div class="footer-brand sm:col-span-2 lg:col-span-3">
-          <!-- 品牌标识：页脚只用图形 mark + 中文名，不用组合标
-               （组合标是竖排的，这里设计稿是横排；图形 24px、文字 18px 均取自画板） -->
+          <!-- 只放图形 mark + 中文名（组合标是竖排的，稿子这里是横排）；图形 24px、文字 18px -->
           <div class="flex items-center gap-3">
             <img
               :src="logoMark"
@@ -53,8 +47,7 @@ const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
             }}</span>
           </div>
 
-          <!-- 品牌描述：13px / 22px 行高；max-w-[330px] 还原画板的折行位置（第一行断在"全流程规"后）；
-               text-night-300 是在深底上仍能保证可读性的次要色 -->
+          <!-- 描述：13px / 行高 22；max-w-[330px] 是为了还原稿子的折行位置（第一行断在「全流程规」后面） -->
           <p
             v-for="(line, i) in siteConfig.footer.desc"
             :key="i"
@@ -64,13 +57,13 @@ const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
             {{ line }}
           </p>
 
-          <!-- 品牌理念：四个短语用中圆点连接，12px 最弱色 -->
+          <!-- 理念：几个短语用中点连起来，12px 最弱色 -->
           <p class="mt-5 text-xs leading-[18px] text-night-400">
             {{ siteConfig.footer.slogan.join(' · ') }}
           </p>
         </div>
 
-        <!-- 链接栏：标题 14px 纯白，条目 13px 次要色，条目间距 30（行高 18 + space-y-3） -->
+        <!-- 链接栏：标题 14px 白，条目 13px，行高 18 + space-y-3(12) = 每条 30 -->
         <nav
           v-for="group in siteConfig.footer.linkGroups"
           :key="group.title"
@@ -79,8 +72,8 @@ const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
           <h3 class="text-sm font-bold leading-5 text-white">{{ group.title }}</h3>
           <ul class="mt-2.5 space-y-3">
             <li v-for="item in group.items" :key="item.label">
-              <!-- block 不能省：a 是 inline 时，li 的行盒高度由父级 line-height 决定（实测 24px），
-                   比文字自身的 18px 多出 6px，四行累计会把整个页脚撑高十几像素 -->
+              <!-- block 别省：a 是 inline 时 li 的行盒会被父级 line-height 撑到 24，
+                   比文字本身多 6px，四行累计能把页脚顶高十几像素 -->
               <RouterLink
                 v-if="!isExternal(item.to)"
                 :to="item.to"
@@ -97,15 +90,14 @@ const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
           </ul>
         </nav>
 
-        <!-- 关注我们：四张 100×100 二维码 + 下方标签。
-             图用 aspect-square w-full 自适应，≥1440 由 scoped 样式固定 100px；
-             max-w-[430px] 是四张的上限（4×100 + 3×10），否则在两列/三列布局下
-             每张会被拉到 170px 以上，比画板大近一倍 -->
+        <!-- 关注我们：四张图，间距 10。
+             图用 aspect-square + w-full 自适应，≥1440 由 scoped 固定 100px；
+             max-w-[430px] = 4×100 + 3×10，不设的话两列/三列时每张会被拉到 170 以上 -->
         <div class="footer-social sm:col-span-2 lg:col-span-3">
           <h3 class="text-sm font-bold leading-5 text-white">关注我们</h3>
           <ul class="mt-2.5 grid max-w-[430px] grid-cols-4 gap-2.5">
             <li v-for="qr in qrcodes" :key="qr.label">
-              <!-- 圆角裁切：四张图本身是白底方图，画板里都带圆角 -->
+              <!-- 四张原图是白底方图，稿子里带圆角 -->
               <img
                 :src="qr.src"
                 :alt="qr.alt"
@@ -119,8 +111,7 @@ const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
         </div>
       </div>
 
-      <!-- 底部条：分隔线 1px（#22392f），上方留 32px、下方内容留 36px，
-           三项之和与画板的 343 高度对齐 -->
+      <!-- 底部条：上面留 32、下面 36，加 1px 分隔线（#22392f），合计对上画板的 343 高 -->
       <div
         class="mt-8 flex flex-col gap-2 border-t border-night-800 pt-9 pb-9 sm:flex-row sm:items-center sm:justify-between"
       >
@@ -132,27 +123,20 @@ const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
 </template>
 
 <style scoped>
-/**
- * ≥1440 的五栏精确版式
- *
- * 为什么这段用原生媒体查询而不是 Tailwind 的断点变体：
- * Tailwind v4 会把 @theme 里自定义 --breakpoint-* 生成的媒体查询排在核心断点
- * （sm / md / lg …）之前，同特异性下 lg: 的规则反而赢 —— 实测 1440 下拿到的
- * 仍是 `lg:grid-cols-3`，头像被压到 67px。写在 scoped 里顺序完全可控，
- * 且 scoped 选择器带 data-v 属性，特异性能稳稳压过工具类。
- *
- * 数值全部来自设计稿 1440×343 画板的像素实测（见 README「页脚」一节）：
- *   · 品牌栏吃掉剩余空间，约 358px
- *   · 三个链接栏各约 87 / 87 / 62，栏间距 58
- *   · 关注我们 430 = 四张 100 + 三个 10，右边缘与容器右边界齐平
- */
+/* ≥1440 的五栏版式。
+   这里得写原生媒体查询：Tailwind v4 会把自定义断点的媒体查询排在核心断点前面，
+   同特异性下 lg: 反而赢——之前实测 1440 下拿到的还是 grid-cols-3，二维码被压到 67px。
+   scoped 选择器带 data-v，特异性能稳稳压过工具类。
+
+   数值来自 1440×343 画板：品牌栏吃掉剩余空间（约 358），三个链接栏 87/87/62、栏距 58，
+   二维码栏 430 = 四张 100 + 三个 10，右边缘贴容器。 */
 @media (min-width: 1440px) {
   .footer-main {
     grid-template-columns: minmax(0, 1fr) auto auto auto 430px;
     column-gap: 58px;
   }
 
-  /* 五栏里品牌栏与二维码栏各占一列，覆盖 lg 的 col-span-3 */
+  /* 品牌栏和二维码栏各占一列，盖掉 lg 的 col-span-3 */
   .footer-brand,
   .footer-social {
     grid-column: auto;

@@ -3,21 +3,14 @@ import CtaBanner from '@/components/sections/CtaBanner.vue'
 import PageHero from '@/components/sections/PageHero.vue'
 import { getPage } from '@/config/site'
 
-/**
- * 产品矩阵 → 物流调度（/products/logistics）
- *
- * 对应原型画板「威易达物流：调度与合规」。
- * 首屏文案取自 src/config/site.ts 的 pages。
- * ⚠️ 首屏以下的区块尚未按原型实现：该画板原型有 2~4 屏内容
- *    （卡片栅格 / 六类档案对照表 / 电子台账追溯 / 实施路径 / CTA），
- *    与首页复用同一批区块组件，先做首页再回来填这里。
- */
+// 物流调度 /products/logistics，对应画板「威易达物流：调度与合规」。
+// 首屏文案在 site.ts 的 pages；下面还有 2~4 屏没做（卡片栅格、档案对照表、电子台账、实施路径）
 const page = getPage('/products/logistics')
 </script>
 
 <template>
   <PageHero :eyebrow="page.eyebrow" :title="page.title" :desc="page.desc" :align="page.align" />
-  <!-- TODO: 本页其余区块（按原型画板「威易达物流：调度与合规」） -->
-  <!-- 底部行动号召：所有内页共用同一份文案（config/site.ts 的 cta） -->
+  <!-- TODO: 本页其余区块，按「威易达物流：调度与合规」画板 -->
+  <!-- 底部行动号召：内页共用 -->
   <CtaBanner />
 </template>
