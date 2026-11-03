@@ -1,0 +1,149 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "威易达化工 首页" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "威易达化工" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: 威易达化工
+          - generic [ref=e9]: WEIYIDA HUAGONG
+      - navigation "主导航" [ref=e10]:
+        - link "首页" [ref=e12] [cursor=pointer]:
+          - /url: /
+        - link "产品矩阵" [ref=e15] [cursor=pointer]:
+          - /url: /products
+        - link "服务支持" [ref=e19] [cursor=pointer]:
+          - /url: /solutions
+        - link "关于我们" [ref=e21] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=e22]:
+        - link "400-001-8355" [ref=e23] [cursor=pointer]:
+          - /url: tel:4000018355
+        - link "预约演示" [ref=e25] [cursor=pointer]:
+          - /url: tel:4000018355
+  - main [ref=e26]:
+    - generic [ref=e28]:
+      - generic [ref=e30]:
+        - img "对标 2026 版《危险化学品安全法》" [ref=e31]
+        - heading "威易达化工生产 + 危化运输 一体化平台" [level=1] [ref=e32]:
+          - text: 威易达化工生产 + 危化运输
+          - generic [ref=e33]: 一体化平台
+        - paragraph [ref=e34]: 覆盖销售订单、原料入库、工厂投产、成品发货与在途运输的全过程。业务数据一处录入、多处复用，合规记录随流程自动生成。
+        - link "预约产品演示" [ref=e36] [cursor=pointer]:
+          - /url: tel:4000018355
+        - list [ref=e37]:
+          - listitem [ref=e38]: 合规前置校验
+          - listitem [ref=e41]: 一物一码全链路追溯
+          - listitem [ref=e44]: 多端协同调度
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - term [ref=e53]: 大业务模块
+          - definition [ref=e54]: "10"
+        - generic [ref=e55]:
+          - term [ref=e56]: 个数据库
+          - definition [ref=e57]: "1"
+        - generic [ref=e58]:
+          - term [ref=e59]: 完成上线部署
+          - definition [ref=e60]: 0 天
+        - generic [ref=e61]:
+          - term [ref=e62]: 技术支持响应
+          - definition [ref=e63]: 0×24
+    - generic [ref=e65]:
+      - paragraph [ref=e66]: INDUSTRY & COMPLIANCE / 行业背景与法规驱动
+      - heading "行业背景与法规驱动" [level=2] [ref=e67]
+      - paragraph [ref=e68]: 新法核心要求：信息化建设与危化品全生命周期安全管控
+      - generic [ref=e69]:
+        - article [ref=e70]:
+          - paragraph [ref=e71]: 第 6 条 / 第 11 条
+          - heading "双重预防 + 信息化管控" [level=3] [ref=e72]
+          - paragraph [ref=e73]: 强制企业构建风险分级管控与隐患排查双重预防机制，推进安全生产信息化，实现全生命周期追溯。
+        - article [ref=e74]:
+          - paragraph [ref=e75]: 第 12 条
+          - heading "鼓励智能自控与数字化" [level=3] [ref=e76]
+          - paragraph [ref=e77]: 鼓励采用智能控制系统，实现自动监测、数字化管控等先进适用的安全生产技术。
+        - article [ref=e78]:
+          - paragraph [ref=e79]: 第 82 条 / 第 83 条
+          - heading "严禁混装与违规处罚" [level=3] [ref=e80]
+          - paragraph [ref=e81]: 严禁危化品混装运输与储存，对违规行为实施高额罚款与行政处罚，彻底压降物理混装风险。
+        - article [ref=e82]:
+          - paragraph [ref=e83]: 第 69 条
+          - heading "运输全流程动态管控" [level=3] [ref=e84]
+          - paragraph [ref=e85]: 强制对运输车辆、驾驶与押运人员实施动态管控，确保危化品运输轨迹可查、状态可控。
+      - paragraph [ref=e88]: 平台响应：对标新法要求，将合规要求内置于系统流程，以全生命周期信息化手段，帮助企业轻松应对监管挑战，实现安全与合规一体化落地。
+    - generic [ref=e92]:
+      - heading "约一次 30 分钟的线上演示" [level=2] [ref=e93]
+      - paragraph [ref=e94]: 按你的产线、仓库与运输线路走一遍实际操作，看完再判断值不值得推进。
+      - generic [ref=e95]:
+        - link "预约演示" [ref=e96] [cursor=pointer]:
+          - /url: tel:4000018355
+        - link "400-001-8355" [ref=e97] [cursor=pointer]:
+          - /url: tel:4000018355
+  - contentinfo [ref=e100]:
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - img "威易达化工" [ref=e105]
+            - generic [ref=e106]: 威易达化工
+          - paragraph [ref=e107]: 化工生产 + 危化运输一体化平台，全链路数字化、全流程规范化、全方位安全化。
+          - paragraph [ref=e108]: 市场为源 · 客户为心 · 应用而创 · 携手同行
+        - navigation "页脚产品" [ref=e109]:
+          - heading "产品" [level=3] [ref=e110]
+          - list [ref=e111]:
+            - listitem [ref=e112]:
+              - link "威易达化工" [ref=e113] [cursor=pointer]:
+                - /url: /products/chemical
+            - listitem [ref=e114]:
+              - link "威易达物流" [ref=e115] [cursor=pointer]:
+                - /url: /products/logistics
+            - listitem [ref=e116]:
+              - link "威易达司机" [ref=e117] [cursor=pointer]:
+                - /url: /products/driver
+            - listitem [ref=e118]:
+              - link "报表与数据看板" [ref=e119] [cursor=pointer]:
+                - /url: /platform
+        - navigation "页脚解决方案" [ref=e120]:
+          - heading "解决方案" [level=3] [ref=e121]
+          - list [ref=e122]:
+            - listitem [ref=e123]:
+              - link "化工生产管理" [ref=e124] [cursor=pointer]:
+                - /url: /products/chemical
+            - listitem [ref=e125]:
+              - link "危化运输调度" [ref=e126] [cursor=pointer]:
+                - /url: /products/logistics
+            - listitem [ref=e127]:
+              - link "合规与全程追溯" [ref=e128] [cursor=pointer]:
+                - /url: /solutions
+            - listitem [ref=e129]:
+              - link "平台架构" [ref=e130] [cursor=pointer]:
+                - /url: /platform
+        - navigation "页脚关于威易达" [ref=e131]:
+          - heading "关于威易达" [level=3] [ref=e132]
+          - list [ref=e133]:
+            - listitem [ref=e134]:
+              - link "公司介绍" [ref=e135] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e136]:
+              - link "实施与服务" [ref=e137] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e138]:
+              - link "联系我们" [ref=e139] [cursor=pointer]:
+                - /url: tel:4000018355
+        - generic [ref=e140]:
+          - heading "关注我们" [level=3] [ref=e141]
+          - list [ref=e142]:
+            - listitem [ref=e143]:
+              - img "威易达化工微信公众号二维码" [ref=e144]
+              - paragraph [ref=e145]: 微信公众号
+            - listitem [ref=e146]:
+              - img "威易达官方抖音号二维码" [ref=e147]
+              - paragraph [ref=e148]: 官方抖音号
+            - listitem [ref=e149]:
+              - img "威易达官方快手号二维码" [ref=e150]
+              - paragraph [ref=e151]: 官方快手号
+            - listitem [ref=e152]:
+              - img "威易达化工 App 下载二维码" [ref=e153]
+              - paragraph [ref=e154]: 扫码下载 APP
+      - generic [ref=e155]:
+        - paragraph [ref=e156]: 2026 苏州羿瑞成信息科技有限公司 版权所有
+        - paragraph [ref=e157]: 威易达化工 · 化工生产与危化运输一体化平台

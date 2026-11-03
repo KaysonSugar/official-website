@@ -82,6 +82,19 @@ export interface SiteConfig {
     /** 首屏底部数字条 */
     stats: { value: string; label: string }[]
   }
+  /** 首页第二屏：行业背景与法规驱动（定稿原型 02，纯文字 + 四张法规卡片） */
+  industry: {
+    /** 标题上方的橙色眉题（英文 / 中文） */
+    eyebrow: string
+    /** 板块主标题 */
+    title: string
+    /** 标题下的一句话说明 */
+    desc: string
+    /** 四张法规卡片，icon 对应 assets/home/icons 下的素材名 */
+    cards: { icon: 'shield' | 'chip' | 'ban' | 'pin'; label: string; title: string; desc: string }[]
+    /** 底部「平台响应」提示条 */
+    note: string
+  }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案） */
   cta: {
     /** 主标题 */
@@ -222,6 +235,39 @@ export const siteConfig: SiteConfig = {
       { value: '7 天', label: '完成上线部署' },
       { value: '7×24', label: '技术支持响应' },
     ],
+  },
+  // 原型 02 的四张卡片按新法条款顺序排，icon 名对应 assets/home/icons/ 下的 png
+  industry: {
+    eyebrow: 'INDUSTRY & COMPLIANCE / 行业背景与法规驱动',
+    title: '行业背景与法规驱动',
+    desc: '新法核心要求：信息化建设与危化品全生命周期安全管控',
+    cards: [
+      {
+        icon: 'shield',
+        label: '第 6 条 / 第 11 条',
+        title: '双重预防 + 信息化管控',
+        desc: '强制企业构建风险分级管控与隐患排查双重预防机制，推进安全生产信息化，实现全生命周期追溯。',
+      },
+      {
+        icon: 'chip',
+        label: '第 12 条',
+        title: '鼓励智能自控与数字化',
+        desc: '鼓励采用智能控制系统，实现自动监测、数字化管控等先进适用的安全生产技术。',
+      },
+      {
+        icon: 'ban',
+        label: '第 82 条 / 第 83 条',
+        title: '严禁混装与违规处罚',
+        desc: '严禁危化品混装运输与储存，对违规行为实施高额罚款与行政处罚，彻底压降物理混装风险。',
+      },
+      {
+        icon: 'pin',
+        label: '第 69 条',
+        title: '运输全流程动态管控',
+        desc: '强制对运输车辆、驾驶与押运人员实施动态管控，确保危化品运输轨迹可查、状态可控。',
+      },
+    ],
+    note: '平台响应：对标新法要求，将合规要求内置于系统流程，以全生命周期信息化手段，帮助企业轻松应对监管挑战，实现安全与合规一体化落地。',
   },
   cta: {
     title: '约一次 30 分钟的线上演示',
