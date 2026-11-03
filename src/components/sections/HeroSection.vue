@@ -19,7 +19,10 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
  * 分隔线 y=562、数字条顶 y=600；两列列距 24px。
  * 浮层卡定位全部用看板容器的百分比，窄窗口下跟随等比缩放不跑位；
  * 卡素材的 alpha bbox 含投影，折算显示尺寸时按白卡体像素盒子（747×243 / 631×243）计算。
- */
+ *
+ * 间距约定：本区块的间距/尺寸一律写 px 字面值（如 mt-[28px]），不写 Tailwind 的 rem 档位，
+ * 因为数值全部来自设计稿实测，写 px 才能直接对着稿子加减数字。
+ * 换算备忘：1rem = 16px，Tailwind 的 mt-8 = 8 × 0.25rem = 32px。 */
 </script>
 
 <template>
@@ -28,12 +31,13 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
   <section id="home" class="hero-bg relative overflow-hidden">
     <!-- 右上装饰同心圆：设计稿导出的大图，纯装饰不进无障碍树。
          实测 800×800、圆心 (1062, 296)（外圈左缘 x=662、底缘 y=696 反推）→
-         right = 1440-662-800 = -22px、top = -104px -->
+         right = 1440-662-800 = -22px、top = -104px。
+         小屏等比缩小到 576 宽、右上各 -96/-192，避免占满整屏 -->
     <img
       :src="ringsImg"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute -top-24 right-[-12rem] w-[36rem] max-w-none select-none lg:-top-[6.5rem] lg:right-[-1.375rem] lg:w-[50rem]"
+      class="pointer-events-none absolute -top-[96px] right-[-192px] w-[576px] max-w-none select-none lg:-top-[104px] lg:right-[-22px] lg:w-[800px]"
     />
 
     <!-- 内容容器：与顶栏同一条左右基准线 -->
@@ -41,18 +45,18 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
       <!-- 两栏：实测 660:596 ≈ 11:10，列距 24px；看板顶 y=67 → 顶部留白 67px；
            <1024px 上下堆叠（文案在前、看板在后） -->
       <div
-        class="grid items-start gap-14 pt-10 sm:pt-12 lg:grid-cols-[11fr_10fr] lg:gap-6 lg:pt-[4.1875rem]"
+        class="grid items-start gap-[56px] pt-[40px] sm:pt-[48px] lg:grid-cols-[11fr_10fr] lg:gap-[24px] lg:pt-[67px]"
       >
         <!-- 左列：胶囊 → 标题 → 说明 → 主按钮 → 三个卖点（整块 660×426）。
              顶部比看板低 8px（实测 84 vs 77），用 mt-2 补齐 -->
-        <div class="lg:mt-2">
+        <div class="lg:mt-[8px]">
           <!-- 法规对标胶囊：素材 924×128，显示高 32px 时宽 231 ≈ 实测 236 -->
           <img :src="badgeImg" alt="对标 2026 版《危险化学品安全法》" class="h-8 w-auto" />
 
           <!-- 主标题：实测字号 48px（单字格高 45）、行距 73px → leading-[1.5]；
                第二行品牌橙 -->
           <h1
-            class="mt-7 text-[28px] font-bold leading-[1.35] text-ink-900 sm:text-4xl lg:text-[48px] lg:leading-[1.5]"
+            class="mt-[28px] text-[28px] font-bold leading-[1.35] text-ink-900 sm:text-4xl lg:text-[48px] lg:leading-[1.5]"
           >
             {{ siteConfig.hero.title }}
             <span class="block text-brand-500">{{ siteConfig.hero.titleAccent }}</span>
@@ -60,31 +64,37 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
 
           <!-- 说明：实测行宽约 590px（max-w-[37rem]）、行距 26px → leading-[1.65] -->
           <p
-            class="mt-6 max-w-[37rem] text-[15px] leading-relaxed text-ink-600 lg:text-base lg:leading-[1.65]"
+            class="mt-[24px] max-w-[592px] text-[15px] leading-relaxed text-ink-600 lg:text-base lg:leading-[1.65]"
           >
             {{ siteConfig.hero.desc }}
           </p>
 
-          <!-- 主按钮：实测 358×50 → 宽 22.5rem、高 3.125rem（覆盖 lg 尺寸的 py） -->
-          <div class="mt-7">
+          <!-- 主按钮：实测 358×50（覆盖 lg 尺寸的 py），下方 28px 接卖点胶囊 -->
+          <div class="mt-[28px]">
             <BaseButton
               :href="siteConfig.contact.ctaHref"
               size="lg"
-              class="w-full sm:w-auto lg:h-[3.125rem] lg:w-[22.5rem]"
+              class="w-full sm:w-auto lg:h-[50px] lg:w-[360px]"
             >
               {{ siteConfig.hero.primaryCta }}
             </BaseButton>
           </div>
 
-          <!-- 三个卖点胶囊：白底半透明 + 细描边，对勾是纯线条绿勾（设计稿无圆底） -->
-          <ul class="mt-7 flex flex-wrap gap-2.5">
+          <!-- 三个卖点胶囊：白底半透明 + 细描边，对勾是纯线条绿勾（设计稿无圆底）。
+               胶囊间距 10px、内边距 上7 左12 右14 -->
+          <ul class="mt-[28px] flex flex-wrap gap-[10px]">
             <li
               v-for="feature in siteConfig.hero.features"
               :key="feature"
-              class="flex items-center gap-2 rounded-full border border-ink-100 bg-white/80 py-[7px] pl-3 pr-3.5 text-sm font-medium text-ink-700"
+              class="flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-sm font-medium text-ink-700"
             >
               <!-- 对勾：纯线条 #2f9e6e，14px 与文字重心齐平 -->
-              <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <svg
+                class="h-[14px] w-[14px] shrink-0"
+                viewBox="0 0 14 14"
+                fill="none"
+                aria-hidden="true"
+              >
                 <path
                   d="M2.5 7.4 5.6 10.4 11.5 3.9"
                   stroke="#2f9e6e"
@@ -101,7 +111,7 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
         <!-- 右列：看板整图（596×462）+ 两张浮层。
              整块是装饰性界面示意图，对读屏隐藏，避免念一堆表格数字 -->
         <div
-          class="relative mx-auto w-full max-w-[34rem] sm:max-w-[38rem] lg:mt-0 lg:max-w-none"
+          class="relative mx-auto w-full max-w-[544px] sm:max-w-[608px] lg:mt-0 lg:max-w-none"
           aria-hidden="true"
         >
           <!-- 「合规校验通过」浮层：实测卡体 188×63，左探看板 59px、底边压看板顶边 10px。
@@ -132,19 +142,19 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
       </div>
 
       <!-- 分隔线：看板底(528)→线(562) 间距 34px；线→数字条 38px；数字条→底部 50px -->
-      <div class="pb-10 lg:mt-[2.125rem] lg:pb-[3.125rem]">
+      <div class="pb-[40px] lg:mt-[34px] lg:pb-[50px]">
         <img :src="dividerImg" alt="" aria-hidden="true" class="h-[2px] w-full" />
 
         <!-- 四条数字：实测整块 1280×62，两端对齐（首列贴左、末列贴右）；
              手机两列网格，≥640px 转一行 flex 两端对齐 -->
         <dl
-          class="mt-8 grid grid-cols-2 gap-y-6 sm:mt-12 sm:flex sm:flex-wrap sm:justify-between sm:gap-x-8 sm:gap-y-6 lg:mt-[2.375rem]"
+          class="mt-[32px] grid grid-cols-2 gap-y-[24px] sm:mt-[48px] sm:flex sm:flex-wrap sm:justify-between sm:gap-x-[32px] sm:gap-y-[24px] lg:mt-[38px]"
         >
           <div v-for="stat in siteConfig.hero.stats" :key="stat.label">
             <!-- 数值：实测字格高 18 → 字号 24px 加粗 -->
             <dd class="text-2xl font-bold leading-none text-ink-900">{{ stat.value }}</dd>
             <!-- 标签：13px 弱化灰，与数值拉开层级 -->
-            <dt class="mt-2.5 text-[13px] text-ink-400">{{ stat.label }}</dt>
+            <dt class="mt-[10px] text-[13px] text-ink-400">{{ stat.label }}</dt>
           </div>
         </dl>
       </div>
@@ -156,10 +166,11 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
 /* 首屏背景：三层叠加，颜色从设计稿像素取样。
    顺序 = 上层到下层：右上浓橙光晕 → 左下薄荷绿光晕 → 纵向暖橙到近白的底色。
    写原生 CSS 而不是 Tailwind，是因为多层 radial-gradient 用工具类表达会很长，也不好读出意图 */
+/* 光晕尺寸同样写 px：右上橙 960×512 落在 (88%, -8%)，左下绿 880×480 落在 (0%, 108%) */
 .hero-bg {
   background:
-    radial-gradient(60rem 32rem at 88% -8%, rgba(255, 131, 63, 0.26), transparent 68%),
-    radial-gradient(55rem 30rem at 0% 108%, rgba(47, 158, 110, 0.16), transparent 70%),
+    radial-gradient(960px 512px at 88% -8%, rgba(255, 131, 63, 0.26), transparent 68%),
+    radial-gradient(880px 480px at 0% 108%, rgba(47, 158, 110, 0.16), transparent 70%),
     linear-gradient(180deg, #fff1e6 0%, #fffbf7 45%, #fdfdfb 100%);
 }
 </style>
