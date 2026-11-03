@@ -7,6 +7,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { siteConfig } from '@/config/site'
+import glowImg from '@/assets/home/images/glow.png'
 
 /**
  * 第四屏：平台功能结构（原型 04）。
@@ -42,8 +43,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <section ref="root" class="arch-bg pb-[80px] pt-[136px]">
-    <div class="container-page">
+  <section ref="root" class="arch-bg relative overflow-hidden pb-[80px] pt-[136px]">
+    <!-- 背景光斑：glow.png 是黑底硬边圆盘，screen 混合吃掉黑底，
+         大半径模糊把硬边和同心环纹理揉开，只剩一团微亮的绿光 -->
+    <img
+      :src="glowImg"
+      alt=""
+      aria-hidden="true"
+      class="pointer-events-none absolute -top-[300px] right-[-200px] w-[900px] select-none opacity-60 mix-blend-screen blur-[70px]"
+    />
+
+    <div class="container-page relative">
       <!-- 眉题：跟前三屏同款，11px 橙色宽字距 -->
       <p
         class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
@@ -91,7 +101,7 @@ onMounted(() => {
             <div
               v-for="block in layer.blocks"
               :key="block"
-              class="flex h-[38px] items-center justify-center rounded-[8px] bg-night-800 text-center text-[14px] leading-[20px] text-white"
+              class="flex h-[44px] items-center justify-center rounded-[8px] bg-night-800 text-center text-[14px] leading-[20px] text-white"
               :class="layer.blocks!.length >= 5 ? 'px-[8px] text-[13px]' : ''"
             >
               {{ block }}
@@ -103,7 +113,7 @@ onMounted(() => {
             <div
               v-for="mod in layer.modules"
               :key="mod.title"
-              class="rounded-[10px] border border-[#7d5530] bg-[#5b391d] p-[12px]"
+              class="rounded-[10px] border border-[#7d5530] bg-[#5b391d] px-[12px] pb-[20px] pt-[12px]"
             >
               <h3 class="text-[15px] font-bold leading-[22px] text-white">{{ mod.title }}</h3>
               <p class="mt-[4px] text-[11px] leading-[16px] text-[#d9bd97]">（{{ mod.desc }}）</p>
@@ -125,12 +135,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* 暗底：夜色绿打底，上方压一层很淡的径向光斑（原型顶部那片微亮），
-   光斑用半透明色才能跟底色融在一起 */
+/* 暗底：夜色绿打底，顶部的光斑由 glow.png 叠层负责（见模板里的 img） */
 .arch-bg {
-  background:
-    radial-gradient(52% 42% at 60% 8%, rgba(38, 78, 61, 0.5) 0%, rgba(38, 78, 61, 0) 70%),
-    #0f211b;
+  background: #0f211b;
 }
 
 /* 每层块区的列数：窄屏先叠一列，sm 起按 --cols 等分（块数不同不能写死类名） */
