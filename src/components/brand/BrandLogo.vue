@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import logoMark from '@/assets/logo.webp'
+import logoMark from '@/assets/brand/logo.webp'
 
 /**
  * 品牌标识：图形 mark + 中文名 + 英文名，对应原型图左上角的横向组合

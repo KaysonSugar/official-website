@@ -31,16 +31,19 @@ wyd-official-website/
 ├── eslint.config.js            # ESLint flat config（Vue + TS 规则）
 ├── .prettierrc.json            # Prettier 格式化规则
 ├── public/
-│   ├── favicon.png             # 站点图标（由 assets/logo.webp 导出）
+│   ├── favicon.png             # 站点图标（由 assets/brand/logo.webp 导出）
 │   └── apple-touch-icon.png    # iOS 添加到主屏图标
 └── src/
     ├── main.ts                 # 应用入口，等路由就绪后挂载 #app，引入全局样式
     ├── App.vue                 # 根组件：顶栏 + RouterView + 页脚（无样式、无文案）
     ├── style.css               # 全局样式入口 + 设计 token（@theme）+ 基础样式
     ├── vite-env.d.ts           # Vite 类型声明
-    ├── assets/
-    │   ├── logo.webp           # 品牌图形 mark（259×260，导航栏与页脚使用）
-    │   ├── logo-text.webp      # 完整组合标（图形+中文+英文，备用）
+    ├── assets/                 # 素材按「导航层级」分包：页面专属素材进同名目录，全局品牌素材进 brand/
+    │   ├── brand/              # 全局品牌素材：顶栏与页脚共用
+    │   │   ├── logo.webp           # 品牌图形 mark（259×260，导航栏与页脚使用）
+    │   │   └── logo-text.webp      # 完整组合标（图形+中文+英文，备用）
+    │   │   # 后续页面素材按导航落位：home/（首页）、products/（产品矩阵，可再分 chemical/logistics/driver）、
+    │   │   # support/（服务支持）、about/（关于我们）。没有素材就先不建空目录
     │   └── footer/             # 页脚「关注我们」四张二维码
     │       ├── ewm-gzh.jpg     # 微信公众号（258×258）
     │       ├── ewm-dy.png      # 官方抖音号（512×498，青绿底涂鸦码；实为 JPEG）
@@ -128,7 +131,7 @@ npm run format
 > 后续所有工作（铺首页 16 个区块、补内页正文、加新页面）都在这个骨架上做，不再讨论「要不要拆页」。
 > 唯一允许的结构性变更是**新增页面**（往 `router/index.ts` 加一条 + `site.ts` 加一条 `pages` 记录）。
 
-**一级导航 5 项，其中「产品矩阵」带二级下拉，共 8 个路由页**，点击切换页面，页面内部各自滚动。
+**一级导航 4 项（首页 / 产品矩阵 / 服务支持 / 关于我们），其中「产品矩阵」带二级下拉，共 8 个路由页**，点击切换页面，页面内部各自滚动。
 
 这个结论来自原型画板本身：`01 首页` 是一张 1440×约 10600 的长画板，里面没有化工 / 物流 / 司机 / 解决方案这些标题；后四项各自对应另外一张画板（宽高比 1:1.87 / 1:2.63 / 1:1.38 / 1:1.65）。其中化工/物流/司机三张是**三条业务线**，挂在「产品矩阵」之下，不是一级导航。
 
@@ -140,7 +143,7 @@ npm run format
 | └ 二级   | 化工生产 | `/products/chemical`  | `ProductChemicalView.vue`  | 威易达化工：生产与经营管理     |
 | └ 二级   | 物流调度 | `/products/logistics` | `ProductLogisticsView.vue` | 威易达物流：调度与合规         |
 | └ 二级   | 司机作业 | `/products/driver`    | `ProductDriverView.vue`    | 威易达司机：接单与作业         |
-| 一级     | 解决方案 | `/solutions`          | `SolutionsView.vue`        | 按角色区分的解决方案           |
+| 一级     | 服务支持 | `/solutions`          | `SolutionsView.vue`        | 定稿导航改叫服务支持，页面待补   |
 | 一级     | 关于我们 | `/about`              | `AboutView.vue`            | 暂无画板（文案占位）           |
 
 导航数据源是 `config/site.ts` 的 `navItems`：一级项 `{ label, to }`，带下拉的再挂 `children: NavChild[]`。`to` 必须与 `router/index.ts` 的 `path` 完全一致，改路由要两边同步；三条业务线在 `productLines` 里定义一次，导航下拉与 `/products` 页的卡片同源。
@@ -155,7 +158,7 @@ npm run format
 | 化工生产 | ✅ 取原型画板标题                             | 待铺（原型 2~4 屏）          | ✅       |
 | 物流调度 | ✅ 取原型画板标题                             | 待铺（原型 2~4 屏）          | ✅       |
 | 司机作业 | ✅ 取原型画板标题                             | 待铺（原型 2~4 屏）          | ✅       |
-| 解决方案 | ✅ 居中对齐                                   | 待铺（原型 2~4 屏）          | ✅       |
+| 服务支持 | ✅ 居中对齐                                   | 待铺（原型 2~4 屏）          | ✅       |
 | 关于我们 | ✅ 占位文案                                   | 待设计（无原型画板）         | ✅       |
 
 **内容分工已定**：首页放「完整叙事 + 每块留一个进内页的口子」，内页放该板块的全部细节。

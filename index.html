@@ -62,15 +62,14 @@
     <!-- 移动端浏览器地址栏配色，与品牌主色 brand-500 (#FF833F) 保持一致 -->
     <meta name="theme-color" content="#FF833F" />
 
-    <!-- 站点图标：由 src/assets/logo.webp（品牌图形 mark）导出，构建后从 public/ 拷贝到根目录 -->
+    <!-- 站点图标：由 src/assets/brand/logo.webp（品牌图形 mark）导出，构建后从 public/ 拷贝到根目录 -->
     <link rel="icon" type="image/png" href="/favicon.png" />
     <!-- iOS 添加到主屏时使用的图标，建议 180×180，当前复用同一张图 -->
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <!-- 预加载顶栏 logo：它挂载后才渲染成 <img>，不提前取会比正文晚十几毫秒。
-         构建时 Vite 会把路径重写成带 hash 的产物。 -->
-    <link rel="preload" as="image" href="/src/assets/logo.webp" />
-    <link rel="preload" as="image" href="/src/assets/logo-text.webp" />
+         构建时 Vite 会把路径重写成带 hash 的产物。（组合标页面里没用到，不再预加载） -->
+    <link rel="preload" as="image" href="/src/assets/brand/logo.webp" />
   </head>
   <body>
     <!-- 兜底提示：上面的 #app:empty 规则会在脚本不可用时一直隐藏页面，

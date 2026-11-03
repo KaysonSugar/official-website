@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import logoMark from '@/assets/logo.webp'
+import logoMark from '@/assets/brand/logo.webp'
 import qrWechat from '@/assets/footer/ewm-gzh.jpg'
 import qrDouyin from '@/assets/footer/ewm-dy.png'
 import qrKuaishou from '@/assets/footer/ewm-ks.jpg'
