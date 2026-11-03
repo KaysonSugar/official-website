@@ -65,18 +65,22 @@ export interface SiteConfig {
   navItems: NavItem[]
   /** 各页面首屏文案（首页除外，首页文案在 hero 里） */
   pages: PageIntro[]
-  /** 首页首屏 Hero */
+  /** 首页首屏 Hero（定稿原型 01：左文案 + 右后台看板） */
   hero: {
-    /** 主标题 */
+    /** 标题上方的法规对标胶囊 */
+    badge: string
+    /** 主标题第一行（黑） */
     title: string
-    /** 一句话价值主张 */
-    tagline: string
+    /** 主标题第二行（品牌橙） */
+    titleAccent: string
+    /** 标题下的一段说明 */
+    desc: string
     /** 主按钮文案 */
     primaryCta: string
-    /** 次按钮文案 */
-    secondaryCta: string
-    /** 次按钮跳转的路由 */
-    secondaryCtaTo: string
+    /** 主按钮下方三个卖点胶囊 */
+    features: string[]
+    /** 首屏底部数字条 */
+    stats: { value: string; label: string }[]
   }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案） */
   cta: {
@@ -206,11 +210,18 @@ export const siteConfig: SiteConfig = {
   ],
   pages,
   hero: {
-    title: '用数字化平台重构化工生产效率',
-    tagline: '从原料到成品全链路在线，让每一条产线的数据都能被看见、被追溯、被优化。',
+    badge: '对标 2026 版《危险化学品安全法》',
+    title: '威易达化工生产 + 危化运输',
+    titleAccent: '一体化平台',
+    desc: '覆盖销售订单、原料入库、工厂投产、成品发货与在途运输的全过程。业务数据一处录入、多处复用，合规记录随流程自动生成。',
     primaryCta: '预约演示',
-    secondaryCta: '了解平台架构',
-    secondaryCtaTo: '/platform',
+    features: ['合规前置校验', '一物一码全链路追溯', '多端协同调度'],
+    stats: [
+      { value: '10', label: '大业务模块' },
+      { value: '1', label: '个数据库' },
+      { value: '7 天', label: '完成上线部署' },
+      { value: '7×24', label: '技术支持响应' },
+    ],
   },
   cta: {
     title: '约一次 30 分钟的线上演示',
