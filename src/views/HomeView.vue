@@ -9,8 +9,9 @@ import CtaBanner from '@/components/sections/CtaBanner.vue'
 import HeroSection from '@/components/sections/HeroSection.vue'
 import IndustrySection from '@/components/sections/IndustrySection.vue'
 import LightweightSection from '@/components/sections/LightweightSection.vue'
+import PlatformArchitectureSection from '@/components/sections/PlatformArchitectureSection.vue'
 
-// 首页。原型 16 个区块，做到第 3 屏，后面的等设计稿逐块补
+// 首页。原型 16 个区块，做到第 4 屏，后面的等设计稿逐块补
 </script>
 
 <template>
@@ -20,6 +21,8 @@ import LightweightSection from '@/components/sections/LightweightSection.vue'
   <IndustrySection />
   <!-- 第三屏：轻量化平台，胶囊 + 痛点面板 + 两组卡片 -->
   <LightweightSection />
+  <!-- 第四屏：平台功能结构，暗色六层架构图 -->
+  <PlatformArchitectureSection />
   <!-- 底部行动号召：首页和内页共用一份文案 -->
   <CtaBanner />
 </template>
