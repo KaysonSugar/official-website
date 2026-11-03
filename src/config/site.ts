@@ -95,6 +95,43 @@ export interface SiteConfig {
     /** 底部「平台响应」提示条 */
     note: string
   }
+  /** 首页第三屏：轻量化平台（定稿原型 03，胶囊 + 痛点面板 + 两组卡片 + 底部绿条） */
+  lightweight: {
+    /** 标题上方的橙色眉题（英文 / 中文） */
+    eyebrow: string
+    /** 板块主标题 */
+    title: string
+    /** 标题下的一段说明 */
+    desc: string
+    /** 标题下四个卖点胶囊，icon 对应 assets/home/icons 下的素材名 */
+    tags: { icon: 'tag-erp' | 'tag-invest' | 'tag-speed' | 'tag-launch'; text: string }[]
+    /** 痛点面板：浅橙大底内嵌三张白卡 */
+    pain: {
+      /** 面板左上角的小标题 */
+      title: string
+      /** 三张痛点卡，编号 01/02/03 显示在卡片右上角 */
+      cards: {
+        icon: 'pain-price' | 'pain-staff' | 'pain-compliance'
+        no: string
+        title: string
+        desc: string
+      }[]
+    }
+    /** 两组「小标题 + 卡片阵列」，投入轻四卡 4 列、核心能力四卡 2×2 */
+    groups: {
+      /** 小标题 */
+      title: string
+      /** 卡片横排列数：4 竖卡一排 / 2 宽卡两排，窄屏自动降列 */
+      cols: 4 | 2
+      cards: {
+        icon: string
+        title: string
+        desc: string
+      }[]
+    }[]
+    /** 底部绿色提示条里的两条短句（左侧带勾图标） */
+    notes: string[]
+  }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案） */
   cta: {
     /** 主标题 */
@@ -268,6 +305,83 @@ export const siteConfig: SiteConfig = {
       },
     ],
     note: '平台响应：对标新法要求，将合规要求内置于系统流程，以全生命周期信息化手段，帮助企业轻松应对监管挑战，实现安全与合规一体化落地。',
+  },
+  // 原型 03：轻量化平台。icon 名即 assets/home/icons/ 下的文件名（不含 .png）
+  lightweight: {
+    eyebrow: 'LIGHTWEIGHT PLATFORM / 轻量化平台',
+    title: '减负提效，轻量合规',
+    desc: '面向预算与信息化人员较为有限的中小化工及运输企业，平台以 SaaS 方式交付，覆盖生产、仓储、运输与合规台账管理。',
+    tags: [
+      { icon: 'tag-erp', text: '无需重型 ERP 系统' },
+      { icon: 'tag-invest', text: '无需大额软硬件投入' },
+      { icon: 'tag-speed', text: '基础操作约一小时' },
+      { icon: 'tag-launch', text: '七天完成上线部署' },
+    ],
+    pain: {
+      title: '中小企业的三项现实约束',
+      cards: [
+        {
+          icon: 'pain-price',
+          no: '01',
+          title: '预算有限',
+          desc: '重型系统采购与定制开发投入较高，实施周期长。',
+        },
+        {
+          icon: 'pain-staff',
+          no: '02',
+          title: '落地困难',
+          desc: '缺乏专职运维及信息化人员，复杂系统难以推广。',
+        },
+        {
+          icon: 'pain-compliance',
+          no: '03',
+          title: '合规压力',
+          desc: '追溯、人车校验与台账缺乏专人管理，违规处罚金额高。',
+        },
+      ],
+    },
+    groups: [
+      {
+        title: '平台在投入、操作、运维与部署四个方面进行了简化',
+        cols: 4,
+        cards: [
+          { icon: 'light-invest', title: '投入轻', desc: '无需额外实施费用，按需订阅。' },
+          { icon: 'light-operate', title: '操作轻', desc: '流程精简，约一小时即可掌握。' },
+          { icon: 'light-maintain', title: '运维轻', desc: '无需专职 IT，版本由云端统一升级。' },
+          { icon: 'light-deploy', title: '部署轻', desc: 'SaaS 架构，无需本地服务器。' },
+        ],
+      },
+      {
+        title: '核心能力覆盖生产、调度、溯源与财务台账',
+        cols: 2,
+        cards: [
+          {
+            icon: 'cap-production',
+            title: '生产管控',
+            desc: '支持简易排产与 BOM 自动拆解，库存、采购及生产环节形成闭环管理。',
+          },
+          {
+            icon: 'cap-dispatch',
+            title: '智能调度',
+            desc: '运单一键发布，系统自动匹配运力，并校验人车资质与禁配物料。',
+          },
+          {
+            icon: 'cap-trace',
+            title: '全链路溯源',
+            desc: '采用一物一码追溯，电子台账自动生成并加密存档，监管报表可导出。',
+          },
+          {
+            icon: 'cap-finance',
+            title: '财务台账',
+            desc: '收付款、报销与资金流水统一统计，报表自动生成，满足日常对账需要。',
+          },
+        ],
+      },
+    ],
+    notes: [
+      '生产、仓储与运输共用同一套系统，无需在多个软件之间切换。',
+      '合规校验内置于业务流程之中，对无证作业与混装等违规行为形成事前拦截。',
+    ],
   },
   cta: {
     title: '约一次 30 分钟的线上演示',
