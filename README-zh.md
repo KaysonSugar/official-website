@@ -52,20 +52,23 @@ wyd-official-website/
     │   └── index.ts            # 路由表（8 个页面 + 兜底）+ 切页落点 + 标题同步
     ├── views/                  # 路由页面：一页一个文件，只做区块编排
     │   ├── HomeView.vue            # /
-    │   ├── PlatformView.vue        # /platform             平台架构
-    │   ├── ProductsView.vue        # /products             产品矩阵（三条业务线总览）
-    │   ├── ProductChemicalView.vue # /products/chemical    化工生产
-    │   ├── ProductLogisticsView.vue# /products/logistics   物流调度
-    │   ├── ProductDriverView.vue   # /products/driver      司机作业
-    │   ├── SolutionsView.vue       # /solutions            解决方案
-    │   └── AboutView.vue           # /about                关于我们
+    │   ├── PlatformView.vue        # /platform             平台架构（已从导航撤下，页脚仍可进入）
+    │   ├── SolutionsView.vue       # /solutions            服务支持
+    │   ├── AboutView.vue           # /about                关于我们
+    │   └── products/               # 产品矩阵整组，与 /products/* 层级对应
+    │       ├── ProductsView.vue        # /products         产品矩阵（三条业务线总览）
+    │       ├── ProductChemicalView.vue # /products/chemical 化工生产
+    │       ├── ProductLogisticsView.vue# /products/logistics 物流调度
+    │       └── ProductDriverView.vue   # /products/driver  司机作业
     ├── composables/
     │   └── useReveal.ts        # 滚动进场动效（IntersectionObserver，只触发一次）
     └── components/
         ├── brand/
         │   └── BrandLogo.vue   # 品牌标识：图形 + 中文 + 英文（对应原型左上角）
         ├── layout/
-        │   ├── SiteHeader.vue  # 固定顶栏：品牌 / 导航（含悬停下拉）/ 电话 / 预约演示 / 汉堡菜单
+        │   ├── SiteHeader.vue  # 顶栏壳：三段式布局、滚动两态、电话 / 预约演示 / 汉堡开关
+        │   ├── DesktopNav.vue  # 桌面主导航（≥1024px）：悬停下拉 + 路由高亮
+        │   ├── MobileMenu.vue  # 移动端菜单（<1024px）：收到 open 后展示，点链接发 close
         │   └── SiteFooter.vue  # 页脚：组合标 / 快速导航 / 联系方式 / 版权
         ├── sections/
         │   ├── HeroSection.vue      # 首页首屏（待按原型改为「左文 + 右看板」两栏）
