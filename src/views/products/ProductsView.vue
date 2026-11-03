@@ -32,10 +32,10 @@ const productLines = siteConfig.navItems.find((item) => item.to === '/products')
       <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
         <li v-for="(line, index) in productLines" :key="line.to">
           <!-- 整卡可点：group 让箭头跟着动；h-full 让同排等高；
-               hover 上浮 1px、边框转浅橙、加一层很淡的投影 -->
+               hover 上浮 1px、边框转浅橙、加一层很淡的投影（card-lift，全局样式） -->
           <RouterLink
             :to="line.to"
-            class="group flex h-full flex-col rounded-xl border border-ink-100 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lg hover:shadow-ink-900/5 sm:p-8"
+            class="group card-lift flex h-full flex-col rounded-xl border border-ink-100 bg-white p-6 hover:border-brand-200 sm:p-8"
           >
             <!-- 序号：等宽字体让 01/02/03 对齐，品牌橙点一下 -->
             <span class="font-mono text-sm font-medium text-brand-500">

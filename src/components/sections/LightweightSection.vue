@@ -159,7 +159,7 @@ onMounted(() => {
           <article
             v-for="(card, i) in group.cards"
             :key="card.title"
-            class="reveal rounded-[16px] border border-ink-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_16px_36px_-16px_rgba(26,26,26,0.16)]"
+            class="reveal card-lift rounded-[16px] border border-ink-100 bg-white"
             :class="group.cols === 4 ? 'p-[24px]' : 'flex items-start gap-[16px] p-[32px]'"
             :style="{ '--d': `${(g === 0 ? 780 : 1140) + i * 80}ms` }"
           >

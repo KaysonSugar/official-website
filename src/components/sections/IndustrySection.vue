@@ -82,7 +82,7 @@ onMounted(() => {
         <article
           v-for="(card, i) in industry.cards"
           :key="card.title"
-          class="reveal rounded-[16px] border border-ink-100 bg-white p-[24px] transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_16px_36px_-16px_rgba(26,26,26,0.16)]"
+          class="reveal card-lift rounded-[16px] border border-ink-100 bg-white p-[24px]"
           :style="{ '--d': `${200 + i * 100}ms` }"
         >
           <!-- 图标：素材 176×176 自带圆角浅底，显示 42 -->

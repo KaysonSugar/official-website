@@ -70,6 +70,36 @@
       padding-inline: 5rem;
     }
   }
+
+  /* 卡片悬浮：上浮 4px + 阴影浮现，第二屏 / 第三屏 / 产品页卡片共用。
+     阴影画在伪元素上只过渡它的 opacity——直接 transition box-shadow
+     每帧都重绘整块阴影，大屏下鼠标扫过一排卡片肉眼可见的卡顿 */
+  .card-lift {
+    position: relative;
+    will-change: transform; /* 提前建合成层，hover 第一帧不会抖一下 */
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .card-lift::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit; /* 跟卡片圆角走，别处改圆角这里不用管 */
+    box-shadow: 0 16px 36px -16px rgba(26, 26, 26, 0.16);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* 盖在内容上但不挡点击 */
+  }
+
+  .card-lift:hover {
+    transform: translateY(-4px);
+  }
+
+  .card-lift:hover::after {
+    opacity: 1;
+  }
 }
 
 /* 基础样式层：优先级低于工具类，可被组件中的 Tailwind 类名覆盖 */
