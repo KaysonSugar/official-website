@@ -19,3 +19,4 @@ dist-ssr
 
 # WorkBuddy 工作区数据（仅本地使用，不提交）
 .workbuddy/
+.playwright-cli/
