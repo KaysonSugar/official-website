@@ -1,13 +1,13 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 品牌标识
+-->
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import logoMark from '@/assets/brand/logo.webp'
 
-/**
- * 品牌标识：图形 + 中文名 + 英文名，横排。
- *
- * 没用整张 logo-text.webp，是因为原型里文字是横排的（整图是竖排组合），
- * 缩到导航栏高度中文就糊了；文字用 HTML 还能换色，搜索引擎也读得到。
- */
 interface Props {
   /** 中文品牌名 */
   name: string

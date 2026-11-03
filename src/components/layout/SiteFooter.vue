@@ -1,3 +1,9 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 站点页脚
+-->
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import logoMark from '@/assets/brand/logo.webp'
@@ -6,10 +12,6 @@ import qrDouyin from '@/assets/footer/ewm-dy.png'
 import qrKuaishou from '@/assets/footer/ewm-ks.jpg'
 import qrApp from '@/assets/footer/download-icon.png'
 import { siteConfig } from '@/config/site'
-
-// 页脚，按设计稿 1440×343 还原：五栏、二维码 100×100、间距 10。
-// 响应式：手机单列 → ≥640 两列 → ≥1024 三列 → ≥1440 五栏（最后一档见文件末尾）
-
 /** 四张二维码。图在这里 import，Vite 才会做哈希命名 */
 const qrcodes = [
   { src: qrWechat, label: '微信公众号', alt: '威易达化工微信公众号二维码' },

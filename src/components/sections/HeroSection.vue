@@ -1,3 +1,9 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 首页首屏
+-->
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'

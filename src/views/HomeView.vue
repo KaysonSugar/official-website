@@ -1,3 +1,9 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 首页
+-->
 <script setup lang="ts">
 import CtaBanner from '@/components/sections/CtaBanner.vue'
 import HeroSection from '@/components/sections/HeroSection.vue'

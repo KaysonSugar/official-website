@@ -1,3 +1,9 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 产品矩阵页
+-->
 <script setup lang="ts">
 import CtaBanner from '@/components/sections/CtaBanner.vue'
 import { RouterLink } from 'vue-router'

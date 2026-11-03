@@ -1,3 +1,9 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 根组件：顶栏 + 路由出口 + 页脚
+-->
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import SiteHeader from '@/components/layout/SiteHeader.vue'

@@ -1,3 +1,9 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 底部行动号召
+-->
 <script setup lang="ts">
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { siteConfig } from '@/config/site'

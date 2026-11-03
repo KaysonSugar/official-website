@@ -1,4 +1,11 @@
 /**
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 站点内容配置
+ */
+
+/**
  * 站点内容配置（唯一数据源）
  *
  * 页面上的品牌信息、导航、各页面首屏文案全部集中在这里。

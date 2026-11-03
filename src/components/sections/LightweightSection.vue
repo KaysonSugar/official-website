@@ -1,3 +1,9 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 首页第三屏：轻量化平台
+-->
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { siteConfig } from '@/config/site'

@@ -1,3 +1,9 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 内页首屏
+-->
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'

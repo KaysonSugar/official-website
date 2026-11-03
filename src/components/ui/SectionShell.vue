@@ -1,3 +1,9 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 区块外壳
+-->
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'

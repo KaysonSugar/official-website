@@ -1,3 +1,9 @@
+/**
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 应用入口
+ */
 // 应用入口：创建 Vue 实例、挂载路由并渲染到 index.html 中的 #app 节点
 import { createApp } from 'vue'
 // 全局样式：内含 Tailwind 入口（@import "tailwindcss"）、设计 token 与基础样式，必须在此引入

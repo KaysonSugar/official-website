@@ -1,3 +1,9 @@
+/**
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 路由表
+ */
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import PlatformView from '@/views/PlatformView.vue'

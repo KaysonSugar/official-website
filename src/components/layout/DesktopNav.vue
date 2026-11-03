@@ -1,12 +1,14 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 桌面主导航
+-->
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { siteConfig, type NavItem } from '@/config/site'
 
-/**
- * 桌面主导航（≥1024），从顶栏拆出来的中间那段。
- * 悬停展开「产品矩阵」的下拉，Tab 键也走得通。展开状态自己管。
- */
 // 当前展开的是哪个导航项，存 to，天然互斥
 const openDropdown = ref<string | null>(null)
 
@@ -96,27 +98,27 @@ watch(activePath, () => {
             v-show="openDropdown === item.to"
             class="rounded-b-xl border-x border-b border-ink-100 bg-white p-2 shadow-[0_16px_40px_-8px_rgba(26,26,26,0.18)]"
           >
-          <!-- 子项：整块可点，px-4 py-2.5 保证手点击高度；hover 浅灰，当前页灰底橙字 -->
-          <RouterLink
-            v-for="child in item.children"
-            :key="child.to"
-            :to="child.to"
-            class="block rounded-lg px-4 py-2.5 transition-colors duration-200"
-            :class="
-              activePath === child.to
-                ? 'bg-ink-50 text-brand-500'
-                : 'text-ink-700 hover:bg-ink-50 hover:text-brand-500'
-            "
-            :aria-current="activePath === child.to ? 'page' : undefined"
-          >
-            <!-- 子项标题：15px，和一级导航同号 -->
-            <span class="block text-[15px] font-medium">{{ child.label }}</span>
-            <!-- 补充说明：12px 弱化色，一眼能看出「化工生产」对应「生产与经营管理」 -->
-            <span v-if="child.desc" class="mt-0.5 block text-xs text-ink-400">{{
-              child.desc
-            }}</span>
-          </RouterLink>
-        </div>
+            <!-- 子项：整块可点，px-4 py-2.5 保证手点击高度；hover 浅灰，当前页灰底橙字 -->
+            <RouterLink
+              v-for="child in item.children"
+              :key="child.to"
+              :to="child.to"
+              class="block rounded-lg px-4 py-2.5 transition-colors duration-200"
+              :class="
+                activePath === child.to
+                  ? 'bg-ink-50 text-brand-500'
+                  : 'text-ink-700 hover:bg-ink-50 hover:text-brand-500'
+              "
+              :aria-current="activePath === child.to ? 'page' : undefined"
+            >
+              <!-- 子项标题：15px，和一级导航同号 -->
+              <span class="block text-[15px] font-medium">{{ child.label }}</span>
+              <!-- 补充说明：12px 弱化色，一眼能看出「化工生产」对应「生产与经营管理」 -->
+              <span v-if="child.desc" class="mt-0.5 block text-xs text-ink-400">{{
+                child.desc
+              }}</span>
+            </RouterLink>
+          </div>
         </Transition>
       </div>
     </div>

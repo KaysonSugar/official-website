@@ -1,14 +1,15 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 移动端导航菜单
+-->
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { siteConfig } from '@/config/site'
 
-/**
- * 移动端菜单（<1024），从顶栏拆出来的部分。
- * 开关在顶栏壳上（汉堡在那边），这边只负责显示和收起：
- * 点任意链接发 close，壳把 menuOpen 置 false。
- */
 defineProps<{ open: boolean }>()
 
 const emit = defineEmits<{ close: [] }>()
@@ -31,62 +32,62 @@ const closeMenu = () => emit('close')
       class="absolute inset-x-0 top-full max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-ink-100 bg-white pb-6 pt-2 shadow-lg lg:hidden"
       aria-label="移动端导航"
     >
-    <!-- 菜单内容也套 container-page，跟 logo 左边缘对齐 -->
-    <div class="container-page">
-      <!-- 每项一组，分隔线画在组上（父项带子项算一组），最后一项不画 -->
-      <div
-        v-for="item in siteConfig.navItems"
-        :key="item.to"
-        class="border-b border-ink-100 last:border-b-0"
-      >
-        <!-- 一级项：独占一行，上下 12px 保证手点击高度，当前页橙色加粗 -->
-        <RouterLink
-          :to="item.to"
-          class="block py-3 text-base transition-colors duration-200"
-          :class="
-            activePath === item.to
-              ? 'font-semibold text-brand-500'
-              : 'text-ink-700 hover:text-brand-500'
-          "
-          @click="closeMenu"
-          >{{ item.label }}</RouterLink
+      <!-- 菜单内容也套 container-page，跟 logo 左边缘对齐 -->
+      <div class="container-page">
+        <!-- 每项一组，分隔线画在组上（父项带子项算一组），最后一项不画 -->
+        <div
+          v-for="item in siteConfig.navItems"
+          :key="item.to"
+          class="border-b border-ink-100 last:border-b-0"
         >
+          <!-- 一级项：独占一行，上下 12px 保证手点击高度，当前页橙色加粗 -->
+          <RouterLink
+            :to="item.to"
+            class="block py-3 text-base transition-colors duration-200"
+            :class="
+              activePath === item.to
+                ? 'font-semibold text-brand-500'
+                : 'text-ink-700 hover:text-brand-500'
+            "
+            @click="closeMenu"
+            >{{ item.label }}</RouterLink
+          >
 
-        <!-- 二级项：缩进平铺，只有三个，一屏能看完，不做折叠省一次点击 -->
-        <ul v-if="item.children" class="pb-2">
-          <li v-for="child in item.children" :key="child.to">
-            <RouterLink
-              :to="child.to"
-              class="flex items-baseline gap-2 rounded-lg py-2 pl-4 pr-2 transition-colors duration-200"
-              :class="
-                activePath === child.to ? 'text-brand-500' : 'text-ink-600 hover:text-brand-500'
-              "
-              @click="closeMenu"
-            >
-              <!-- 4px 小圆点，比单纯缩进更容易看出层级（ink-300 没定义，用 400） -->
-              <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-ink-400" aria-hidden="true" />
-              <span class="text-sm font-medium">{{ child.label }}</span>
-              <span v-if="child.desc" class="text-xs text-ink-400">{{ child.desc }}</span>
-            </RouterLink>
-          </li>
-        </ul>
-      </div>
+          <!-- 二级项：缩进平铺，只有三个，一屏能看完，不做折叠省一次点击 -->
+          <ul v-if="item.children" class="pb-2">
+            <li v-for="child in item.children" :key="child.to">
+              <RouterLink
+                :to="child.to"
+                class="flex items-baseline gap-2 rounded-lg py-2 pl-4 pr-2 transition-colors duration-200"
+                :class="
+                  activePath === child.to ? 'text-brand-500' : 'text-ink-600 hover:text-brand-500'
+                "
+                @click="closeMenu"
+              >
+                <!-- 4px 小圆点，比单纯缩进更容易看出层级（ink-300 没定义，用 400） -->
+                <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-ink-400" aria-hidden="true" />
+                <span class="text-sm font-medium">{{ child.label }}</span>
+                <span v-if="child.desc" class="text-xs text-ink-400">{{ child.desc }}</span>
+              </RouterLink>
+            </li>
+          </ul>
+        </div>
 
-      <!-- 底部行动区：跟顶栏右侧互补，同一个入口只出现一份。
+        <!-- 底部行动区：跟顶栏右侧互补，同一个入口只出现一份。
            电话 ≥768 就由顶栏常驻了，这里 md:hidden；预约按钮 ≥640 常驻，这里 sm:hidden -->
-      <div class="mt-5 flex flex-col gap-3 md:hidden">
-        <!-- 电话做成描边按钮，和主按钮分主次 -->
-        <BaseButton :href="siteConfig.contact.phoneHref" variant="outline" block>
-          {{ siteConfig.contact.phone }}
-        </BaseButton>
-        <!-- 主按钮外面包一层 div 控显隐，同样不能把 sm:hidden 写在 BaseButton 上（inline-flex 会盖掉） -->
-        <div class="sm:hidden">
-          <BaseButton :href="siteConfig.contact.ctaHref" block @click="closeMenu">
-            {{ siteConfig.contact.ctaLabel }}
+        <div class="mt-5 flex flex-col gap-3 md:hidden">
+          <!-- 电话做成描边按钮，和主按钮分主次 -->
+          <BaseButton :href="siteConfig.contact.phoneHref" variant="outline" block>
+            {{ siteConfig.contact.phone }}
           </BaseButton>
+          <!-- 主按钮外面包一层 div 控显隐，同样不能把 sm:hidden 写在 BaseButton 上（inline-flex 会盖掉） -->
+          <div class="sm:hidden">
+            <BaseButton :href="siteConfig.contact.ctaHref" block @click="closeMenu">
+              {{ siteConfig.contact.ctaLabel }}
+            </BaseButton>
+          </div>
         </div>
       </div>
-    </div>
     </nav>
   </Transition>
 </template>

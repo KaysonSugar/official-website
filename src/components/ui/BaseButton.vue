@@ -1,3 +1,9 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 通用按钮
+-->
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'

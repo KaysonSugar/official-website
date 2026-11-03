@@ -1,3 +1,9 @@
+/**
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 滚动进场工具
+ */
 import { onMounted, onUnmounted, ref, type Ref } from 'vue'
 
 /**
