@@ -106,19 +106,26 @@ onMounted(() => {
           :class="card.tone === 'orange' ? 'bg-[#fdf4ec]' : 'bg-[#eef7f2]'"
           :style="{ '--d': `${340 + i * 80}ms` }"
         >
-          <!-- 光斑：透明底圆盘素材，模糊后垫在图标后面 -->
+          <!-- 光斑：透明底圆盘素材，模糊后垫在图标后面（原型 logo 周围那圈明显的暖光） -->
           <img
             :src="glowMap[i]"
             alt=""
             aria-hidden="true"
-            class="pointer-events-none absolute -top-[150px] left-1/2 w-[420px] -translate-x-1/2 select-none opacity-70 blur-[60px]"
+            class="pointer-events-none absolute -top-[130px] left-1/2 w-[380px] -translate-x-1/2 select-none opacity-80 blur-[40px]"
           />
-          <!-- 圆环：细线圆素材，右下角露一段弧 -->
+          <!-- 右下角：先一团光斑填充，再压圆环线——原型里环内是有底色的，
+               圆心在卡片角外，只露左上四分之一弧 -->
+          <img
+            :src="glowMap[i]"
+            alt=""
+            aria-hidden="true"
+            class="pointer-events-none absolute -bottom-[200px] -right-[100px] w-[320px] select-none opacity-80 blur-[50px]"
+          />
           <img
             :src="ringMap[i]"
             alt=""
             aria-hidden="true"
-            class="pointer-events-none absolute -bottom-[120px] -right-[70px] w-[330px] select-none opacity-70"
+            class="pointer-events-none absolute -bottom-[240px] -right-[150px] w-[400px] select-none opacity-70"
           />
 
           <div class="relative">
