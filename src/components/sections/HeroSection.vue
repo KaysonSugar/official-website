@@ -8,10 +8,13 @@
 import { computed, onMounted, ref } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { siteConfig } from '@/config/site'
-// 图重采样成 2 倍显示尺寸的无损 WebP——4 倍原图经浏览器缩小反而发虚，
-// 2 倍正好喂饱视网膜屏；看板和浮层卡里的文字已经烘焙在图里
+// 看板用三档 srcset：显示宽度随视口变（1440 视口约 598、1920 约 827），浏览器按
+// 设备像素就近取图，采样比接近 1:1 才不糊——单一尺寸总有一档是 2 倍以上的缩小。
+// 浮层卡显示宽度有 min() 封顶，2 倍尺寸一张就够；文字都烘焙在图里
 import badgeImg from '@/assets/home/images/badge.webp'
 import workbenchImg from '@/assets/home/images/workbench-body.webp'
+import workbenchSm from '@/assets/home/images/workbench-body-sm.webp'
+import workbenchLg from '@/assets/home/images/workbench-body-lg.webp'
 import complianceImg from '@/assets/home/images/compliance.webp'
 import onTheWayImg from '@/assets/home/images/on-the-way.webp'
 import ringsImg from '@/assets/home/images/rings.webp'
@@ -36,10 +39,23 @@ const stats = computed(() =>
   }),
 )
 
+// 能递增的条目初始就渲染 0（模板里拼 0 + 尾巴），不然页面先闪终值、
+// 动画启动又跳回 0 重数，肉眼看是闪一下「7 天 → 0 天 → …」
 onMounted(() => {
+  // 把没走到递增逻辑的条目直接填成终值（关动效 / 老浏览器两条提前 return 的路）
+  const fillFinal = () => {
+    statsEl.value
+      ?.querySelectorAll<HTMLElement>('[data-num]')
+      .forEach((el) => {
+        el.textContent = `${el.dataset.num ?? ''}${el.dataset.rest ?? ''}`
+      })
+  }
+
   // 关了动效或者浏览器太老，就直接显示终值
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-  if (!('IntersectionObserver' in window)) return
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+    fillFinal()
+    return
+  }
 
   const els = statsEl.value?.querySelectorAll<HTMLElement>('[data-num]')
   if (!els?.length) return
@@ -162,34 +178,34 @@ onMounted(() => {
                top 用 calc 是因为纯百分比的卡会跟着看板一起涨、1920 顶到导航栏，
                px 那部分把它按住，卡顶恒定在导航栏下 20px；宽和左探用 min/max 封顶，
                不然卡变大后底边会压到看板里的六边形 logo。
-               素材 480×253（2 倍显示尺寸），下缘投影已裁掉渐隐。
-               will-change：pop-in 是 scale 动画，不预建层的话 Chrome 会按动画中间
-               状态光栅化，动画播完缓存的糊纹理一直留着（刷新后先清后糊就是这个） -->
+               素材 480×253（2 倍显示尺寸），下缘投影已裁掉渐隐 -->
           <img
             :src="complianceImg"
             alt=""
-            class="pop-in absolute left-[max(-71px,-11.8%)] top-[calc(-47px_-_5.25%)] z-10 w-[min(240px,34.4%)] select-none will-change-transform"
+            class="pop-in absolute left-[max(-71px,-11.8%)] top-[calc(-47px_-_5.25%)] z-10 w-[min(240px,34.4%)] select-none"
             :style="{ animationDelay: '450ms' }"
           />
 
           <!-- 看板整图：圆角 + 柔和投影浮起来。
                relative 不能省：圆环是 absolute，普通流元素会被它盖住。
-               will-change 必须加：hover 位移时 Chrome 才不会临时建合成层再按低分辨率
-               光栅化——那样 hover 期间整块图是糊的（Windows 缩放屏尤其明显） -->
+               srcset 三档 828/1656/2384，sizes 按右列实际占宽给：
+               ≥1440 内容宽 = 100vw-160，右列 = (内容-24)×10/21，超 2080 被
+               container max-width 1920 封住 → 827px；1024~1439 左右 padding 48 -->
           <img
             :src="workbenchImg"
+            :srcset="`${workbenchSm} 828w, ${workbenchImg} 1656w, ${workbenchLg} 2384w`"
+            :sizes="'(min-width: 1440px) min(calc((100vw - 184px) * 10 / 21), 827px), (min-width: 1024px) calc((100vw - 120px) * 10 / 21), min(92vw, 608px)'"
             alt="威易达化工一体化平台工作台界面"
-            class="slide-in relative w-full will-change-transform rounded-xl shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] transition-transform duration-500 ease-out hover:-translate-y-1.5 lg:rounded-2xl"
+            class="slide-in relative w-full rounded-xl shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] transition-transform duration-500 ease-out hover:-translate-y-1.5 lg:rounded-2xl"
             :style="{ animationDelay: '150ms' }"
           />
 
           <!-- 在途卡：卡体 160×63，左探看板 120、底边贴看板底。
-               同样 px 封顶，不然 1920 下会探出看板 49px、压到下面的分隔线。
-               will-change 同合规卡（scale 动画不预建层会留下糊纹理） -->
+               同样 px 封顶，不然 1920 下会探出看板 49px、压到下面的分隔线 -->
           <img
             :src="onTheWayImg"
             alt=""
-            class="pop-in absolute bottom-[max(-35px,-7.6%)] left-[max(-132px,-22.1%)] z-10 w-[min(215px,30.8%)] select-none will-change-transform"
+            class="pop-in absolute bottom-[max(-35px,-7.6%)] left-[max(-132px,-22.1%)] z-10 w-[min(215px,30.8%)] select-none"
             :style="{ animationDelay: '550ms' }"
           />
         </div>
@@ -213,7 +229,7 @@ onMounted(() => {
             <!-- 数值：24px 加粗；能递增的交给 count-up，data-* 传目标和尾巴 -->
             <dd class="text-2xl font-bold leading-none text-ink-900">
               <span v-if="stat.count" :data-num="stat.count.num" :data-rest="stat.count.rest">{{
-                stat.value
+                '0' + stat.count.rest
               }}</span>
               <template v-else>{{ stat.value }}</template>
             </dd>
@@ -242,10 +258,13 @@ onMounted(() => {
   }
 }
 
+/* pop-in 原来是 scale(0.92)：scale 动画会让 Chrome 按中间状态光栅化图层，
+   播完缓存的糊纹理留在屏上（刷新后「先清晰后发糊」就是它）。
+   改纯位移 + 淡入，观感接近（回弹曲线带一点落定感），但没有缩放重采样 */
 @keyframes hero-pop {
   from {
     opacity: 0;
-    transform: scale(0.92);
+    transform: translateY(12px);
   }
 }
 
