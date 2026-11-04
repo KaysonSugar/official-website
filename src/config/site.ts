@@ -221,6 +221,26 @@ export interface SiteConfig {
     /** 底部汇合提示条文案 */
     note: string
   }
+  // 原型 08：运输协同。环形闭环图用 SVG + HTML 还原（Ring Wrap.png 里的文字是位图，
+  // 按约定文字走 HTML；图里那层低透明彩带不搬，底色用 CSS 渐变重画）
+  collab: {
+    /** 标题上方的橙色眉题（英文 / 中文） */
+    eyebrow: string
+    /** 板块主标题 */
+    title: string
+    /** 标题下的两行说明 */
+    desc: string
+    /** 中央大圆文案 */
+    center: { title: string; sub: string; highlight: string }
+    /** 环上四个节点卡，顺序即入场顺序（上 → 右 → 下 → 左，顺时针） */
+    nodes: { title: string; sub: string; tone: 'plain' | 'orange' | 'green'; pos: 'top' | 'right' | 'bottom' | 'left' }[]
+    /** 环上四个流转角标，顺时针：右上 / 右下 / 左下 / 左上 */
+    labels: string[]
+    /** 左列：绿点列表 */
+    left: { group: string; items: { title: string; desc: string }[] }
+    /** 右列：橙点列表 */
+    right: { group: string; items: { title: string; desc: string }[] }
+  }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案） */
   cta: {
     /** 主标题 */
@@ -614,6 +634,39 @@ export const siteConfig: SiteConfig = {
       },
     ],
     note: '两条分支最终都汇入成品入库与发货环节：采购回来的原料进入投料生产，库存充足则直接领料投产 —— 全流程单据与批次数据自动联动，无需二次录入。',
+  },
+  collab: {
+    eyebrow: 'COLLABORATION / 运输协同流程图',
+    title: '运输协同',
+    desc: '化工企业发布运单，货主端完成比价与合同确认，物流端派车，司机接单承运并回传在途状态。回单与结算数据回流至货主，形成完整闭环。',
+    center: {
+      title: '全链路数据闭环',
+      sub: '订单 · 运单 · 回单 同步',
+      highlight: '一次录入，四方可见',
+    },
+    nodes: [
+      { title: '化工企业', sub: '发布运单、选择合作物流', tone: 'plain', pos: 'top' },
+      { title: '威易达化工', sub: '比价 · 合同 · 结算', tone: 'orange', pos: 'right' },
+      { title: '威易达物流', sub: '派车 · 调度 · 在途监控', tone: 'green', pos: 'bottom' },
+      { title: '威易达司机', sub: '社会运力 · 接单 · 电子回单', tone: 'plain', pos: 'left' },
+    ],
+    labels: ['下单询价', '转单派车', '接单承运', '回单结算'],
+    left: {
+      group: '闭环如何成立',
+      items: [
+        { title: '一份数据源', desc: '订单、运单、回单同源，四方同步可见。' },
+        { title: '节点全留痕', desc: '派车、装货、在途、卸货逐环节留痕。' },
+        { title: '回单即回传', desc: '司机拍照上传，结算不等纸质单据。' },
+      ],
+    },
+    right: {
+      group: '数据流向哪里',
+      items: [
+        { title: '在途看板', desc: '位置、进度、异常在货主端实时可见。' },
+        { title: '回单归档', desc: '卸货拍照即入档，按单可查、按客户可筛。' },
+        { title: '成本报表', desc: '运费、里程、时效汇入报表，可对比分析。' },
+      ],
+    },
   },
   cta: {
     title: '约一次 30 分钟的线上演示',

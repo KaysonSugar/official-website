@@ -13,8 +13,9 @@ import PlatformArchitectureSection from '@/components/sections/PlatformArchitect
 import ProductMatrixSection from '@/components/sections/ProductMatrixSection.vue'
 import CoreCapabilitiesSection from '@/components/sections/CoreCapabilitiesSection.vue'
 import ProductionFlowSection from '@/components/sections/ProductionFlowSection.vue'
+import TransportCollabSection from '@/components/sections/TransportCollabSection.vue'
 
-// 首页。原型 16 个区块，做到第 7 屏，后面的等设计稿逐块补
+// 首页。原型 16 个区块，做到第 8 屏，后面的等设计稿逐块补
 </script>
 
 <template>
@@ -32,6 +33,8 @@ import ProductionFlowSection from '@/components/sections/ProductionFlowSection.v
   <CoreCapabilitiesSection />
   <!-- 第七屏：生产主流程图，四节点 → 菱形判断 → 双分支 -->
   <ProductionFlowSection />
+  <!-- 第八屏：运输协同，环形闭环图 -->
+  <TransportCollabSection />
   <!-- 底部行动号召：首页和内页共用一份文案 -->
   <CtaBanner />
 </template>
