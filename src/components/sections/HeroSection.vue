@@ -34,7 +34,9 @@ const statsEl = ref<HTMLDListElement | null>(null)
 
 const stats = computed(() =>
   siteConfig.hero.stats.map((stat) => {
-    const m = stat.value.match(/^(\d+)(\D.*)$/)
+    // noCount 的直接给 null，模板走终值分支——中间值说不通的（7 天 / 7×24）
+    // 不能递增，0.9s 里「6 天 / 6×24」一闪而过像展示错了
+    const m = stat.noCount ? null : stat.value.match(/^(\d+)(\D.*)$/)
     return { ...stat, count: m ? { num: Number(m[1]), rest: m[2] } : null }
   }),
 )
@@ -178,7 +180,8 @@ onMounted(() => {
                top 用 calc 是因为纯百分比的卡会跟着看板一起涨、1920 顶到导航栏，
                px 那部分把它按住，卡顶恒定在导航栏下 20px；宽和左探用 min/max 封顶，
                不然卡变大后底边会压到看板里的六边形 logo。
-               素材 480×253（2 倍显示尺寸），下缘投影已裁掉渐隐 -->
+               素材 980×516（4 倍显示尺寸，无损），下缘投影已裁掉渐隐。
+               别再往 2 倍压：在途卡压到 2 倍后在用户屏上明显发虚，4 倍才兜得住 -->
           <img
             :src="complianceImg"
             alt=""
@@ -201,7 +204,8 @@ onMounted(() => {
           />
 
           <!-- 在途卡：卡体 160×63，左探看板 120、底边贴看板底。
-               同样 px 封顶，不然 1920 下会探出看板 49px、压到下面的分隔线 -->
+               同样 px 封顶，不然 1920 下会探出看板 49px、压到下面的分隔线。
+               素材 864×516（4 倍，无损），2 倍版实测发糊别再压 -->
           <img
             :src="onTheWayImg"
             alt=""

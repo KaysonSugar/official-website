@@ -86,8 +86,8 @@ export interface SiteConfig {
     primaryCta: string
     /** 主按钮下方三个卖点胶囊 */
     features: string[]
-    /** 首屏底部数字条 */
-    stats: { value: string; label: string }[]
+    /** 首屏底部数字条；noCount 的条目不做递增、直接显示终值 */
+    stats: { value: string; label: string; noCount?: boolean }[]
   }
   /** 首页第二屏：行业背景与法规驱动（定稿原型 02，纯文字 + 四张法规卡片） */
   industry: {
@@ -368,8 +368,9 @@ export const siteConfig: SiteConfig = {
     stats: [
       { value: '10', label: '大业务模块' },
       { value: '1', label: '个数据库' },
-      { value: '7 天', label: '完成上线部署' },
-      { value: '7×24', label: '技术支持响应' },
+      // 这两条不递增：0.9s 动画里会闪过「6 天 / 6×24」，6×24 语义就不对
+      { value: '7 天', label: '完成上线部署', noCount: true },
+      { value: '7×24', label: '技术支持响应', noCount: true },
     ],
   },
   // 原型 02 的四张卡片按新法条款顺序排，icon 名对应 assets/home/icons/ 下的 png
