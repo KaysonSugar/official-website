@@ -7,16 +7,31 @@
 <script setup lang="ts">
 import CtaBanner from '@/components/sections/CtaBanner.vue'
 import PageHero from '@/components/sections/PageHero.vue'
-import { getPage } from '@/config/site'
+import SupportScopeSection from '@/components/sections/SupportScopeSection.vue'
+import SupportTimeline from '@/components/sections/SupportTimeline.vue'
+import { getPage, siteConfig } from '@/config/site'
 
 // 服务支持 /solutions。定稿版把「解决方案」改名叫「服务支持」，路由没动。
-// 首屏文案在 site.ts 的 pages 里，占位；下面几屏等首页铺完再回来补，区块组件是复用的
+// 首屏：左文案（按钮 + 四个服务方式胶囊）+ 右「典型项目节奏」卡；
+// 第二屏：八项交付内容。后面的屏等画板
 const page = getPage('/solutions')
+const { support } = siteConfig
 </script>
 
 <template>
-  <PageHero :eyebrow="page.eyebrow" :title="page.title" :desc="page.desc" :align="page.align" />
-  <!-- TODO: 本页其余区块，等「服务支持」画板 -->
+  <PageHero
+    :eyebrow="page.eyebrow"
+    :title="page.title"
+    :desc="page.desc"
+    :align="page.align"
+    :cta-label="support.ctaLabel"
+    :features="support.features"
+  >
+    <!-- 首屏右侧的项目节奏卡，走 PageHero 的插槽 -->
+    <SupportTimeline />
+  </PageHero>
+  <SupportScopeSection />
+  <!-- TODO: 本页其余区块，等「服务支持」后续画板 -->
   <!-- 底部行动号召：内页共用 -->
   <CtaBanner />
 </template>

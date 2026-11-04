@@ -24,9 +24,18 @@ interface Props {
   desc: string
   /** 左对齐 / 居中 */
   align?: 'left' | 'center'
+  /** 按钮文案覆盖；不传用全站默认的「预约产品演示」（服务支持页是「预约实施评估」） */
+  ctaLabel?: string
+  /** 按钮下的服务方式胶囊（橙点 + 文字）；不传就不渲染 */
+  features?: string[]
 }
 
-const props = withDefaults(defineProps<Props>(), { align: 'left' })
+const props = withDefaults(defineProps<Props>(), {
+  align: 'left',
+  // 空串/空数组都当「没传」，渲染时回落到全站默认值
+  ctaLabel: '',
+  features: () => [],
+})
 
 const slots = useSlots()
 // 没给插槽就不留右侧占位，免得左对齐版式里多出一块空
@@ -46,8 +55,8 @@ const isCenter = computed(() => props.align === 'center')
 
     <!-- 内容容器：和顶栏同一条基准线；上下留白 手机 56 / ≥640 64 / ≥1024 80 -->
     <div class="container-page py-14 sm:py-16 lg:py-20" :class="isCenter ? 'text-center' : ''">
-      <!-- 左对齐且有插槽时走两栏，否则单栏 -->
-      <div :class="hasAside && !isCenter ? 'grid items-center gap-12 lg:grid-cols-2' : ''">
+      <!-- 左对齐且有插槽时走两栏；左 6 右 4，照服务支持首屏原型量的比例，别改回 1:1 -->
+      <div :class="hasAside && !isCenter ? 'grid items-center gap-12 lg:grid-cols-[3fr_2fr]' : ''">
         <div :class="isCenter ? 'mx-auto max-w-3xl' : 'max-w-xl'">
           <!-- 小标签：12px、品牌橙、0.18em 宽字距 -->
           <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">
@@ -66,12 +75,25 @@ const isCenter = computed(() => props.align === 'center')
             {{ props.desc }}
           </p>
 
-          <!-- 主按钮：和顶栏「预约演示」同一个入口 -->
+          <!-- 主按钮：文案可被 ctaLabel 覆盖，跳转仍走全站统一的拨号入口 -->
           <div class="mt-8">
             <BaseButton :href="siteConfig.contact.ctaHref" size="lg">
-              {{ siteConfig.contact.ctaLabel }}
+              {{ props.ctaLabel || siteConfig.contact.ctaLabel }}
             </BaseButton>
           </div>
+
+          <!-- 服务方式胶囊：白底细边 + 橙色小圆点，和首页 hero 的对勾胶囊同一套骨架 -->
+          <ul v-if="props.features.length" class="mt-8 flex flex-wrap gap-3">
+            <li
+              v-for="feature in props.features"
+              :key="feature"
+              class="flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[13px] pr-[15px] text-sm font-medium text-ink-700"
+            >
+              <!-- 橙点：6px，垂直居中靠 flex，不用管基线 -->
+              <span class="h-[6px] w-[6px] shrink-0 rounded-full bg-brand-500" aria-hidden="true" />
+              {{ feature }}
+            </li>
+          </ul>
         </div>
 
         <!-- 右侧示意图，由各页面塞进来 -->

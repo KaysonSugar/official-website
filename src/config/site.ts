@@ -273,6 +273,38 @@ export interface SiteConfig {
     /** 服务卡：icon 对应 icons 目录的短名，items 为小圆点列表 */
     cards: { icon: 'implement' | 'custom' | 'support'; title: string; items: string[] }[]
   }
+  /** 服务支持页（原型 Service Hero + S1）：首屏胶囊与按钮、项目节奏卡、八项交付内容 */
+  support: {
+    /** 首屏按钮文案（原型「预约实施评估」，和全站默认的「预约产品演示」不是一个词） */
+    ctaLabel: string
+    /** 首屏按钮下的四个服务方式胶囊 */
+    features: string[]
+    /** 首屏右侧「典型项目节奏」白卡 */
+    timeline: {
+      /** 卡片标题 */
+      title: string
+      /** 右上角的工期徽标 */
+      badge: string
+      /** 分隔线下的说明小字 */
+      note: string
+      /** 四行步骤；tone 决定序号块配色（1 橙 / 2 绿 / 3 橘红，均为浅底彩字；4 深绿底白字） */
+      steps: { no: string; tone: 'orange' | 'green' | 'salmon' | 'dark'; label: string; desc: string }[]
+    }
+    /** 第二屏「服务内容」：八张交付内容卡，icon 对应 assets/support/icons 的短名 */
+    scope: {
+      /** 标题上方的橙色眉题（英文 / 中文） */
+      eyebrow: string
+      /** 板块主标题 */
+      title: string
+      /** 标题下的一行说明 */
+      desc: string
+      cards: {
+        icon: 'survey' | 'init' | 'migrate' | 'training' | 'launch' | 'accept' | 'aftercare' | 'plus'
+        title: string
+        desc: string
+      }[]
+    }
+  }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案，对应原型 CTA Card） */
   cta: {
     /** 主标题 */
@@ -360,10 +392,10 @@ const pages: PageIntro[] = [
   {
     to: '/solutions',
     label: '服务支持',
-    eyebrow: '服务支持',
-    title: '服务支持',
-    desc: '从实施交付到培训与售后，全流程跟进保障，让平台在你的产线上真正用起来。',
-    align: 'center',
+    eyebrow: 'SERVICE / 实施与服务',
+    title: '标准化的服务流程',
+    desc: '订阅版包含基础实施与售后运维。从需求调研、系统配置、数据迁移到操作培训、试运行与验收，每个环节都有明确的交付物与确认动作，实施范围在合同附件中逐项列明。',
+    align: 'left',
   },
   {
     to: '/about',
@@ -828,6 +860,69 @@ export const siteConfig: SiteConfig = {
         ],
       },
     ],
+  },
+  // 服务支持页（原型 Service Hero + S1），文案逐字照画板
+  support: {
+    ctaLabel: '预约实施评估',
+    features: ['线上远程实施', '线下上门实施', '7–15 天试运行', '7×24 技术支持'],
+    timeline: {
+      title: '典型项目节奏',
+      badge: '4–6 周',
+      note: '整体周期视模块数量、数据量与反馈处理效率评估，多工厂项目顺延。',
+      steps: [
+        { no: '1', tone: 'orange', label: '第 1 周 · 调研与方案', desc: '梳理流程与单据，确认实施范围与交付清单' },
+        { no: '2', tone: 'green', label: '第 2 周 · 配置与建档', desc: '搭建组织权限，标准化基础档案与审批流程' },
+        { no: '3', tone: 'salmon', label: '第 3–4 周 · 迁移与培训', desc: '存量数据清洗导入，管理员与岗位分批实操培训' },
+        { no: '4', tone: 'dark', label: '第 5 周 · 试运行与验收', desc: '全流程跑单观察，逐项签字确认后移交维保' },
+      ],
+    },
+    scope: {
+      eyebrow: 'SERVICE SCOPE / 服务内容',
+      title: '实施交付包含八项内容',
+      desc: '从签约后的需求调研到验收归档，实施范围按固定清单推进。合同附件中逐项列明交付内容，避免范围与责任界定不清。',
+      cards: [
+        {
+          icon: 'survey',
+          title: '前期对接调研',
+          desc: '梳理业务流程、组织架构、岗位权限与审批路径，确认表单字段、报表与 BOM 需求，输出实施方案、工期计划与交付清单。',
+        },
+        {
+          icon: 'init',
+          title: '系统初始化配置',
+          desc: '按组织架构与角色权限，批量开通账号，标准化客户、供应商、物料、仓库与会计科目等基础档案，配置单据流程与打印模板。',
+        },
+        {
+          icon: 'migrate',
+          title: '历史数据迁移',
+          desc: '整理并清洗存量 Excel 数据，协助导入历史单据、往来账目与库存期初，完成试算平衡与差异调整后在新系统并行试运行。',
+        },
+        {
+          icon: 'training',
+          title: '操作培训服务',
+          desc: '为管理员提供后台全功能培训，为各岗位员工提供线上或现场实操培训，配套操作手册与常见问题说明，并考核操作熟练度。',
+        },
+        {
+          icon: 'launch',
+          title: '上线调试与试运行',
+          desc: '完成全流程跑单测试与业务闭环验证，跟进异常问题与缺陷修复，安排 7–15 天试运行，配合旧系统平稳切换。',
+        },
+        {
+          icon: 'accept',
+          title: '项目验收归档',
+          desc: '按需求清单逐项验收签字，归档需求文档、配置台账与培训记录，移交售后对接人并转入常规维保服务。',
+        },
+        {
+          icon: 'aftercare',
+          title: '后期售后运维',
+          desc: '处理账号新增与权限调整，提供在线答疑与远程协助，同步版本更新与功能升级，跟进年度盘点与续期服务。',
+        },
+        {
+          icon: 'plus',
+          title: '增值实施服务',
+          desc: '深度定制流程、二次表单开发、个性化报表、多系统接口对接、驻场实施与数据大屏等需求，按单次项目另行报价。',
+        },
+      ],
+    },
   },
   // 原型 CTA Card：文案逐字照原型。注意电话是原型上的 400-828-1988，
   // 与 contact.phone（400-001-8355）不一致，用哪个等用户拍板
