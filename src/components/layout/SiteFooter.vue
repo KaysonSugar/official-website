@@ -7,10 +7,11 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import logoMark from '@/assets/brand/logo.webp'
-import qrWechat from '@/assets/footer/ewm-gzh.jpg'
-import qrDouyin from '@/assets/footer/ewm-dy.png'
-import qrKuaishou from '@/assets/footer/ewm-ks.jpg'
-import qrApp from '@/assets/footer/download-icon.png'
+// 页脚素材全在 brand/ 下，带 footer- 前缀区分（页脚是全局组件，不算页面素材）
+import qrWechat from '@/assets/brand/footer-qr-gzh.jpg'
+import qrDouyin from '@/assets/brand/footer-qr-dy.png'
+import qrKuaishou from '@/assets/brand/footer-qr-ks.jpg'
+import qrApp from '@/assets/brand/footer-app-download.png'
 import { siteConfig } from '@/config/site'
 /** 四张二维码。图在这里 import，Vite 才会做哈希命名 */
 const qrcodes = [
