@@ -110,10 +110,13 @@ onMounted(() => {
 
           <!-- 业务层：四张棕卡，模块名白粗体，能力清单小字浅棕 -->
           <div v-else-if="layer.modules" class="layer-grid flex-1" :style="{ '--cols': 4 }">
+            <!-- 四张棕卡各自延迟 70ms 错峰浮入：整层一起冒出来太呆板，
+                 这里补上独立 --d（父层的淡入会叠一层，所以起始提前 40ms） -->
             <div
-              v-for="mod in layer.modules"
+              v-for="(mod, mi) in layer.modules"
               :key="mod.title"
-              class="rounded-[10px] border border-[#7d5530] bg-[#5b391d] px-[12px] pb-[38px] pt-[12px]"
+              class="reveal rounded-[10px] border border-[#7d5530] bg-[#5b391d] px-[12px] pb-[38px] pt-[12px]"
+              :style="{ '--d': `${240 + i * 80 + 40 + mi * 70}ms` }"
             >
               <h3 class="text-[15px] font-bold leading-[22px] text-white">{{ mod.title }}</h3>
               <p class="mt-[4px] text-[11px] leading-[16px] text-[#d9bd97]">（{{ mod.desc }}）</p>

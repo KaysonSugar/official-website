@@ -81,12 +81,14 @@ onMounted(() => {
         {{ capabilities.desc }}
       </p>
 
-      <!-- 六张功能卡：2 行 3 列；浅灰卡底无描边，图标橙绿交替 -->
-      <div class="reveal mt-[40px] grid grid-cols-1 gap-[24px] sm:grid-cols-2 lg:grid-cols-3" style="--d: 240ms">
+      <!-- 六张功能卡：2 行 3 列；浅灰卡底无描边，图标橙绿交替。
+           逐张错峰 70ms 浮入，整组一起冒出来看着跟没动画一样 -->
+      <div class="mt-[40px] grid grid-cols-1 gap-[24px] sm:grid-cols-2 lg:grid-cols-3">
         <article
-          v-for="card in capabilities.cards"
+          v-for="(card, i) in capabilities.cards"
           :key="card.title"
-          class="rounded-[16px] bg-[#fafbfa] p-[24px]"
+          class="reveal rounded-[16px] bg-[#fafbfa] p-[24px]"
+          :style="{ '--d': `${240 + i * 70}ms` }"
         >
           <img :src="iconMap[card.icon]" alt="" class="h-[46px] w-[46px] select-none" />
           <h3 class="mt-[16px] text-[16px] font-bold leading-[24px] text-ink-900">{{ card.title }}</h3>
@@ -99,7 +101,7 @@ onMounted(() => {
 
 <style scoped>
 /* 入场跟前几屏同一套：.in 触发一次性动画，延迟走行内 --d。
-   卡片整组一个 reveal 就够，六张一起浮上来比逐张错峰更贴原型 */
+   六张卡各自 --d 错峰，网格容器本身不做动画 */
 .reveal {
   opacity: 0;
 }
