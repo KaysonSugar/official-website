@@ -231,6 +231,24 @@ export interface SiteConfig {
     /** 标题下的两行说明 */
     desc: string
   }
+  /** 首页第九屏：全链路一体化优势（定稿原型 08-S8，暗色三行对照表 + 三张支撑卡，无图标） */
+  advantage: {
+    /** 标题上方的橙色眉题（英文 / 中文） */
+    eyebrow: string
+    /** 板块主标题 */
+    title: string
+    /** 三行参与方；化工企业痛点只有两条，两组条目各自独立、长度不要求相等 */
+    rows: {
+      name: string
+      pains: { title: string; desc: string }[]
+      solutions: { title: string; desc: string }[]
+    }[]
+    /** 平台层三张支撑卡；tone 决定编号颜色（原型 01/03 橙、02 绿） */
+    supports: { no: string; tone: 'orange' | 'green'; title: string; desc: string }[]
+    /** 底部核心观点条：左侧小标签 + 正文 */
+    noteTag: string
+    note: string
+  }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案） */
   cta: {
     /** 主标题 */
@@ -630,6 +648,72 @@ export const siteConfig: SiteConfig = {
     eyebrow: 'COLLABORATION / 运输协同流程图',
     title: '运输协同',
     desc: '化工企业发布运单，货主端完成比价与合同确认，物流端派车，司机接单承运并回传在途状态。回单与结算数据回流至货主，形成完整闭环。',
+  },
+  advantage: {
+    eyebrow: 'FULL-CHAIN ADVANTAGE / 全链路一体化优势',
+    title: '三类参与方的核心痛点与对应方案',
+    rows: [
+      {
+        name: '化工企业',
+        pains: [
+          { title: '生产混乱', desc: '订单排产无序；BOM 拆解易错，库存与生产脱节。' },
+          { title: '管理繁琐', desc: '台账人工记录，全流程溯源难，合规风险高。' },
+        ],
+        solutions: [
+          { title: '生产管控一体化', desc: '订单驱动智能排产，BOM 自动拆解，库存智能校验。' },
+          { title: '管理数字化', desc: '自动化台账，一物一ID 全流程溯源，满足合规审计。' },
+          { title: '运输资源整合', desc: '多渠道运力入池，透明比价，全程在途监控。' },
+        ],
+      },
+      {
+        name: '物流企业',
+        pains: [
+          { title: '获客难', desc: '优质货源分散，接单渠道单一。' },
+          { title: '调度难', desc: '人工派单效率低，运力匹配不合理。' },
+          { title: '合规难', desc: '人车资质审核繁琐，货物禁配风险高。' },
+        ],
+        solutions: [
+          { title: '货源信息聚合', desc: '平台汇聚优质货源，拓宽接单渠道。' },
+          { title: '智能调度派单', desc: '系统自动匹配最优运力，提升调度效率。' },
+          { title: '合规前置校验', desc: '自动核验人车资质，禁配自动检测，规避风险。' },
+        ],
+      },
+      {
+        name: '危化司机',
+        pains: [
+          { title: '找货难', desc: '货源信息杂乱，优质订单匹配效率低。' },
+          { title: '流程繁', desc: '接单-报备-回单流程繁琐，沟通成本高。' },
+          { title: '风险高', desc: '禁配、路线无指导，违规风险高。' },
+        ],
+        solutions: [
+          { title: '智能订单匹配', desc: '精准推送优质订单，提升接单效率。' },
+          { title: '操作流程简化', desc: '一键接单，在线报备、电子回单，简化操作。' },
+          { title: '全程合规指导', desc: '智能规划合规路线，禁配风险提前预警。' },
+        ],
+      },
+    ],
+    supports: [
+      {
+        no: '01',
+        tone: 'orange',
+        title: '数据自动串联',
+        desc: '原料入库、生产完工、成品仓储、销售出库、运输签收全链路自动打通，跨系统抄录与二次录入彻底消失。',
+      },
+      {
+        no: '02',
+        tone: 'green',
+        title: '一物一 ID 贯穿全周期',
+        desc: '每一批次、每一包化学品都有唯一身份标识，从生成到使用逐环节记录，随时可追溯、责任可界定。',
+      },
+      {
+        no: '03',
+        tone: 'orange',
+        title: '契合新法合规要求',
+        desc: '完整响应安全生产法对危化品全生命周期信息化管理与跨部门数据共享的要求，从源头规避合规风险。',
+      },
+    ],
+    noteTag: '核心观点',
+    note: '全流程记录在一处可查：管理层看得见瓶颈工序，合规岗调得出批次台账，客户查得到货物去向。',
   },
   cta: {
     title: '约一次 30 分钟的线上演示',

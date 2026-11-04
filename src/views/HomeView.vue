@@ -14,8 +14,9 @@ import ProductMatrixSection from '@/components/sections/ProductMatrixSection.vue
 import CoreCapabilitiesSection from '@/components/sections/CoreCapabilitiesSection.vue'
 import ProductionFlowSection from '@/components/sections/ProductionFlowSection.vue'
 import TransportCollabSection from '@/components/sections/TransportCollabSection.vue'
+import AdvantageSection from '@/components/sections/AdvantageSection.vue'
 
-// 首页。原型 16 个区块，做到第 8 屏，后面的等设计稿逐块补
+// 首页。原型 16 个区块，做到第 9 屏，后面的等设计稿逐块补
 </script>
 
 <template>
@@ -35,6 +36,8 @@ import TransportCollabSection from '@/components/sections/TransportCollabSection
   <ProductionFlowSection />
   <!-- 第八屏：运输协同，环形闭环图 -->
   <TransportCollabSection />
+  <!-- 第九屏：全链路一体化优势，暗色三行对照表 + 三张支撑卡 -->
+  <AdvantageSection />
   <!-- 底部行动号召：首页和内页共用一份文案 -->
   <CtaBanner />
 </template>
