@@ -7,6 +7,7 @@
 <script setup lang="ts">
 import CtaBanner from '@/components/sections/CtaBanner.vue'
 import PageHero from '@/components/sections/PageHero.vue'
+import SupportCommitmentSection from '@/components/sections/SupportCommitmentSection.vue'
 import SupportPricingSection from '@/components/sections/SupportPricingSection.vue'
 import SupportProcessSection from '@/components/sections/SupportProcessSection.vue'
 import SupportScopeSection from '@/components/sections/SupportScopeSection.vue'
@@ -15,7 +16,8 @@ import { getPage, siteConfig } from '@/config/site'
 
 // 服务支持 /solutions。定稿版把「解决方案」改名叫「服务支持」，路由没动。
 // 首屏：左文案（按钮 + 四个服务方式胶囊）+ 右「典型项目节奏」卡；
-// 第二屏：八项交付内容；第三屏：七节点实施流程；第四屏：实施方式与计费。
+// 第二屏：八项交付内容；第三屏：七节点实施流程；第四屏：实施方式与计费；
+// 第五屏：四项交付准则（深绿屏）。
 // 后面的屏等画板
 const page = getPage('/solutions')
 const { support } = siteConfig
@@ -36,6 +38,7 @@ const { support } = siteConfig
   <SupportScopeSection />
   <SupportProcessSection />
   <SupportPricingSection />
+  <SupportCommitmentSection />
   <!-- TODO: 本页其余区块，等「服务支持」后续画板 -->
   <!-- 底部行动号召：内页共用 -->
   <CtaBanner />

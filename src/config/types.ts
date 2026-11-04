@@ -332,6 +332,17 @@ export interface SiteConfig {
         warm?: boolean
       }[]
     }
+    /** 第五屏「服务承诺」：深绿底四张交付准则卡 + 底部一行四个硬指标（原型 S4） */
+    commitment: {
+      /** 眉题（绿色，同上一屏） */
+      eyebrow: string
+      title: string
+      desc: string
+      /** 四张准则卡；loop（闭环售后）的循环箭头是组件里内联 SVG 画的，其余走 PNG */
+      cards: { icon: 'sign' | 'checklist' | 'schedule' | 'loop'; title: string; desc: string }[]
+      /** 分隔线下的一行硬指标，直接渲染终值不递增（7×24 这类递增会闪中间值） */
+      stats: { value: string; label: string }[]
+    }
   }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案，对应原型 CTA Card） */
   cta: {
