@@ -15,8 +15,10 @@ import CoreCapabilitiesSection from '@/components/sections/CoreCapabilitiesSecti
 import ProductionFlowSection from '@/components/sections/ProductionFlowSection.vue'
 import TransportCollabSection from '@/components/sections/TransportCollabSection.vue'
 import AdvantageSection from '@/components/sections/AdvantageSection.vue'
+import CostEfficiencySection from '@/components/sections/CostEfficiencySection.vue'
+import ServiceSection from '@/components/sections/ServiceSection.vue'
 
-// 首页。原型 16 个区块，做到第 9 屏，后面的等设计稿逐块补
+// 首页。原型 16 个区块，做到第 11 屏，后面的等设计稿逐块补
 </script>
 
 <template>
@@ -38,6 +40,10 @@ import AdvantageSection from '@/components/sections/AdvantageSection.vue'
   <TransportCollabSection />
   <!-- 第九屏：全链路一体化优势，暗色三行对照表 + 三张支撑卡 -->
   <AdvantageSection />
+  <!-- 第十屏：降本增效，四张违规风险卡 + 四列收益宽卡 -->
+  <CostEfficiencySection />
+  <!-- 第十一屏：我们的服务，三张服务卡 -->
+  <ServiceSection />
   <!-- 底部行动号召：首页和内页共用一份文案 -->
   <CtaBanner />
 </template>
