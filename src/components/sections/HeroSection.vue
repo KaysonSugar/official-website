@@ -8,13 +8,14 @@
 import { computed, onMounted, ref } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { siteConfig } from '@/config/site'
-// 图都是设计稿导出的 2 倍图，看板和浮层卡里的文字已经烘焙在图里
-import badgeImg from '@/assets/home/images/badge.png'
-import workbenchImg from '@/assets/home/images/workbench-body.png'
-import complianceImg from '@/assets/home/images/compliance.png'
-import onTheWayImg from '@/assets/home/images/on-the-way.png'
-import ringsImg from '@/assets/home/images/rings.png'
-import dividerImg from '@/assets/home/images/hero-bottom-divider.png'
+// 图重采样成 2 倍显示尺寸的无损 WebP——4 倍原图经浏览器缩小反而发虚，
+// 2 倍正好喂饱视网膜屏；看板和浮层卡里的文字已经烘焙在图里
+import badgeImg from '@/assets/home/images/badge.webp'
+import workbenchImg from '@/assets/home/images/workbench-body.webp'
+import complianceImg from '@/assets/home/images/compliance.webp'
+import onTheWayImg from '@/assets/home/images/on-the-way.webp'
+import ringsImg from '@/assets/home/images/rings.webp'
+import dividerImg from '@/assets/home/images/hero-bottom-divider.webp'
 
 /**
  * 首屏 Hero，按 1440×704 画板量出来的：
@@ -170,11 +171,13 @@ onMounted(() => {
           />
 
           <!-- 看板整图：圆角 + 柔和投影浮起来。
-               relative 不能省：圆环是 absolute，普通流元素会被它盖住 -->
+               relative 不能省：圆环是 absolute，普通流元素会被它盖住。
+               will-change 必须加：hover 位移时 Chrome 才不会临时建合成层再按低分辨率
+               光栅化——那样 hover 期间整块图是糊的（Windows 缩放屏尤其明显） -->
           <img
             :src="workbenchImg"
             alt="威易达化工一体化平台工作台界面"
-            class="slide-in relative w-full rounded-xl shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] transition-transform duration-500 ease-out hover:-translate-y-1.5 lg:rounded-2xl"
+            class="slide-in relative w-full will-change-transform rounded-xl shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] transition-transform duration-500 ease-out hover:-translate-y-1.5 lg:rounded-2xl"
             :style="{ animationDelay: '150ms' }"
           />
 

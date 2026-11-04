@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { siteConfig } from '@/config/site'
-import glowImg from '@/assets/home/images/glow.png'
+import glowImg from '@/assets/home/images/glow.webp'
 
 /**
  * 第四屏：平台功能结构（原型 04）。

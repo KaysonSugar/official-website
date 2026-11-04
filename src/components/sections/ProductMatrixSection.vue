@@ -7,16 +7,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { siteConfig } from '@/config/site'
-import flowImg from '@/assets/home/images/matrix-flow.png'
-import logoChemical from '@/assets/home/images/brand-chemical.png'
-import logoLogistics from '@/assets/home/images/brand-logistics.png'
-import logoDriver from '@/assets/home/images/brand-driver.png'
-import glowOrange from '@/assets/home/images/card-glow-orange.png'
-import glowMint from '@/assets/home/images/card-glow-mint.png'
-import glowGreen from '@/assets/home/images/card-glow-green.png'
-import ringOrange from '@/assets/home/images/card-ring-orange.png'
-import ringMint from '@/assets/home/images/card-ring-mint.png'
-import ringGreen from '@/assets/home/images/card-ring-green.png'
+import flowImg from '@/assets/home/images/matrix-flow.webp'
+import logoChemical from '@/assets/home/images/brand-chemical.webp'
+import logoLogistics from '@/assets/home/images/brand-logistics.webp'
+import logoDriver from '@/assets/home/images/brand-driver.webp'
+import glowOrange from '@/assets/home/images/card-glow-orange.webp'
+import glowMint from '@/assets/home/images/card-glow-mint.webp'
+import glowGreen from '@/assets/home/images/card-glow-green.webp'
+import ringOrange from '@/assets/home/images/card-ring-orange.webp'
+import ringMint from '@/assets/home/images/card-ring-mint.webp'
+import ringGreen from '@/assets/home/images/card-ring-green.webp'
 
 /**
  * 第五屏：三端业务运转模式（原型 05）。

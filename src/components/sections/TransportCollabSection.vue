@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { siteConfig } from '@/config/site'
-import collabImg from '@/assets/home/images/collab-flow.png'
+import collabImg from '@/assets/home/images/collab-flow.webp'
 
 /**
  * 第八屏：运输协同（原型 08）。
