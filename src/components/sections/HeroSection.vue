@@ -15,8 +15,9 @@ import badgeImg from '@/assets/home/images/badge.webp'
 import workbenchImg from '@/assets/home/images/workbench-body.webp'
 import workbenchSm from '@/assets/home/images/workbench-body-sm.webp'
 import workbenchLg from '@/assets/home/images/workbench-body-lg.webp'
-import complianceImg from '@/assets/home/images/compliance.webp'
-import onTheWayImg from '@/assets/home/images/on-the-way.webp'
+// 悬浮卡改 DOM 后只留两个图标 tile（从 4 倍原图裁的，白底和卡体同色无缝）
+import truckIcon from '@/assets/home/images/hero-truck.webp'
+import checkIcon from '@/assets/home/images/hero-check.webp'
 import ringsImg from '@/assets/home/images/rings.webp'
 import dividerImg from '@/assets/home/images/hero-bottom-divider.webp'
 
@@ -176,18 +177,24 @@ onMounted(() => {
             class="breathe pointer-events-none absolute left-[-16.9%] top-[-37.1%] w-[134.2%] max-w-none select-none"
           />
 
-          <!-- 合规卡：卡体 188×63，左探看板 59。
-               top 用 calc 是因为纯百分比的卡会跟着看板一起涨、1920 顶到导航栏，
-               px 那部分把它按住，卡顶恒定在导航栏下 20px；宽和左探用 min/max 封顶，
-               不然卡变大后底边会压到看板里的六边形 logo。
-               素材 980×516（4 倍显示尺寸，无损），下缘投影已裁掉渐隐。
-               别再往 2 倍压：在途卡压到 2 倍后在用户屏上明显发虚，4 倍才兜得住 -->
-          <img
-            :src="complianceImg"
-            alt=""
-            class="pop-in absolute left-[max(-71px,-11.8%)] top-[calc(-47px_-_5.25%)] z-10 w-[min(240px,34.4%)] select-none"
+          <!-- 合规卡：改 DOM——烘焙文字的图片在缩放屏上必糊（4 倍源也救不回来），
+               文字走浏览器渲染永远锐利。设计尺寸 188×63，左探 59、卡顶在看板顶上 47
+               （= 导航栏下 20）；手机上收进看板左上角，不探出屏幕 -->
+          <div
+            class="pop-in absolute left-[10px] top-[-14px] z-10 flex h-[63px] w-[188px] items-center rounded-[10px] bg-white pl-[10px] shadow-[0_18px_36px_-18px_rgba(26,26,26,0.3)] ring-1 ring-black/5 lg:left-[-59px] lg:top-[-47px]"
             :style="{ animationDelay: '450ms' }"
-          />
+          >
+            <img
+              :src="checkIcon"
+              alt=""
+              aria-hidden="true"
+              class="h-[38px] w-[38px] shrink-0 select-none"
+            />
+            <div class="ml-[10px] min-w-0 whitespace-nowrap">
+              <p class="text-[13px] font-semibold leading-none text-ink-900">合规校验通过</p>
+              <p class="mt-[7px] text-[10px] leading-none text-ink-400">危化品运输资质已核验</p>
+            </div>
+          </div>
 
           <!-- 看板整图：圆角 + 柔和投影浮起来。
                relative 不能省：圆环是 absolute，普通流元素会被它盖住。
@@ -203,15 +210,23 @@ onMounted(() => {
             :style="{ animationDelay: '150ms' }"
           />
 
-          <!-- 在途卡：卡体 160×63，左探看板 120、底边贴看板底。
-               同样 px 封顶，不然 1920 下会探出看板 49px、压到下面的分隔线。
-               素材 864×516（4 倍，无损），2 倍版实测发糊别再压 -->
-          <img
-            :src="onTheWayImg"
-            alt=""
-            class="pop-in absolute bottom-[max(-35px,-7.6%)] left-[max(-132px,-22.1%)] z-10 w-[min(215px,30.8%)] select-none"
+          <!-- 在途卡：同样改 DOM。设计 160×63，左探 120、底边贴看板底；
+               手机上收进看板左下角 -->
+          <div
+            class="pop-in absolute bottom-[8px] left-[10px] z-10 flex h-[63px] w-[160px] items-center rounded-[10px] bg-white pl-[10px] shadow-[0_18px_36px_-18px_rgba(26,26,26,0.3)] ring-1 ring-black/5 lg:bottom-0 lg:left-[-120px]"
             :style="{ animationDelay: '550ms' }"
-          />
+          >
+            <img
+              :src="truckIcon"
+              alt=""
+              aria-hidden="true"
+              class="h-[38px] w-[38px] shrink-0 select-none"
+            />
+            <div class="ml-[10px] min-w-0 whitespace-nowrap">
+              <p class="text-[13px] font-semibold leading-none text-ink-900">在途运输 12 辆</p>
+              <p class="mt-[7px] text-[10px] leading-none text-ink-400">4 单待签收</p>
+            </div>
+          </div>
         </div>
       </div>
 
