@@ -87,7 +87,7 @@ onMounted(() => {
         <article
           v-for="(card, i) in capabilities.cards"
           :key="card.title"
-          class="reveal rounded-[16px] bg-[#fafbfa] p-[24px]"
+          class="reveal card-lift rounded-[16px] bg-[#fafbfa] p-[24px]"
           :style="{ '--d': `${240 + i * 70}ms` }"
         >
           <img :src="iconMap[card.icon]" alt="" class="h-[46px] w-[46px] select-none" />
