@@ -84,7 +84,7 @@ onMounted(() => {
           :style="{ '--d': `${240 + i * 80}ms` }"
         >
           <!-- 图标素材自带浅色圆角底，46px 跟第六屏的功能卡一致 -->
-          <img :src="iconMap[card.icon]" alt="" class="h-[46px] w-[46px] select-none" />
+          <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[46px] w-[46px] select-none" />
           <h3 class="mt-[20px] text-[16px] font-bold leading-[24px] text-ink-900">
             {{ card.title }}
           </h3>
@@ -93,7 +93,7 @@ onMounted(() => {
             <li
               v-for="item in card.items"
               :key="item"
-              class="flex gap-[10px] text-[13px] leading-[22px] text-ink-500"
+              class="flex gap-[10px] text-[13px] leading-[22px] text-ink-600"
             >
               <span class="mt-[9px] h-[3px] w-[3px] shrink-0 rounded-full bg-ink-400" />
               <span>{{ item }}</span>

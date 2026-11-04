@@ -76,6 +76,7 @@ onMounted(() => {
         <!-- 整图 4848×2336（约 2.08:1），随面板宽度缩放；窄屏横向滚动保文字可读 -->
         <div class="overflow-x-auto">
           <img
+loading="lazy" decoding="async"
             :src="collabImg"
             alt="运输协同闭环流程图：化工企业、威易达化工、威易达物流、威易达司机四方围绕全链路数据闭环流转"
             class="mx-auto block w-full min-w-[980px] max-w-[1240px]"

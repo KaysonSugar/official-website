@@ -108,7 +108,7 @@ onMounted(() => {
           :key="tag.text"
           class="flex h-[60px] items-center justify-center gap-[12px] rounded-[12px] bg-[#ecf7f1] px-[12px]"
         >
-          <img :src="iconMap[tag.icon]" alt="" class="h-[40px] w-[40px] shrink-0 select-none" />
+          <img loading="lazy" decoding="async" :src="iconMap[tag.icon]" alt="" class="h-[40px] w-[40px] shrink-0 select-none" />
           <span class="text-[16px] font-bold leading-[24px] text-[#2a5044]">{{ tag.text }}</span>
         </div>
       </div>
@@ -130,7 +130,7 @@ onMounted(() => {
             :style="{ '--d': `${500 + i * 80}ms` }"
           >
             <div class="flex items-center">
-              <img :src="iconMap[card.icon]" alt="" class="h-[40px] w-[40px] shrink-0 select-none" />
+              <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[40px] w-[40px] shrink-0 select-none" />
               <h3 class="ml-[12px] text-[16px] font-bold leading-[24px] text-[#684023]">
                 {{ card.title }}
               </h3>
@@ -165,14 +165,14 @@ onMounted(() => {
           >
             <!-- 竖卡（4 列）：图标在上标题在下；宽卡（2 列）：图标标题一行，正文跟标题对齐 -->
             <template v-if="group.cols === 4">
-              <img :src="iconMap[card.icon]" alt="" class="h-[42px] w-[42px] select-none" />
+              <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[42px] w-[42px] select-none" />
               <h4 class="mt-[18px] text-[16px] font-bold leading-[24px] text-ink-900">
                 {{ card.title }}
               </h4>
               <p class="mt-[6px] text-[13px] leading-[22px] text-ink-600">{{ card.desc }}</p>
             </template>
             <template v-else>
-              <img :src="iconMap[card.icon]" alt="" class="h-[64px] w-[64px] shrink-0 select-none" />
+              <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[64px] w-[64px] shrink-0 select-none" />
               <div class="min-w-0">
                 <h4 class="text-[18px] font-bold leading-[26px] text-ink-900">{{ card.title }}</h4>
                 <p class="mt-[10px] text-[14px] leading-[24px] text-ink-600">{{ card.desc }}</p>
@@ -192,7 +192,7 @@ onMounted(() => {
           :key="note"
           class="flex items-center gap-[12px]"
         >
-          <img :src="checkIcon" alt="" class="h-[20px] w-[20px] shrink-0 select-none" />
+          <img loading="lazy" decoding="async" :src="checkIcon" alt="" class="h-[20px] w-[20px] shrink-0 select-none" />
           <p class="text-[14px] leading-[22px] text-[#2e5445]">{{ note }}</p>
         </div>
       </div>

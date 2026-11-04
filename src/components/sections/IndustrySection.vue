@@ -86,7 +86,7 @@ onMounted(() => {
           :style="{ '--d': `${200 + i * 100}ms` }"
         >
           <!-- 图标：素材 176×176 自带圆角浅底，显示 42 -->
-          <img :src="iconMap[card.icon]" alt="" class="h-[42px] w-[42px] select-none" />
+          <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[42px] w-[42px] select-none" />
 
           <!-- 条款号：11px 焦橙，原型里比眉题深一档 -->
           <p

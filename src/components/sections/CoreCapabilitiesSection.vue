@@ -90,7 +90,7 @@ onMounted(() => {
           class="reveal card-lift rounded-[16px] bg-[#fafbfa] p-[24px]"
           :style="{ '--d': `${240 + i * 70}ms` }"
         >
-          <img :src="iconMap[card.icon]" alt="" class="h-[46px] w-[46px] select-none" />
+          <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[46px] w-[46px] select-none" />
           <h3 class="mt-[16px] text-[16px] font-bold leading-[24px] text-ink-900">{{ card.title }}</h3>
           <p class="mt-[8px] text-[13px] leading-[22px] text-ink-600">{{ card.desc }}</p>
         </article>

@@ -90,6 +90,7 @@ onMounted(() => {
         style="--d: 240ms"
       >
         <img
+loading="lazy" decoding="async"
           :src="flowImg"
           alt="化工企业、威易达化工、合作物流公司、威易达物流、威易达司机与全国危化物流公司的业务流转关系图"
           class="mx-auto w-full min-w-[960px] max-w-[1200px] select-none"
@@ -110,6 +111,7 @@ onMounted(() => {
           <div class="pointer-events-none absolute inset-0 overflow-hidden rounded-[16px]">
             <!-- 光斑：透明底圆盘素材，模糊后只垫在 logo 区域，卡片本体保持白底 -->
             <img
+loading="lazy" decoding="async"
               :src="glowMap[i]"
               alt=""
               aria-hidden="true"
@@ -118,12 +120,14 @@ onMounted(() => {
             <!-- 右下角装饰：尺寸位置全部钉死（不随屏幕缩放），
                  先一团光斑填充、再压圆环线；圆心在角外，只露四分之一弧 -->
             <img
+loading="lazy" decoding="async"
               :src="glowMap[i]"
               alt=""
               aria-hidden="true"
               class="pointer-events-none absolute -bottom-[130px] -right-[130px] w-[220px] select-none opacity-80 blur-[40px]"
             />
             <img
+loading="lazy" decoding="async"
               :src="ringMap[i]"
               alt=""
               aria-hidden="true"
@@ -134,6 +138,7 @@ onMounted(() => {
           <div class="relative">
             <!-- 品牌图标：素材自带白色圆角 tile，直接用 -->
             <img
+loading="lazy" decoding="async"
               :src="iconMap[card.icon]"
               alt=""
               class="mx-auto h-[64px] w-[64px] select-none drop-shadow-[0_6px_14px_rgba(26,26,26,0.08)]"

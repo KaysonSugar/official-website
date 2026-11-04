@@ -79,7 +79,7 @@ onMounted(() => {
           <p class="mt-[10px] text-[13px] font-semibold leading-[20px] text-[#d24c0f]">
             {{ risk.penalty }}
           </p>
-          <p class="mt-[8px] text-[12px] leading-[20px] text-ink-500">{{ risk.guard }}</p>
+          <p class="mt-[8px] text-[12px] leading-[20px] text-ink-600">{{ risk.guard }}</p>
         </article>
       </div>
 
@@ -98,7 +98,7 @@ onMounted(() => {
             <h3 class="mt-[16px] text-[15px] font-bold leading-[22px] text-ink-900">
               {{ gain.title }}
             </h3>
-            <p class="mt-[8px] text-[13px] leading-[22px] text-ink-500">{{ gain.desc }}</p>
+            <p class="mt-[8px] text-[13px] leading-[22px] text-ink-600">{{ gain.desc }}</p>
           </div>
         </div>
       </div>

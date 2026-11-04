@@ -47,6 +47,7 @@ onMounted(() => {
     <!-- 背景光斑：glow.png 是黑底硬边圆盘（900 见方，亮部居中），screen 混合吃掉黑底，
          模糊把硬边和同心环纹理揉开；透明度给足才够「亮眼」，位置对准原型右上亮区 -->
     <img
+loading="lazy" decoding="async"
       :src="glowImg"
       alt=""
       aria-hidden="true"
