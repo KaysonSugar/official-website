@@ -15,11 +15,17 @@ import { siteConfig } from '@/config/site'
  */
 const { workflow } = siteConfig
 
-// 节点 / 条目三套配色：orange 浅橙、green 浅绿、plain 白底描边、solid 深绿实心
-const toneClass: Record<string, string> = {
-  orange: 'border-transparent bg-[#fdf0e7] text-[#bc6a30]',
-  green: 'border-transparent bg-[#e3f3ea] text-[#2f8f62]',
-  plain: 'border-ink-100 bg-white text-ink-800',
+// 顶部节点：底色极淡（原型 #fff8f2 / #f1faf5），边框是同色系浅一档
+const nodeClass: Record<string, string> = {
+  orange: 'border-[#fbe2dd] bg-[#fff8f2] text-[#b0602f]',
+  green: 'border-[#dcebe6] bg-[#f1faf5] text-[#2f8a5f]',
+  plain: 'border-[#e1e3e2] bg-white text-ink-800',
+}
+
+// 分支名条 / 浅色收尾条：比顶部节点深一档，边框跟着重一点
+const branchClass: Record<string, string> = {
+  orange: 'border-[#f0d5c4] bg-[#fff1e8] text-[#b0602f]',
+  green: 'border-[#d0e5de] bg-[#e9f6ef] text-[#2f8a5f]',
   solid: 'border-transparent bg-[#2f9e66] text-white',
 }
 
@@ -82,8 +88,8 @@ onMounted(() => {
         <div class="flex flex-col gap-[8px] lg:flex-row lg:items-center">
           <template v-for="(node, i) in workflow.topNodes" :key="node.text">
             <div
-              class="reveal flex h-[48px] flex-1 items-center justify-center rounded-[10px] border px-[12px] text-center text-[13px] leading-[18px] font-medium"
-              :class="toneClass[node.tone]"
+              class="reveal flex h-[48px] flex-1 items-center justify-center rounded-[8px] border px-[12px] text-center text-[13px] leading-[18px] font-medium"
+              :class="nodeClass[node.tone]"
               :style="{ '--d': `${320 + i * 60}ms` }"
             >
               {{ node.text }}
@@ -98,7 +104,8 @@ onMounted(() => {
           </template>
         </div>
 
-        <!-- 判断菱形：正方形旋转 45°，文字反转回来；上方一条 ↓ 接住主流程 -->
+        <!-- 判断菱形：原型是扁长的（约 176×94，比高宽两倍），用 clip-path 裁
+             方块旋转只能在正方形时才等边，非等比会连圆角一起拉变形 -->
         <div class="reveal mt-[6px] flex flex-col items-center" style="--d: 580ms">
           <span class="text-[16px] leading-[20px] text-ink-300" aria-hidden="true">↓</span>
           <div class="diamond mt-[14px] flex items-center justify-center">
@@ -120,20 +127,20 @@ onMounted(() => {
               >↓</span
             >
 
-            <!-- 分支名条 -->
+            <!-- 分支名条：比顶部节点深一档的浅底 -->
             <div
-              class="reveal flex h-[44px] items-center justify-center rounded-[10px] border text-[13px] font-semibold leading-[18px]"
-              :class="toneClass[branch.tone]"
+              class="reveal flex h-[36px] items-center justify-center rounded-[8px] border text-[13px] font-semibold leading-[18px]"
+              :class="branchClass[branch.tone]"
               :style="{ '--d': `${640 + b * 80}ms` }"
             >
               {{ branch.head }}
             </div>
 
-            <!-- 中间步骤：白底描边，条目之间一条 ↓ -->
+            <!-- 中间步骤：白底 + 极淡暖灰边框，条目之间一条 ↓ -->
             <template v-for="(step, s) in branch.steps" :key="step">
-              <span class="my-[4px] text-center text-[16px] leading-[18px] text-ink-300" aria-hidden="true">↓</span>
+              <span class="my-[5px] text-center text-[16px] leading-[18px] text-ink-300" aria-hidden="true">↓</span>
               <div
-                class="reveal flex h-[44px] items-center justify-center rounded-[10px] border border-ink-100 bg-white text-[13px] leading-[18px] text-ink-700"
+                class="reveal flex h-[36px] items-center justify-center rounded-[8px] border border-[#e4e1dc] bg-white text-[13px] leading-[18px] text-ink-700"
                 :style="{ '--d': `${680 + b * 80 + s * 60}ms` }"
               >
                 {{ step }}
@@ -141,10 +148,10 @@ onMounted(() => {
             </template>
 
             <!-- 收尾条：tinted 沿用所在分支的色调（左浅橙 / 右深绿实心） -->
-            <span class="my-[4px] text-center text-[16px] leading-[18px] text-ink-300" aria-hidden="true">↓</span>
+            <span class="my-[5px] text-center text-[16px] leading-[18px] text-ink-300" aria-hidden="true">↓</span>
             <div
-              class="reveal flex h-[44px] items-center justify-center rounded-[10px] border text-[13px] font-semibold leading-[18px]"
-              :class="toneClass[branch.tail.tone === 'tinted' ? branch.tone : branch.tail.tone]"
+              class="reveal flex h-[36px] items-center justify-center rounded-[8px] border text-[13px] font-semibold leading-[18px]"
+              :class="branchClass[branch.tail.tone === 'tinted' ? branch.tone : branch.tail.tone]"
               :style="{ '--d': `${880 + b * 80}ms` }"
             >
               {{ branch.tail.text }}
@@ -166,18 +173,13 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* 判断菱形：56px 方块转 45°，对角线约 79px；文字反转回来摆正 */
+/* 判断菱形：原型量出来 176×94（宽是高的一倍多点），四边形用 clip-path 直接裁，
+   比 rotate 方块更省事——方块非等比旋转会把角拉变形，也留不住尖角 */
 .diamond {
-  width: 96px;
-  height: 96px;
-  border-radius: 10px;
-  background: #1b4433;
-  transform: rotate(45deg);
-}
-
-/* 文字反转回来时容器得是正的：直接给内层 span 反转 */
-.diamond span {
-  transform: rotate(-45deg);
+  width: 176px;
+  height: 94px;
+  background: #13322a;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
 
 /* 入场跟前几屏同一套：.in 触发一次性动画，延迟走行内 --d */
