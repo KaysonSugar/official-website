@@ -50,7 +50,7 @@ const isCenter = computed(() => props.align === 'center')
       <div :class="hasAside && !isCenter ? 'grid items-center gap-12 lg:grid-cols-2' : ''">
         <div :class="isCenter ? 'mx-auto max-w-3xl' : 'max-w-xl'">
           <!-- 小标签：12px、品牌橙、0.18em 宽字距 -->
-          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-500">
+          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">
             {{ props.eyebrow }}
           </p>
 

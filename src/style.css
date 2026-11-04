@@ -100,6 +100,39 @@
   .card-lift:hover::after {
     opacity: 1;
   }
+
+  /* 滚动进场：区块根元素被 useReveal 加上 .in 后，子元素一次性浮上来。
+     延迟走行内 --d（如 style="--d: 160ms"）逐块错峰。
+     用 animation 而不是 transition-delay：后者会连 hover 的过渡一起拖慢。
+     backwards 保证延迟期间停在起始态，不会先闪一下原样。
+     .in.reveal 这一档是给「区块根元素自己也要淡入」的场景留的 */
+  .reveal {
+    opacity: 0;
+  }
+
+  .in .reveal,
+  .in.reveal {
+    opacity: 1;
+    animation: reveal-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: var(--d, 0ms);
+  }
+
+  @keyframes reveal-rise {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+
+  /* 减弱动效时不播动画，但必须让内容可见——否则 .reveal 的 opacity: 0 会把内容藏住 */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .in .reveal,
+    .in.reveal {
+      opacity: 1;
+      animation: none;
+    }
+  }
 }
 
 /* 基础样式层：优先级低于工具类，可被组件中的 Tailwind 类名覆盖 */

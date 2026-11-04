@@ -5,7 +5,8 @@
  * @Name: 首页第三屏：轻量化平台
 -->
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { useTemplateRef } from 'vue'
+import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import checkIcon from '@/assets/home/icons/check-circle.png'
 import tagErp from '@/assets/home/icons/tag-erp.png'
@@ -50,38 +51,16 @@ const iconMap: Record<string, string> = {
   'cap-finance': capFinance,
 }
 
-// 和第二屏同一套：IntersectionObserver 滚进来才播入场
-const root = ref<HTMLElement>()
-
-onMounted(() => {
-  const el = root.value
-  if (!el) return
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
-    el.classList.add('in')
-    return
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        el.classList.add('in')
-        io.disconnect()
-      }
-    },
-    { threshold: 0.15 },
-  )
-  io.observe(el)
-})
+const root = useTemplateRef<HTMLElement>('root')
+useReveal(root)
 </script>
 
 <template>
-  <section ref="root" class="bg-white pb-[80px] pt-[90px]">
+  <section ref="root" class="bg-white pb-[64px] pt-[96px]">
     <div class="container-page">
       <!-- 眉题：跟第二屏同款，11px 橙色宽字距 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ lightweight.eyebrow }}
@@ -102,22 +81,29 @@ onMounted(() => {
 
       <!-- 四个卖点胶囊：等宽 60 高浅绿底，内容居中（白 tile 图标 + 深绿粗体）；
            窄屏 1 列，sm 起 2 列，lg 四列铺满 -->
-      <div class="reveal mt-[30px] grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:grid-cols-4" style="--d: 220ms">
+      <div
+        class="reveal mt-[30px] grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:grid-cols-4"
+        style="--d: 220ms"
+      >
         <div
           v-for="tag in lightweight.tags"
           :key="tag.text"
           class="flex h-[60px] items-center justify-center gap-[12px] rounded-[12px] bg-[#ecf7f1] px-[12px]"
         >
-          <img loading="lazy" decoding="async" :src="iconMap[tag.icon]" alt="" class="h-[40px] w-[40px] shrink-0 select-none" />
+          <img
+            loading="lazy"
+            decoding="async"
+            :src="iconMap[tag.icon]"
+            alt=""
+            aria-hidden="true"
+            class="h-[40px] w-[40px] shrink-0 select-none"
+          />
           <span class="text-[16px] font-bold leading-[24px] text-[#2a5044]">{{ tag.text }}</span>
         </div>
       </div>
 
       <!-- 痛点面板：浅橙大底，三张白卡横排；卡内上行是图标+标题+右上角编号 -->
-      <div
-        class="reveal mt-[36px] rounded-[16px] bg-[#fff8f2] p-[24px]"
-        style="--d: 460ms"
-      >
+      <div class="reveal mt-[36px] rounded-[16px] bg-[#fff8f2] p-[24px]" style="--d: 460ms">
         <p class="text-[12px] font-semibold leading-[18px] tracking-[0.02em] text-[#a35c30]">
           {{ lightweight.pain.title }}
         </p>
@@ -130,7 +116,14 @@ onMounted(() => {
             :style="{ '--d': `${500 + i * 80}ms` }"
           >
             <div class="flex items-center">
-              <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[40px] w-[40px] shrink-0 select-none" />
+              <img
+                loading="lazy"
+                decoding="async"
+                :src="iconMap[card.icon]"
+                alt=""
+                aria-hidden="true"
+                class="h-[40px] w-[40px] shrink-0 select-none"
+              />
               <h3 class="ml-[12px] text-[16px] font-bold leading-[24px] text-[#684023]">
                 {{ card.title }}
               </h3>
@@ -165,14 +158,28 @@ onMounted(() => {
           >
             <!-- 竖卡（4 列）：图标在上标题在下；宽卡（2 列）：图标标题一行，正文跟标题对齐 -->
             <template v-if="group.cols === 4">
-              <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[42px] w-[42px] select-none" />
+              <img
+                loading="lazy"
+                decoding="async"
+                :src="iconMap[card.icon]"
+                alt=""
+                aria-hidden="true"
+                class="h-[42px] w-[42px] select-none"
+              />
               <h4 class="mt-[18px] text-[16px] font-bold leading-[24px] text-ink-900">
                 {{ card.title }}
               </h4>
               <p class="mt-[6px] text-[13px] leading-[22px] text-ink-600">{{ card.desc }}</p>
             </template>
             <template v-else>
-              <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[64px] w-[64px] shrink-0 select-none" />
+              <img
+                loading="lazy"
+                decoding="async"
+                :src="iconMap[card.icon]"
+                alt=""
+                aria-hidden="true"
+                class="h-[64px] w-[64px] shrink-0 select-none"
+              />
               <div class="min-w-0">
                 <h4 class="text-[18px] font-bold leading-[26px] text-ink-900">{{ card.title }}</h4>
                 <p class="mt-[10px] text-[14px] leading-[24px] text-ink-600">{{ card.desc }}</p>
@@ -187,46 +194,18 @@ onMounted(() => {
         class="reveal mt-[24px] grid grid-cols-1 items-center gap-[12px] rounded-[12px] bg-[#e7f2eb] px-[24px] py-[20px] lg:grid-cols-2 lg:py-0 lg:h-[82px]"
         style="--d: 1420ms"
       >
-        <div
-          v-for="note in lightweight.notes"
-          :key="note"
-          class="flex items-center gap-[12px]"
-        >
-          <img loading="lazy" decoding="async" :src="checkIcon" alt="" class="h-[20px] w-[20px] shrink-0 select-none" />
+        <div v-for="note in lightweight.notes" :key="note" class="flex items-center gap-[12px]">
+          <img
+            loading="lazy"
+            decoding="async"
+            :src="checkIcon"
+            alt=""
+            aria-hidden="true"
+            class="h-[20px] w-[20px] shrink-0 select-none"
+          />
           <p class="text-[14px] leading-[22px] text-[#2e5445]">{{ note }}</p>
         </div>
       </div>
     </div>
   </section>
 </template>
-
-<style scoped>
-/* 入场跟第二屏完全同一套：.in 触发一次性动画，延迟走行内 --d，
-   不用 transition-delay（会连 hover 上浮一起拖慢） */
-.reveal {
-  opacity: 0;
-}
-
-.in .reveal {
-  opacity: 1;
-  animation: lw-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  animation-delay: var(--d, 0ms);
-}
-
-@keyframes lw-rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-  }
-
-  .in .reveal {
-    animation: none;
-  }
-}
-</style>

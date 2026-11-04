@@ -5,7 +5,8 @@
  * @Name: 首页第十一屏：我们的服务
 -->
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { useTemplateRef } from 'vue'
+import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import svcImplement from '@/assets/home/icons/svc-implement.png'
 import svcCustom from '@/assets/home/icons/svc-custom.png'
@@ -25,38 +26,16 @@ const iconMap = {
   support: svcSupport,
 }
 
-// 和前几屏同一套：IntersectionObserver 滚进来才播入场
-const root = ref<HTMLElement>()
-
-onMounted(() => {
-  const el = root.value
-  if (!el) return
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
-    el.classList.add('in')
-    return
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        el.classList.add('in')
-        io.disconnect()
-      }
-    },
-    { threshold: 0.15 },
-  )
-  io.observe(el)
-})
+const root = useTemplateRef<HTMLElement>('root')
+useReveal(root)
 </script>
 
 <template>
-  <section ref="root" class="bg-white pb-[96px] pt-[100px]">
+  <section ref="root" class="bg-white pb-[64px] pt-[96px]">
     <div class="container-page">
       <!-- 眉题：跟前几屏同款，11px 橙色宽字距 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ service.eyebrow }}
@@ -84,7 +63,14 @@ onMounted(() => {
           :style="{ '--d': `${240 + i * 80}ms` }"
         >
           <!-- 图标素材自带浅色圆角底，46px 跟第六屏的功能卡一致 -->
-          <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[46px] w-[46px] select-none" />
+          <img
+            loading="lazy"
+            decoding="async"
+            :src="iconMap[card.icon]"
+            alt=""
+            aria-hidden="true"
+            class="h-[46px] w-[46px] select-none"
+          />
           <h3 class="mt-[20px] text-[16px] font-bold leading-[24px] text-ink-900">
             {{ card.title }}
           </h3>
@@ -104,33 +90,3 @@ onMounted(() => {
     </div>
   </section>
 </template>
-
-<style scoped>
-/* 入场跟前几屏同一套：.in 触发一次性动画，延迟走行内 --d */
-.reveal {
-  opacity: 0;
-}
-
-.in .reveal {
-  opacity: 1;
-  animation: svc-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  animation-delay: var(--d, 0ms);
-}
-
-@keyframes svc-rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-  }
-
-  .in .reveal {
-    animation: none;
-  }
-}
-</style>

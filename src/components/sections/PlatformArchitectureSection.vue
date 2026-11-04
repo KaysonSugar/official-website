@@ -5,7 +5,8 @@
  * @Name: 首页第四屏：平台功能结构
 -->
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { useTemplateRef } from 'vue'
+import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import glowImg from '@/assets/home/images/glow.webp'
 
@@ -16,38 +17,17 @@ import glowImg from '@/assets/home/images/glow.webp'
  */
 const { architecture } = siteConfig
 
-// 和第二、三屏同一套：IntersectionObserver 滚进来才播入场
-const root = ref<HTMLElement>()
-
-onMounted(() => {
-  const el = root.value
-  if (!el) return
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
-    el.classList.add('in')
-    return
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        el.classList.add('in')
-        io.disconnect()
-      }
-    },
-    { threshold: 0.15 },
-  )
-  io.observe(el)
-})
+const root = useTemplateRef<HTMLElement>('root')
+useReveal(root)
 </script>
 
 <template>
-  <section ref="root" class="arch-bg relative overflow-hidden pb-[80px] pt-[136px]">
+  <section ref="root" class="arch-bg relative overflow-hidden pb-[64px] pt-[136px]">
     <!-- 背景光斑：glow.png 是黑底硬边圆盘（900 见方，亮部居中），screen 混合吃掉黑底，
          模糊把硬边和同心环纹理揉开；透明度给足才够「亮眼」，位置对准原型右上亮区 -->
     <img
-loading="lazy" decoding="async"
+      loading="lazy"
+      decoding="async"
       :src="glowImg"
       alt=""
       aria-hidden="true"
@@ -72,10 +52,7 @@ loading="lazy" decoding="async"
       </h2>
 
       <!-- 一行说明：原型里离标题远、贴着架构图，14px 灰绿 -->
-      <p
-        class="reveal mt-[72px] text-[14px] leading-[22px] text-[#9db4a8]"
-        style="--d: 160ms"
-      >
+      <p class="reveal mt-[72px] text-[14px] leading-[22px] text-[#9db4a8]" style="--d: 160ms">
         {{ architecture.desc }}
       </p>
 
@@ -88,9 +65,9 @@ loading="lazy" decoding="async"
           :style="{ '--d': `${240 + i * 80}ms` }"
         >
           <!-- 层名：12px 灰绿，窄屏时整行占一行 -->
-          <span
-            class="shrink-0 text-[12px] leading-[18px] text-night-400 sm:w-[64px]"
-          >{{ layer.label }}</span>
+          <span class="shrink-0 text-[12px] leading-[18px] text-night-400 sm:w-[64px]">{{
+            layer.label
+          }}</span>
 
           <!-- 普通层：等宽文字块，块数即列数（--cols 交给 scoped 样式做响应式）；
                资源服务层 5 块太挤，文字降到 13px -->
@@ -154,34 +131,6 @@ loading="lazy" decoding="async"
 @media (min-width: 640px) {
   .layer-grid {
     grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
-  }
-}
-
-/* 入场跟前三屏同一套：.in 触发一次性动画，延迟走行内 --d */
-.reveal {
-  opacity: 0;
-}
-
-.in .reveal {
-  opacity: 1;
-  animation: arch-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  animation-delay: var(--d, 0ms);
-}
-
-@keyframes arch-rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-  }
-
-  .in .reveal {
-    animation: none;
   }
 }
 </style>

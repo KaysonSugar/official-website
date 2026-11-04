@@ -5,7 +5,8 @@
  * @Name: 首页第七屏：生产主流程图
 -->
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { useTemplateRef } from 'vue'
+import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 
 /**
@@ -30,38 +31,16 @@ const branchClass: Record<string, string> = {
   solid: 'border-transparent bg-[#2f9e66] text-white',
 }
 
-// 和前几屏同一套：IntersectionObserver 滚进来才播入场
-const root = ref<HTMLElement>()
-
-onMounted(() => {
-  const el = root.value
-  if (!el) return
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
-    el.classList.add('in')
-    return
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        el.classList.add('in')
-        io.disconnect()
-      }
-    },
-    { threshold: 0.15 },
-  )
-  io.observe(el)
-})
+const root = useTemplateRef<HTMLElement>('root')
+useReveal(root)
 </script>
 
 <template>
-  <section ref="root" class="bg-[#f1faf5] pb-[80px] pt-[100px]">
+  <section ref="root" class="bg-[#f1faf5] pb-[64px] pt-[96px]">
     <div class="container-page">
       <!-- 眉题：跟前几屏同款，11px 橙色宽字距 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ workflow.eyebrow }}
@@ -76,7 +55,10 @@ onMounted(() => {
       </h2>
 
       <!-- 一行说明：14px 弱化灰 -->
-      <p class="reveal mt-[32px] max-w-[860px] text-[14px] leading-[22px] text-ink-600" style="--d: 160ms">
+      <p
+        class="reveal mt-[32px] max-w-[860px] text-[14px] leading-[22px] text-ink-600"
+        style="--d: 160ms"
+      >
         {{ workflow.desc }}
       </p>
 
@@ -139,7 +121,11 @@ onMounted(() => {
 
             <!-- 中间步骤：白底 + 极淡暖灰边框，条目之间一条 ↓ -->
             <template v-for="(step, s) in branch.steps" :key="step">
-              <span class="my-[5px] text-center text-[16px] leading-[18px] text-[#82bda2]" aria-hidden="true">↓</span>
+              <span
+                class="my-[5px] text-center text-[16px] leading-[18px] text-[#82bda2]"
+                aria-hidden="true"
+                >↓</span
+              >
               <div
                 class="reveal flex h-[36px] items-center justify-center rounded-[8px] border border-[#f0d5c4] bg-white text-[13px] leading-[18px] text-ink-700"
                 :style="{ '--d': `${680 + b * 80 + s * 60}ms` }"
@@ -149,7 +135,11 @@ onMounted(() => {
             </template>
 
             <!-- 收尾条：tinted 沿用所在分支的色调（左浅橙 / 右深绿实心） -->
-            <span class="my-[5px] text-center text-[16px] leading-[18px] text-[#82bda2]" aria-hidden="true">↓</span>
+            <span
+              class="my-[5px] text-center text-[16px] leading-[18px] text-[#82bda2]"
+              aria-hidden="true"
+              >↓</span
+            >
             <div
               class="reveal flex h-[36px] items-center justify-center rounded-[8px] border text-[13px] font-semibold leading-[18px]"
               :class="branchClass[branch.tail.tone === 'tinted' ? branch.tone : branch.tail.tone]"
@@ -181,33 +171,5 @@ onMounted(() => {
   height: 94px;
   background: #13322a;
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-}
-
-/* 入场跟前几屏同一套：.in 触发一次性动画，延迟走行内 --d */
-.reveal {
-  opacity: 0;
-}
-
-.in .reveal {
-  opacity: 1;
-  animation: wf-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  animation-delay: var(--d, 0ms);
-}
-
-@keyframes wf-rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-  }
-
-  .in .reveal {
-    animation: none;
-  }
 }
 </style>

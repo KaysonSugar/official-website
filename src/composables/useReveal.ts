@@ -4,69 +4,54 @@
  * @StartDate: 2026.11.03
  * @Name: 滚动进场工具
  */
-import { onMounted, onUnmounted, ref, type Ref } from 'vue'
+import { onMounted, onUnmounted, type ShallowRef } from 'vue'
 
 /**
- * 滚动进场动效：元素进入视口后把 visible 置为 true，由调用方绑到过渡类上实现淡入上移。
- * 用户开启「减弱动效」时直接置为 true，保证内容一定可见。
+ * 区块的滚动进场：根元素露头才加 .in，子元素带 .reveal 依次浮上来。
+ *
+ * 为什么不用纯 CSS：首屏以下的区块页面一打开就在视口外，动画会提前播完，
+ * 用户滚下来只看到静止画面。所以得等 IntersectionObserver 说「进来了」才开播。
+ *
+ * 动画本体在 style.css 的全局 .reveal，各屏别再各写一份 keyframes——
+ * 之前 11 个组件写了 11 遍，调一次节奏要改 11 个文件。
  *
  * 用法：
- *   const boxEl = useTemplateRef<HTMLElement>('box')
- *   const visible = useReveal(boxEl)
- *   <section ref="box" :class="visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'">
+ *   const root = useTemplateRef<HTMLElement>('root')
+ *   useReveal(root)
+ *   <section ref="root"> <p class="reveal" style="--d: 80ms">…</p> </section>
+ *
+ * @param target useTemplateRef 拿到的根元素
+ * @param threshold 露出多少比例就开播，默认 0.15（整块进视口太磨叽）
  */
-export interface RevealOptions {
-  /** 元素露出多少比例才触发，默认 0.15（露出 15%） */
-  threshold?: number
-  /** 视口边缘收缩，负值表示延后触发，默认底部内缩 10% 让动效更自然 */
-  rootMargin?: string
-}
-
-/**
- * @param target 由 useTemplateRef 取得的元素引用
- * @returns visible 是否已进入视口（供模板绑定过渡类）
- */
-export function useReveal<T extends HTMLElement = HTMLElement>(
-  target: Ref<T | null>,
-  options: RevealOptions = {},
-) {
-  const visible = ref(false)
+export function useReveal(target: Readonly<ShallowRef<HTMLElement | null>>, threshold = 0.15) {
   let observer: IntersectionObserver | null = null
 
   onMounted(() => {
-    const node = target.value
-    if (!node) return
+    const el = target.value
+    if (!el) return
 
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    // 减弱动效或浏览器不支持时直接显示，避免内容一直处于不可见状态
-    if (prefersReduced || typeof IntersectionObserver === 'undefined') {
-      visible.value = true
+    // 系统开了「减弱动效」或者浏览器太老，直接显示，别把内容锁在透明态
+    if (
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      !('IntersectionObserver' in window)
+    ) {
+      el.classList.add('in')
       return
     }
 
     observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            visible.value = true
-            // 只触发一次，触发后立即断开监听，避免来回滚动时反复切换
-            observer?.disconnect()
-          }
+        // 播一次就够，断开省得来回滚反复触发
+        if (entries.some((e) => e.isIntersecting)) {
+          el.classList.add('in')
+          observer?.disconnect()
         }
       },
-      {
-        threshold: options.threshold ?? 0.15,
-        rootMargin: options.rootMargin ?? '0px 0px -10% 0px',
-      },
+      { threshold },
     )
-
-    observer.observe(node)
+    observer.observe(el)
   })
 
-  onUnmounted(() => {
-    observer?.disconnect()
-  })
-
-  return visible
+  // 还没滚到就被销毁（切路由），记得解绑，不然 observer 挂着整个 DOM 不放
+  onUnmounted(() => observer?.disconnect())
 }

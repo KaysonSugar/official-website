@@ -5,7 +5,8 @@
  * @Name: 首页第九屏：全链路一体化优势
 -->
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { useTemplateRef } from 'vue'
+import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 
 /**
@@ -16,34 +17,12 @@ import { siteConfig } from '@/config/site'
  */
 const { advantage } = siteConfig
 
-// 和第四屏同一套：IntersectionObserver 滚进来才播入场
-const root = ref<HTMLElement>()
-
-onMounted(() => {
-  const el = root.value
-  if (!el) return
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
-    el.classList.add('in')
-    return
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        el.classList.add('in')
-        io.disconnect()
-      }
-    },
-    { threshold: 0.15 },
-  )
-  io.observe(el)
-})
+const root = useTemplateRef<HTMLElement>('root')
+useReveal(root)
 </script>
 
 <template>
-  <section ref="root" class="adv-bg relative overflow-hidden pb-[100px] pt-[136px]">
+  <section ref="root" class="adv-bg relative overflow-hidden pb-[64px] pt-[136px]">
     <div class="container-page">
       <!-- 眉题：跟第四屏暗底同款，11px 橙色宽字距 -->
       <p
@@ -81,7 +60,9 @@ onMounted(() => {
               >
                 核心痛点
               </div>
-              <div class="flex h-[44px] items-center bg-[#1e332a] text-[13px] font-medium text-white">
+              <div
+                class="flex h-[44px] items-center bg-[#1e332a] text-[13px] font-medium text-white"
+              >
                 威易达解决方案
               </div>
             </div>
@@ -108,17 +89,20 @@ onMounted(() => {
                 class="py-[24px] pl-[45px] pr-[32px]"
                 :class="i === 0 ? 'border-t border-white/10' : ''"
               >
-                <div v-for="(pain, pi) in row.pains" :key="pain.title" :class="pi > 0 ? 'mt-[18px]' : ''">
-                  <h3 class="text-[15px] font-semibold leading-[20px] text-white">{{ pain.title }}</h3>
+                <div
+                  v-for="(pain, pi) in row.pains"
+                  :key="pain.title"
+                  :class="pi > 0 ? 'mt-[18px]' : ''"
+                >
+                  <h3 class="text-[15px] font-semibold leading-[20px] text-white">
+                    {{ pain.title }}
+                  </h3>
                   <p class="mt-[4px] text-[12px] leading-[18px] text-[#a3b6b0]">{{ pain.desc }}</p>
                 </div>
               </div>
 
               <!-- 解决方案：标题换薄荷绿，其余同痛点列 -->
-              <div
-                class="py-[24px] pr-[40px]"
-                :class="i === 0 ? 'border-t border-white/10' : ''"
-              >
+              <div class="py-[24px] pr-[40px]" :class="i === 0 ? 'border-t border-white/10' : ''">
                 <div
                   v-for="(sol, si) in row.solutions"
                   :key="sol.title"
@@ -157,7 +141,9 @@ onMounted(() => {
           >
             {{ card.no }}
           </p>
-          <h4 class="mt-[30px] text-[16px] font-bold leading-[24px] text-white">{{ card.title }}</h4>
+          <h4 class="mt-[30px] text-[16px] font-bold leading-[24px] text-white">
+            {{ card.title }}
+          </h4>
           <p class="mt-[10px] text-[12px] leading-[20px] text-[#a3b6b0]">{{ card.desc }}</p>
         </div>
       </div>
@@ -180,33 +166,5 @@ onMounted(() => {
 /* 暗底：比第四屏的 #0f211b 略偏绿，右下角渐亮（原型四角采色：左上暗右下亮） */
 .adv-bg {
   background: linear-gradient(135deg, #10251e 0%, #11271f 55%, #142e25 100%);
-}
-
-/* 入场跟第四屏同一套：.in 触发一次性动画，延迟走行内 --d */
-.reveal {
-  opacity: 0;
-}
-
-.in .reveal {
-  opacity: 1;
-  animation: adv-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  animation-delay: var(--d, 0ms);
-}
-
-@keyframes adv-rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-  }
-
-  .in .reveal {
-    animation: none;
-  }
 }
 </style>

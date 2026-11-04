@@ -5,7 +5,8 @@
  * @Name: 首页第二屏：行业背景与法规驱动
 -->
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { useTemplateRef } from 'vue'
+import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import shieldIcon from '@/assets/home/icons/shield.png'
 import chipIcon from '@/assets/home/icons/chip.png'
@@ -22,43 +23,21 @@ const { industry } = siteConfig
 // icon 名 → 素材。配置里存短名，素材换图只动这里
 const iconMap = { shield: shieldIcon, chip: chipIcon, ban: banIcon, pin: pinIcon }
 
-// 首屏下面的区块，页面一打开就在视口外，CSS 入场动画播完用户也看不到，
-// 所以用 IntersectionObserver：滚进来才加 .in，让子元素依次浮上来
-const root = ref<HTMLElement>()
-
-onMounted(() => {
-  const el = root.value
-  if (!el) return
-  // reduce 或老浏览器不搞花活，直接显示
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
-    el.classList.add('in')
-    return
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        el.classList.add('in')
-        io.disconnect()
-      }
-    },
-    // 15% 露头就开始播，等整个区块进视口太磨叽
-    { threshold: 0.15 },
-  )
-  io.observe(el)
-})
+const root = useTemplateRef<HTMLElement>('root')
+useReveal(root)
 </script>
 
 <template>
   <!-- 区块底：白到浅灰绿的细微渐变，原型上几乎看不出来的那层；
        内边距在原型基础上加宽：上 90 / 下 80（用户要求上+40 下+30） -->
-  <section ref="root" class="bg-[linear-gradient(180deg,#ffffff_0%,#fafbfa_100%)] pb-[80px] pt-[90px]">
+  <section
+    ref="root"
+    class="bg-[linear-gradient(180deg,#ffffff_0%,#fafbfa_100%)] pb-[64px] pt-[96px]"
+  >
     <div class="container-page">
       <!-- 眉题：11px 橙色小字，宽字距，原型里的「英文 / 中文」一行 -->
       <p
-        class="reveal mt-[46px] text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
+        class="reveal mt-[46px] text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ industry.eyebrow }}
@@ -86,7 +65,14 @@ onMounted(() => {
           :style="{ '--d': `${200 + i * 100}ms` }"
         >
           <!-- 图标：素材 176×176 自带圆角浅底，显示 42 -->
-          <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[42px] w-[42px] select-none" />
+          <img
+            loading="lazy"
+            decoding="async"
+            :src="iconMap[card.icon]"
+            alt=""
+            aria-hidden="true"
+            class="h-[42px] w-[42px] select-none"
+          />
 
           <!-- 条款号：11px 焦橙，原型里比眉题深一档 -->
           <p
@@ -118,35 +104,3 @@ onMounted(() => {
     </div>
   </section>
 </template>
-
-<style scoped>
-/* 滚动入场：.in 加上后播一次性动画，延迟走行内变量 --d（卡片每张 +100ms）。
-   不用 transition 做入场——transition-delay 会连 hover 上浮一起拖慢；
-   animation 是播完就完，hover 的 transform 过渡互不干扰 */
-.reveal {
-  opacity: 0;
-}
-
-.in .reveal {
-  opacity: 1;
-  animation: sec-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  animation-delay: var(--d, 0ms);
-}
-
-@keyframes sec-rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-  }
-
-  .in .reveal {
-    animation: none;
-  }
-}
-</style>

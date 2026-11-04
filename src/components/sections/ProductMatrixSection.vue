@@ -5,7 +5,8 @@
  * @Name: 首页第五屏：三端业务运转模式
 -->
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
+import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import flowImg from '@/assets/home/images/matrix-flow.webp'
 import logoChemical from '@/assets/home/images/brand-chemical.webp'
@@ -33,38 +34,19 @@ const ringMap = [ringOrange, ringMint, ringGreen]
 // 司机端没上线：点了链接位就把文案换成「正在上线中」
 const comingSoon = ref(false)
 
-// 和前几屏同一套：IntersectionObserver 滚进来才播入场
-const root = ref<HTMLElement>()
-
-onMounted(() => {
-  const el = root.value
-  if (!el) return
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
-    el.classList.add('in')
-    return
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        el.classList.add('in')
-        io.disconnect()
-      }
-    },
-    { threshold: 0.15 },
-  )
-  io.observe(el)
-})
+const root = useTemplateRef<HTMLElement>('root')
+useReveal(root)
 </script>
 
 <template>
-  <section ref="root" class="bg-[linear-gradient(180deg,#ffffff_0%,#fafbfa_100%)] pb-[80px] pt-[100px]">
+  <section
+    ref="root"
+    class="bg-[linear-gradient(180deg,#ffffff_0%,#fafbfa_100%)] pb-[64px] pt-[96px]"
+  >
     <div class="container-page">
       <!-- 眉题：跟前几屏同款，11px 橙色宽字距 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ matrix.eyebrow }}
@@ -79,7 +61,10 @@ onMounted(() => {
       </h2>
 
       <!-- 两行说明：14px 弱化灰，限宽防止拉太长 -->
-      <p class="reveal mt-[48px] max-w-[860px] text-[14px] leading-[22px] text-ink-600" style="--d: 160ms">
+      <p
+        class="reveal mt-[48px] max-w-[860px] text-[14px] leading-[22px] text-ink-600"
+        style="--d: 160ms"
+      >
         {{ matrix.desc }}
       </p>
 
@@ -90,7 +75,8 @@ onMounted(() => {
         style="--d: 240ms"
       >
         <img
-loading="lazy" decoding="async"
+          loading="lazy"
+          decoding="async"
           :src="flowImg"
           alt="化工企业、威易达化工、合作物流公司、威易达物流、威易达司机与全国危化物流公司的业务流转关系图"
           class="mx-auto w-full min-w-[960px] max-w-[1200px] select-none"
@@ -111,7 +97,8 @@ loading="lazy" decoding="async"
           <div class="pointer-events-none absolute inset-0 overflow-hidden rounded-[16px]">
             <!-- 光斑：透明底圆盘素材，模糊后只垫在 logo 区域，卡片本体保持白底 -->
             <img
-loading="lazy" decoding="async"
+              loading="lazy"
+              decoding="async"
               :src="glowMap[i]"
               alt=""
               aria-hidden="true"
@@ -120,14 +107,16 @@ loading="lazy" decoding="async"
             <!-- 右下角装饰：尺寸位置全部钉死（不随屏幕缩放），
                  先一团光斑填充、再压圆环线；圆心在角外，只露四分之一弧 -->
             <img
-loading="lazy" decoding="async"
+              loading="lazy"
+              decoding="async"
               :src="glowMap[i]"
               alt=""
               aria-hidden="true"
               class="pointer-events-none absolute -bottom-[130px] -right-[130px] w-[220px] select-none opacity-80 blur-[40px]"
             />
             <img
-loading="lazy" decoding="async"
+              loading="lazy"
+              decoding="async"
               :src="ringMap[i]"
               alt=""
               aria-hidden="true"
@@ -138,22 +127,30 @@ loading="lazy" decoding="async"
           <div class="relative">
             <!-- 品牌图标：素材自带白色圆角 tile，直接用 -->
             <img
-loading="lazy" decoding="async"
+              loading="lazy"
+              decoding="async"
               :src="iconMap[card.icon]"
               alt=""
+              aria-hidden="true"
               class="mx-auto h-[64px] w-[64px] select-none drop-shadow-[0_6px_14px_rgba(26,26,26,0.08)]"
             />
 
             <!-- 小胶囊标签：橙卡暖橙、绿卡浅绿 -->
             <p
               class="mt-[16px] inline-block rounded-full px-[12px] py-[4px] text-[12px] leading-[18px]"
-              :class="card.tone === 'orange' ? 'bg-[#fbe9da] text-[#bc6a30]' : 'bg-[#dcf1e6] text-[#2f8f62]'"
+              :class="
+                card.tone === 'orange'
+                  ? 'bg-[#fbe9da] text-[#bc6a30]'
+                  : 'bg-[#dcf1e6] text-[#2f8f62]'
+              "
             >
               {{ card.label }}
             </p>
 
             <!-- 卡片标题：20px 加粗 -->
-            <h3 class="mt-[12px] text-[20px] font-bold leading-[28px] text-ink-900">{{ card.title }}</h3>
+            <h3 class="mt-[12px] text-[20px] font-bold leading-[28px] text-ink-900">
+              {{ card.title }}
+            </h3>
 
             <!-- 正文：14px 居中，与原型同款换行节奏 -->
             <p class="mt-[14px] text-[14px] leading-[24px] text-ink-600">{{ card.desc }}</p>
@@ -196,33 +193,3 @@ loading="lazy" decoding="async"
     </div>
   </section>
 </template>
-
-<style scoped>
-/* 入场跟前几屏同一套：.in 触发一次性动画，延迟走行内 --d */
-.reveal {
-  opacity: 0;
-}
-
-.in .reveal {
-  opacity: 1;
-  animation: mx-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  animation-delay: var(--d, 0ms);
-}
-
-@keyframes mx-rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-  }
-
-  .in .reveal {
-    animation: none;
-  }
-}
-</style>

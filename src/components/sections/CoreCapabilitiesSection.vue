@@ -5,7 +5,8 @@
  * @Name: 首页第六屏：核心功能详解
 -->
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { useTemplateRef } from 'vue'
+import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import fnOrder from '@/assets/home/icons/fn-order.png'
 import fnBom from '@/assets/home/icons/fn-bom.png'
@@ -31,38 +32,16 @@ const iconMap = {
   sales: fnSales,
 }
 
-// 和前几屏同一套：IntersectionObserver 滚进来才播入场
-const root = ref<HTMLElement>()
-
-onMounted(() => {
-  const el = root.value
-  if (!el) return
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
-    el.classList.add('in')
-    return
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        el.classList.add('in')
-        io.disconnect()
-      }
-    },
-    { threshold: 0.15 },
-  )
-  io.observe(el)
-})
+const root = useTemplateRef<HTMLElement>('root')
+useReveal(root)
 </script>
 
 <template>
-  <section ref="root" class="bg-white pb-[80px] pt-[100px]">
+  <section ref="root" class="bg-white pb-[64px] pt-[96px]">
     <div class="container-page">
       <!-- 眉题：跟前几屏同款，11px 橙色宽字距 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ capabilities.eyebrow }}
@@ -77,7 +56,10 @@ onMounted(() => {
       </h2>
 
       <!-- 两行说明：14px 弱化灰，限宽对齐原型换行位置 -->
-      <p class="reveal mt-[48px] max-w-[880px] text-[14px] leading-[24px] text-ink-600" style="--d: 160ms">
+      <p
+        class="reveal mt-[48px] max-w-[880px] text-[14px] leading-[24px] text-ink-600"
+        style="--d: 160ms"
+      >
         {{ capabilities.desc }}
       </p>
 
@@ -90,42 +72,20 @@ onMounted(() => {
           class="reveal card-lift rounded-[16px] bg-[#fafbfa] p-[24px]"
           :style="{ '--d': `${240 + i * 70}ms` }"
         >
-          <img loading="lazy" decoding="async" :src="iconMap[card.icon]" alt="" class="h-[46px] w-[46px] select-none" />
-          <h3 class="mt-[16px] text-[16px] font-bold leading-[24px] text-ink-900">{{ card.title }}</h3>
+          <img
+            loading="lazy"
+            decoding="async"
+            :src="iconMap[card.icon]"
+            alt=""
+            aria-hidden="true"
+            class="h-[46px] w-[46px] select-none"
+          />
+          <h3 class="mt-[16px] text-[16px] font-bold leading-[24px] text-ink-900">
+            {{ card.title }}
+          </h3>
           <p class="mt-[8px] text-[13px] leading-[22px] text-ink-600">{{ card.desc }}</p>
         </article>
       </div>
     </div>
   </section>
 </template>
-
-<style scoped>
-/* 入场跟前几屏同一套：.in 触发一次性动画，延迟走行内 --d。
-   六张卡各自 --d 错峰，网格容器本身不做动画 */
-.reveal {
-  opacity: 0;
-}
-
-.in .reveal {
-  opacity: 1;
-  animation: cp-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  animation-delay: var(--d, 0ms);
-}
-
-@keyframes cp-rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-  }
-
-  .in .reveal {
-    animation: none;
-  }
-}
-</style>

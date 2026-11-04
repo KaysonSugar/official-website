@@ -47,15 +47,16 @@ const stats = computed(() =>
 onMounted(() => {
   // 把没走到递增逻辑的条目直接填成终值（关动效 / 老浏览器两条提前 return 的路）
   const fillFinal = () => {
-    statsEl.value
-      ?.querySelectorAll<HTMLElement>('[data-num]')
-      .forEach((el) => {
-        el.textContent = `${el.dataset.num ?? ''}${el.dataset.rest ?? ''}`
-      })
+    statsEl.value?.querySelectorAll<HTMLElement>('[data-num]').forEach((el) => {
+      el.textContent = `${el.dataset.num ?? ''}${el.dataset.rest ?? ''}`
+    })
   }
 
   // 关了动效或者浏览器太老，就直接显示终值
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+  if (
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    !('IntersectionObserver' in window)
+  ) {
     fillFinal()
     return
   }
@@ -113,7 +114,9 @@ onMounted(() => {
             :style="{ animationDelay: '70ms' }"
           >
             {{ siteConfig.hero.title }}
-            <span class="block mt-[5px] text-brand-500">{{ siteConfig.hero.titleAccent }}</span>
+            <!-- 第二行品牌橙强调。48px 大字按 WCAG 要 3:1，brand-500 只有 2.45，
+                 用 brand-600（3.06）；再深就成砖色了，观感差 -->
+            <span class="block mt-[5px] text-brand-600">{{ siteConfig.hero.titleAccent }}</span>
           </h1>
 
           <!-- 说明：一行最多 592，行距 26（leading-1.65） -->

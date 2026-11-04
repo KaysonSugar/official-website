@@ -5,7 +5,8 @@
  * @Name: 首页第八屏：运输协同
 -->
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { useTemplateRef } from 'vue'
+import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import collabImg from '@/assets/home/images/collab-flow.webp'
 
@@ -16,38 +17,16 @@ import collabImg from '@/assets/home/images/collab-flow.webp'
  */
 const { collab } = siteConfig
 
-// 和前几屏同一套：IntersectionObserver 滚进来才播入场
-const root = ref<HTMLElement>()
-
-onMounted(() => {
-  const el = root.value
-  if (!el) return
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
-    el.classList.add('in')
-    return
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        el.classList.add('in')
-        io.disconnect()
-      }
-    },
-    { threshold: 0.15 },
-  )
-  io.observe(el)
-})
+const root = useTemplateRef<HTMLElement>('root')
+useReveal(root)
 </script>
 
 <template>
-  <section ref="root" class="bg-white pb-[80px] pt-[100px]">
+  <section ref="root" class="bg-white pb-[64px] pt-[96px]">
     <div class="container-page">
       <!-- 眉题：跟前几屏同款，11px 橙色宽字距 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ collab.eyebrow }}
@@ -62,7 +41,10 @@ onMounted(() => {
       </h2>
 
       <!-- 两行说明：14px 弱化灰 -->
-      <p class="reveal mt-[32px] max-w-[880px] text-[14px] leading-[24px] text-ink-600" style="--d: 160ms">
+      <p
+        class="reveal mt-[32px] max-w-[880px] text-[14px] leading-[24px] text-ink-600"
+        style="--d: 160ms"
+      >
         {{ collab.desc }}
       </p>
 
@@ -76,7 +58,8 @@ onMounted(() => {
         <!-- 整图 4848×2336（约 2.08:1），随面板宽度缩放；窄屏横向滚动保文字可读 -->
         <div class="overflow-x-auto">
           <img
-loading="lazy" decoding="async"
+            loading="lazy"
+            decoding="async"
             :src="collabImg"
             alt="运输协同闭环流程图：化工企业、威易达化工、威易达物流、威易达司机四方围绕全链路数据闭环流转"
             class="mx-auto block w-full min-w-[980px] max-w-[1240px]"
@@ -95,33 +78,5 @@ loading="lazy" decoding="async"
     radial-gradient(38% 56% at 27% 52%, rgba(226, 244, 235, 0.55) 0%, rgba(226, 244, 235, 0) 100%),
     radial-gradient(32% 50% at 73% 46%, rgba(250, 238, 224, 0.45) 0%, rgba(250, 238, 224, 0) 100%),
     #fdfefd;
-}
-
-/* 入场跟前几屏同一套：.in 触发一次性动画，延迟走行内 --d */
-.reveal {
-  opacity: 0;
-}
-
-.in .reveal {
-  opacity: 1;
-  animation: collab-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  animation-delay: var(--d, 0ms);
-}
-
-@keyframes collab-rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-  }
-
-  .in .reveal {
-    animation: none;
-  }
 }
 </style>

@@ -26,12 +26,15 @@ const { cta, contact } = siteConfig
         <!-- 文案区：max-w 限住换行宽度，原型 desc 正好折两行 -->
         <div class="relative max-w-[620px]">
           <!-- 标题：原型量出 32px 加粗白字 -->
-          <h2 class="text-[26px] font-bold leading-[38px] text-white sm:text-[30px] sm:leading-[42px] lg:text-[32px]">
+          <h2
+            class="text-[26px] font-bold leading-[38px] text-white sm:text-[30px] sm:leading-[42px] lg:text-[32px]"
+          >
             {{ cta.title }}
           </h2>
 
-          <!-- 说明：白字压 85%，对比度依然够；行距按原型的 24px -->
-          <p class="mt-[16px] text-[14px] leading-[24px] text-white/85">
+          <!-- 说明：纯白而不是白 85%。半透明白混深橙底只有 2.9:1，
+               14px 正文要 4.5，纯白能到 4.26——橙底压着，这是上限了 -->
+          <p class="mt-[16px] text-[14px] leading-[24px] text-white">
             {{ cta.desc }}
           </p>
         </div>
@@ -45,8 +48,9 @@ const { cta, contact } = siteConfig
           >
             {{ cta.button }}
           </a>
-          <!-- 小字：12px 白 80%，跟按钮左对齐（原型里就是齐左） -->
-          <p class="mt-[14px] text-[12px] leading-[18px] text-white/80">
+          <!-- 小字：12px 纯白，跟按钮左对齐（原型里就是齐左）。
+               别用白 80%——混深橙底只有 2.38:1，小字在强光屏上基本看不清 -->
+          <p class="mt-[14px] text-[12px] leading-[18px] text-white">
             {{ cta.phoneNote }}
           </p>
         </div>
