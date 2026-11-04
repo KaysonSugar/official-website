@@ -102,30 +102,29 @@ onMounted(() => {
         <article
           v-for="(card, i) in matrix.cards"
           :key="card.title"
-          class="reveal relative overflow-hidden rounded-[16px] px-[28px] pb-[28px] pt-[36px] text-center"
-          :class="card.tone === 'orange' ? 'bg-[#fdf4ec]' : 'bg-[#eef7f2]'"
+          class="reveal relative overflow-hidden rounded-[16px] border border-ink-100 bg-white px-[28px] pb-[28px] pt-[36px] text-center shadow-[0_18px_40px_-30px_rgba(26,26,26,0.12)]"
           :style="{ '--d': `${340 + i * 80}ms` }"
         >
-          <!-- 光斑：透明底圆盘素材，模糊后垫在图标后面（原型 logo 周围那圈明显的暖光） -->
+          <!-- 光斑：透明底圆盘素材，模糊后只垫在 logo 区域，卡片本体保持白底 -->
           <img
             :src="glowMap[i]"
             alt=""
             aria-hidden="true"
             class="pointer-events-none absolute -top-[130px] left-1/2 w-[380px] -translate-x-1/2 select-none opacity-80 blur-[40px]"
           />
-          <!-- 右下角：先一团光斑填充，再压圆环线——原型里环内是有底色的，
-               圆心在卡片角外，只露左上四分之一弧 -->
+          <!-- 右下角装饰：尺寸位置全部钉死（不随屏幕缩放），
+               先一团光斑填充、再压圆环线；圆心在角外，只露四分之一弧 -->
           <img
             :src="glowMap[i]"
             alt=""
             aria-hidden="true"
-            class="pointer-events-none absolute -bottom-[200px] -right-[100px] w-[320px] select-none opacity-80 blur-[50px]"
+            class="pointer-events-none absolute -bottom-[130px] -right-[130px] w-[220px] select-none opacity-80 blur-[40px]"
           />
           <img
             :src="ringMap[i]"
             alt=""
             aria-hidden="true"
-            class="pointer-events-none absolute -bottom-[240px] -right-[150px] w-[400px] select-none opacity-70"
+            class="pointer-events-none absolute -bottom-[130px] -right-[130px] w-[240px] select-none opacity-70"
           />
 
           <div class="relative">
@@ -155,7 +154,7 @@ onMounted(() => {
               <span
                 v-for="tag in card.tags"
                 :key="tag"
-                class="rounded-[8px] bg-white/80 px-[12px] py-[5px] text-[12px] leading-[20px] text-ink-700"
+                class="rounded-[8px] bg-[#f3f5f4] px-[12px] py-[5px] text-[12px] leading-[20px] text-ink-700"
               >
                 {{ tag }}
               </span>
