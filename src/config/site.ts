@@ -199,6 +199,28 @@ export interface SiteConfig {
     /** 六张功能卡，顺序即原型从左到右、从上到下 */
     cards: { icon: 'order' | 'bom' | 'stock' | 'purchase' | 'process' | 'sales'; title: string; desc: string }[]
   }
+  /** 首页第七屏：生产主流程图（定稿原型 07，纯文字流程图，零图标素材） */
+  workflow: {
+    /** 标题上方的橙色眉题（英文 / 中文） */
+    eyebrow: string
+    /** 板块主标题 */
+    title: string
+    /** 标题下的一句话说明 */
+    desc: string
+    /** 顶部主流程节点，arrow 表示节点右侧跟一个 → 箭头 */
+    topNodes: { text: string; tone: 'orange' | 'green' | 'plain'; arrow: boolean }[]
+    /** 菱形判断块的文字 */
+    judge: string
+    /** 两条分支：head 分支名条，steps 中间步骤，tail 收尾条 */
+    branches: {
+      head: string
+      tone: 'orange' | 'green'
+      steps: string[]
+      tail: { text: string; tone: 'tinted' | 'solid' }
+    }[]
+    /** 底部汇合提示条文案 */
+    note: string
+  }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案） */
   cta: {
     /** 主标题 */
@@ -562,6 +584,36 @@ export const siteConfig: SiteConfig = {
         desc: '成品入库即刻同步可用库存与可承诺量，销售报价与交期承诺有真实数据支撑。',
       },
     ],
+  },
+  // 原型 07：生产主流程图。纯文字流程图无图标：顶部四节点 → 菱形判断 → 左右两条分支
+  workflow: {
+    eyebrow: 'WORKFLOW / 生产主流程图',
+    title: '生产主流程管理',
+    desc: '流程中只有一个判断点：即时库存是否满足。不足生成采购单，齐套生成领料单，两条分支最终都在成品入库与发货环节汇合。',
+    // 顶部主流程节点，arrow 前置表示节点右侧跟一个 →
+    topNodes: [
+      { text: '销售订单', tone: 'orange', arrow: true },
+      { text: '生产计划（绑定成品和 BOM）', tone: 'green', arrow: true },
+      { text: 'BOM 多级展开', tone: 'plain', arrow: true },
+      { text: '物料需求（半成品 / 原料 / 包材）', tone: 'green', arrow: false },
+    ],
+    judge: '库存可用量',
+    // 两条分支：head 分支名条、steps 中间步骤、tail 收尾条（tone=solid 是深绿实心）
+    branches: [
+      {
+        head: '库存不足 → 采购分支',
+        tone: 'orange',
+        steps: ['生成采购单', '供应商比价 · 送货', '来料质检'],
+        tail: { text: '原料入库（批次可追溯）', tone: 'tinted' },
+      },
+      {
+        head: '库存充足 → 生产分支',
+        tone: 'green',
+        steps: ['生成领料单', '投料生产 · 工序化作业', '成品入库'],
+        tail: { text: '发货出库 → 运输调度', tone: 'solid' },
+      },
+    ],
+    note: '两条分支最终都汇入成品入库与发货环节：采购回来的原料进入投料生产，库存充足则直接领料投产 —— 全流程单据与批次数据自动联动，无需二次录入。',
   },
   cta: {
     title: '约一次 30 分钟的线上演示',
