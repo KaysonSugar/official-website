@@ -86,12 +86,14 @@ onMounted(() => {
               </div>
             </div>
 
-            <!-- 三行参与方；左列每行独立的橙渐变（上浅下深，原型逐行重起） -->
+            <!-- 三行参与方；左列每行独立的橙渐变（上浅下深，原型逐行重起）。
+                 分隔线只压在痛点/方案两列：原型里参与方橙列从表头到行内容是
+                 无线平滑衔接的（#ff7b33 直接接 #ff8a4a），首行橙列不能有线 -->
             <div
               v-for="(row, i) in advantage.rows"
               :key="row.name"
-              class="grid grid-cols-[150px_1fr_1fr] border-t border-white/10 sm:grid-cols-[185px_1fr_1fr]"
-              :class="i > 0 ? 'border-t' : ''"
+              class="grid grid-cols-[150px_1fr_1fr] sm:grid-cols-[185px_1fr_1fr]"
+              :class="i > 0 ? 'border-t border-white/10' : ''"
             >
               <!-- 参与方名称：橙渐变格里垂直居中 -->
               <div
@@ -100,8 +102,12 @@ onMounted(() => {
                 {{ row.name }}
               </div>
 
-              <!-- 核心痛点：白标题 + 灰绿描述；化工企业这行只有两条，顶对齐 -->
-              <div class="py-[24px] pl-[45px] pr-[32px]">
+              <!-- 核心痛点：白标题 + 灰绿描述；化工企业这行只有两条，顶对齐。
+                   首行补一条上边线，跟深绿表头分界（橙列不需要） -->
+              <div
+                class="py-[24px] pl-[45px] pr-[32px]"
+                :class="i === 0 ? 'border-t border-white/10' : ''"
+              >
                 <div v-for="(pain, pi) in row.pains" :key="pain.title" :class="pi > 0 ? 'mt-[18px]' : ''">
                   <h3 class="text-[15px] font-semibold leading-[20px] text-white">{{ pain.title }}</h3>
                   <p class="mt-[4px] text-[12px] leading-[18px] text-[#a3b6b0]">{{ pain.desc }}</p>
@@ -109,7 +115,10 @@ onMounted(() => {
               </div>
 
               <!-- 解决方案：标题换薄荷绿，其余同痛点列 -->
-              <div class="py-[24px] pr-[40px]">
+              <div
+                class="py-[24px] pr-[40px]"
+                :class="i === 0 ? 'border-t border-white/10' : ''"
+              >
                 <div
                   v-for="(sol, si) in row.solutions"
                   :key="sol.title"
