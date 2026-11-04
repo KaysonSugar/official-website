@@ -273,12 +273,16 @@ export interface SiteConfig {
     /** 服务卡：icon 对应 icons 目录的短名，items 为小圆点列表 */
     cards: { icon: 'implement' | 'custom' | 'support'; title: string; items: string[] }[]
   }
-  /** 页面底部的行动号召区（首页与全部内页共用同一份文案） */
+  /** 页面底部的行动号召区（首页与全部内页共用同一份文案，对应原型 CTA Card） */
   cta: {
     /** 主标题 */
     title: string
-    /** 一句话说明 */
+    /** 说明（原型两行，讲演示怎么走、要多久） */
     desc: string
+    /** 橙卡上的白色主按钮文案（原型「预约产品演示」，跟导航栏的 ctaLabel 不是一回事） */
+    button: string
+    /** 按钮下方的小字：电话与工作时间 */
+    phoneNote: string
   }
   /** 页脚（对应原型底部的深色收尾区，1440 画板下高 343） */
   footer: {
@@ -825,9 +829,13 @@ export const siteConfig: SiteConfig = {
       },
     ],
   },
+  // 原型 CTA Card：文案逐字照原型。注意电话是原型上的 400-828-1988，
+  // 与 contact.phone（400-001-8355）不一致，用哪个等用户拍板
   cta: {
-    title: '约一次 30 分钟的线上演示',
-    desc: '按你的产线、仓库与运输线路走一遍实际操作，看完再判断值不值得推进。',
+    title: '约一次演示，用你的单据跑一遍',
+    desc: '演示会基于你所在行业的 BOM 结构和实际运输场景，从接单、排产、出入库到发运、回单逐环节走一遍，约 40 分钟。',
+    button: '预约产品演示',
+    phoneNote: '或致电 400-828-1988（工作日 9:00-18:00）',
   },
   footer: {
     desc: ['化工生产 + 危化运输一体化平台，全链路数字化、全流程规范化、全方位安全化。'],
