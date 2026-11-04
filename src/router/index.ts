@@ -7,8 +7,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import PlatformView from '@/views/PlatformView.vue'
-// 产品矩阵整组放在 views/products/，与 /products/* 路由层级对应
-import ProductsView from '@/views/products/ProductsView.vue'
+// 产品矩阵整组放在 views/products/，与 /products/* 路由层级对应；
+// /products 本身重定向到化工生产，没有总览页
 import ProductChemicalView from '@/views/products/ProductChemicalView.vue'
 import ProductLogisticsView from '@/views/products/ProductLogisticsView.vue'
 import ProductDriverView from '@/views/products/ProductDriverView.vue'
@@ -40,10 +40,11 @@ const router = createRouter({
       meta: { title: '平台架构' },
     },
     {
+      // 产品矩阵不再有独立总览页：进 /products 直接落到化工生产，
+      // 顶栏「产品矩阵」和旧链接都经这里重定向
       path: '/products',
       name: 'products',
-      component: ProductsView,
-      meta: { title: '产品矩阵' },
+      redirect: { name: 'products-chemical' },
     },
     {
       path: '/products/chemical',

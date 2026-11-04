@@ -32,14 +32,6 @@ const pages: PageIntro[] = [
     align: 'left',
   },
   {
-    to: '/products',
-    label: '产品矩阵',
-    eyebrow: '三条业务线',
-    title: '产品矩阵',
-    desc: '化工生产、物流调度、司机作业各自独立成端，数据在三条线之间直接流转，不用二次录入。',
-    align: 'left',
-  },
-  {
     to: '/products/chemical',
     label: '化工生产',
     eyebrow: '产品线 01',
