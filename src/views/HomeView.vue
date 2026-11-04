@@ -11,8 +11,9 @@ import IndustrySection from '@/components/sections/IndustrySection.vue'
 import LightweightSection from '@/components/sections/LightweightSection.vue'
 import PlatformArchitectureSection from '@/components/sections/PlatformArchitectureSection.vue'
 import ProductMatrixSection from '@/components/sections/ProductMatrixSection.vue'
+import CoreCapabilitiesSection from '@/components/sections/CoreCapabilitiesSection.vue'
 
-// 首页。原型 16 个区块，做到第 5 屏，后面的等设计稿逐块补
+// 首页。原型 16 个区块，做到第 6 屏，后面的等设计稿逐块补
 </script>
 
 <template>
@@ -26,6 +27,8 @@ import ProductMatrixSection from '@/components/sections/ProductMatrixSection.vue
   <PlatformArchitectureSection />
   <!-- 第五屏：三端业务运转模式，流程图 + 三张业务线卡 -->
   <ProductMatrixSection />
+  <!-- 第六屏：核心功能详解，六张功能卡 -->
+  <CoreCapabilitiesSection />
   <!-- 底部行动号召：首页和内页共用一份文案 -->
   <CtaBanner />
 </template>

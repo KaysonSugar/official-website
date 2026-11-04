@@ -188,6 +188,17 @@ export interface SiteConfig {
       href?: string
     }[]
   }
+  /** 首页第六屏：核心功能详解（定稿原型 06，六张功能卡，icon 对应 assets/home/icons 的 fn-* 素材） */
+  capabilities: {
+    /** 标题上方的橙色眉题（英文 / 中文） */
+    eyebrow: string
+    /** 板块主标题 */
+    title: string
+    /** 标题下的两行说明 */
+    desc: string
+    /** 六张功能卡，顺序即原型从左到右、从上到下 */
+    cards: { icon: 'order' | 'bom' | 'stock' | 'purchase' | 'process' | 'sales'; title: string; desc: string }[]
+  }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案） */
   cta: {
     /** 主标题 */
@@ -510,6 +521,45 @@ export const siteConfig: SiteConfig = {
         title: '威易达司机',
         desc: '一手货源看得见：一键接单、在线报备、电子回单、禁配与线路提示，把过去靠电话沟通的环节压缩成几次点击。',
         tags: ['找货接单', '在线报备', '电子回单', '合规提示', '安全培训'],
+      },
+    ],
+  },
+  // 原型 06：核心功能详解。六张卡按业务流顺序排（订单 → BOM → 库存 → 采购 → 投产 → 销售），
+  // icon 名对应 assets/home/icons/ 下的 fn-*.png（素材自带浅色圆角底，橙绿交替）
+  capabilities: {
+    eyebrow: 'CORE CAPABILITIES / 核心功能详解',
+    title: '业务流程闭环',
+    desc: '销售订单确认后，系统依次完成生产计划、BOM 拆解、物料需求计算与库存校验。缺料自动转采购，齐套自动转领料，计划员只需核对系统生成的需求清单。',
+    cards: [
+      {
+        icon: 'order',
+        title: '订单驱动，智能排产',
+        desc: '多张销售订单自动合并，结合产能与交期生成最优生产计划，减少换线次数。',
+      },
+      {
+        icon: 'bom',
+        title: 'BOM 多级展开，物料精准',
+        desc: '成品自动拆解到半成品与原材料，按定额与损耗系数计算需求量，杜绝漏算、多算。',
+      },
+      {
+        icon: 'stock',
+        title: '库存智能校验，按需触发',
+        desc: '对照实时库存自动判定可用量，缺料触发采购，齐套触发领料，采购与车间同步收紧。',
+      },
+      {
+        icon: 'purchase',
+        title: '采购—质检—入库闭环',
+        desc: '询价、比价、验收、质检、入库逐环节留痕，批次与供应商绑定，物料质量来源可查。',
+      },
+      {
+        icon: 'process',
+        title: '工序化投产，过程标准化',
+        desc: '投产工单与工序、工时绑定，投料量与实际产出双向核对，生产进度实时可见。',
+      },
+      {
+        icon: 'sales',
+        title: '产销衔接，数据互通',
+        desc: '成品入库即刻同步可用库存与可承诺量，销售报价与交期承诺有真实数据支撑。',
       },
     ],
   },
