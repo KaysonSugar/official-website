@@ -6,6 +6,7 @@
 -->
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import BackToTop from '@/components/ui/BackToTop.vue'
 import SiteHeader from '@/components/layout/SiteHeader.vue'
 import SiteFooter from '@/components/layout/SiteFooter.vue'
 
@@ -26,4 +27,7 @@ import SiteFooter from '@/components/layout/SiteFooter.vue'
   </main>
 
   <SiteFooter />
+
+  <!-- 回到顶部：fixed 定位不占布局，全站共用 -->
+  <BackToTop />
 </template>

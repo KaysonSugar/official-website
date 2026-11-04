@@ -162,11 +162,13 @@ onMounted(() => {
                top 用 calc 是因为纯百分比的卡会跟着看板一起涨、1920 顶到导航栏，
                px 那部分把它按住，卡顶恒定在导航栏下 20px；宽和左探用 min/max 封顶，
                不然卡变大后底边会压到看板里的六边形 logo。
-               素材 980×516，白卡体 (116,116)-(863,359)，下缘投影已裁掉渐隐 -->
+               素材 480×253（2 倍显示尺寸），下缘投影已裁掉渐隐。
+               will-change：pop-in 是 scale 动画，不预建层的话 Chrome 会按动画中间
+               状态光栅化，动画播完缓存的糊纹理一直留着（刷新后先清后糊就是这个） -->
           <img
             :src="complianceImg"
             alt=""
-            class="pop-in absolute left-[max(-71px,-11.8%)] top-[calc(-47px_-_5.25%)] z-10 w-[min(240px,34.4%)] select-none"
+            class="pop-in absolute left-[max(-71px,-11.8%)] top-[calc(-47px_-_5.25%)] z-10 w-[min(240px,34.4%)] select-none will-change-transform"
             :style="{ animationDelay: '450ms' }"
           />
 
@@ -182,11 +184,12 @@ onMounted(() => {
           />
 
           <!-- 在途卡：卡体 160×63，左探看板 120、底边贴看板底。
-               同样 px 封顶，不然 1920 下会探出看板 49px、压到下面的分隔线 -->
+               同样 px 封顶，不然 1920 下会探出看板 49px、压到下面的分隔线。
+               will-change 同合规卡（scale 动画不预建层会留下糊纹理） -->
           <img
             :src="onTheWayImg"
             alt=""
-            class="pop-in absolute bottom-[max(-35px,-7.6%)] left-[max(-132px,-22.1%)] z-10 w-[min(215px,30.8%)] select-none"
+            class="pop-in absolute bottom-[max(-35px,-7.6%)] left-[max(-132px,-22.1%)] z-10 w-[min(215px,30.8%)] select-none will-change-transform"
             :style="{ animationDelay: '550ms' }"
           />
         </div>
