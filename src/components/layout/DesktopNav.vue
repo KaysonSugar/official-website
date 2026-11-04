@@ -7,7 +7,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { siteConfig, type NavItem } from '@/config/site'
+import { siteConfig } from '@/config/site'
+import type { NavItem } from '@/config/types'
 
 // 当前展开的是哪个导航项，存 to，天然互斥
 const openDropdown = ref<string | null>(null)
