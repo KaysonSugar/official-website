@@ -303,6 +303,35 @@ export interface SiteConfig {
         desc: string
       }[]
     }
+    /** 第三屏「实施流程」：七个节点上下交错挂在一条渐变轴上（原型 S2） */
+    process: {
+      /** 眉题（这一屏是绿色，不是全站默认的橙） */
+      eyebrow: string
+      /** 板块主标题 */
+      title: string
+      /** 标题下的一行说明 */
+      desc: string
+      /** 七个节点，顺序即轴上 01-07；dark 的节点（07）用深绿卡，其余白卡 */
+      steps: { no: string; title: string; desc: string; dark?: boolean }[]
+      /** 轴末端右下角的补充盒 */
+      afterLabel: string
+      afterText: string
+    }
+    /** 第四屏「实施方式与计费」：三张卡（原型 S3），icon 对应 assets/support/icons 的短名 */
+    pricing: {
+      eyebrow: string
+      title: string
+      desc: string
+      cards: {
+        icon: 'remote' | 'onsite' | 'plus'
+        title: string
+        items: string[]
+        /** 卡片底部的适用范围 / 报价说明小字 */
+        foot: string
+        /** 暖橙卡（线下上门那张）：浅橙底、暖棕文字，无边框 */
+        warm?: boolean
+      }[]
+    }
   }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案，对应原型 CTA Card） */
   cta: {
