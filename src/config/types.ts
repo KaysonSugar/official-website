@@ -502,30 +502,46 @@ export interface SiteConfig {
       desc: string
       /** noteTag 是绿色小结行加粗的前缀（源头风险 / 周转效率 / 降低风险） */
       cards: { title: string; body: string; noteTag: string; note: string }[]
-      /** 调度台窗口：mask 字段渲染成灰色打码块（原型里车牌/电话就是打码的） */
+      /** 调度台窗口：配色/字号全部照 wyd-h5-carrier 源码 dispatchDesk 三个 scss 还原，数据是演示假数据不脱敏 */
       console: {
         /** 窗口顶栏：标题与时间 */
         title: string
         time: string
         caption: string
-        /** 左栏：待调度运单，active 卡是绿框高亮的第一张 */
+        /** 左栏：待调度运单，active 卡是绿框高亮的第一张（#d8ffff 渐变 + #21e3a5 边框） */
         orders: {
           title: string
-          cards: { from: string; to: string; active?: boolean; fields: { label: string; value: string; mask?: boolean }[] }[]
+          cards: {
+            from: string
+            to: string
+            active?: boolean
+            orderNo: string
+            category: string
+            weight: string
+            vehicleType: string
+            mileage: string
+            loadTime: string
+          }[]
         }
-        /** 中栏：车辆排班表，day 是 0 起数的日期列下标 */
+        /** 中栏：车辆排班表；左列 200px + 7 天，cells 按 0 起数的天下标给数据格 */
         board: {
           title: string
           days: string[]
+          /** 可拼单栏：pinCount 对应「可拼单 : N 辆」，route 是中间的绿色 Tag */
+          pinCount: string
+          routeFrom: string
+          routeTo: string
           vehicles: {
+            plate: string
             weight: string
             scope: string
+            /** 可拼单水印 + 绿框高亮（照源码 has-combine-watermark / is-selected） */
             active?: boolean
-            cells: { day: number; route: string; cls: string; weight: string; frac: string }[]
+            cells: ({ orderNo: string; from: string; to: string; cls: string; weight: string; frac: string } | null)[]
           }[]
         }
-        /** 右栏：空闲车辆（只画原型里那张高亮车卡） */
-        idle: { title: string; city: string; weight: string; scope: string }
+        /** 右栏：空闲车辆 */
+        idle: { title: string; cards: { plate: string; city: string; weight: string; phone: string; scope: string }[] }
       }
     }
     /** 第四屏「智能拼车」：深绿屏，右侧拼车时间轴卡 DOM 重建（拼车路线图.png 是参考图） */
