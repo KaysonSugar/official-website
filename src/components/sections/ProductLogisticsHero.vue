@@ -85,8 +85,9 @@ const badgeTone = {
           <aside class="hidden w-[116px] shrink-0 flex-col bg-gradient-to-b from-[#3ec795] to-[#27a276] px-[10px] py-[16px] sm:flex">
             <!-- 品牌：白色圆角块放物流产品自己的 logo-mark.png，块下产品名 + 副标（照原型：威易达 / 物流工作台） -->
             <div class="flex flex-col items-center">
-              <span class="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] bg-white">
-                <img :src="logoMark" alt="" aria-hidden="true" class="h-[24px] w-[24px] object-contain" />
+              <!-- 图标铺满整块（104px 源图缩到 24px 会发虚，铺到 34px 下采样倍数小更锐） -->
+              <span class="block h-[34px] w-[34px] overflow-hidden rounded-[9px] bg-white">
+                <img :src="logoMark" alt="" aria-hidden="true" class="h-full w-full object-cover" />
               </span>
               <p class="mt-[8px] text-[13px] font-bold leading-[18px] text-white">{{ dash.brand }}</p>
               <p class="mt-[2px] text-[10px] leading-[14px] text-white/70">{{ dash.brandSub }}</p>
