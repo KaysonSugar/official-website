@@ -36,9 +36,10 @@ const orderTone = {
   },
 } as const
 
-// 浮动徽标位置：右上压在手机顶上，左边两枚一上一下错开
+// 浮动徽标位置：顶部那枚整体悬在手机顶上方（设计稿里底边刚好贴住手机顶，不压屏幕），
+// 左边两枚一上一下错开、压着手机左缘
 const chipPos = {
-  top: '-top-[18px] right-[6px]',
+  top: '-top-[36px] right-[12px]',
   left: 'top-[104px] left-[-64px]',
   bottom: 'bottom-[168px] left-[-88px]',
 } as const
