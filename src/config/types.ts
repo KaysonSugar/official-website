@@ -397,6 +397,23 @@ export interface SiteConfig {
         mergeNote?: string
       }
     }
+    /** 第三屏「界面展示」（原型 P 界面实录）：深绿底四行图文交替，图是系统真实界面截图 */
+    tour: {
+      eyebrow: string
+      title: string
+      desc: string
+      rows: {
+        /** 图对应 assets/products/chemical/images 的短名 */
+        image: 'warehouse' | 'production' | 'quality' | 'customer'
+        /** 小标，如「01 · 仓储」 */
+        label: string
+        /** 图在右（默认）还是图在左；原型 1右 2左 3右 4左 */
+        flip?: boolean
+        /** 01 仓储是「名 + 描述」两栏行；02~04 是圆点列表，二选一 */
+        pairs?: { name: string; desc: string }[]
+        bullets?: string[]
+      }[]
+    }
   }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案，对应原型 CTA Card） */
   cta: {
