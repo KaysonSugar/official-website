@@ -8,7 +8,7 @@
 import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
-import recruitTruck from '@/assets/products/driver/images/recruit-truck.png'
+import recruitTruck from '@/assets/products/driver/images/recruit-truck.webp'
 import qrDownload from '@/assets/products/driver/images/qr-download.png'
 
 /**
@@ -57,10 +57,12 @@ useReveal(root)
           </div>
         </div>
 
-        <!-- 右列：罐车 + 司机插画 -->
+        <!-- 右列：罐车 + 司机插画（960×698，固有尺寸防布局抖动） -->
         <img
           :src="recruitTruck"
           alt="威易达司机与危化品运输车"
+          width="960"
+          height="698"
           class="w-full select-none rounded-[16px] shadow-[0_20px_50px_-24px_rgba(19,50,42,0.35)]"
           loading="lazy"
         />

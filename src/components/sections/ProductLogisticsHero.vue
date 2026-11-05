@@ -9,8 +9,8 @@ import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { getPage, siteConfig } from '@/config/site'
-import glowWarm from '@/assets/products/logistics/images/glow-warm.png'
-import ringOne from '@/assets/products/logistics/images/ring-1.png'
+import glowWarm from '@/assets/products/logistics/images/glow-warm.webp'
+import ringOne from '@/assets/products/logistics/images/ring-1.webp'
 import logoMark from '@/assets/products/logistics/icons/logo-mark.png'
 
 /**

@@ -9,9 +9,9 @@ import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { getPage, siteConfig } from '@/config/site'
-import glowMint from '@/assets/products/driver/images/glow-mint.png'
-import glowWarm from '@/assets/products/driver/images/glow-warm.png'
-import ringOuter from '@/assets/products/driver/images/ring-outer.png'
+import glowMint from '@/assets/products/driver/images/glow-mint.webp'
+import glowWarm from '@/assets/products/driver/images/glow-warm.webp'
+import ringOuter from '@/assets/products/driver/images/ring-outer.webp'
 
 /**
  * 司机端首屏（原型 Driver Hero）：左侧文案 + 右侧手机演示。
@@ -37,11 +37,11 @@ const orderTone = {
 } as const
 
 // 浮动徽标位置：顶部那枚整体悬在手机顶上方（设计稿里底边刚好贴住手机顶，不压屏幕），
-// 左边两枚一上一下错开、压着手机左缘
+// 左边两枚一上一下错开、压着手机左缘；手机端列距屏边只有 30px，探出收到 -16/-20 不被视口裁掉
 const chipPos = {
   top: '-top-[36px] right-[12px]',
-  left: 'top-[104px] left-[-64px]',
-  bottom: 'bottom-[168px] left-[-88px]',
+  left: 'top-[104px] left-[-16px] sm:left-[-64px]',
+  bottom: 'bottom-[168px] left-[-20px] sm:left-[-88px]',
 } as const
 </script>
 
@@ -103,8 +103,12 @@ const chipPos = {
         <!-- 右列：手机演示，整屏 DOM 重建。鼠标进入上浮 8px（8×1.25=10 物理像素，整数不糊） -->
         <div class="reveal relative mx-auto w-[330px] pb-[24px]" style="--d: 200ms">
           <!-- 细圆环：1345 设计稿量出直径约 1.54 倍手机宽、与手机同心（顶弧贴手机顶、左右各探出约 70px）。
-               外层 span 负责定位，里层 img 只跑 scale 呼吸动画，transform 分层不互相覆盖 -->
-          <span aria-hidden="true" class="pointer-events-none absolute left-1/2 top-0 w-[510px] -translate-x-1/2">
+               手机端视口只有 390，用 min 收到屏宽内（留 24px 边距）不被裁；
+               外层 span 定位，里层 img 只跑 scale 呼吸动画，transform 分层不互相覆盖 -->
+          <span
+            aria-hidden="true"
+            class="pointer-events-none absolute left-1/2 top-0 w-[min(510px,calc(100vw-24px))] -translate-x-1/2"
+          >
             <img :src="ringOuter" alt="" class="drv-breathe w-full select-none" />
           </span>
           <!-- 浮动徽标：白底圆角胶囊 + 彩点，DOM 重建（位图版已删） -->

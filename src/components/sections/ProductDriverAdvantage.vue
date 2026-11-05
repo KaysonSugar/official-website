@@ -8,10 +8,10 @@
 import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
-import iconSource from '@/assets/products/driver/icons/source-direct.png'
-import iconRoundtrip from '@/assets/products/driver/icons/roundtrip.png'
-import iconSafer from '@/assets/products/driver/icons/safer.png'
-import iconEarn from '@/assets/products/driver/icons/earn-more.png'
+import iconSource from '@/assets/products/driver/icons/source-direct.webp'
+import iconRoundtrip from '@/assets/products/driver/icons/roundtrip.webp'
+import iconSafer from '@/assets/products/driver/icons/safer.webp'
+import iconEarn from '@/assets/products/driver/icons/earn-more.webp'
 
 /**
  * 平台优势（原型 B 平台优势）：眉题右侧一根细线拉通，
@@ -49,7 +49,13 @@ const iconMap = {
           class="reveal flex flex-col items-center text-center"
           :style="{ '--d': `${i * 90}ms` }"
         >
-          <img :src="iconMap[item.icon]" alt="" aria-hidden="true" class="h-[120px] w-[120px] select-none" />
+          <!-- 插画悬停轻微放大：8% 以内不糊，will-change 建合成层 -->
+          <img
+            :src="iconMap[item.icon]"
+            alt=""
+            aria-hidden="true"
+            class="h-[120px] w-[120px] select-none transition-transform duration-500 ease-out will-change-transform hover:scale-[1.06]"
+          />
           <h3 class="mt-[22px] text-[17px] font-bold leading-[24px] text-ink-900">{{ item.title }}</h3>
           <p class="mt-[10px] max-w-[240px] text-[13px] leading-[22px] text-[#6b6b6b]">{{ item.desc }}</p>
         </div>

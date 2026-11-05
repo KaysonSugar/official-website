@@ -11,7 +11,7 @@ import { siteConfig } from '@/config/site'
 import icon01 from '@/assets/products/logistics/icons/icon-box-01.png'
 import icon02 from '@/assets/products/logistics/icons/icon-box-02.png'
 import icon03 from '@/assets/products/logistics/icons/icon-box-03.png'
-import texture from '@/assets/products/logistics/images/texture-dots.png'
+import texture from '@/assets/products/logistics/images/texture-dots.webp'
 
 /**
  * 奶油底三卡。图标是现成的 Icon Box PNG（浅绿圆角盒 + 深绿线性图形，192px）。
@@ -55,7 +55,7 @@ useReveal(root)
         <article
           v-for="(card, i) in ledger.cards"
           :key="card.title"
-          class="reveal rounded-[16px] border border-[#f3e9e0] bg-white p-[28px] shadow-[0_18px_44px_-30px_rgba(120,80,40,0.25)]"
+          class="reveal rounded-[16px] border border-[#f3e9e0] bg-white p-[28px] shadow-[0_18px_44px_-30px_rgba(120,80,40,0.25)] transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
           <div class="flex items-center gap-[14px]">
