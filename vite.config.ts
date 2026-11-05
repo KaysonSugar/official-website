@@ -23,5 +23,8 @@ export default defineConfig({
     // 生产构建输出目录，静态托管时指向 dist 即可
     outDir: 'dist',
     assetsDir: 'assets',
+    // 图标转 webp 后普遍只有 1~3KB，默认会被 base64 塞进 JS（gzip 后白涨 26KB）。
+    // 关掉内联，让它们单独成文件，走浏览器缓存、也能和 JS 并行下载。
+    assetsInlineLimit: 0,
   },
 })

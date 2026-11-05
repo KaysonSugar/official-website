@@ -11,7 +11,7 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import { getPage, siteConfig } from '@/config/site'
 import glowWarm from '@/assets/products/logistics/images/glow-warm.webp'
 import ringOuter from '@/assets/products/logistics/images/ring-outer.webp'
-import logoMark from '@/assets/products/logistics/icons/logo-mark.png'
+import logoMark from '@/assets/products/logistics/icons/logo-mark.webp'
 
 /**
  * 物流调度首屏（原型 Logistics Hero）：浅薄荷绿渐变背景 + 左文案 + 右调度台。

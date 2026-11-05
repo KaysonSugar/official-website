@@ -9,7 +9,7 @@ import { RouterLink } from 'vue-router'
 import logoMark from '@/assets/brand/logo.webp'
 // 页脚素材全在 brand/ 下，带 footer- 前缀区分（页脚是全局组件，不算页面素材）
 import qrWechat from '@/assets/brand/footer-qr-gzh.jpg'
-import qrDouyin from '@/assets/brand/footer-qr-dy.png'
+import qrDouyin from '@/assets/brand/footer-qr-dy.jpg'
 import qrKuaishou from '@/assets/brand/footer-qr-ks.jpg'
 import qrApp from '@/assets/brand/footer-app-download.png'
 import { siteConfig } from '@/config/site'

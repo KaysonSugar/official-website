@@ -12,7 +12,7 @@ import PlatformView from '@/views/PlatformView.vue'
 import ProductChemicalView from '@/views/products/ProductChemicalView.vue'
 import ProductLogisticsView from '@/views/products/ProductLogisticsView.vue'
 import ProductDriverView from '@/views/products/ProductDriverView.vue'
-import SolutionsView from '@/views/SolutionsView.vue'
+import SupportView from '@/views/SupportView.vue'
 import AboutView from '@/views/AboutView.vue'
 import { siteConfig } from '@/config/site'
 
@@ -67,7 +67,7 @@ const router = createRouter({
     {
       path: '/solutions',
       name: 'solutions',
-      component: SolutionsView,
+      component: SupportView,
       // 定稿原型导航把「解决方案」改成「服务支持」，路由路径不动，只换标题
       meta: { title: '服务支持' },
     },

@@ -42,11 +42,12 @@ wyd-official-website/
     │   ├── brand/              # 全局品牌素材：顶栏、页脚、二维码共用
     │   │   ├── logo.webp               # 品牌图形 mark（导航栏与页脚使用）
     │   │   ├── footer-qr-gzh.jpg       # 微信公众号二维码
-    │   │   ├── footer-qr-dy.png        # 官方抖音号二维码（实为 JPEG 内容）
+    │   │   ├── footer-qr-dy.jpg        # 官方抖音号二维码（源文件就是 JPEG，扩展名已对齐）
     │   │   ├── footer-qr-ks.jpg        # 官方快手号二维码
     │   │   └── footer-app-download.png # 扫码下载 App（中间嵌品牌 logo）
     │   │   # 页面素材按导航层级落位：home/、products/{chemical,logistics,driver}/、
     │   │   # support/、about/。文件名全小写 kebab-case，图标进 icons/、大图进 images/；
+    │   │   # 图片统一 webp（图标无损转的），只有二维码留 png/jpg 保扫描识别率；
     │   │   # 目录里只要有素材就不需要 .gitkeep（空目录才拿它占位）
     ├── config/
     │   └── site.ts             # 站点唯一数据源：品牌、导航、各页面首屏文案
@@ -72,17 +73,20 @@ wyd-official-website/
         │   ├── MobileMenu.vue  # 移动端菜单（<1024px）：收到 open 后展示，点链接发 close
         │   └── SiteFooter.vue  # 页脚：组合标 / 快速导航 / 联系方式 / 版权
         ├── sections/               # 按导航模块分子目录，和 views 的层级一一对应
+        │   │                       #   命名规则：<模块><屏名>.vue，首屏收 Hero、横幅收 Banner
         │   ├── common/             # 多页共用：PageHero（内页首屏）、CtaBanner（底部横幅）
-        │   ├── home/               # 首页：HeroSection + HeroWorkbench（首屏右侧看板）
-        │   │                       #   Advantage / CoreCapabilities / ProductMatrix / Industry
-        │   │                       #   ProductionFlow / TransportCollab / CostEfficiency
-        │   │                       #   Lightweight / Service / PlatformArchitecture
+        │   ├── home/               # 首页：HomeHero + HomeWorkbench（首屏右侧看板）、
+        │   │                       #   HomeAdvantage / HomeCoreCapabilities / HomeProductMatrix
+        │   │                       #   HomeIndustry / HomeProductionFlow / HomeTransportCollab
+        │   │                       #   HomeCostEfficiency / HomeLightweight / HomeService
+        │   │                       #   HomePlatformArchitecture
         │   ├── products/
-        │   │   ├── chemical/       # 化工生产：Hero、产业链、四步流程、界面展示、报表
-        │   │   ├── logistics/      # 物流调度：Hero、能力、台账、货源、拼车
-        │   │   └── driver/         # 司机作业：Hero、优势、接单四步、核心界面、招募
-        │   ├── support/            # 服务支持（/solutions）：范围、流程、时效、承诺、价格
-        │   └── about/              # 关于我们：首屏、简介、企业理念
+        │   │   ├── chemical/       # 化工生产：Hero、Chains、Tour、Report
+        │   │   ├── logistics/      # 物流调度：Hero、Capability、Ledger、Cargo、Carpool
+        │   │   └── driver/         # 司机作业：Hero、Advantage、Workflow、Screens、Recruit
+        │   ├── support/            # 服务支持（/solutions，视图文件是 SupportView）：
+        │   │                       #   Scope、Pricing、Process、Commitment、Timeline
+        │   └── about/              # 关于我们：AboutHero、AboutPhilosophy、AboutText
         └── ui/
             ├── BaseButton.vue   # 通用按钮（to 走路由 / href 走外链；primary / outline / ghost / light）
             └── BackToTop.vue    # 右下角回到顶部

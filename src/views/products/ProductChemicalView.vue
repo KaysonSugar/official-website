@@ -7,9 +7,9 @@
 <script setup lang="ts">
 import CtaBanner from '@/components/sections/common/CtaBanner.vue'
 import ProductChemicalHero from '@/components/sections/products/chemical/ProductChemicalHero.vue'
-import ProductChainsSection from '@/components/sections/products/chemical/ProductChainsSection.vue'
-import ProductReportSection from '@/components/sections/products/chemical/ProductReportSection.vue'
-import ProductTourSection from '@/components/sections/products/chemical/ProductTourSection.vue'
+import ProductChemicalChains from '@/components/sections/products/chemical/ProductChemicalChains.vue'
+import ProductChemicalReport from '@/components/sections/products/chemical/ProductChemicalReport.vue'
+import ProductChemicalTour from '@/components/sections/products/chemical/ProductChemicalTour.vue'
 
 // 化工生产 /products/chemical（/products 也重定向到这里）。
 // 首屏：浅橙渐变 + 资金流水演示卡；第二屏：三条主线 + 订单驱动流程面板；
@@ -18,9 +18,9 @@ import ProductTourSection from '@/components/sections/products/chemical/ProductT
 
 <template>
   <ProductChemicalHero />
-  <ProductChainsSection />
-  <ProductTourSection />
-  <ProductReportSection />
+  <ProductChemicalChains />
+  <ProductChemicalTour />
+  <ProductChemicalReport />
   <!-- TODO: 本页其余区块，等后续画板 -->
   <!-- 底部行动号召：内页共用 -->
   <CtaBanner />
