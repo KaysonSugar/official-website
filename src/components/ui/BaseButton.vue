@@ -20,8 +20,8 @@ interface Props {
   to?: string
   /** 站外链接、锚点或 tel: */
   href?: string
-  /** primary 主行动，outline 次要，ghost 纯文字，light 用在深底/橙底上 */
-  variant?: 'primary' | 'outline' | 'ghost' | 'light'
+  /** primary 主行动，green 物流页绿色主行动（原型按钮是绿不是橙），outline 次要，ghost 纯文字，light 用在深底/橙底上 */
+  variant?: 'primary' | 'green' | 'outline' | 'ghost' | 'light'
   /** sm 顶栏用，md 正文用，lg 首屏用 */
   size?: 'sm' | 'md' | 'lg'
   /** 撑满父容器，移动端菜单里用 */
@@ -41,6 +41,9 @@ const props = withDefaults(defineProps<Props>(), {
 const variantClass: Record<NonNullable<Props['variant']>, string> = {
   primary:
     'bg-brand-500 text-white shadow-[0_10px_30px_-12px_rgba(26,26,26,0.28)] hover:bg-brand-600 focus-visible:outline-brand-500',
+  // 绿色主行动：物流页原型按钮是薄荷绿（#26BC8C），阴影跟 primary 同一套只换色相
+  green:
+    'bg-mint-500 text-white shadow-[0_10px_30px_-12px_rgba(24,124,92,0.4)] hover:bg-mint-600 focus-visible:outline-mint-500',
   outline:
     'border border-ink-200 text-ink-900 hover:border-brand-500 hover:text-brand-500 focus-visible:outline-brand-500',
   ghost: 'text-ink-700 hover:text-brand-500 focus-visible:outline-brand-500',

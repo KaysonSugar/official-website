@@ -42,9 +42,9 @@ const pages: PageIntro[] = [
   {
     to: '/products/logistics',
     label: '物流调度',
-    eyebrow: '产品线 02',
-    title: '威易达物流：调度与合规',
-    desc: '车辆、线路、单据在同一个调度台上闭环，让每一趟运输都合规可查。',
+    eyebrow: '产品 / 威易达物流',
+    title: '威易达物流',
+    desc: '覆盖资质核验、订单派车、线路规划、在途监控与台账导出五项功能。调度员的日常工作从打电话改为在系统里派单。',
     align: 'left',
   },
   {
@@ -856,6 +856,104 @@ export const siteConfig: SiteConfig = {
           items: ['销售订单明细表', '生产计划表 · 投入产出表', '质检报告汇总', '货运台账'],
         },
       ],
+    },
+  },
+  // 物流调度页（原型 Logistics Hero + B 免费货源广场）。调度台卡与货源表格都是 DOM
+  // 重建（用户传的 Dispatch Mock.png / Cargo Card.png 是烘焙文字参考图，已删）。
+  // 表格行数据逐字照 Cargo Card.png 转录，含原型里同一电话出现两行的细节
+  logistics: {
+    ctaLabel: '预约调度演示',
+    heroDash: {
+      brand: '威易达',
+      brandSub: '物流工作台',
+      menus: [
+        { label: '首页' },
+        { label: '调度台' },
+        { label: '运单管理' },
+        { label: '仓储推荐' },
+        { label: '合作运单' },
+        { label: '货源广场', vip: true },
+        { label: '地址簿' },
+        { label: '合同管理' },
+        { label: '运输协议' },
+        { label: '车辆管理' },
+        { label: '司机管理' },
+      ],
+      topbarRight: '下载中心　2026-10-29 星期四',
+      welcome: { name: '张三 · 威易达物流', hello: '早上好，欢迎登录本系统' },
+      coop: {
+        title: '合作运单',
+        stats: [
+          { label: '报价次数', value: '36' },
+          { label: '接单数量', value: '28' },
+          { label: '完成运单数', value: '24' },
+          { label: '运费（万元）', value: '128.6' },
+        ],
+      },
+      nonCoop: {
+        title: '非合作运单',
+        stats: [
+          { label: '发单数量', value: '12' },
+          { label: '完成运单数', value: '9' },
+          { label: '运费（万元）', value: '46.2' },
+        ],
+      },
+      todo: {
+        badges: [
+          { label: '待处理', count: '8', tone: 'green' },
+          { label: '待报价', count: '128', tone: 'orange' },
+          { label: '待装货', count: '2', tone: 'gray' },
+        ],
+        rows: [
+          { no: '2506133632', route: '苏州 → 北京 · 危险品 32t', badge: '待装货', tone: 'orange' },
+          { no: '241225597849', route: '沧州 → 北京 · 危险品 30t', badge: '待报价', tone: 'green' },
+        ],
+      },
+      brief: {
+        title: '今日货源简讯',
+        rows: [
+          { route: '北京市 → 内蒙古自治区', meta: '一类 · 15 吨' },
+          { route: '定远县济东化工 → 上海市金山区', meta: '八类 · 17.6 吨' },
+        ],
+      },
+    },
+    cargo: {
+      eyebrow: 'CARGO MARKET / 免费货源广场',
+      title: '每天',
+      titleAccent: '5,000+',
+      titleTail: '条危化品货源，免费看、直接联系',
+      desc: '平台每天更新 5,000 条以上一手货源，覆盖全国 31 个省级区域，全部是危化品运输需求。装货地、品类、重量、装车时间与联系人电话全部公开，注册即可联系货主，不收会员费、不抽成。',
+      stats: [
+        { value: '5,000+', label: '每日新增货源（条）', tone: 'green' },
+        { value: '31', label: '覆盖省级区域', tone: 'green' },
+        { value: '100%', label: '均为危化品货源', tone: 'green' },
+        { value: '0 元', label: '查看联系方式，不抽成', tone: 'orange' },
+      ],
+      notes: ['数据实时同步', '覆盖危化品 8 大类', '全部一手货源'],
+      card: {
+        title: '货源广场 · 实时货源',
+        badges: [
+          { label: '免费查看', tone: 'green' },
+          { label: '每日更新 5,000+', tone: 'orange' },
+        ],
+        updated: '数据更新于 2026-10-29 10:00',
+        count: '当前 5,002 条',
+        filters: [
+          { label: '装货地', placeholder: '请选择装货地' },
+          { label: '卸货地', placeholder: '请选择卸货地' },
+          { label: '类别', placeholder: '请选择类别' },
+        ],
+        columns: ['序号', '装卸地址', '类别', '车辆类型', '货物重量', '装货时间', '联系人', '联系电话'],
+        rows: [
+          { route: '北京市 → 内蒙古自治区', cls: '一类 1.1', truck: '敞篷车', weight: '13 吨', time: '09-29 12:00 → 17:59', contact: '小苏', phone: '13295240809' },
+          { route: '安徽固镇县 → 福建漳州市', cls: '八类', truck: '无要求', weight: '15 吨', time: '随时装车', contact: '张师傅', phone: '18913275666' },
+          { route: '定远县济东化工 → 上海市金山区', cls: '八类', truck: '无要求', weight: '17.6 吨', time: '随时装车', contact: '—', phone: '18913275666' },
+          { route: '甘肃玉门 → 上海浦东', cls: '三类', truck: '无要求', weight: '25.6 吨', time: '随时装车', contact: '—', phone: '18112886910' },
+          { route: '陕西富平 → 安徽铜陵', cls: '八类', truck: '无要求', weight: '32 吨', time: '随时装车', contact: '—', phone: '18112886910' },
+        ],
+        foot: '共 5,002 条货源 · 注册后可查看完整联系方式并与货主信息',
+        more: '查看全部货源',
+      },
     },
   },
   // 原型 CTA Card：文案逐字照原型。注意电话是原型上的 400-828-1988，

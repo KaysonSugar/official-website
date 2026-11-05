@@ -25,6 +25,17 @@
   --color-brand-800: #a8400e;
   --color-brand-900: #7d300b;
 
+  /* 品牌绿：物流调度页主色，取自原型首屏按钮 #26BC8C；
+     500 主按钮 / 600 悬停，浅底直接用 mint-50 / mint-100 */
+  --color-mint-50: #eff9f5;
+  --color-mint-100: #d9f2e7;
+  --color-mint-200: #b6e6d3;
+  --color-mint-300: #86d8b9;
+  --color-mint-400: #4cc9a0;
+  --color-mint-500: #26bc8c;
+  --color-mint-600: #1e9e74;
+  --color-mint-700: #187c5c;
+
   /* 中性墨色：ink-900 主标题、ink-700 强调正文、ink-600 正文、ink-400 弱化信息、ink-100 分隔线 */
   --color-ink-50: #fafafa;
   --color-ink-100: #f2f2f2;

@@ -430,6 +430,72 @@ export interface SiteConfig {
       }[]
     }
   }
+  /** 物流调度页 /products/logistics（原型 Logistics Hero + B 免费货源广场） */
+  logistics: {
+    /** 首屏按钮文案（原型「预约调度演示」，绿色按钮） */
+    ctaLabel: string
+    /** 第一屏右侧调度台演示卡：整卡 DOM 重建（Dispatch Mock.png 是烘焙文字位图，已删） */
+    heroDash: {
+      /** 侧栏品牌名与副标 */
+      brand: string
+      brandSub: string
+      /** 侧栏菜单，第一项渲染为白底选中态；vip 的项挂橙色 VIP 徽标 */
+      menus: { label: string; vip?: boolean }[]
+      /** 顶栏右侧的「下载中心 + 日期」文字 */
+      topbarRight: string
+      /** 欢迎卡：用户名与问候语 */
+      welcome: { name: string; hello: string }
+      /** 合作运单卡：四个统计 */
+      coop: { title: string; stats: { label: string; value: string }[] }
+      /** 非合作运单卡：三个统计 */
+      nonCoop: { title: string; stats: { label: string; value: string }[] }
+      /** 待办卡：计数徽标 + 两条待办 */
+      todo: {
+        badges: { label: string; count: string; tone: 'green' | 'orange' | 'gray' }[]
+        rows: { no: string; route: string; badge: string; tone: 'orange' | 'green' }[]
+      }
+      /** 今日货源简讯卡：右侧「更多 →」组件里写死 */
+      brief: { title: string; rows: { route: string; meta: string }[] }
+    }
+    /** 第二屏「免费货源广场」（原型 B 免费货源广场）：表格卡 DOM 重建（Cargo Card.png 已删） */
+    cargo: {
+      /** 眉题（绿色） */
+      eyebrow: string
+      /** 大标题三段：title 黑 + accent 橙（原型橙的是 5,000+）+ tail 黑 */
+      title: string
+      titleAccent: string
+      titleTail: string
+      desc: string
+      /** 四个统计；tone 决定数字颜色（原型前三个绿、0 元橙） */
+      stats: { value: string; label: string; tone: 'green' | 'orange' }[]
+      /** 统计行右侧的注释短句，组件里用 · 连接 */
+      notes: string[]
+      card: {
+        title: string
+        /** 标题旁的两枚徽标（免费查看绿 / 每日更新橙） */
+        badges: { label: string; tone: 'green' | 'orange' }[]
+        /** 右上角「数据更新于 … · 当前 … 条」 */
+        updated: string
+        count: string
+        /** 筛选行：label + 输入框占位文字 */
+        filters: { label: string; placeholder: string }[]
+        columns: string[]
+        rows: {
+          route: string
+          cls: string
+          truck: string
+          weight: string
+          time: string
+          contact: string
+          phone: string
+        }[]
+        /** 卡片底部左侧合计说明 */
+        foot: string
+        /** 右下角「查看全部货源 →」链接文字 */
+        more: string
+      }
+    }
+  }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案，对应原型 CTA Card） */
   cta: {
     /** 主标题 */
