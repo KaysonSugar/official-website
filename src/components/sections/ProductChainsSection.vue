@@ -69,9 +69,10 @@ useReveal(root)
         {{ chains.title }}
       </h2>
 
+      <!-- 左右按原型比例 736:520 分配宽度（flex-grow 比例），宽屏下 FLOW 面板跟着变宽 -->
       <div class="mt-[36px] flex flex-col gap-[20px] lg:flex-row lg:items-stretch lg:gap-[24px]">
         <!-- 左列：三张链路卡 -->
-        <div class="flex min-w-0 flex-1 flex-col gap-[16px]">
+        <div class="flex min-w-0 flex-1 flex-col gap-[16px] lg:flex-[736]">
           <article
             v-for="(card, i) in chains.cards"
             :key="card.no"
@@ -103,9 +104,9 @@ useReveal(root)
           </article>
         </div>
 
-        <!-- 右列：FLOW 流程面板。520 宽（原型左 736 / 右 520 的比例），小屏横向滚动 -->
-        <div class="reveal overflow-x-auto pb-[4px] lg:w-[520px] lg:shrink-0" style="--d: 400ms">
-          <div class="min-w-[520px] rounded-[16px] bg-white p-[24px] ring-1 ring-[#e6ecea]">
+        <!-- 右列：FLOW 流程面板，占 520 份比例宽；窄屏（lg 以下）退化为 520px 起步横向滚动 -->
+        <div class="reveal overflow-x-auto pb-[4px] lg:min-w-0 lg:flex-[520]" style="--d: 400ms">
+          <div class="min-w-[520px] lg:min-w-0 rounded-[16px] bg-white p-[24px] ring-1 ring-[#e6ecea]">
             <p class="text-[12px] font-semibold leading-[18px] text-[#1f6e4e]">{{ chains.flow.label }}</p>
 
             <!-- 主链：节点 + 竖向箭头（旁挂小字） -->
@@ -140,25 +141,38 @@ useReveal(root)
               </div>
             </div>
 
-            <!-- 分叉线：菱形底尖 → 水平展开 → 两列中心，分支标签写在线上（内宽 472：中心 236，左列中心 112，右列中心 360） -->
-            <svg viewBox="0 0 472 50" class="mt-[4px] h-[50px] w-full" aria-hidden="true">
-              <path d="M236 0v16" stroke="#a9c0b2" stroke-width="1.5" fill="none" />
-              <path d="M112 16h248" stroke="#a9c0b2" stroke-width="1.5" fill="none" />
-              <path d="M112 16v26" stroke="#a9c0b2" stroke-width="1.5" fill="none" />
-              <path d="M360 16v26" stroke="#a9c0b2" stroke-width="1.5" fill="none" />
-              <path d="M108 40l4 6 4-6z" fill="#a9c0b2" />
-              <path d="M356 40l4 6 4-6z" fill="#a9c0b2" />
-              <text x="112" y="10" text-anchor="middle" font-size="11" fill="#c26116">{{ chains.flow.branchLeft.label }}</text>
-              <text x="360" y="10" text-anchor="middle" font-size="11" fill="#2b6950">{{ chains.flow.branchRight.label }}</text>
-            </svg>
-
-            <!-- 两支分支：左支浅橙、右支白底绿边；物料入库到生成领料单有虚线回流 -->
-            <div class="relative grid grid-cols-2 gap-[24px]">
-              <!-- 虚线回流：从左支末节点（y=114 中心）→ 中缝 → 右支首节点（y=18） -->
-              <svg viewBox="0 0 472 132" preserveAspectRatio="none" class="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
-                <path d="M224 114h12V18h8" stroke="#c9d6cd" stroke-width="1.5" fill="none" stroke-dasharray="4 4" />
-                <path d="M244 14l4 4-4 4" stroke="#c9d6cd" stroke-width="1.5" fill="none" stroke-dasharray="4 4" />
+            <!-- 分叉线：菱形底尖 → 水平展开 → 两列中心，分支标签写在线上。
+                 面板宽度自适应，所以全部用 calc 百分比画：左列中心 = 25%-6px（列宽=(W-24)/2 的一半），中点 50% -->
+            <div class="relative mt-[4px] h-[50px]" aria-hidden="true">
+              <span class="absolute left-1/2 top-0 h-[16px] w-[1.5px] -translate-x-1/2 bg-[#a9c0b2]" />
+              <span class="absolute left-[calc(25%-6px)] right-[calc(25%-6px)] top-[16px] h-[1.5px] bg-[#a9c0b2]" />
+              <span class="absolute left-[calc(25%-6px)] top-[16px] h-[26px] w-[1.5px] -translate-x-1/2 bg-[#a9c0b2]" />
+              <svg class="absolute left-[calc(25%-6px)] bottom-0 h-[6px] w-[8px] -translate-x-1/2" viewBox="0 0 8 6" fill="none">
+                <path d="M0 0l4 6 4-6z" fill="#a9c0b2" />
               </svg>
+              <span class="absolute right-[calc(25%-6px)] top-[16px] h-[26px] w-[1.5px] translate-x-1/2 bg-[#a9c0b2]" />
+              <svg class="absolute right-[calc(25%-6px)] bottom-0 h-[6px] w-[8px] translate-x-1/2" viewBox="0 0 8 6" fill="none">
+                <path d="M0 0l4 6 4-6z" fill="#a9c0b2" />
+              </svg>
+              <span class="absolute left-[calc(25%-6px)] top-0 -translate-x-1/2 whitespace-nowrap text-[11px] leading-[14px] text-[#c26116]">
+                {{ chains.flow.branchLeft.label }}
+              </span>
+              <span class="absolute right-[calc(25%-6px)] top-0 translate-x-1/2 whitespace-nowrap text-[11px] leading-[14px] text-[#2b6950]">
+                {{ chains.flow.branchRight.label }}
+              </span>
+            </div>
+
+            <!-- 两支分支：左支浅橙、右支白底绿边；物料入库到生成领料单有虚线回流。
+                 虚线同样用 calc 画：节点高 36 固定 → 左支末节点中心 y=158，右支首节点中心 y=18 -->
+            <div class="relative grid grid-cols-2 gap-[24px]">
+              <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+                <span class="absolute left-[calc(50%-12px)] top-[157px] h-[1.5px] w-[12px] border-t border-dashed border-[#c9d6cd]" />
+                <span class="absolute left-1/2 top-[18px] h-[140px] w-[1.5px] -translate-x-1/2 border-l border-dashed border-[#c9d6cd]" />
+                <span class="absolute left-1/2 top-[18px] h-[1.5px] w-[13px] border-t border-dashed border-[#c9d6cd]" />
+                <svg class="absolute left-1/2 top-[15px] h-[6px] w-[8px] translate-x-[9px]" viewBox="0 0 8 6" fill="none">
+                  <path d="M0 0l4 6 4-6z" fill="#c9d6cd" />
+                </svg>
+              </div>
 
               <!-- 左支 -->
               <div class="flex flex-col gap-[12px]">
