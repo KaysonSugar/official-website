@@ -495,6 +495,45 @@ export interface SiteConfig {
         more: string
       }
     }
+    /** 第三屏「运输链核心功能」：三张能力卡 + 调度台实录大图（调度台截图区.png 裁窗体出 webp） */
+    capability: {
+      eyebrow: string
+      title: string
+      desc: string
+      /** noteTag 是绿色小结行加粗的前缀（源头风险 / 周转效率 / 降低风险） */
+      cards: { title: string; body: string; noteTag: string; note: string }[]
+      /** 实录大图的替换文字与底部灰字说明 */
+      console: { alt: string; caption: string }
+    }
+    /** 第四屏「智能拼车」：深绿屏，右侧拼车时间轴卡 DOM 重建（拼车路线图.png 是参考图） */
+    carpool: {
+      eyebrow: string
+      title: string
+      desc: string
+      /** 左列：橙色小标签（拼车）与说明段 */
+      tag: string
+      detail: string
+      card: {
+        plan: string
+        from: string
+        to: string
+        badge: string
+        summary: string
+        /** 六个节点：城市 / 圆点上方事件 / 圆点下方货物去向 */
+        stops: { city: string; event: string; cargo: string }[]
+        /** 底部橙条：加粗引子 + 全程路线 */
+        stripLead: string
+        stripRoute: string
+      }
+    }
+    /** 第五屏「车辆及司机管理」：奶油底三卡 */
+    ledger: {
+      eyebrow: string
+      title: string
+      desc: string
+      /** icon 对应 logistics/icons/Icon Box 0N.png（01 文档=集中管理、02 链接=灵活配置、03 日历=智能排班） */
+      cards: { icon: '01' | '02' | '03'; title: string; body: string }[]
+    }
   }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案，对应原型 CTA Card） */
   cta: {
