@@ -104,9 +104,10 @@ useReveal(root)
           </article>
         </div>
 
-        <!-- 右列：FLOW 流程面板，占 520 份比例宽；窄屏（lg 以下）退化为 520px 起步横向滚动 -->
-        <div class="reveal overflow-x-auto pb-[4px] lg:min-w-0 lg:flex-[520]" style="--d: 400ms">
-          <div class="min-w-[520px] lg:min-w-0 rounded-[16px] bg-white p-[24px] shadow-[0_24px_60px_-28px_rgba(36,63,49,0.22)] ring-1 ring-[#e2ebe4]">
+        <!-- 右列：FLOW 流程面板，占 520 份比例宽；窄屏（lg 以下）退化为 520px 起步横向滚动。
+             lg 放开 overflow 让投影完整显示（auto 会把出界阴影/描边切掉） -->
+        <div class="reveal overflow-x-auto pb-[4px] lg:min-w-0 lg:flex-[520] lg:overflow-visible" style="--d: 400ms">
+          <div class="min-w-[520px] rounded-[16px] border border-[#e2ebe4] bg-white p-[24px] shadow-[0_24px_60px_-28px_rgba(36,63,49,0.22)] lg:min-w-0">
             <p class="text-[12px] font-semibold leading-[18px] text-[#1f6e4e]">{{ chains.flow.label }}</p>
 
             <!-- 主链：节点 + 竖向箭头（旁挂小字） -->
