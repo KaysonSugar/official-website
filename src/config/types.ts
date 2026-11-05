@@ -397,23 +397,61 @@ export interface SiteConfig {
         mergeNote?: string
       }
     }
-    /** 第三屏「界面展示」（原型 P 界面实录）：深绿底四行图文交替，图是系统真实界面截图 */
+    /** 第三屏「界面展示」（原型 P 界面实录）：深绿底四行图文交替，面板 DOM 重建（位图已删） */
     tour: {
       eyebrow: string
       title: string
       desc: string
       rows: {
-        /** 图对应 assets/products/chemical/images 的短名 */
-        image: 'warehouse' | 'production' | 'quality' | 'customer'
         /** 小标，如「01 · 仓储」 */
         label: string
-        /** 截图宽/高比（CSS aspect-ratio 同款），用来在图片加载前占好位，避免撑动页面 */
-        ratio: number
-        /** 图在右（默认）还是图在左；原型 1右 2左 3右 4左 */
+        /** 面板在右（默认）还是左；原型 1右 2左 3右 4左 */
         flip?: boolean
         /** 01 仓储是「名 + 描述」两栏行；02~04 是圆点列表，二选一 */
         pairs?: { name: string; desc: string }[]
         bullets?: string[]
+        /** 面板演示数据：四块面板结构不同，按 kind 可辨识联合分派 */
+        panel:
+          | {
+              kind: 'warehouse'
+              title: string
+              badge: string
+              meta: string[]
+              tabs: { active: string; idle: string[] }
+              action: string
+              headers: [string, string, string, string, string]
+              rows: { name: string; tag: string; tagTone: 'green' | 'orange'; purity: string; unit: string; qty: string }[]
+              footer: string
+            }
+          | {
+              kind: 'production'
+              title: string
+              badges: { text: string; tone: 'green' | 'blue' }[]
+              chips: { label: string; value: string }[]
+              tabs: [string, ...string[]]
+              headers: [string, string, string, string]
+              rows: { name: string; loss: string; amount: string; source: string; tone: 'orange' | 'gray' }[]
+              footer: string
+            }
+          | {
+              kind: 'quality'
+              title: string
+              badge: string
+              meta: string[]
+              headers: [string, string, string]
+              rows: { item: string; desc: string; method: string }[]
+              freqLabel: string
+              freqs: { text: string; active?: boolean }[]
+            }
+          | {
+              kind: 'customer'
+              title: string
+              stat: string
+              filters: { text: string; active?: boolean }[]
+              headers: [string, string, string, string]
+              rows: { name: string; level: string; levelTone: 'green' | 'orange' | 'gray'; nature: string; status: string }[]
+              footer: string
+            }
       }[]
     }
     /** 第四屏「报表中心」（原型 P 报表中心）：浅绿底四张报表维度卡 */
