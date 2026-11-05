@@ -55,20 +55,22 @@ useReveal(root)
         </article>
       </div>
 
-      <!-- 调度台窗口：手机横滚，桌面铺满容器。窗口底色是面板间的缝隙色（浅青绿） -->
-      <div class="reveal mt-[48px] overflow-x-auto pb-[4px]" style="--d: 240ms">
+      <!-- 调度台窗口：手机横滚（滚动条隐藏，桌面不露条）。窗口底色 #f5f5f5（面板间缝隙色） -->
+      <div class="reveal hide-scrollbar mt-[48px] overflow-x-auto" style="--d: 240ms">
         <div
-          class="min-w-[1180px] overflow-hidden rounded-[14px] bg-[#e8f4ee] p-[10px] shadow-[0_28px_70px_-30px_rgba(19,50,42,0.35)] ring-1 ring-black/5"
+          class="min-w-[1180px] overflow-hidden rounded-[14px] bg-[#f5f5f5] p-[10px] shadow-[0_28px_70px_-30px_rgba(19,50,42,0.35)] ring-1 ring-black/5"
         >
-          <!-- 窗口顶栏：mac 三点 + 标题 + 时间 -->
-          <div class="flex items-center gap-[10px] px-[10px] py-[6px]">
+          <!-- 窗口顶栏：mac 三点 + 标题 + 时间；底部多留空隙跟面板隔开 -->
+          <div class="flex items-center gap-[10px] px-[10px] pb-[12px] pt-[6px]">
+            <!-- mac 三点：经典红黄绿 -->
             <span class="flex gap-[6px]" aria-hidden="true">
-              <span class="h-[9px] w-[9px] rounded-full bg-[#d4ded8]" />
-              <span class="h-[9px] w-[9px] rounded-full bg-[#d4ded8]" />
-              <span class="h-[9px] w-[9px] rounded-full bg-[#d4ded8]" />
+              <span class="h-[9px] w-[9px] rounded-full bg-[#ff5f57]" />
+              <span class="h-[9px] w-[9px] rounded-full bg-[#febc2e]" />
+              <span class="h-[9px] w-[9px] rounded-full bg-[#28c840]" />
             </span>
             <span class="ml-[4px] text-[13px] font-semibold leading-[18px] text-[#3a4f46]">{{ consoleData.title }}</span>
-            <span class="ml-auto text-[12px] leading-[16px] text-[#7d948a]">{{ consoleData.time }}</span>
+            <!-- 时间挨着标题，不靠右 -->
+            <span class="ml-[10px] text-[12px] leading-[16px] text-[#7d948a]">{{ consoleData.time }}</span>
           </div>
 
           <!-- 三面板：渐变底 #f0fdff→#fff（源码三个 scss 同款）。行高定死 640：源码高度就是 JS 算的，
@@ -167,15 +169,15 @@ useReveal(root)
                 <span class="text-[15px] leading-[20px] text-[#444]" aria-hidden="true">»</span>
               </div>
 
-              <!-- 筛选两行：第一行发货地/卸货地/经营范围，第二行车辆类型/车牌/按钮（源码 search flex-wrap） -->
+              <!-- 筛选两行：源码 search 自然宽度左对齐（gap 20px），下拉不拉伸；label 全部带冒号 -->
               <div class="mt-[4px] flex flex-wrap items-center gap-x-[10px] gap-y-[6px] px-[14px] pb-[6px]">
-                <span class="fake-field">发货地 <span class="fake-select w-[64px]">请选择</span> 省 <span class="fake-select w-[64px]">请选择</span> 市</span>
-                <span class="fake-field">卸货地 <span class="fake-select w-[64px]">请选择</span> 省 <span class="fake-select w-[64px]">请选择</span> 市</span>
-                <span class="fake-field">经营范围 <span class="fake-select w-[92px]">请选择</span></span>
+                <span class="fake-field">发货地：<span class="fake-select w-[68px]">请选择</span>省<span class="fake-select w-[68px]">请选择</span>市</span>
+                <span class="fake-field">卸货地：<span class="fake-select w-[68px]">请选择</span>省<span class="fake-select w-[68px]">请选择</span>市</span>
+                <span class="fake-field">经营范围：<span class="fake-select w-[108px]">请选择</span></span>
               </div>
               <div class="flex flex-nowrap items-center gap-[10px] px-[14px] pb-[4px]">
-                <span class="fake-field">车辆类型 <span class="fake-select w-[92px]">请选择</span></span>
-                <span class="fake-field">车牌 <span class="fake-input w-[92px]">请输入</span></span>
+                <span class="fake-field">车辆类型：<span class="fake-select w-[108px]">请选择</span></span>
+                <span class="fake-field">车牌：<span class="fake-input w-[108px]">请输入</span></span>
                 <span class="fake-btn-solid">🔍 搜索</span>
                 <span class="fake-btn-line">⟳ 重置</span>
               </div>
@@ -197,9 +199,19 @@ useReveal(root)
                   {{ consoleData.board.routeTo }}
                 </span>
                 <span class="flex items-center rounded-[4px] border border-[#bacedb] py-[3px] text-[10px] leading-[14px] text-[#979797]">
-                  <span class="flex items-center gap-[3px] px-[8px]">上一周 <span aria-hidden="true">‹</span></span>
-                  <span class="h-[9px] w-[2px] bg-[#cfcfcf]" aria-hidden="true" />
-                  <span class="flex items-center gap-[3px] px-[8px]"><span aria-hidden="true">›</span> 下一周</span>
+                  <!-- 源码 btn-group 是 el-icon-arrow 实心折线箭头 -->
+                  <span class="flex items-center gap-[3px] px-[8px]">上一周
+                    <svg viewBox="0 0 24 24" class="h-[11px] w-[11px]" fill="#979797" aria-hidden="true">
+                      <path d="M15 4 7 12l8 8 1.8-1.8L10.6 12l6.2-6.2z" />
+                    </svg>
+                  </span>
+                  <span class="h-[10px] w-[2px] bg-[#cfcfcf]" aria-hidden="true" />
+                  <span class="flex items-center gap-[3px] px-[8px]">
+                    <svg viewBox="0 0 24 24" class="h-[11px] w-[11px]" fill="#979797" aria-hidden="true">
+                      <path d="M9 4l8 8-8 8-1.8-1.8L13.4 12 7.2 5.8z" />
+                    </svg>
+                    下一周
+                  </span>
                 </span>
               </div>
 
@@ -237,19 +249,17 @@ useReveal(root)
                     </span>
                     <p class="relative flex items-center overflow-hidden">
                       <span class="cal-label">车牌</span>
+                      <span class="cal-colon">：</span>
                       <span class="min-w-0 flex-1 truncate text-[10px] font-semibold leading-[15px] text-black">{{ vehicle.plate }}</span>
-                      <!-- 定位图标照源码 address 绝对定位在右上 -->
-                      <svg viewBox="0 0 24 24" class="absolute -right-1 top-2 h-[12px] w-[12px]" fill="none" aria-hidden="true">
-                        <path d="M12 21s-7-5.5-7-11a7 7 0 1 1 14 0c0 5.5-7 11-7 11z" fill="#2fd6b0" />
-                        <circle cx="12" cy="10" r="2.2" fill="#fff" />
-                      </svg>
                     </p>
                     <p class="mt-[4px] flex items-center overflow-hidden">
                       <span class="cal-label">载重</span>
+                      <span class="cal-colon">：</span>
                       <span class="truncate text-[10px] font-semibold leading-[15px] text-black">{{ vehicle.weight }}</span>
                     </p>
                     <p class="mt-[4px] flex items-center overflow-hidden">
                       <span class="cal-label">经营范围</span>
+                      <span class="cal-colon">：</span>
                       <span class="min-w-0 flex-1 truncate text-[10px] font-semibold leading-[15px] text-black">{{ vehicle.scope }}</span>
                     </p>
                     <p class="mt-[7px] flex justify-end">
@@ -275,11 +285,15 @@ useReveal(root)
                       </p>
                       <p class="max-w-full truncate text-[9px] leading-[13px] text-[#6b8077]">{{ cell.cls }}</p>
                       <p class="text-[10px] font-bold leading-[14px] text-black">{{ cell.weight }}</p>
-                      <!-- 底部翻页：源码 arrow-container absolute bottom 5px -->
+                      <!-- 底部翻页：源码 arrow 是 el-icon-caret 实心三角，左右贴边 -->
                       <p class="absolute inset-x-0 bottom-[3px] flex items-center justify-between px-[6px] text-[9px] leading-[12px] text-[#949494]">
-                        <span aria-hidden="true">‹</span>
+                        <svg viewBox="0 0 24 24" class="h-[12px] w-[12px]" fill="#949494" aria-hidden="true">
+                          <path d="M15.5 4.5 7 12l8.5 7.5z" />
+                        </svg>
                         <span>{{ cell.frac }}</span>
-                        <span aria-hidden="true">›</span>
+                        <svg viewBox="0 0 24 24" class="h-[12px] w-[12px]" fill="#949494" aria-hidden="true">
+                          <path d="M8.5 4.5 17 12l-8.5 7.5z" />
+                        </svg>
                       </p>
                     </div>
                     <div v-else class="rounded-[8px] border border-[#bacedb] bg-white" aria-hidden="true" />
@@ -300,16 +314,16 @@ useReveal(root)
                 <span class="text-[15px] font-bold leading-[21px] text-black">{{ consoleData.idle.title }}</span>
               </div>
 
-              <!-- 筛选（源码 free-vehicle .search：label 55px + select 100px / input 82px） -->
+              <!-- 筛选（源码 free-vehicle .search：label 55px + select 100px / input 82px），label 带冒号 -->
               <div class="mt-[2px] flex flex-col gap-[8px] px-[12px]">
                 <div class="flex flex-nowrap items-center gap-[6px]">
-                  <span class="shrink-0 text-[10px] leading-[15px] text-black">车辆类型</span>
+                  <span class="shrink-0 text-[10px] leading-[15px] text-black">车辆类型：</span>
                   <span class="fake-select min-w-0 flex-1">请选择</span>
-                  <span class="shrink-0 text-[10px] leading-[15px] text-black">前车牌</span>
+                  <span class="shrink-0 text-[10px] leading-[15px] text-black">前车牌：</span>
                   <span class="fake-input min-w-0 flex-1">请输入</span>
                 </div>
                 <div class="flex flex-nowrap items-center gap-[6px]">
-                  <span class="shrink-0 text-[10px] leading-[15px] text-black">载重范围</span>
+                  <span class="shrink-0 text-[10px] leading-[15px] text-black">载重范围：</span>
                   <span class="fake-select min-w-0 flex-1">请选择</span>
                   <span class="fake-btn-solid shrink-0">🔍 搜索</span>
                   <span class="fake-btn-line shrink-0">⟳ 重置</span>
@@ -368,6 +382,15 @@ useReveal(root)
 </template>
 
 <style scoped>
+/* 隐藏横向滚动条：手机端横滚能力保留，但视觉上不出条（桌面截图里露底条不好看） */
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* 面板底：三个面板共用源码里的 linear-gradient(to bottom,#f0fdff,#fff) + 白边 + 绿色淡阴影 */
 .panel {
   border: 1px solid #ffffff;
@@ -376,12 +399,21 @@ useReveal(root)
   box-shadow: 0 4px 12px rgba(47, 177, 136, 0.1);
 }
 
-/* 车辆格/表头格的 label：源码用 65px 定宽 + text-align-last 两端对齐撑开「车 牌」间距 */
+/* 车辆格/表头格的 label：源码 title 定宽 + text-align-last 两端对齐撑开「车 牌」间距，宽度收窄到 46px */
 .cal-label {
-  width: 58px;
+  width: 46px;
   flex-shrink: 0;
   text-align: justify;
   text-align-last: justify;
+  font-size: 10px;
+  line-height: 15px;
+  color: #000;
+}
+
+/* justify 拉开后的冒号：源码 title + 独立「：」span，冒号不参与两端对齐 */
+.cal-colon {
+  flex-shrink: 0;
+  margin-right: 3px;
   font-size: 10px;
   line-height: 15px;
   color: #000;
