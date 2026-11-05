@@ -43,7 +43,8 @@ const imgMap = {
         {{ screens.desc }}
       </p>
 
-      <!-- 四列截图：编号橙色小字 + 场景名，截图圆角轻投影 -->
+      <!-- 四列截图：编号橙色小字 + 场景名。素材自带透明圆角，直接素图展示，
+           不加投影和描边——阴影会从透明圆角里透出来，看着像黑边 -->
       <div class="mt-[36px] grid gap-[24px] sm:grid-cols-2 lg:grid-cols-4">
         <figure
           v-for="(item, i) in screens.items"
@@ -55,12 +56,7 @@ const imgMap = {
             <span class="text-[12px] font-bold leading-[17px] tabular-nums text-brand-500">{{ item.no }}</span>
             <span class="text-[15px] font-bold leading-[21px] text-ink-900">{{ item.label }}</span>
           </figcaption>
-          <img
-            :src="imgMap[item.img]"
-            :alt="`${item.label}界面截图`"
-            class="mt-[14px] w-full select-none rounded-[14px] shadow-[0_18px_44px_-20px_rgba(19,50,42,0.3)] ring-1 ring-black/5"
-            loading="lazy"
-          />
+          <img :src="imgMap[item.img]" :alt="`${item.label}界面截图`" class="mt-[14px] w-full select-none" loading="lazy" />
         </figure>
       </div>
     </div>

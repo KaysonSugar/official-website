@@ -101,12 +101,9 @@ const chipPos = {
 
         <!-- 右列：手机演示，整屏 DOM 重建。鼠标进入上浮 8px（8×1.25=10 物理像素，整数不糊） -->
         <div class="reveal relative mx-auto w-[330px] pb-[24px]" style="--d: 200ms">
-          <!-- 细圆环：原型量出直径约 1.2 倍手机宽、圆心比手机中心偏右约 30px、顶弧高出手机顶约 50px。
-               外层 span 负责定位（translate 居中），里层 img 只跑 scale 呼吸动画，两层分开免得 transform 互相覆盖 -->
-          <span
-            aria-hidden="true"
-            class="pointer-events-none absolute left-[calc(50%_+_28px)] top-[-52px] w-[400px] -translate-x-1/2"
-          >
+          <!-- 细圆环：1345 设计稿量出直径约 1.54 倍手机宽、与手机同心（顶弧贴手机顶、左右各探出约 70px）。
+               外层 span 负责定位，里层 img 只跑 scale 呼吸动画，transform 分层不互相覆盖 -->
+          <span aria-hidden="true" class="pointer-events-none absolute left-1/2 top-0 w-[510px] -translate-x-1/2">
             <img :src="ringOuter" alt="" class="drv-breathe w-full select-none" />
           </span>
           <!-- 浮动徽标：白底圆角胶囊 + 彩点，DOM 重建（位图版已删） -->
