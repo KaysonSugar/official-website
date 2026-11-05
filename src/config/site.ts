@@ -956,8 +956,9 @@ export const siteConfig: SiteConfig = {
         more: '查看全部货源',
       },
     },
-    // 第三屏文字逐字照「L 三项核心能力.png」转录；大图是调度台截图区.png 裁掉
-    // 烘焙的深色画框和底部注释行后出的 q95 webp（无损 877KB 太肥，q95 220KB 肉眼无差）
+    // 第三屏文字逐字照「L 三项核心能力.png」转录。调度台窗口整窗 DOM 重建
+    // （原参考图 调度台截图区.png 已删）：打码字段照原型保留成灰色色块，
+    // 行数据逐格转录，第五张运单卡在原型里就被面板底边裁掉一半，照做
     capability: {
       eyebrow: 'CORE CAPABILITIES / 运输链核心功能',
       title: '资质校验、派单、线路规划',
@@ -983,9 +984,120 @@ export const siteConfig: SiteConfig = {
         },
       ],
       console: {
-        alt: '威易达物流调度台：左侧待调度运单、中间车辆排班表、右侧空闲车辆',
+        title: '威易达物流 · 调度台',
+        time: '2025-10-29 周四 10:00',
         caption:
           '调度台：左侧待调度运单（含品类、总量、运距与装货时间），中间按车辆与日期排班并可拼单，右侧显示空闲车辆与可承运品类。',
+        orders: {
+          title: '待调度运单',
+          cards: [
+            {
+              from: '苏州市',
+              to: '合肥市',
+              active: true,
+              fields: [
+                { label: '运单编号', value: '', mask: true },
+                { label: '货物类别', value: '三类' },
+                { label: '货物总重', value: '6 吨' },
+                { label: '车辆类型', value: '微型车、…' },
+                { label: '运输里程', value: '426.94km' },
+                { label: '装货时间', value: '2025-12-01 12:00:00' },
+              ],
+            },
+            {
+              from: '合肥市',
+              to: '长沙市',
+              fields: [
+                { label: '运单编号', value: '', mask: true },
+                { label: '货物类别', value: '二类2.1' },
+                { label: '货物总重', value: '5 吨' },
+                { label: '车辆类型', value: '全部' },
+                { label: '运输里程', value: '685.72km' },
+                { label: '装货时间', value: '2025-12-01 00:00:00' },
+              ],
+            },
+            {
+              from: '宜宾市',
+              to: '合肥市',
+              fields: [
+                { label: '运单编号', value: '', mask: true },
+                { label: '货物类别', value: '六类6.1' },
+                { label: '货物总重', value: '5 吨' },
+                { label: '车辆类型', value: '全部' },
+                { label: '运输里程', value: '1499.45…' },
+                { label: '装货时间', value: '2025-12-07 12:00:00' },
+              ],
+            },
+            {
+              from: '长沙市',
+              to: '咸宁市',
+              fields: [
+                { label: '运单编号', value: '', mask: true },
+                { label: '货物类别', value: '六类6.1' },
+                { label: '货物总重', value: '5 吨' },
+                { label: '车辆类型', value: '全部' },
+                { label: '运输里程', value: '276.17km' },
+                { label: '装货时间', value: '2025-12-01 12:00:00' },
+              ],
+            },
+            {
+              from: '苏州市',
+              to: '宜宾市',
+              fields: [
+                { label: '运单编号', value: '', mask: true },
+                { label: '货物类别', value: '三类、四…' },
+                { label: '货物总重', value: '6 吨' },
+                { label: '车辆类型', value: '全部' },
+                { label: '运输里程', value: '862.30km' },
+                { label: '装货时间', value: '2025-12-08 08:00:00' },
+              ],
+            },
+          ],
+        },
+        board: {
+          title: '车辆排班表',
+          days: ['12月1日', '12月2日', '12月3日', '12月4日', '12月5日', '12月6日', '12月7日'],
+          vehicles: [
+            {
+              weight: '32 吨',
+              scope: '一类1.1',
+              cells: [
+                { day: 0, route: '苏州市 → 苏州市', cls: '二类', weight: '5 吨', frac: '1/1' },
+                { day: 1, route: '苏州市 → 合肥市', cls: '三类', weight: '6 吨', frac: '1/1' },
+                { day: 5, route: '长沙市 → 咸宁市', cls: '六类6.1', weight: '5 吨', frac: '1/1' },
+              ],
+            },
+            {
+              weight: '32 吨',
+              scope: '七类',
+              cells: [
+                { day: 0, route: '苏州市 → 长沙市', cls: '四类4.3', weight: '6 吨', frac: '1/1' },
+                { day: 3, route: '苏州市 → 长沙市', cls: '三类、四类4…', weight: '6 吨', frac: '1/1' },
+              ],
+            },
+            {
+              weight: '50 吨',
+              scope: '一类1.1、—…',
+              cells: [
+                { day: 0, route: '苏州市 → 苏州市', cls: '六类6.1', weight: '5 吨', frac: '1/1' },
+                { day: 2, route: '苏州市 → 乌鲁木齐…', cls: '三类', weight: '6 吨', frac: '1/1' },
+                { day: 6, route: '宜宾市 → 合肥市', cls: '六类6.1', weight: '5 吨', frac: '1/1' },
+              ],
+            },
+            {
+              weight: '33 吨',
+              scope: '一类1.2、二…',
+              active: true,
+              cells: [{ day: 0, route: '苏州市 → 合肥市', cls: '三类', weight: '6 吨', frac: '1/1' }],
+            },
+          ],
+        },
+        idle: {
+          title: '空闲车辆',
+          city: '苏州市',
+          weight: '32 吨',
+          scope: '四类4.1',
+        },
       },
     },
     // 第四屏文字逐字照「L 智能拼车.png」转录；右侧时间轴卡 DOM 重建（拼车路线图.png 是参考图）

@@ -8,10 +8,10 @@
 import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
-import icon01 from '@/assets/products/logistics/icons/Icon Box 01.png'
-import icon02 from '@/assets/products/logistics/icons/Icon Box 02.png'
-import icon03 from '@/assets/products/logistics/icons/Icon Box 03.png'
-import texture from '@/assets/products/logistics/images/Texture 02.png'
+import icon01 from '@/assets/products/logistics/icons/icon-box-01.png'
+import icon02 from '@/assets/products/logistics/icons/icon-box-02.png'
+import icon03 from '@/assets/products/logistics/icons/icon-box-03.png'
+import texture from '@/assets/products/logistics/images/texture-dots.png'
 
 /**
  * 奶油底三卡。图标是现成的 Icon Box PNG（浅绿圆角盒 + 深绿线性图形，192px）。

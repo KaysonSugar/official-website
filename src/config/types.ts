@@ -495,15 +495,38 @@ export interface SiteConfig {
         more: string
       }
     }
-    /** 第三屏「运输链核心功能」：三张能力卡 + 调度台实录大图（调度台截图区.png 裁窗体出 webp） */
+    /** 第三屏「运输链核心功能」：三张能力卡 + 调度台演示窗口（整窗 DOM 重建） */
     capability: {
       eyebrow: string
       title: string
       desc: string
       /** noteTag 是绿色小结行加粗的前缀（源头风险 / 周转效率 / 降低风险） */
       cards: { title: string; body: string; noteTag: string; note: string }[]
-      /** 实录大图的替换文字与底部灰字说明 */
-      console: { alt: string; caption: string }
+      /** 调度台窗口：mask 字段渲染成灰色打码块（原型里车牌/电话就是打码的） */
+      console: {
+        /** 窗口顶栏：标题与时间 */
+        title: string
+        time: string
+        caption: string
+        /** 左栏：待调度运单，active 卡是绿框高亮的第一张 */
+        orders: {
+          title: string
+          cards: { from: string; to: string; active?: boolean; fields: { label: string; value: string; mask?: boolean }[] }[]
+        }
+        /** 中栏：车辆排班表，day 是 0 起数的日期列下标 */
+        board: {
+          title: string
+          days: string[]
+          vehicles: {
+            weight: string
+            scope: string
+            active?: boolean
+            cells: { day: number; route: string; cls: string; weight: string; frac: string }[]
+          }[]
+        }
+        /** 右栏：空闲车辆（只画原型里那张高亮车卡） */
+        idle: { title: string; city: string; weight: string; scope: string }
+      }
     }
     /** 第四屏「智能拼车」：深绿屏，右侧拼车时间轴卡 DOM 重建（拼车路线图.png 是参考图） */
     carpool: {
