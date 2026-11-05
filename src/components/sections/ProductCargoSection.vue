@@ -56,7 +56,7 @@ const badgeTone = {
         <!-- 注释：三段分开摆、间隔拉大（原型里圆点是独立分隔符），
              垂直位置贴数字行底部不是整组居中，水平离「0 元」约 120 -->
         <p
-          class="hidden text-[12px] leading-[18px] text-[#8aa094] lg:flex lg:ml-[120px] lg:items-center lg:self-end lg:gap-x-[36px] lg:pb-[24px]"
+          class="hidden text-[12px] leading-[18px] text-[#8aa094] lg:flex lg:ml-[120px] lg:items-center lg:self-end lg:gap-x-[20px] lg:pb-[24px]"
         >
           <template v-for="(note, i) in cargo.notes" :key="note">
             <span>{{ note }}</span>

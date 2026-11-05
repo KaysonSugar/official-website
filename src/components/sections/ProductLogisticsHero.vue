@@ -11,6 +11,7 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import { getPage, siteConfig } from '@/config/site'
 import glowWarm from '@/assets/products/logistics/images/glow-warm.png'
 import ringOne from '@/assets/products/logistics/images/ring-1.png'
+import logoMark from '@/assets/brand/logo.webp'
 
 /**
  * 物流调度首屏（原型 Logistics Hero）：浅薄荷绿渐变背景 + 左文案 + 右调度台。
@@ -82,19 +83,10 @@ const badgeTone = {
         >
           <!-- 侧栏：绿渐变，窄屏藏掉省空间；宽度按「货源广场 + VIP 徽标」一行放下量的 -->
           <aside class="hidden w-[116px] shrink-0 flex-col bg-gradient-to-b from-[#3ec795] to-[#27a276] px-[10px] py-[16px] sm:flex">
-            <!-- 品牌：白色圆角块里画个小货车，块下品牌名 + 副标 -->
+            <!-- 品牌：白色圆角块放 Logo Mark（跟顶栏同一个 logo.webp），块下品牌名 + 英文副标 -->
             <div class="flex flex-col items-center">
               <span class="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] bg-white">
-                <svg viewBox="0 0 24 24" class="h-[20px] w-[20px]" fill="none" aria-hidden="true">
-                  <path
-                    d="M3 7h9v8H3zM12 10h5l3 3v2h-8z"
-                    stroke="#2fae85"
-                    stroke-width="1.8"
-                    stroke-linejoin="round"
-                  />
-                  <circle cx="7" cy="17" r="1.8" fill="#2fae85" />
-                  <circle cx="16.5" cy="17" r="1.8" fill="#2fae85" />
-                </svg>
+                <img :src="logoMark" alt="" aria-hidden="true" class="h-[24px] w-[24px] object-contain" />
               </span>
               <p class="mt-[8px] text-[13px] font-bold leading-[18px] text-white">{{ dash.brand }}</p>
               <p class="mt-[2px] text-[10px] leading-[14px] text-white/70">{{ dash.brandSub }}</p>

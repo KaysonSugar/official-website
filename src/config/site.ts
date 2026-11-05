@@ -864,8 +864,9 @@ export const siteConfig: SiteConfig = {
   logistics: {
     ctaLabel: '预约调度演示',
     heroDash: {
-      brand: '威易达',
-      brandSub: '物流工作台',
+      // 品牌名照站点 brand 走，跟顶栏一致
+      brand: '威易达化工',
+      brandSub: 'WEIYIDA HUAGONG',
       menus: [
         { label: '首页' },
         { label: '调度台' },
