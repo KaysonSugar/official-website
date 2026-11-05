@@ -407,6 +407,8 @@ export interface SiteConfig {
         image: 'warehouse' | 'production' | 'quality' | 'customer'
         /** 小标，如「01 · 仓储」 */
         label: string
+        /** 截图宽/高比（CSS aspect-ratio 同款），用来在图片加载前占好位，避免撑动页面 */
+        ratio: number
         /** 图在右（默认）还是图在左；原型 1右 2左 3右 4左 */
         flip?: boolean
         /** 01 仓储是「名 + 描述」两栏行；02~04 是圆点列表，二选一 */

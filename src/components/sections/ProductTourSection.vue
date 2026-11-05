@@ -81,13 +81,15 @@ useReveal(root)
             </ul>
           </div>
 
-          <!-- 界面截图：白底圆角卡，细白描边 + 投影在深底上分层 -->
+          <!-- 界面截图：白底圆角卡，细白描边 + 投影在深底上分层。
+               素材是原生 3085px 无损 webp（不缩不压），小字才不发糊；aspect-ratio 提前占位防抖 -->
           <img
             loading="lazy"
             decoding="async"
             :src="imageMap[row.image]"
             :alt="row.label"
-            class="w-full select-none rounded-[12px] shadow-[0_28px_70px_-30px_rgba(0,0,0,0.55)] ring-1 ring-white/10"
+            :style="{ aspectRatio: row.ratio }"
+            class="w-full select-none rounded-[12px] object-cover shadow-[0_28px_70px_-30px_rgba(0,0,0,0.55)] ring-1 ring-white/10"
             :class="row.flip ? 'lg:order-1' : ''"
           />
         </div>

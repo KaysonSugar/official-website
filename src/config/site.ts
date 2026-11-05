@@ -784,6 +784,7 @@ export const siteConfig: SiteConfig = {
         {
           image: 'warehouse',
           label: '01 · 仓储',
+          ratio: 2.5019,
           pairs: [
             { name: '当前库存', desc: '每种物料在库多少，成品与原料分色标注' },
             { name: '分批次库存统计', desc: '按批次统计，每一批次多少量一清二楚' },
@@ -793,6 +794,7 @@ export const siteConfig: SiteConfig = {
         {
           image: 'production',
           label: '02 · 生产',
+          ratio: 2.7325,
           flip: true,
           bullets: [
             '生产需求中心汇总待排订单，一键加入生产计划',
@@ -803,6 +805,7 @@ export const siteConfig: SiteConfig = {
         {
           image: 'quality',
           label: '03 · 质量与安全',
+          ratio: 2.9297,
           bullets: [
             '检测项模块化配置：检测项、指标描述、检测方法同屏维护',
             '安全检查可设频率，从早晚各一次到每季度按场景选',
@@ -812,6 +815,7 @@ export const siteConfig: SiteConfig = {
         {
           image: 'customer',
           label: '04 · 客户与供应商',
+          ratio: 2.7520,
           flip: true,
           bullets: [
             '客户分三级，可根据不同等级的客户分类管理',
