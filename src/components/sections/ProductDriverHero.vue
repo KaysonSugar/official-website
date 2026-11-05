@@ -45,25 +45,27 @@ const chipPos = {
 </script>
 
 <template>
-  <section ref="root" class="relative overflow-hidden bg-gradient-to-b from-[#f2faf6] via-[#f7fcf9] to-white pb-[72px] pt-[64px]">
-    <!-- 背景装饰：大薄荷光晕垫在手机后面，暖橙光晕沉在左下文字区，细圆环压最右 -->
+  <section ref="root" class="relative overflow-hidden bg-gradient-to-b from-[#fdf6f0] via-[#fefaf6] to-white pb-[72px] pt-[64px]">
+    <!-- 背景装饰照原型：左半底色是暖奶油橙（渐变给出），大薄荷光晕垫在手机后，
+         橙光晕在文案列右下（中心约视口 38% 处、按钮药丸下方、底边裁一半），
+         细圆环小圈贴手机右侧、右缘几乎触视口边 -->
     <img
       :src="glowMint"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute right-[60px] top-[10px] hidden w-[680px] select-none lg:block"
+      class="pointer-events-none absolute right-[100px] top-[40px] hidden w-[660px] select-none lg:block"
     />
     <img
       :src="ringOuter"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute right-[-60px] top-[36px] hidden w-[520px] select-none lg:block"
+      class="pointer-events-none absolute right-[36px] top-[150px] hidden w-[420px] select-none lg:block"
     />
     <img
       :src="glowWarm"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute bottom-[-190px] left-[100px] hidden w-[400px] select-none lg:block"
+      class="pointer-events-none absolute bottom-[-140px] left-[440px] hidden w-[600px] select-none lg:block"
     />
     <div class="container-page relative">
       <div class="grid items-center gap-[48px] lg:grid-cols-[1fr_480px]">
