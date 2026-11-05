@@ -47,8 +47,7 @@ const chipPos = {
 <template>
   <section ref="root" class="relative overflow-hidden bg-gradient-to-b from-[#fdf6f0] via-[#fefaf6] to-white pb-[72px] pt-[64px]">
     <!-- 背景装饰照原型：左半底色是暖奶油橙（渐变给出），大薄荷光晕垫在手机后，
-         橙光晕在文案列右下（中心约视口 38% 处、按钮药丸下方、底边裁一半），
-         细圆环小圈贴手机右侧、右缘几乎触视口边 -->
+         橙光晕在药丸下方偏右（原型可见直径约 450px、中心约视口 700,540，整团收在底边内不裁） -->
     <img
       :src="glowMint"
       alt=""
@@ -56,16 +55,10 @@ const chipPos = {
       class="pointer-events-none absolute right-[100px] top-[40px] hidden w-[660px] select-none lg:block"
     />
     <img
-      :src="ringOuter"
-      alt=""
-      aria-hidden="true"
-      class="pointer-events-none absolute right-[36px] top-[150px] hidden w-[420px] select-none lg:block"
-    />
-    <img
       :src="glowWarm"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute bottom-[-140px] left-[440px] hidden w-[600px] select-none lg:block"
+      class="pointer-events-none absolute bottom-[40px] left-[480px] hidden w-[440px] select-none opacity-80 lg:block"
     />
     <div class="container-page relative">
       <div class="grid items-center gap-[48px] lg:grid-cols-[1fr_480px]">
@@ -108,6 +101,14 @@ const chipPos = {
 
         <!-- 右列：手机演示，整屏 DOM 重建。鼠标进入上浮 8px（8×1.25=10 物理像素，整数不糊） -->
         <div class="reveal relative mx-auto w-[330px] pb-[24px]" style="--d: 200ms">
+          <!-- 细圆环：原型是以手机为中心的整圆（直径约 550px、圆心比手机中心偏右 30px、顶弧在手机顶上方），
+               跟着手机列定位，任何视口下整圆都完整可见 -->
+          <img
+            :src="ringOuter"
+            alt=""
+            aria-hidden="true"
+            class="pointer-events-none absolute left-1/2 top-[-8px] w-[560px] select-none translate-x-[calc(-50%_+_30px)]"
+          />
           <!-- 浮动徽标：白底圆角胶囊 + 彩点，DOM 重建（位图版已删） -->
           <span
             v-for="chip in hero.chips"
