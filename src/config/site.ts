@@ -1359,8 +1359,8 @@ export const siteConfig: SiteConfig = {
     phoneNote: '或致电 400-828-1988（工作日 9:00-18:00）',
   },
   footer: {
-    desc: ['化工生产 + 危化运输一体化平台，全链路数字化、全流程规范化、全方位安全化。'],
-    slogan: ['市场为源', '客户为心', '应用而创', '携手同行'],
+    desc: ['化工生产 + 危化运输一体化平台。全链路数字化、全流程规范化、全方位安全化。'],
+    slogan: ['市场为源', '客户为心', '应需而创', '携手同行'],
     linkGroups: [
       {
         title: '产品',
@@ -1378,7 +1378,6 @@ export const siteConfig: SiteConfig = {
           { label: '化工生产管理', to: '/products/chemical' },
           { label: '危化运输调度', to: '/products/logistics' },
           { label: '合规与全程追溯', to: '/solutions' },
-          { label: '平台架构', to: '/platform' },
         ],
       },
       {
@@ -1391,7 +1390,7 @@ export const siteConfig: SiteConfig = {
         ],
       },
     ],
-    copyright: '2026 苏州羿瑞成信息科技有限公司　版权所有',
+    copyright: '2026 苏州翔瑞成信息科技有限公司　版权所有',
     tagline: '威易达化工 · 化工生产与危化运输一体化平台',
   },
 }

@@ -18,7 +18,7 @@ const qrcodes = [
   { src: qrWechat, label: '微信公众号', alt: '威易达化工微信公众号二维码' },
   { src: qrDouyin, label: '官方抖音号', alt: '威易达官方抖音号二维码' },
   { src: qrKuaishou, label: '官方快手号', alt: '威易达官方快手号二维码' },
-  { src: qrApp, label: '扫码下载 APP', alt: '威易达化工 App 下载二维码' },
+  { src: qrApp, label: '扫码下载APP', alt: '威易达化工 App 下载二维码' },
 ]
 
 /** 页脚条目有可能是 tel:/mailto: 这类外链，据此决定渲染 RouterLink 还是 a */
