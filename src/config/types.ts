@@ -416,6 +416,19 @@ export interface SiteConfig {
         bullets?: string[]
       }[]
     }
+    /** 第四屏「报表中心」（原型 P 报表中心）：浅绿底四张报表维度卡 */
+    report: {
+      eyebrow: string
+      title: string
+      desc: string
+      cards: {
+        icon: 'material' | 'finance' | 'purchase' | 'production'
+        title: string
+        /** 标题与对勾跟 tone 走色：green 绿 / orange 橙（原型资金、采购两张是橙勾） */
+        tone: 'green' | 'orange'
+        items: string[]
+      }[]
+    }
   }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案，对应原型 CTA Card） */
   cta: {

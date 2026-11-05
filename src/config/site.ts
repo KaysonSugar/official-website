@@ -825,6 +825,38 @@ export const siteConfig: SiteConfig = {
         },
       ],
     },
+    // 原型 P 报表中心：四张维度卡，标题/对勾跟卡 tone 走色（资金、采购是橙勾）
+    report: {
+      eyebrow: 'REPORT CENTER / 智慧报表',
+      title: '报表中心：四个维度自动成表',
+      desc: '同一套业务数据，按物资、资金、采购、生产四个维度自动生成报表，不需要财务与仓管各自导出 Excel 核对。',
+      cards: [
+        {
+          icon: 'material',
+          title: '物资',
+          tone: 'green',
+          items: ['入库报表', '出库报表', '库存流水表', '库存汇总表'],
+        },
+        {
+          icon: 'finance',
+          title: '资金',
+          tone: 'orange',
+          items: ['资金类型表', '资金流水表', '收款合同报表 · 付款合同报表', '项目收支表 · 供应商报表'],
+        },
+        {
+          icon: 'purchase',
+          title: '采购',
+          tone: 'orange',
+          items: ['采购申请表', '采购总量分析表', '物资价格表', '付款报表'],
+        },
+        {
+          icon: 'production',
+          title: '生产与销售',
+          tone: 'green',
+          items: ['销售订单明细表', '生产计划表 · 投入产出表', '质检报告汇总', '货运台账'],
+        },
+      ],
+    },
   },
   // 原型 CTA Card：文案逐字照原型。注意电话是原型上的 400-828-1988，
   // 与 contact.phone（400-001-8355）不一致，用哪个等用户拍板
