@@ -58,7 +58,6 @@ wyd-official-website/
     │   ├── SolutionsView.vue       # /solutions            服务支持
     │   ├── AboutView.vue           # /about                关于我们
     │   └── products/               # 产品矩阵整组，与 /products/* 层级对应
-    │       ├── ProductsView.vue        # /products         产品矩阵（三条业务线总览）
     │       ├── ProductChemicalView.vue # /products/chemical 化工生产
     │       ├── ProductLogisticsView.vue# /products/logistics 物流调度
     │       └── ProductDriverView.vue   # /products/driver  司机作业
@@ -72,13 +71,21 @@ wyd-official-website/
         │   ├── DesktopNav.vue  # 桌面主导航（≥1024px）：悬停下拉 + 路由高亮
         │   ├── MobileMenu.vue  # 移动端菜单（<1024px）：收到 open 后展示，点链接发 close
         │   └── SiteFooter.vue  # 页脚：组合标 / 快速导航 / 联系方式 / 版权
-        ├── sections/
-        │   ├── HeroSection.vue      # 首页首屏（待按原型改为「左文 + 右看板」两栏）
-        │   ├── PageHero.vue         # 内页首屏（7 个内页共用，左对齐 / 居中对齐两态）
-        │   └── CtaBanner.vue        # 页面底部行动号召（橙色横幅，8 个页面共用）
+        ├── sections/               # 按导航模块分子目录，和 views 的层级一一对应
+        │   ├── common/             # 多页共用：PageHero（内页首屏）、CtaBanner（底部横幅）
+        │   ├── home/               # 首页：HeroSection + HeroWorkbench（首屏右侧看板）
+        │   │                       #   Advantage / CoreCapabilities / ProductMatrix / Industry
+        │   │                       #   ProductionFlow / TransportCollab / CostEfficiency
+        │   │                       #   Lightweight / Service / PlatformArchitecture
+        │   ├── products/
+        │   │   ├── chemical/       # 化工生产：Hero、产业链、四步流程、界面展示、报表
+        │   │   ├── logistics/      # 物流调度：Hero、能力、台账、货源、拼车
+        │   │   └── driver/         # 司机作业：Hero、优势、接单四步、核心界面、招募
+        │   ├── support/            # 服务支持（/solutions）：范围、流程、时效、承诺、价格
+        │   └── about/              # 关于我们：首屏、简介、企业理念
         └── ui/
             ├── BaseButton.vue   # 通用按钮（to 走路由 / href 走外链；primary / outline / ghost / light）
-            └── SectionShell.vue # 区块外壳：锚点 + 留白 + 标题区 + 进场动效
+            └── BackToTop.vue    # 右下角回到顶部
 ```
 
 ### 分层职责
@@ -86,7 +93,7 @@ wyd-official-website/
 | 层          | 职责                                         | 不该做的事                                          |
 | ----------- | -------------------------------------------- | --------------------------------------------------- |
 | `views/`    | 把某个路由的区块按顺序排好                   | 不写具体区块内容（交给 `sections/`）                |
-| `sections/` | 组装某一屏的内容，从 `config/site.ts` 取数据 | 不写容器宽度、间距、进场动效（交给 `SectionShell`） |
+| `sections/` | 组装某一屏的内容，从 `config/site.ts` 取数据 | 不写容器宽度、间距、进场动效（交给 `useReveal`）   |
 | `ui/`       | 与业务无关的可复用件，全部走 props           | 不直接 import `siteConfig`                          |
 | `layout/`   | 全站骨架（顶栏、页脚）                       | 不含页面内容区块                                    |
 | `brand/`    | 品牌相关视觉资产                             | 不处理业务逻辑                                      |

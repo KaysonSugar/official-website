@@ -14,7 +14,7 @@ import { siteConfig } from '@/config/site'
 import badgeImg from '@/assets/home/images/badge.webp'
 // 看板整卡改 DOM 绘制（workbench-body*.webp 位图已删）——位图在缩放屏上文字必糊，
 // DOM 文字走浏览器渲染任何尺寸都锐利
-import HeroWorkbench from '@/components/home/HeroWorkbench.vue'
+import HeroWorkbench from './HeroWorkbench.vue'
 // 悬浮卡只留两个图标 tile（从 4 倍原图裁的，白底和卡体同色无缝）
 import truckIcon from '@/assets/home/images/hero-truck.webp'
 import checkIcon from '@/assets/home/images/hero-check.webp'

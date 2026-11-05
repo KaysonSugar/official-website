@@ -5,8 +5,8 @@
  * @Name: 平台架构页
 -->
 <script setup lang="ts">
-import CtaBanner from '@/components/sections/CtaBanner.vue'
-import PageHero from '@/components/sections/PageHero.vue'
+import CtaBanner from '@/components/sections/common/CtaBanner.vue'
+import PageHero from '@/components/sections/common/PageHero.vue'
 import { getPage } from '@/config/site'
 
 // 平台架构 /platform。这页已经从导航里撤了，但路由留着。

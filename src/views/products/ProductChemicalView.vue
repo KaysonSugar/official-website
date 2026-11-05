@@ -5,11 +5,11 @@
  * @Name: 化工生产页
 -->
 <script setup lang="ts">
-import CtaBanner from '@/components/sections/CtaBanner.vue'
-import ProductChemicalHero from '@/components/sections/ProductChemicalHero.vue'
-import ProductChainsSection from '@/components/sections/ProductChainsSection.vue'
-import ProductReportSection from '@/components/sections/ProductReportSection.vue'
-import ProductTourSection from '@/components/sections/ProductTourSection.vue'
+import CtaBanner from '@/components/sections/common/CtaBanner.vue'
+import ProductChemicalHero from '@/components/sections/products/chemical/ProductChemicalHero.vue'
+import ProductChainsSection from '@/components/sections/products/chemical/ProductChainsSection.vue'
+import ProductReportSection from '@/components/sections/products/chemical/ProductReportSection.vue'
+import ProductTourSection from '@/components/sections/products/chemical/ProductTourSection.vue'
 
 // 化工生产 /products/chemical（/products 也重定向到这里）。
 // 首屏：浅橙渐变 + 资金流水演示卡；第二屏：三条主线 + 订单驱动流程面板；

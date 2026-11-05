@@ -5,18 +5,18 @@
  * @Name: 首页
 -->
 <script setup lang="ts">
-import CtaBanner from '@/components/sections/CtaBanner.vue'
-import HeroSection from '@/components/sections/HeroSection.vue'
-import IndustrySection from '@/components/sections/IndustrySection.vue'
-import LightweightSection from '@/components/sections/LightweightSection.vue'
-import PlatformArchitectureSection from '@/components/sections/PlatformArchitectureSection.vue'
-import ProductMatrixSection from '@/components/sections/ProductMatrixSection.vue'
-import CoreCapabilitiesSection from '@/components/sections/CoreCapabilitiesSection.vue'
-import ProductionFlowSection from '@/components/sections/ProductionFlowSection.vue'
-import TransportCollabSection from '@/components/sections/TransportCollabSection.vue'
-import AdvantageSection from '@/components/sections/AdvantageSection.vue'
-import CostEfficiencySection from '@/components/sections/CostEfficiencySection.vue'
-import ServiceSection from '@/components/sections/ServiceSection.vue'
+import CtaBanner from '@/components/sections/common/CtaBanner.vue'
+import HeroSection from '@/components/sections/home/HeroSection.vue'
+import IndustrySection from '@/components/sections/home/IndustrySection.vue'
+import LightweightSection from '@/components/sections/home/LightweightSection.vue'
+import PlatformArchitectureSection from '@/components/sections/home/PlatformArchitectureSection.vue'
+import ProductMatrixSection from '@/components/sections/home/ProductMatrixSection.vue'
+import CoreCapabilitiesSection from '@/components/sections/home/CoreCapabilitiesSection.vue'
+import ProductionFlowSection from '@/components/sections/home/ProductionFlowSection.vue'
+import TransportCollabSection from '@/components/sections/home/TransportCollabSection.vue'
+import AdvantageSection from '@/components/sections/home/AdvantageSection.vue'
+import CostEfficiencySection from '@/components/sections/home/CostEfficiencySection.vue'
+import ServiceSection from '@/components/sections/home/ServiceSection.vue'
 
 // 首页 11 个内容模块全齐（首屏到服务屏），底下接预约演示横幅；
 // 页脚不在首页里，在 App.vue 挂的 SiteFooter

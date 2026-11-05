@@ -5,13 +5,13 @@
  * @Name: 服务支持页
 -->
 <script setup lang="ts">
-import CtaBanner from '@/components/sections/CtaBanner.vue'
-import PageHero from '@/components/sections/PageHero.vue'
-import SupportCommitmentSection from '@/components/sections/SupportCommitmentSection.vue'
-import SupportPricingSection from '@/components/sections/SupportPricingSection.vue'
-import SupportProcessSection from '@/components/sections/SupportProcessSection.vue'
-import SupportScopeSection from '@/components/sections/SupportScopeSection.vue'
-import SupportTimeline from '@/components/sections/SupportTimeline.vue'
+import CtaBanner from '@/components/sections/common/CtaBanner.vue'
+import PageHero from '@/components/sections/common/PageHero.vue'
+import SupportCommitmentSection from '@/components/sections/support/SupportCommitmentSection.vue'
+import SupportPricingSection from '@/components/sections/support/SupportPricingSection.vue'
+import SupportProcessSection from '@/components/sections/support/SupportProcessSection.vue'
+import SupportScopeSection from '@/components/sections/support/SupportScopeSection.vue'
+import SupportTimeline from '@/components/sections/support/SupportTimeline.vue'
 import { getPage, siteConfig } from '@/config/site'
 
 // 服务支持 /solutions。定稿版把「解决方案」改名叫「服务支持」，路由没动。

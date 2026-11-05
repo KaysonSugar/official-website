@@ -5,10 +5,10 @@
  * @Name: 关于我们页
 -->
 <script setup lang="ts">
-import AboutHeroSection from '@/components/sections/AboutHeroSection.vue'
-import AboutPhilosophySection from '@/components/sections/AboutPhilosophySection.vue'
-import AboutTextSection from '@/components/sections/AboutTextSection.vue'
-import CtaBanner from '@/components/sections/CtaBanner.vue'
+import AboutHeroSection from '@/components/sections/about/AboutHeroSection.vue'
+import AboutPhilosophySection from '@/components/sections/about/AboutPhilosophySection.vue'
+import AboutTextSection from '@/components/sections/about/AboutTextSection.vue'
+import CtaBanner from '@/components/sections/common/CtaBanner.vue'
 import { siteConfig } from '@/config/site'
 
 // 关于我们 /about。首屏：插画背景横条 + 左侧文字（文案在 pages 的 /about 条目）；
