@@ -136,7 +136,7 @@ const dotLeft = ['3.5%', '38%', '62%']
               :class="toneCls[s.tone].card"
             >
               <div class="flex items-start justify-between">
-                <p class="text-[1.83cqw] leading-none text-[#41544b]">{{ s.label }}</p>
+                <p class="text-[1.58cqw] leading-none text-[#41544b]">{{ s.label }}</p>
                 <span
                   class="flex h-[4.33cqw] w-[4.33cqw] items-center justify-center rounded-[1.2cqw]"
                   :class="toneCls[s.tone].tile"
@@ -145,7 +145,7 @@ const dotLeft = ['3.5%', '38%', '62%']
                     <path
                       :d="
                         s.tone === 'orange'
-                          ? 'M12 3v18M16.5 6.5h-7a2.8 2.8 0 0 0 0 5.6h5a2.8 2.8 0 0 1 0 5.6H7'
+                          ? 'M5.5 3.5 12 11 18.5 3.5M12 11v10M7 13.5h10M7 17h10'
                           : s.tone === 'mint'
                             ? 'M3 4h2.5l2.2 10.5h11L21.5 7H6.5M9 20.5a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4zm8.5 0a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4z'
                             : s.tone === 'gray'
@@ -156,8 +156,8 @@ const dotLeft = ['3.5%', '38%', '62%']
                   </svg>
                 </span>
               </div>
-              <p class="mt-[2.2cqw] whitespace-nowrap text-[3.5cqw] font-bold leading-none text-[#21322b]">
-                {{ s.value }}<span class="ml-[0.4cqw] text-[1.67cqw] font-normal text-[#5e7169]">{{ s.unit }}</span>
+              <p class="mt-[2.2cqw] whitespace-nowrap text-[3.17cqw] font-bold leading-none text-[#21322b]">
+                {{ s.value }}<span class="ml-[0.4cqw] text-[1.5cqw] font-normal text-[#5e7169]">{{ s.unit }}</span>
               </p>
             </div>
           </div>
