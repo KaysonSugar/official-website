@@ -52,7 +52,7 @@ const chipPos = {
       :src="glowMint"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute right-[100px] top-[40px] hidden w-[660px] select-none lg:block"
+      class="pointer-events-none absolute right-[140px] top-[40px] hidden w-[660px] select-none lg:block"
     />
     <img
       :src="glowWarm"
@@ -101,14 +101,14 @@ const chipPos = {
 
         <!-- 右列：手机演示，整屏 DOM 重建。鼠标进入上浮 8px（8×1.25=10 物理像素，整数不糊） -->
         <div class="reveal relative mx-auto w-[330px] pb-[24px]" style="--d: 200ms">
-          <!-- 细圆环：原型是以手机为中心的整圆（直径约 550px、圆心比手机中心偏右 30px、顶弧在手机顶上方），
-               跟着手机列定位，任何视口下整圆都完整可见 -->
-          <img
-            :src="ringOuter"
-            alt=""
+          <!-- 细圆环：原型量出直径约 1.2 倍手机宽、圆心比手机中心偏右约 30px、顶弧高出手机顶约 50px。
+               外层 span 负责定位（translate 居中），里层 img 只跑 scale 呼吸动画，两层分开免得 transform 互相覆盖 -->
+          <span
             aria-hidden="true"
-            class="pointer-events-none absolute left-1/2 top-[-8px] w-[560px] select-none translate-x-[calc(-50%_+_30px)]"
-          />
+            class="pointer-events-none absolute left-[calc(50%_+_28px)] top-[-52px] w-[400px] -translate-x-1/2"
+          >
+            <img :src="ringOuter" alt="" class="drv-breathe w-full select-none" />
+          </span>
           <!-- 浮动徽标：白底圆角胶囊 + 彩点，DOM 重建（位图版已删） -->
           <span
             v-for="chip in hero.chips"
@@ -185,3 +185,23 @@ const chipPos = {
     </div>
   </section>
 </template>
+
+<style scoped>
+/* 圆环呼吸：跟首页 hero 同款，4s 一个来回放大 3.5%。
+   infinite 动画必须自己关 reduced-motion，全局规则会把它压成 0.01ms 疯狂空转 */
+@keyframes drv-breathe {
+  to {
+    transform: scale(1.035);
+  }
+}
+
+.drv-breathe {
+  animation: drv-breathe 4s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drv-breathe {
+    animation: none;
+  }
+}
+</style>
