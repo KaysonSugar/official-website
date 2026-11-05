@@ -44,7 +44,7 @@ useReveal(root)
         <article
           v-for="(card, i) in capability.cards"
           :key="card.title"
-          class="reveal rounded-[16px] bg-[#f7fbfa] p-[28px]"
+          class="reveal rounded-[16px] bg-[#f7fbfa] p-[28px] transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
           <h3 class="text-[17px] font-bold leading-[24px] text-[#13322a]">{{ card.title }}</h3>

@@ -76,7 +76,7 @@ useReveal(root)
           <article
             v-for="(card, i) in chains.cards"
             :key="card.no"
-            class="reveal rounded-[12px] p-[22px] lg:flex lg:flex-1 lg:gap-[18px]"
+            class="reveal rounded-[12px] p-[22px] transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2 lg:flex lg:flex-1 lg:gap-[18px]"
             :class="toneClass[card.tone].card"
             :style="{ '--d': `${240 + i * 90}ms` }"
           >

@@ -44,7 +44,7 @@ const cardTone = {
         <article
           v-for="(step, i) in workflow.steps"
           :key="step.no"
-          class="reveal rounded-[16px] p-[24px]"
+          class="reveal rounded-[16px] p-[24px] transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2"
           :class="cardTone[step.tone]"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >

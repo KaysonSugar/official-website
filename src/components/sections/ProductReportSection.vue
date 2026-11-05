@@ -66,7 +66,7 @@ useReveal(root)
         <article
           v-for="(card, i) in report.cards"
           :key="card.title"
-          class="reveal rounded-[14px] border border-[#e3ebe6] bg-white p-[22px]"
+          class="reveal rounded-[14px] border border-[#e3ebe6] bg-white p-[22px] transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
           <div class="flex items-center gap-[14px]">

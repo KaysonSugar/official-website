@@ -102,12 +102,12 @@ const badgeTone = {
           </label>
           <div class="ml-auto flex items-center gap-[10px]">
             <span
-              class="flex h-[34px] cursor-pointer items-center rounded-[8px] border border-[#e3ebe6] bg-white px-[18px] text-[12px] leading-[18px] text-[#5e7169]"
+              class="flex h-[34px] cursor-pointer items-center rounded-[8px] border border-[#e3ebe6] bg-white px-[18px] text-[12px] leading-[18px] text-[#5e7169] transition-colors duration-200 hover:bg-[#f3f7f5]"
             >
               重置
             </span>
             <span
-              class="flex h-[34px] cursor-pointer items-center rounded-[8px] bg-mint-500 px-[18px] text-[12px] leading-[18px] font-medium text-white"
+              class="flex h-[34px] cursor-pointer items-center rounded-[8px] bg-mint-500 px-[18px] text-[12px] leading-[18px] font-medium text-white transition-colors duration-200 hover:bg-mint-600"
             >
               搜索
             </span>
@@ -133,7 +133,7 @@ const badgeTone = {
               <tr
                 v-for="(row, i) in cargo.card.rows"
                 :key="row.route"
-                class="border-b border-[#f2f5f3]"
+                class="border-b border-[#f2f5f3] transition-colors duration-200 hover:bg-[#e9f3ed]"
                 :class="i % 2 === 1 ? 'bg-[#f3f9f5]' : ''"
               >
                 <td class="py-[13px] pl-[12px] pr-[8px] tabular-nums text-[#8aa094]">{{ i + 1 }}</td>
