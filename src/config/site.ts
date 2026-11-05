@@ -34,9 +34,9 @@ const pages: PageIntro[] = [
   {
     to: '/products/chemical',
     label: '化工生产',
-    eyebrow: '产品线 01',
-    title: '威易达化工：生产与经营管理',
-    desc: '从原料入库到成品出库，把产线、批次、质检与成本串成一条可追溯的经营链路。',
+    eyebrow: '产品 / 威易达化工',
+    title: '威易达化工',
+    desc: '轻量级管理平台，覆盖业务：销售、采购、仓储、合同、资金、生产 BOM、质检环与报表分析八个模块，订单、库存、合同与资金使用同一套数据。',
     align: 'left',
   },
   {
@@ -696,6 +696,83 @@ export const siteConfig: SiteConfig = {
         { icon: 'execute', label: '执行' },
         { icon: 'excel', label: '卓越' },
       ],
+    },
+  },
+  // 化工生产页（原型 Product Hero + P 三条主线）。资金流水卡与流程面板都是 DOM 重建
+  // （用户传的 Flow Panel.png / Module Card.png 是烘焙文字参考图，已删）。
+  chemical: {
+    ctaLabel: '立即体验',
+    heroCard: {
+      title: '资金流水 · 2026 年 10 月',
+      badge: '本月',
+      stats: [
+        { label: '合同收款', value: '9,053,871.00', active: true },
+        { label: '合同付款', value: '507,913.12' },
+        { label: '借款', value: '2,531,759.00' },
+        { label: '报销', value: '15,008,876.00' },
+        { label: '还款', value: '55,490.12' },
+      ],
+      tabs: ['合同收款', '合同付款', '借款', '报销', '还款'],
+      columns: ['合同名称', '合同编号', '收款金额（元）', '创建日期'],
+      rows: [
+        { name: '硝酸采购合同', contract: 'HT123654321', amount: '800.00', date: '2026-08-25' },
+        { name: '液碱框架采购合同', contract: 'HT123698877', amount: '10,000.00', date: '2026-08-24' },
+        { name: '硫酸年度长约', contract: 'HT123700012', amount: '300,000.00', date: '2026-08-24' },
+        { name: '苏州客户销售合同', contract: 'HT145689', amount: '900,000.00', date: '2026-08-14' },
+      ],
+      totalLabel: '本月合计收款',
+      totalValue: '¥9,053,871.00',
+    },
+    chains: {
+      eyebrow: 'THREE CHAINS / 三大主线',
+      title: '交易、物资与生产',
+      cards: [
+        {
+          no: '01',
+          icon: 'production',
+          title: '生产链路 · 订单驱动到底',
+          desc: '销售订单一确认，系统合并拼产、拆解 BOM、计算物料，全程无需手工转抄。',
+          steps: ['销售订单', '合并拼产', 'BOM 拆解', '物料需求', '库存校验', '领料 / 采购', '投料生产', '成品入库', '发货出库'],
+          tone: 'orange',
+        },
+        {
+          no: '02',
+          icon: 'material',
+          title: '物资链路 · 采购到领料闭环',
+          desc: '请购、比价、到货、质检、入库、领用逐环留痕，批次与供应商强绑定，质量可回溯。',
+          steps: ['请购单', '比价定商', '到货登记', '来料质检', '入库上架', '领料出库', '调拨', '库存汇总'],
+          tone: 'green',
+        },
+        {
+          no: '03',
+          icon: 'finance',
+          title: '资金链路 · 合同到报表',
+          desc: '合同台账、收付款登记、借款报销与报表自动汇总，收入支出与应收应付一目了然。',
+          steps: ['销售 / 采购合同', '收付款登记', '借款报销', '对账核销', '资金流水', '合同报表', '资金类型表'],
+          tone: 'plain',
+        },
+      ],
+      flow: {
+        label: 'FLOW / 订单驱动全流程',
+        main: [
+          { text: '销售订单', tone: 'orange', note: '合并多单同一成品' },
+          { text: '生产计划（绑定成品 · BOM）', tone: 'green', note: 'BOM 多层展开' },
+          { text: '物料需求清单（半成品 + 原料 + 包装）', tone: 'green' },
+        ],
+        decision: '判断库存可用量',
+        branchLeft: {
+          label: '库存不足',
+          nodes: [
+            { text: '生成采购单', note: '审批 · 到货' },
+            { text: '来料质检' },
+            { text: '物料入库' },
+          ],
+        },
+        branchRight: {
+          label: '库存充足',
+          nodes: ['生成领料单', '按工序投产', '成品质检 · 入库', '发货出库'],
+        },
+      },
     },
   },
   // 原型 CTA Card：文案逐字照原型。注意电话是原型上的 400-828-1988，

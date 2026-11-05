@@ -356,6 +356,48 @@ export interface SiteConfig {
       items: { icon: 'innovation' | 'persist' | 'execute' | 'excel'; label: string }[]
     }
   }
+  /** 化工生产页 /products/chemical（原型 Product Hero + P 三条主线） */
+  chemical: {
+    /** 首屏按钮文案（原型「立即体验」） */
+    ctaLabel: string
+    /** 第一屏右侧「资金流水」演示卡：五张统计小卡 + 页签 + 四行台账 + 合计行 */
+    heroCard: {
+      title: string
+      badge: string
+      stats: { label: string; value: string; active?: boolean }[]
+      tabs: string[]
+      columns: string[]
+      rows: { name: string; contract: string; amount: string; date: string }[]
+      totalLabel: string
+      totalValue: string
+    }
+    /** 第二屏「三条主线」：左侧三张链路卡 + 右侧订单驱动流程面板 */
+    chains: {
+      eyebrow: string
+      title: string
+      cards: {
+        no: string
+        icon: 'production' | 'material' | 'finance'
+        title: string
+        desc: string
+        /** 链路行的步骤文字，组件里用 → 连接 */
+        steps: string[]
+        /** 配色：orange 浅橙卡 / green 浅绿卡 / plain 白卡带边框，编号标题箭头跟着 tone 走 */
+        tone: 'orange' | 'green' | 'plain'
+      }[]
+      flow: {
+        label: string
+        /** 主链节点；note 是箭头旁边的小字说明 */
+        main: { text: string; tone: 'orange' | 'green'; note?: string }[]
+        /** 菱形判断节点 */
+        decision: string
+        branchLeft: { label: string; nodes: { text: string; note?: string }[] }
+        branchRight: { label: string; nodes: string[] }
+        /** 左支末节点回流到右支首节点的说明（虚线连接） */
+        mergeNote?: string
+      }
+    }
+  }
   /** 页面底部的行动号召区（首页与全部内页共用同一份文案，对应原型 CTA Card） */
   cta: {
     /** 主标题 */

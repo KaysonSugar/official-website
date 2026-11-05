@@ -6,17 +6,18 @@
 -->
 <script setup lang="ts">
 import CtaBanner from '@/components/sections/CtaBanner.vue'
-import PageHero from '@/components/sections/PageHero.vue'
-import { getPage } from '@/config/site'
+import ProductChemicalHero from '@/components/sections/ProductChemicalHero.vue'
+import ProductChainsSection from '@/components/sections/ProductChainsSection.vue'
 
-// 化工生产 /products/chemical，对应画板「威易达化工：生产与经营管理」。
-// 首屏文案在 site.ts 的 pages；下面还有 2~4 屏没做（卡片栅格、档案对照表、电子台账、实施路径）
-const page = getPage('/products/chemical')
+// 化工生产 /products/chemical（/products 也重定向到这里）。
+// 首屏：浅橙渐变 + 资金流水演示卡；第二屏：三条主线 + 订单驱动流程面板。
+// 后面还有屏（卡片栅格、档案对照表、电子台账、实施路径）等画板
 </script>
 
 <template>
-  <PageHero :eyebrow="page.eyebrow" :title="page.title" :desc="page.desc" :align="page.align" />
-  <!-- TODO: 本页其余区块，按「威易达化工：生产与经营管理」画板 -->
+  <ProductChemicalHero />
+  <ProductChainsSection />
+  <!-- TODO: 本页其余区块，等后续画板 -->
   <!-- 底部行动号召：内页共用 -->
   <CtaBanner />
 </template>
