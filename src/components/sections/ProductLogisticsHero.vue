@@ -10,7 +10,7 @@ import { useReveal } from '@/composables/useReveal'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { getPage, siteConfig } from '@/config/site'
 import glowWarm from '@/assets/products/logistics/images/glow-warm.webp'
-import ringOne from '@/assets/products/logistics/images/ring-1.webp'
+import ringOuter from '@/assets/products/logistics/images/ring-outer.webp'
 import logoMark from '@/assets/products/logistics/icons/logo-mark.png'
 
 /**
@@ -37,7 +37,7 @@ const badgeTone = {
   <section ref="root" class="relative overflow-hidden bg-gradient-to-b from-[#e9f7f0] via-[#f4fcf8] to-white pb-[72px] pt-[64px]">
     <!-- 背景装饰：右上细圆环压在调度台卡后只露上弧（带呼吸），左下暖橙光晕沉在文字区底下，位置按原型量的 -->
     <img
-      :src="ringOne"
+      :src="ringOuter"
       alt=""
       aria-hidden="true"
       class="breathe pointer-events-none absolute right-[140px] top-[-28px] hidden w-[600px] select-none lg:block"

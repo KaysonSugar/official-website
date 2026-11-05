@@ -39,16 +39,15 @@ wyd-official-website/
     ├── style.css               # 全局样式入口 + 设计 token（@theme）+ 基础样式
     ├── vite-env.d.ts           # Vite 类型声明
     ├── assets/                 # 素材按「导航层级」分包：页面专属素材进同名目录，全局品牌素材进 brand/
-    │   ├── brand/              # 全局品牌素材：顶栏与页脚共用
-    │   │   ├── logo.webp           # 品牌图形 mark（259×260，导航栏与页脚使用）
-    │   │   └── logo-text.webp      # 完整组合标（图形+中文+英文，备用）
-    │   │   # 后续页面素材按导航落位：home/（首页）、products/（产品矩阵，可再分 chemical/logistics/driver）、
-    │   │   # support/（服务支持）、about/（关于我们）。没有素材就先不建空目录
-    │   └── footer/             # 页脚「关注我们」四张二维码
-    │       ├── ewm-gzh.jpg     # 微信公众号（258×258）
-    │       ├── ewm-dy.png      # 官方抖音号（512×498，青绿底涂鸦码；实为 JPEG）
-    │       ├── ewm-ks.jpg      # 官方快手号（767×750）
-    │       └── download-icon.png  # 扫码下载 App（400×400，中间嵌品牌 logo）
+    │   ├── brand/              # 全局品牌素材：顶栏、页脚、二维码共用
+    │   │   ├── logo.webp               # 品牌图形 mark（导航栏与页脚使用）
+    │   │   ├── footer-qr-gzh.jpg       # 微信公众号二维码
+    │   │   ├── footer-qr-dy.png        # 官方抖音号二维码（实为 JPEG 内容）
+    │   │   ├── footer-qr-ks.jpg        # 官方快手号二维码
+    │   │   └── footer-app-download.png # 扫码下载 App（中间嵌品牌 logo）
+    │   │   # 页面素材按导航层级落位：home/、products/{chemical,logistics,driver}/、
+    │   │   # support/、about/。文件名全小写 kebab-case，图标进 icons/、大图进 images/；
+    │   │   # 目录里只要有素材就不需要 .gitkeep（空目录才拿它占位）
     ├── config/
     │   └── site.ts             # 站点唯一数据源：品牌、导航、各页面首屏文案
     ├── router/
