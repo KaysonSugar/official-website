@@ -9,6 +9,8 @@ import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { getPage, siteConfig } from '@/config/site'
+import glowWarm from '@/assets/products/logistics/images/glow-warm.png'
+import ringOne from '@/assets/products/logistics/images/ring-1.png'
 
 /**
  * 物流调度首屏（原型 Logistics Hero）：浅薄荷绿渐变背景 + 左文案 + 右调度台。
@@ -31,9 +33,22 @@ const badgeTone = {
 </script>
 
 <template>
-  <section ref="root" class="bg-gradient-to-b from-[#e9f7f0] via-[#f4fcf8] to-white pb-[72px] pt-[64px]">
-    <div class="container-page">
-      <div class="grid items-center gap-[48px] lg:grid-cols-[1fr_640px]">
+  <section ref="root" class="relative overflow-hidden bg-gradient-to-b from-[#e9f7f0] via-[#f4fcf8] to-white pb-[72px] pt-[64px]">
+    <!-- 背景装饰：右上细圆环压在调度台卡后只露上弧（带呼吸），左下暖橙光晕沉在文字区底下，位置按原型量的 -->
+    <img
+      :src="ringOne"
+      alt=""
+      aria-hidden="true"
+      class="breathe pointer-events-none absolute right-[140px] top-[-28px] hidden w-[600px] select-none lg:block"
+    />
+    <img
+      :src="glowWarm"
+      alt=""
+      aria-hidden="true"
+      class="pointer-events-none absolute bottom-[-190px] left-[140px] hidden w-[400px] select-none lg:block"
+    />
+    <div class="container-page relative">
+      <div class="grid items-center gap-[48px] lg:grid-cols-[1fr_700px] xl:grid-cols-[1fr_780px]">
         <!-- 左列 -->
         <div>
           <p
@@ -59,9 +74,10 @@ const badgeTone = {
           </div>
         </div>
 
-        <!-- 右列：调度台演示卡，整卡 DOM 重建 -->
+        <!-- 右列：调度台演示卡，整卡 DOM 重建；鼠标进入上浮，跟首页看板同一个手感。
+             位移写 8px 不写 6px：6×1.25(缩放率)=7.5 物理像素，半像素会让卡内文字重采样发虚 -->
         <article
-          class="reveal flex overflow-hidden rounded-[16px] bg-white shadow-[0_24px_60px_-24px_rgba(19,50,42,0.28)] ring-1 ring-black/5"
+          class="reveal flex overflow-hidden rounded-[16px] bg-white shadow-[0_24px_60px_-24px_rgba(19,50,42,0.28)] ring-1 ring-black/5 transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2"
           style="--d: 200ms"
         >
           <!-- 侧栏：绿渐变，窄屏藏掉省空间；宽度按「货源广场 + VIP 徽标」一行放下量的 -->
@@ -216,3 +232,23 @@ const badgeTone = {
     </div>
   </section>
 </template>
+
+<style scoped>
+/* 圆环呼吸：4s 一个来回、放大 3.5%，跟首页首屏同一个节奏。
+   infinite 动画要自己关掉 reduced-motion，全局规则压成 0.01ms 会变成疯狂空转 */
+@keyframes hero-breathe {
+  to {
+    transform: scale(1.035);
+  }
+}
+
+.breathe {
+  animation: hero-breathe 4s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breathe {
+    animation: none;
+  }
+}
+</style>

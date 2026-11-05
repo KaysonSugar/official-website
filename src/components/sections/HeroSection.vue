@@ -144,7 +144,7 @@ onMounted(() => {
             <li
               v-for="feature in siteConfig.hero.features"
               :key="feature"
-              class="flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-sm font-medium text-ink-700 transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-brand-300"
+              class="flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-sm font-medium text-ink-700 transition-[border-color,transform] duration-200 hover:-translate-y-1 hover:border-brand-300"
             >
               <!-- 对勾：稿子里没有圆底，就是一根 #2f9e6e 的线条勾 -->
               <svg
@@ -201,6 +201,9 @@ onMounted(() => {
 
           <!-- 看板整图：圆角 + 柔和投影浮起来。
                relative 不能省：圆环是 absolute，普通流元素会被它盖住。
+               hover 位移用 8px 不用 6px——6×1.25(缩放率)=7.5 物理像素，
+               半像素位移会让图里的文字被重采样，动画期间发虚发跳。
+               relative 之后必须带 will-change：提前建合成层，位移只合成不重绘。
                srcset 三档 828/1656/2384，sizes 按右列实际占宽给：
                ≥1440 内容宽 = 100vw-160，右列 = (内容-24)×10/21，超 2080 被
                container max-width 1920 封住 → 827px；1024~1439 左右 padding 48 -->
@@ -209,7 +212,7 @@ onMounted(() => {
             :srcset="`${workbenchSm} 828w, ${workbenchImg} 1656w, ${workbenchLg} 2384w`"
             :sizes="'(min-width: 1440px) min(calc((100vw - 184px) * 10 / 21), 827px), (min-width: 1024px) calc((100vw - 120px) * 10 / 21), min(92vw, 608px)'"
             alt="威易达化工一体化平台工作台界面"
-            class="slide-in relative w-full rounded-xl shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] transition-transform duration-500 ease-out hover:-translate-y-1.5 lg:rounded-2xl"
+            class="slide-in relative w-full rounded-xl shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2 lg:rounded-2xl"
             :style="{ animationDelay: '150ms' }"
           />
 

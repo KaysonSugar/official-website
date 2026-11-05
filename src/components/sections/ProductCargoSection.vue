@@ -42,8 +42,8 @@ const badgeTone = {
         <p class="mt-[16px] text-[15px] leading-[28px] text-[#5e7169]">{{ cargo.desc }}</p>
       </div>
 
-      <!-- 统计行：左四组数字，右注释短句 -->
-      <div class="reveal mt-[36px] flex flex-wrap items-end gap-x-[48px] gap-y-[20px] lg:gap-x-[64px]" style="--d: 120ms">
+      <!-- 统计行：左四组数字（组间距按原型拉开），右注释与数字行对齐 -->
+      <div class="reveal mt-[36px] flex flex-wrap items-end gap-x-[48px] gap-y-[20px] lg:gap-x-[80px]" style="--d: 120ms">
         <div v-for="stat in cargo.stats" :key="stat.label">
           <p
             class="text-[28px] font-bold leading-[36px] tabular-nums md:text-[32px] md:leading-[40px]"
@@ -53,8 +53,8 @@ const badgeTone = {
           </p>
           <p class="mt-[4px] text-[12px] leading-[18px] text-[#5e7169]">{{ stat.label }}</p>
         </div>
-        <!-- 注释：桌面端靠右，窄屏折到下一行 -->
-        <p class="hidden text-[12px] leading-[18px] text-[#8aa094] lg:ml-auto lg:block">
+        <!-- 注释：原型里在「0 元」右侧一段距离，垂直位置对着数字行不是标签行 -->
+        <p class="hidden text-[12px] leading-[18px] text-[#8aa094] lg:ml-[60px] lg:self-center lg:block">
           {{ cargo.notes.join(' · ') }}
         </p>
       </div>
