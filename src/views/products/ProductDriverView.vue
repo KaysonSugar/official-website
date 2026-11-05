@@ -1,22 +1,27 @@
 <!--
  * @Author: takaixin
  * @Email: takaixin@outlook.com
- * @StartDate: 2026.11.03
- * @Name: 司机作业页
+ * @StartDate: 2026.11.05
+ * @Name: 司机作业页：五屏组装
 -->
 <script setup lang="ts">
 import CtaBanner from '@/components/sections/CtaBanner.vue'
-import PageHero from '@/components/sections/PageHero.vue'
-import { getPage } from '@/config/site'
+import ProductDriverHero from '@/components/sections/ProductDriverHero.vue'
+import ProductDriverAdvantage from '@/components/sections/ProductDriverAdvantage.vue'
+import ProductDriverWorkflow from '@/components/sections/ProductDriverWorkflow.vue'
+import ProductDriverScreens from '@/components/sections/ProductDriverScreens.vue'
+import ProductDriverRecruit from '@/components/sections/ProductDriverRecruit.vue'
 
-// 司机作业 /products/driver，对应画板「威易达司机：接单与作业」。
-// 首屏文案在 site.ts 的 pages；下面还有 2~4 屏没做（卡片栅格、档案对照表、电子台账、实施路径）
-const page = getPage('/products/driver')
+// 司机作业 /products/driver，对应原型 Driver Hero + B 平台优势 + D 接单作业四步
+// + E 核心界面一览 + F 司机招募 五屏，文案与数据都在 siteConfig.driver
 </script>
 
 <template>
-  <PageHero :eyebrow="page.eyebrow" :title="page.title" :desc="page.desc" :align="page.align" />
-  <!-- TODO: 本页其余区块，按「威易达司机：接单与作业」画板 -->
+  <ProductDriverHero />
+  <ProductDriverAdvantage />
+  <ProductDriverWorkflow />
+  <ProductDriverScreens />
+  <ProductDriverRecruit />
   <!-- 底部行动号召：内页共用 -->
   <CtaBanner />
 </template>
