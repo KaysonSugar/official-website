@@ -11,7 +11,7 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import { getPage, siteConfig } from '@/config/site'
 import glowWarm from '@/assets/products/logistics/images/glow-warm.png'
 import ringOne from '@/assets/products/logistics/images/ring-1.png'
-import logoMark from '@/assets/brand/logo.webp'
+import logoMark from '@/assets/products/logistics/icons/logo-mark.png'
 
 /**
  * 物流调度首屏（原型 Logistics Hero）：浅薄荷绿渐变背景 + 左文案 + 右调度台。
@@ -83,7 +83,7 @@ const badgeTone = {
         >
           <!-- 侧栏：绿渐变，窄屏藏掉省空间；宽度按「货源广场 + VIP 徽标」一行放下量的 -->
           <aside class="hidden w-[116px] shrink-0 flex-col bg-gradient-to-b from-[#3ec795] to-[#27a276] px-[10px] py-[16px] sm:flex">
-            <!-- 品牌：白色圆角块放 Logo Mark（跟顶栏同一个 logo.webp），块下品牌名 + 英文副标 -->
+            <!-- 品牌：白色圆角块放物流产品自己的 logo-mark.png，块下产品名 + 副标（照原型：威易达 / 物流工作台） -->
             <div class="flex flex-col items-center">
               <span class="flex h-[34px] w-[34px] items-center justify-center rounded-[9px] bg-white">
                 <img :src="logoMark" alt="" aria-hidden="true" class="h-[24px] w-[24px] object-contain" />
