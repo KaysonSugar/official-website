@@ -87,6 +87,30 @@ export interface SiteConfig {
     features: string[]
     /** 首屏底部数字条；noCount 的条目不做递增、直接显示终值 */
     stats: { value: string; label: string; noCount?: boolean }[]
+    /** 右侧工作台演示看板：整卡 DOM 重建（workbench-body*.webp 位图已删），演示数据照截图逐字转录 */
+    workbench: {
+      /** 侧栏品牌名与英文副标 */
+      brand: { name: string; sub: string }
+      /** 侧栏菜单文字，第一项为选中态；图标是组件里按序号硬编码的装饰 SVG */
+      menus: string[]
+      top: { title: string; search: string; date: string }
+      greet: { hello: string; sub: string; scope: string }
+      /** 四张统计卡；value 主数字、unit 是「万/亿」小尾巴，tone 决定卡底与图标 tile 配色 */
+      stats: { label: string; value: string; unit: string; tone: 'orange' | 'mint' | 'gray' | 'amber' }[]
+      trend: { title: string; tag: string }
+      /** 三个库存占比圆环，percent 直接驱动 stroke-dasharray */
+      donut: {
+        title: string
+        items: { label: string; percent: number; tone: 'orange' | 'green' | 'gray' }[]
+        total: string
+      }
+      production: {
+        title: string
+        note: string
+        headers: [string, string, string, string]
+        rows: { no: string; product: string; qty: string; status: string; tone: 'orange' | 'amber' | 'green' }[]
+      }
+    }
   }
   /** 首页第二屏：行业背景与法规驱动（定稿原型 02，纯文字 + 四张法规卡片） */
   industry: {

@@ -12,10 +12,10 @@ import { siteConfig } from '@/config/site'
 // 设备像素就近取图，采样比接近 1:1 才不糊——单一尺寸总有一档是 2 倍以上的缩小。
 // 浮层卡显示宽度有 min() 封顶，2 倍尺寸一张就够；文字都烘焙在图里
 import badgeImg from '@/assets/home/images/badge.webp'
-import workbenchImg from '@/assets/home/images/workbench-body.webp'
-import workbenchSm from '@/assets/home/images/workbench-body-sm.webp'
-import workbenchLg from '@/assets/home/images/workbench-body-lg.webp'
-// 悬浮卡改 DOM 后只留两个图标 tile（从 4 倍原图裁的，白底和卡体同色无缝）
+// 看板整卡改 DOM 绘制（workbench-body*.webp 位图已删）——位图在缩放屏上文字必糊，
+// DOM 文字走浏览器渲染任何尺寸都锐利
+import HeroWorkbench from '@/components/home/HeroWorkbench.vue'
+// 悬浮卡只留两个图标 tile（从 4 倍原图裁的，白底和卡体同色无缝）
 import truckIcon from '@/assets/home/images/hero-truck.webp'
 import checkIcon from '@/assets/home/images/hero-check.webp'
 import ringsImg from '@/assets/home/images/rings.webp'
@@ -199,22 +199,17 @@ onMounted(() => {
             </div>
           </div>
 
-          <!-- 看板整图：圆角 + 柔和投影浮起来。
+          <!-- 看板整卡：DOM 绘制（HeroWorkbench 组件）。
                relative 不能省：圆环是 absolute，普通流元素会被它盖住。
                hover 位移用 8px 不用 6px——6×1.25(缩放率)=7.5 物理像素，
-               半像素位移会让图里的文字被重采样，动画期间发虚发跳。
-               relative 之后必须带 will-change：提前建合成层，位移只合成不重绘。
-               srcset 三档 828/1656/2384，sizes 按右列实际占宽给：
-               ≥1440 内容宽 = 100vw-160，右列 = (内容-24)×10/21，超 2080 被
-               container max-width 1920 封住 → 827px；1024~1439 左右 padding 48 -->
-          <img
-            :src="workbenchImg"
-            :srcset="`${workbenchSm} 828w, ${workbenchImg} 1656w, ${workbenchLg} 2384w`"
-            :sizes="'(min-width: 1440px) min(calc((100vw - 184px) * 10 / 21), 827px), (min-width: 1024px) calc((100vw - 120px) * 10 / 21), min(92vw, 608px)'"
-            alt="威易达化工一体化平台工作台界面"
+               半像素位移会让文字被重采样，动画期间发虚发跳。
+               relative 之后必须带 will-change：提前建合成层，位移只合成不重绘 -->
+          <div
             class="slide-in relative w-full rounded-xl shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2 lg:rounded-2xl"
             :style="{ animationDelay: '150ms' }"
-          />
+          >
+            <HeroWorkbench />
+          </div>
 
           <!-- 在途卡：同样改 DOM。设计 160×63，左探 120、底边贴看板底；
                手机上收进看板左下角 -->

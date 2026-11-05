@@ -116,6 +116,39 @@ export const siteConfig: SiteConfig = {
       { value: '7 天', label: '完成上线部署', noCount: true },
       { value: '7×24', label: '技术支持响应', noCount: true },
     ],
+    // 工作台看板演示数据，照 workbench-body 位图逐字转录（位图已删，整卡 DOM 重建）
+    workbench: {
+      brand: { name: '威易达化工', sub: 'WEIYIDAHUAGONG' },
+      menus: ['首页', '销售管理', '物流管理', '仓储推荐', '采购管理', '库存管理', '生产管理', '质量检测', '安全检查', '合同资金'],
+      top: { title: '工作台', search: '全站搜索', date: '10月28日 周三' },
+      greet: { hello: '下午好，王童', sub: '欢迎回到威易达化工系统', scope: '总公司 · 北京总部' },
+      stats: [
+        { label: '销售总额', value: '4,977.28', unit: '万', tone: 'orange' },
+        { label: '采购总额', value: '2.42', unit: '万', tone: 'mint' },
+        { label: '合同收款', value: '905.37', unit: '万', tone: 'gray' },
+        { label: '运输总额', value: '32.13', unit: '亿', tone: 'amber' },
+      ],
+      trend: { title: '产量趋势', tag: '本年' },
+      donut: {
+        title: '物料库存占比',
+        items: [
+          { label: '原料', percent: 60, tone: 'orange' },
+          { label: '成品', percent: 33, tone: 'green' },
+          { label: '其他', percent: 7, tone: 'gray' },
+        ],
+        total: '库存总量 291.5 万吨',
+      },
+      production: {
+        title: '生产情况',
+        note: '本周计划 13 个',
+        headers: ['计划单号', '产品名称', '计划产量', '状态'],
+        rows: [
+          { no: 'JH2026081500', product: '叔丁基过氧化氢-2-乙基己酯', qty: '98 吨', status: '生产中', tone: 'orange' },
+          { no: 'JH2025081500', product: '石油醚', qty: '98 吨', status: '检测中', tone: 'amber' },
+          { no: 'SC11089', product: '叔丁基过氧化氢-2-乙基己酯', qty: '1 吨', status: '已完成', tone: 'green' },
+        ],
+      },
+    },
   },
   // 原型 02 的四张卡片按新法条款顺序排，icon 名对应 assets/home/icons/ 下的 png
   industry: {
