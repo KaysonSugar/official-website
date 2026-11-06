@@ -22,9 +22,9 @@ import iconFinance from '@/assets/products/chemical/icons/chain-finance.webp'
  * （不要用 hover:-translate-y-2，transform 过渡会进合成层，13~16px 中文发虚）。
  *
  * FLOW 面板整体 DOM+SVG 重建（Flow Panel.png 是烘焙文字参考图，已删）。
- * 连接线（竖线、分叉肘线、跨支虚线、全部箭头）收进一张固定坐标的 SVG，
- * 节点是绝对定位的 DOM——之前用 span + calc 百分比拼线，渲染时隐时现；
- * 现在画布固定 480×478，改节点数量/文案要同步改 SVG 里的坐标。
+ * 连接线（竖线、分叉肘线、跨支虚线、全部箭头）收进一张 SVG，节点是绝对定位的 DOM
+ * ——之前用 span + calc 百分比拼线，渲染时隐时现。垂直坐标固定 478，
+ * 水平坐标走 viewBox 480 等比拉伸，卡片铺满右列；改节点数量/文案要同步改 SVG 坐标。
  */
 const { chains } = siteConfig.chemical
 
@@ -34,22 +34,23 @@ const iconMap = {
   finance: iconFinance,
 }
 
-// tone → 卡底 / 编号标题色 / 描述与链路行色（照 Chain Rows.png 采样）
+// tone → 卡底 / 编号标题色 / 描述与链路行色（照 Chain Rows.png 采样）。
+// 卡底极淡接近白，各配一圈同色系略深的细边框把轮廓托出来
 const toneClass = {
   orange: {
-    card: 'bg-[#fff9f5]',
+    card: 'border border-[#f4e8dd] bg-[#fff9f5]',
     head: 'text-[#c4520f]',
     desc: 'text-[#6b7d75]',
     chain: 'text-[#8a6a56]',
   },
   green: {
-    card: 'bg-[#f7fbf9]',
+    card: 'border border-[#e6f0ea] bg-[#f7fbf9]',
     head: 'text-[#17795c]',
     desc: 'text-[#6b7d75]',
     chain: 'text-[#4e6f62]',
   },
   plain: {
-    card: 'bg-[#fbfcfb]',
+    card: 'border border-[#edf1ef] bg-[#fbfcfb]',
     head: 'text-[#16261f]',
     desc: 'text-[#6b7d75]',
     chain: 'text-[#6b7d75]',
@@ -62,13 +63,13 @@ const mainTone = {
   green: 'bg-[#e4f4ea] text-[#1c6b4d]',
 } as const
 
-// ---- FLOW 画布固定几何（与模板里 SVG 路径一一对应，改一处必改另一处）----
+// ---- FLOW 画布几何：垂直坐标固定，水平坐标全部等比（viewBox 480 宽 → 容器实际宽度）。
+// SVG 加 preserveAspectRatio="none" 横向拉伸，节点用百分比定位，卡片能铺满右列。
+// 改节点数量/文案要同步改 SVG 里的路径坐标（单位：480×478 画布）----
 const FLOW_W = 480
 const FLOW_H = 478
-const COL_W = 216 // 分支列宽
-const COL_GAP = 48 // 两列间隙（虚线回流走这里）
-const LEFT_CX = COL_W / 2 // 108，左列中心
-const RIGHT_CX = COL_W + COL_GAP + COL_W / 2 // 372，右列中心
+const LEFT_CX = '22.5%' // 左列中心（列宽 45% 的一半）
+const RIGHT_CX = '77.5%' // 右列中心（右列从 55% 起）
 const MAIN_TOPS = [0, 60, 120] // 主链三节点 top（节点高 34）
 const DIAMOND_TOP = 184 // 菱形 150×76，底尖 260
 const BRANCH_TOP = 292 // 两支首节点 top（节点高 36，间隔 14 → 步进 50）
@@ -78,12 +79,12 @@ function mainStyle(i: number) {
   return { top: `${MAIN_TOPS[i]}px` }
 }
 
-// 分支节点定位：左列贴 0，右列从 COL_W+COL_GAP 起
+// 分支节点定位：左列贴 0 占 45%，右列从 55% 起占 45%（中间 10% 是虚线回流的中缝）
 function branchStyle(i: number, side: 'left' | 'right') {
   return {
     top: `${BRANCH_TOP + i * 50}px`,
-    left: side === 'left' ? '0' : `${COL_W + COL_GAP}px`,
-    width: `${COL_W}px`,
+    left: side === 'left' ? '0%' : '55%',
+    width: '45%',
   }
 }
 
@@ -144,35 +145,51 @@ useReveal(root)
           </article>
         </div>
 
-        <!-- 右列：FLOW 流程面板。内容固定 528px（480 画布 + 2×24 内边距），
-             lg 以下靠外层 overflow-x-auto 横向滚动，不做响应式挤压——流程图挤压会断线 -->
+        <!-- 右列：FLOW 流程面板。卡片铺满右列宽度，画布水平等比拉伸；
+             lg 以下保底 528px 靠外层 overflow-x-auto 横向滚动 -->
         <div
           class="reveal overflow-x-auto pb-[4px] lg:min-w-0 lg:flex-[560] lg:overflow-visible"
           style="--d: 400ms"
         >
           <div
-            class="w-[528px] rounded-[16px] border border-[#e2ebe4] bg-white p-[24px] shadow-[0_24px_60px_-28px_rgba(36,63,49,0.22)]"
+            class="w-full min-w-[528px] rounded-[16px] border border-[#e2ebe4] bg-white p-[24px] shadow-[0_24px_60px_-28px_rgba(36,63,49,0.22)]"
           >
             <p class="text-[12px] font-semibold leading-[18px] text-[#1f6e4e]">
               {{ chains.flow.label }}
             </p>
 
-            <!-- 画布：一张 SVG 画全部连接线（竖线/肘线/虚线/箭头），DOM 节点绝对定位其上 -->
-            <div class="relative mx-auto mt-[16px] h-[478px] w-[480px]">
+            <!-- 画布：一张 SVG 画全部连接线（竖线/肘线/虚线/箭头），DOM 节点绝对定位其上。
+                 SVG 按 viewBox 480 宽横向拉伸（preserveAspectRatio none），路径坐标不变；
+             vector-effect 让线宽不跟着拉伸变粗 -->
+            <div class="relative mt-[16px] h-[478px] w-full">
               <svg
-                class="absolute inset-0"
-                :width="FLOW_W"
-                :height="FLOW_H"
+                class="absolute inset-0 h-full w-full"
                 :viewBox="`0 0 ${FLOW_W} ${FLOW_H}`"
+                preserveAspectRatio="none"
                 fill="none"
                 aria-hidden="true"
               >
                 <!-- 主链三条竖线 + 实心三角箭头（线止于节点上沿 6px 处，三角尖正好点到节点） -->
-                <path d="M240 34V54" stroke="#a9c0b2" stroke-width="1.5" />
+                <path
+                  d="M240 34V54"
+                  stroke="#a9c0b2"
+                  stroke-width="1.5"
+                  vector-effect="non-scaling-stroke"
+                />
                 <polygon points="236,54 244,54 240,60" fill="#a9c0b2" />
-                <path d="M240 94V114" stroke="#a9c0b2" stroke-width="1.5" />
+                <path
+                  d="M240 94V114"
+                  stroke="#a9c0b2"
+                  stroke-width="1.5"
+                  vector-effect="non-scaling-stroke"
+                />
                 <polygon points="236,114 244,114 240,120" fill="#a9c0b2" />
-                <path d="M240 154V178" stroke="#a9c0b2" stroke-width="1.5" />
+                <path
+                  d="M240 154V178"
+                  stroke="#a9c0b2"
+                  stroke-width="1.5"
+                  vector-effect="non-scaling-stroke"
+                />
                 <polygon points="236,178 244,178 240,184" fill="#a9c0b2" />
 
                 <!-- 分叉：菱形底尖垂下 → 横线展开到两列中心 → 各自垂到首节点 -->
@@ -180,18 +197,25 @@ useReveal(root)
                   d="M240 260V278M108 278H372M108 278V286M372 278V286"
                   stroke="#a9c0b2"
                   stroke-width="1.5"
+                  vector-effect="non-scaling-stroke"
                 />
                 <polygon points="104,286 112,286 108,292" fill="#a9c0b2" />
                 <polygon points="368,286 376,286 372,292" fill="#a9c0b2" />
 
                 <!-- 分支内部连线：节点间隙 14px（328→342 / 378→392 / 428→442），按左 3 右 4 个节点手写 -->
-                <path d="M108 328V336M108 378V386" stroke="#a9c0b2" stroke-width="1.5" />
+                <path
+                  d="M108 328V336M108 378V386"
+                  stroke="#a9c0b2"
+                  stroke-width="1.5"
+                  vector-effect="non-scaling-stroke"
+                />
                 <polygon points="104,336 112,336 108,342" fill="#a9c0b2" />
                 <polygon points="104,386 112,386 108,392" fill="#a9c0b2" />
                 <path
                   d="M372 328V336M372 378V386M372 428V436"
                   stroke="#a9c0b2"
                   stroke-width="1.5"
+                  vector-effect="non-scaling-stroke"
                 />
                 <polygon points="368,336 376,336 372,342" fill="#a9c0b2" />
                 <polygon points="368,386 376,386 372,392" fill="#a9c0b2" />
@@ -203,6 +227,7 @@ useReveal(root)
                   stroke="#c0d5c7"
                   stroke-width="1.5"
                   stroke-dasharray="4 4"
+                  vector-effect="non-scaling-stroke"
                 />
                 <polygon points="258,306 258,314 264,310" fill="#c0d5c7" />
               </svg>
@@ -210,7 +235,7 @@ useReveal(root)
               <!-- 主链节点（绝对定位，水平居中）+ 线旁小字 -->
               <template v-for="(node, i) in chains.flow.main" :key="node.text">
                 <div
-                  class="absolute left-1/2 flex h-[34px] -translate-x-1/2 items-center justify-center whitespace-nowrap rounded-[7px] px-[14px] text-[13px] font-semibold leading-[20px]"
+                  class="absolute left-1/2 flex h-[34px] -translate-x-1/2 items-center justify-center whitespace-nowrap rounded-[7px] px-[28px] text-[13px] font-semibold leading-[20px]"
                   :class="mainTone[node.tone]"
                   :style="mainStyle(i)"
                 >
@@ -218,23 +243,23 @@ useReveal(root)
                 </div>
                 <span
                   v-if="node.note"
-                  class="absolute left-[248px] whitespace-nowrap text-[10px] leading-[14px] text-[#9aab9f]"
+                  class="absolute left-[calc(50%+8px)] whitespace-nowrap text-[10px] leading-[14px] text-[#9aab9f]"
                   :style="{ top: `${MAIN_TOPS[i] + 34 + 7}px` }"
                 >
                   {{ node.note }}
                 </span>
               </template>
 
-              <!-- 分支标签：骑在肘线上方，跟各列中心对齐 -->
+              <!-- 分支标签：骑在肘线上方，跟各列中心（22.5% / 77.5%）对齐 -->
               <span
                 class="absolute -translate-x-1/2 whitespace-nowrap text-[11px] leading-[14px] text-[#c26116]"
-                :style="{ left: `${LEFT_CX}px`, top: '261px' }"
+                :style="{ left: LEFT_CX, top: '261px' }"
               >
                 {{ chains.flow.branchLeft.label }}
               </span>
               <span
                 class="absolute -translate-x-1/2 whitespace-nowrap text-[11px] leading-[14px] text-[#2b6950]"
-                :style="{ left: `${RIGHT_CX}px`, top: '261px' }"
+                :style="{ left: RIGHT_CX, top: '261px' }"
               >
                 {{ chains.flow.branchRight.label }}
               </span>
@@ -265,7 +290,7 @@ useReveal(root)
                 <span
                   v-if="node.note"
                   class="absolute whitespace-nowrap text-[10px] leading-[14px] text-[#9aab9f]"
-                  :style="{ left: `${LEFT_CX + 8}px`, top: `${BRANCH_TOP + i * 50 + 36}px` }"
+                  :style="{ left: `calc(${LEFT_CX} + 20px)`, top: `${BRANCH_TOP + i * 50 + 36}px` }"
                 >
                   {{ node.note }}
                 </span>

@@ -25,9 +25,10 @@ const toneClass: Record<string, string> = {
 </script>
 
 <template>
-  <!-- 卡体：白底 + 1px 极淡描边 + 大投影柔影，跟首页看板卡一个量级 -->
+  <!-- 卡体：白底 + 1px 极淡描边 + 大投影柔影，跟首页看板卡一个量级。
+       鼠标进入上浮 8px，与首页首屏/化工首屏同一套手感（8px 走整数物理像素，卡内 13px 小字不重采样） -->
   <article
-    class="rounded-[16px] bg-white p-[28px] shadow-[0_28px_70px_-24px_rgba(16,37,30,0.2)] ring-1 ring-black/5"
+    class="rounded-[16px] bg-white p-[28px] shadow-[0_28px_70px_-24px_rgba(16,37,30,0.2)] ring-1 ring-black/5 transition-transform duration-500 ease-out hover:-translate-y-2"
   >
     <!-- 标题行：左标题右工期徽标 -->
     <div class="flex items-center justify-between gap-4">
