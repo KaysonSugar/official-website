@@ -74,9 +74,24 @@ const MAIN_TOPS = [0, 60, 120] // 主链三节点 top（节点高 34）
 const DIAMOND_TOP = 184 // 菱形 150×76，底尖 260
 const BRANCH_TOP = 292 // 两支首节点 top（节点高 36，间隔 14 → 步进 50）
 
-// 主链节点绝对定位样式：水平居中
+// 主链节点点亮配色：静息底色必须跟 mainTone 的 Tailwind 类一字不差，
+// 不然 delay 窗口（fill-mode: backwards 压 0% 帧）和关动画时会跳色
+const nodePulse = {
+  orange: { bg: '#fbeedf', on: '#f7e0c2', ring: 'rgba(176, 90, 21, 0.4)' },
+  green: { bg: '#e4f4ea', on: '#d1ebdc', ring: 'rgba(28, 107, 77, 0.4)' },
+} as const
+
+// 主链节点绝对定位样式：水平居中；顺带捎上波次变量——
+// --nd 是波到它的时刻（0/450/900ms），--nd-* 是点亮配色（keyframes 里 var() 取）
 function mainStyle(i: number) {
-  return { top: `${MAIN_TOPS[i]}px` }
+  const p = nodePulse[chains.flow.main[i].tone]
+  return {
+    top: `${MAIN_TOPS[i]}px`,
+    '--nd': `${i * 450}ms`,
+    '--nd-bg': p.bg,
+    '--nd-on': p.on,
+    '--nd-ring': p.ring,
+  }
 }
 
 // 分支节点定位：左列贴 0 占 45%，右列从 55% 起占 45%（中间 10% 是虚线回流的中缝）
@@ -221,8 +236,10 @@ useReveal(root)
                 <polygon points="368,386 376,386 372,392" fill="#a9c0b2" />
                 <polygon points="368,436 376,436 372,442" fill="#a9c0b2" />
 
-                <!-- 跨支虚线：物料入库右缘 → 中缝上行 → 汇入生成领料单左缘 -->
+                <!-- 跨支虚线：物料入库右缘 → 中缝上行 → 汇入生成领料单左缘。
+                     flow-march 让虚线沿这个方向慢慢爬（行军蚁），= 物料在回流 -->
                 <path
+                  class="flow-march"
                   d="M216 410H240V310H258"
                   stroke="#c0d5c7"
                   stroke-width="1.5"
@@ -235,7 +252,7 @@ useReveal(root)
               <!-- 主链节点（绝对定位，水平居中）+ 线旁小字 -->
               <template v-for="(node, i) in chains.flow.main" :key="node.text">
                 <div
-                  class="absolute left-1/2 flex h-[34px] -translate-x-1/2 items-center justify-center whitespace-nowrap rounded-[7px] px-[28px] text-[13px] font-semibold leading-[20px]"
+                  class="flow-node absolute left-1/2 flex h-[34px] -translate-x-1/2 items-center justify-center whitespace-nowrap rounded-[7px] px-[28px] text-[13px] font-semibold leading-[20px]"
                   :class="mainTone[node.tone]"
                   :style="mainStyle(i)"
                 >
@@ -270,7 +287,13 @@ useReveal(root)
                 :style="{ top: `${DIAMOND_TOP}px` }"
               >
                 <svg viewBox="0 0 150 76" class="absolute inset-0 h-full w-full" aria-hidden="true">
-                  <polygon points="75,0 150,38 75,76 0,38" fill="#14332a" />
+                  <!-- flow-diamond：波走完主链最后点亮它，fill 提亮一档 -->
+                  <polygon
+                    class="flow-diamond"
+                    :style="{ '--nd': '1350ms' }"
+                    points="75,0 150,38 75,76 0,38"
+                    fill="#14332a"
+                  />
                 </svg>
                 <span
                   class="relative flex h-full items-center justify-center text-[13px] font-semibold leading-[18px] text-white"
@@ -312,3 +335,89 @@ useReveal(root)
     </div>
   </section>
 </template>
+
+<style scoped>
+/* 跨支虚线「行军蚁」：dashoffset 每轮挪 8（= 4+4 正好一个虚线周期），无缝循环。
+   负值 = 虚线沿路径正方向爬：从物料入库右缘上行汇入生成领料单，正是物料回流的方向。
+   只重绘这一条约 300px 的细线，每帧成本可忽略 */
+.flow-march {
+  animation: flow-march 1.1s linear infinite;
+  animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
+}
+
+.in .flow-march {
+  animation-play-state: running;
+}
+
+@keyframes flow-march {
+  to {
+    stroke-dashoffset: -8;
+  }
+}
+
+/* 主链节点顺序点亮：销售订单 → 生产计划 → 物料需求清单 → 菱形判断，
+   0/450/900/1350ms 依次到，跟首页流程图箭头波、服务支持圆点同一套 7s 节奏。
+   配色走行内 --nd-*（两种 tone 共用一份 keyframes），静息底色 = Tailwind 类的值 */
+.flow-node,
+.flow-diamond {
+  animation-duration: 7s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-fill-mode: backwards; /* delay 窗口里就压 0% 帧，否则亮着等波、到点跳变 */
+  animation-delay: var(--nd, 0ms);
+  animation-play-state: paused;
+}
+
+.flow-node {
+  animation-name: flow-node;
+}
+
+.flow-diamond {
+  animation-name: flow-diamond;
+}
+
+.in .flow-node,
+.in .flow-diamond {
+  animation-play-state: running;
+}
+
+@keyframes flow-node {
+  0%,
+  100% {
+    background-color: var(--nd-bg);
+    box-shadow: 0 0 0 0 transparent; /* 静息没有描边环 */
+  }
+  4% {
+    background-color: var(--nd-on); /* 底色加深一档 */
+    box-shadow: 0 0 0 3px var(--nd-ring); /* 同色系细环把轮廓托出来 */
+  }
+  11% {
+    background-color: var(--nd-bg);
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* 菱形是深绿实底 SVG 多边形，点亮就把 fill 提亮一档，白字不动 */
+@keyframes flow-diamond {
+  0%,
+  100% {
+    fill: #14332a;
+  }
+  4% {
+    fill: #1d5440;
+  }
+  11% {
+    fill: #14332a;
+  }
+}
+
+/* reduced-motion：infinite 动画必须自己关（全局 0.01ms 规则会把它压成疯狂空转）。
+   关掉后虚线静止、节点落回 Tailwind 类底色，跟原型一致 */
+@media (prefers-reduced-motion: reduce) {
+  .flow-march,
+  .flow-node,
+  .flow-diamond {
+    animation: none;
+  }
+}
+</style>

@@ -278,7 +278,11 @@ const dotLeft = ['3.5%', '38%', '62%']
             <div class="flex flex-col rounded-[1.67cqw] bg-white p-[2cqw]">
               <p class="text-[2cqw] font-bold leading-none text-[#21322b]">{{ wb.donut.title }}</p>
               <div class="mt-[2.2cqw] flex items-start justify-between px-[0.4cqw]">
-                <div v-for="d in wb.donut.items" :key="d.label" class="flex flex-col items-center">
+                <div
+                  v-for="(d, di) in wb.donut.items"
+                  :key="d.label"
+                  class="flex flex-col items-center"
+                >
                   <svg viewBox="0 0 36 36" class="w-[4.6cqw]" aria-hidden="true">
                     <circle
                       cx="18"
@@ -288,7 +292,15 @@ const dotLeft = ['3.5%', '38%', '62%']
                       stroke="#e3eae6"
                       stroke-width="5.5"
                     />
+                    <!-- wb-arc：入场后错峰 130ms 从 0 扫到目标弧（一次性）。
+                         静息值仍由下面这个 stroke-dasharray 属性提供——动画播完释放、
+                         reduced-motion 关掉后都落回它，CSS 只在动画期间接管 -->
                     <circle
+                      class="wb-arc"
+                      :style="{
+                        '--arc': `${d.percent} ${100 - d.percent}`,
+                        '--ad': `${800 + di * 130}ms`,
+                      }"
                       cx="18"
                       cy="18"
                       r="15.9"
@@ -355,3 +367,31 @@ const dotLeft = ['3.5%', '38%', '62%']
     </div>
   </div>
 </template>
+
+<style scoped>
+/* 库存占比圆环「画出来」：看板卡片 slide-in 落定后（约 0.85s）开始，
+   三个环错峰 130ms、0.9s 从空环扫到目标弧——跟首屏数字递增同一节奏，
+   传达「数据是被加载出来的」，一次性动画不占常驻循环预算。
+   目标值走行内 --arc（"37 63" 这种），keyframes 里 var() 取 */
+.wb-arc {
+  animation: wb-arc 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: var(--ad, 800ms);
+}
+
+@keyframes wb-arc {
+  from {
+    stroke-dasharray: 0 100; /* 空环，只剩底下的灰轨道 */
+  }
+  to {
+    stroke-dasharray: var(--arc);
+  }
+}
+
+/* reduced-motion：全局规则只压时长不压 delay，backwards 会让空环挂最多 1 秒
+   才跳出来——直接关掉，落回模板属性里的终值更干净 */
+@media (prefers-reduced-motion: reduce) {
+  .wb-arc {
+    animation: none;
+  }
+}
+</style>
