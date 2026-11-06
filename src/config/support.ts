@@ -1,0 +1,260 @@
+/**
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.06
+ * @Name: 服务支持页内容配置
+ */
+
+/**
+ * 服务支持页（/solutions）五屏：首屏、八项交付内容、七节点流程、实施计费、服务承诺。
+ * 类型定义就在数据上方；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
+ */
+
+/** 服务支持页（原型 Service Hero + S1）：首屏胶囊与按钮、项目节奏卡、八项交付内容 */
+export interface SupportConfig {
+  /** 首屏按钮文案（原型「预约实施评估」，和全站默认的「预约产品演示」不是一个词） */
+  ctaLabel: string
+  /** 首屏按钮下的四个服务方式胶囊 */
+  features: string[]
+  /** 首屏右侧「典型项目节奏」白卡 */
+  timeline: {
+    /** 卡片标题 */
+    title: string
+    /** 右上角的工期徽标 */
+    badge: string
+    /** 分隔线下的说明小字 */
+    note: string
+    /** 四行步骤；tone 决定序号块配色（1 橙 / 2 绿 / 3 橘红，均为浅底彩字；4 深绿底白字） */
+    steps: {
+      no: string
+      tone: 'orange' | 'green' | 'salmon' | 'dark'
+      label: string
+      desc: string
+    }[]
+  }
+  /** 第二屏「服务内容」：八张交付内容卡，icon 对应 assets/support/icons 的短名 */
+  scope: {
+    /** 标题上方的橙色眉题（英文 / 中文） */
+    eyebrow: string
+    /** 板块主标题 */
+    title: string
+    /** 标题下的一行说明 */
+    desc: string
+    cards: {
+      icon: 'survey' | 'init' | 'migrate' | 'training' | 'launch' | 'accept' | 'aftercare' | 'plus'
+      title: string
+      desc: string
+    }[]
+  }
+  /** 第三屏「实施流程」：七个节点上下交错挂在一条渐变轴上（原型 S2） */
+  process: {
+    /** 眉题（这一屏是绿色，不是全站默认的橙） */
+    eyebrow: string
+    /** 板块主标题 */
+    title: string
+    /** 标题下的一行说明 */
+    desc: string
+    /** 七个节点，顺序即轴上 01-07；dark 的节点（07）用深绿卡，其余白卡 */
+    steps: { no: string; title: string; desc: string; dark?: boolean }[]
+    /** 轴末端右下角的补充盒 */
+    afterLabel: string
+    afterText: string
+  }
+  /** 第四屏「实施方式与计费」：三张卡（原型 S3），icon 对应 assets/support/icons 的短名 */
+  pricing: {
+    eyebrow: string
+    title: string
+    desc: string
+    cards: {
+      icon: 'remote' | 'onsite' | 'plus'
+      title: string
+      items: string[]
+      /** 卡片底部的适用范围 / 报价说明小字 */
+      foot: string
+      /** 暖橙卡（线下上门那张）：浅橙底、暖棕文字，无边框 */
+      warm?: boolean
+    }[]
+  }
+  /** 第五屏「服务承诺」：深绿底四张交付准则卡 + 底部一行四个硬指标（原型 S4） */
+  commitment: {
+    /** 眉题（绿色，同上一屏） */
+    eyebrow: string
+    title: string
+    desc: string
+    /** 四张准则卡；loop（闭环售后）的循环箭头是组件里内联 SVG 画的，其余走 PNG */
+    cards: { icon: 'sign' | 'checklist' | 'schedule' | 'loop'; title: string; desc: string }[]
+    /** 分隔线下的一行硬指标，直接渲染终值不递增（7×24 这类递增会闪中间值） */
+    stats: { value: string; label: string }[]
+  }
+}
+
+// 服务支持页（原型 Service Hero + S1），文案逐字照画板
+export const support: SupportConfig = {
+  ctaLabel: '预约实施评估',
+  features: ['线上远程实施', '线下上门实施', '7–15 天试运行', '7×24 技术支持'],
+  timeline: {
+    title: '典型项目节奏',
+    badge: '4–6 周',
+    note: '整体周期视模块数量、数据量与反馈处理效率评估，多工厂项目顺延。',
+    steps: [
+      {
+        no: '1',
+        tone: 'orange',
+        label: '第 1 周 · 调研与方案',
+        desc: '梳理流程与单据，确认实施范围与交付清单',
+      },
+      {
+        no: '2',
+        tone: 'green',
+        label: '第 2 周 · 配置与建档',
+        desc: '搭建组织权限，标准化基础档案与审批流程',
+      },
+      {
+        no: '3',
+        tone: 'salmon',
+        label: '第 3–4 周 · 迁移与培训',
+        desc: '存量数据清洗导入，管理员与岗位分批实操培训',
+      },
+      {
+        no: '4',
+        tone: 'dark',
+        label: '第 5 周 · 试运行与验收',
+        desc: '全流程跑单观察，逐项签字确认后移交维保',
+      },
+    ],
+  },
+  scope: {
+    eyebrow: 'SERVICE SCOPE / 服务内容',
+    title: '实施交付包含八项内容',
+    desc: '从签约后的需求调研到验收归档，实施范围按固定清单推进。合同附件中逐项列明交付内容，避免范围与责任界定不清。',
+    cards: [
+      {
+        icon: 'survey',
+        title: '前期对接调研',
+        desc: '梳理业务流程、组织架构、岗位权限与审批路径，确认表单字段、报表与 BOM 需求，输出实施方案、工期计划与交付清单。',
+      },
+      {
+        icon: 'init',
+        title: '系统初始化配置',
+        desc: '按组织架构与角色权限，批量开通账号，标准化客户、供应商、物料、仓库与会计科目等基础档案，配置单据流程与打印模板。',
+      },
+      {
+        icon: 'migrate',
+        title: '历史数据迁移',
+        desc: '整理并清洗存量 Excel 数据，协助导入历史单据、往来账目与库存期初，完成试算平衡与差异调整后在新系统并行试运行。',
+      },
+      {
+        icon: 'training',
+        title: '操作培训服务',
+        desc: '为管理员提供后台全功能培训，为各岗位员工提供线上或现场实操培训，配套操作手册与常见问题说明，并考核操作熟练度。',
+      },
+      {
+        icon: 'launch',
+        title: '上线调试与试运行',
+        desc: '完成全流程跑单测试与业务闭环验证，跟进异常问题与缺陷修复，安排 7–15 天试运行，配合旧系统平稳切换。',
+      },
+      {
+        icon: 'accept',
+        title: '项目验收归档',
+        desc: '按需求清单逐项验收签字，归档需求文档、配置台账与培训记录，移交售后对接人并转入常规维保服务。',
+      },
+      {
+        icon: 'aftercare',
+        title: '后期售后运维',
+        desc: '处理账号新增与权限调整，提供在线答疑与远程协助，同步版本更新与功能升级，跟进年度盘点与续期服务。',
+      },
+      {
+        icon: 'plus',
+        title: '增值实施服务',
+        desc: '深度定制流程、二次表单开发、个性化报表、多系统接口对接、驻场实施与数据大屏等需求，按单次项目另行报价。',
+      },
+    ],
+  },
+  // 第三屏（原型 S2）：七个节点单数在轴上方、双数在下方，07 是深绿卡
+  process: {
+    // 这一屏眉题是绿色，全站独一份
+    eyebrow: 'PROCESS / 实施流程',
+    title: '七个节点，从需求调研到转入维保',
+    desc: '每个节点都有对应的交付物与确认动作，客户确认后进入下一阶段。未签订实施协议、未结清费用，不启动上门与深度实施。',
+    steps: [
+      { no: '01', title: '需求调研', desc: '确认流程与数据范围' },
+      { no: '02', title: '方案确认', desc: '输出方案与交付清单' },
+      { no: '03', title: '环境初始化', desc: '组织权限与基础档案' },
+      { no: '04', title: '数据迁移', desc: '清洗导入与期初建账' },
+      { no: '05', title: '培训交付', desc: '管理员与岗位培训' },
+      { no: '06', title: '试运行', desc: '全流程跑单与观察' },
+      { no: '07', title: '验收转维保', desc: '逐项签字移交对接人', dark: true },
+    ],
+    afterLabel: '验收之后',
+    afterText: '签字移交后转入运维，7×24 技术支持持续推进。',
+  },
+  // 第四屏（原型 S3）：线下上门那张是暖橙卡，其余白卡
+  pricing: {
+    eyebrow: 'DELIVERY & PRICING / 实施方式与计费',
+    title: '线上远程与线下上门，按方式分别计费',
+    desc: '年套餐内含基础实施与售后运维。超出标配范围的上门、专场培训与定制开发，按单次项目另行计费，具体报价按城市、客户规模与实施天数评估。',
+    cards: [
+      {
+        icon: 'remote',
+        title: '线上远程实施',
+        items: [
+          '年套餐内含基础实施，不另行收费',
+          '超出标配的账号座位按档计费',
+          '年度赠送一次专场培训，超出按次计费',
+        ],
+        foot: '适用于单工厂、流程相对标准的企业',
+      },
+      {
+        icon: 'onsite',
+        title: '线下上门实施',
+        warm: true,
+        items: [
+          '按实施人天计费，差旅住宿据实报销',
+          '集中培训按场次计费',
+          '报价按城市、客户规模与天数评估',
+        ],
+        foot: '适用于多工厂、多角色协同的企业',
+      },
+      {
+        icon: 'plus',
+        title: '增值与定制',
+        items: ['二次表单开发与个性化报表', '多系统接口对接与数据大屏', '驻场实施与专项数据整理'],
+        foot: '按单次项目评估工作量后报价',
+      },
+    ],
+  },
+  // 第五屏「服务承诺」（原型 S4）：深绿底，四张准则卡 + 底部一行硬指标
+  commitment: {
+    eyebrow: 'COMMITMENT / 服务承诺',
+    title: '四项交付准则，写入服务范围',
+    desc: '实施与售后均按统一标准执行：范围在合同中明确、节点按计划推进、问题有明确的责任人与关闭时间。',
+    cards: [
+      {
+        icon: 'sign',
+        title: '先签约后实施',
+        desc: '实施协议签订、费用结清后启动上门与深度实施，不在合同外先做后补。',
+      },
+      {
+        icon: 'checklist',
+        title: '按清单交付',
+        desc: '交付内容以合同附件与交付清单为准，不做超出范围的口头承诺。',
+      },
+      {
+        icon: 'schedule',
+        title: '按期验收',
+        desc: '按计划节点推进，异常问题当日反馈，未完成项列入整改清单并跟踪至关闭。',
+      },
+      {
+        icon: 'loop',
+        title: '闭环售后',
+        desc: '验收后移交专属对接人，服务工单跟进至关闭，年度回访与续费提醒由同一人负责。',
+      },
+    ],
+    stats: [
+      { value: '7×24', label: '技术支持响应' },
+      { value: '1 对 1', label: '专属实施顾问' },
+      { value: '7–15 天', label: '系统试运行周期' },
+      { value: '100%', label: '由公司对公账户收款' },
+    ],
+  },
+}
