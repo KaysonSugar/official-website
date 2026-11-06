@@ -54,10 +54,16 @@ useReveal(root)
       >
         {{ report.eyebrow }}
       </p>
-      <h2 class="reveal mt-[24px] text-[32px] font-bold leading-[42px] text-ink-900" style="--d: 80ms">
+      <h2
+        class="reveal mt-[24px] text-[32px] font-bold leading-[42px] text-ink-900"
+        style="--d: 80ms"
+      >
         {{ report.title }}
       </h2>
-      <p class="reveal mt-[14px] max-w-[720px] text-[14px] leading-[24px] text-[#5e7169]" style="--d: 160ms">
+      <p
+        class="reveal mt-[14px] max-w-[720px] text-[14px] leading-[24px] text-[#5e7169]"
+        style="--d: 160ms"
+      >
         {{ report.desc }}
       </p>
 
@@ -66,7 +72,7 @@ useReveal(root)
         <article
           v-for="(card, i) in report.cards"
           :key="card.title"
-          class="reveal rounded-[14px] border border-[#e3ebe6] bg-white p-[22px] transition-transform duration-500 ease-out hover:-translate-y-2"
+          class="reveal card-lift rounded-[14px] border border-[#e3ebe6] bg-white p-[22px]"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
           <div class="flex items-center gap-[14px]">
@@ -109,3 +115,27 @@ useReveal(root)
     </div>
   </section>
 </template>
+
+<style scoped>
+/* 卡片 hover 时图标轻放大 6%：跟首页/物流台账卡同款两级反馈（投影浮现 + 图标放大）。
+   报表卡里只有顶部一张 tile 图标没有别的装饰图，直接 .card-lift img 不穿帮。
+   曲线用起停都缓的 0.4/0/0.2/1，260ms，全站 hover 统一节奏 */
+.card-lift img {
+  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-lift:hover img {
+  transform: scale(1.06);
+}
+
+/* 减弱动效：图标别缩放，只留投影浮现 */
+@media (prefers-reduced-motion: reduce) {
+  .card-lift img {
+    transition: none;
+  }
+
+  .card-lift:hover img {
+    transform: none;
+  }
+}
+</style>

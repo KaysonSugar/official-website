@@ -24,7 +24,10 @@ useReveal(root)
 </script>
 
 <template>
-  <section ref="root" class="bg-gradient-to-b from-[#fff6f0] via-[#fffbf8] to-white pb-[72px] pt-[64px]">
+  <section
+    ref="root"
+    class="bg-gradient-to-b from-[#fff6f0] via-[#fffbf8] to-white pb-[72px] pt-[64px]"
+  >
     <div class="container-page">
       <!-- 右列固定 660px：五张统计小卡要完整放下 15,008,876.00 这类长数字，550px 会溢出 -->
       <div class="grid items-center gap-[48px] lg:grid-cols-[1fr_660px]">
@@ -44,7 +47,10 @@ useReveal(root)
             {{ page.title }}
           </h1>
 
-          <p class="reveal mt-[20px] max-w-[520px] text-[15px] leading-[28px] text-[#5e7169]" style="--d: 160ms">
+          <p
+            class="reveal mt-[20px] max-w-[520px] text-[15px] leading-[28px] text-[#5e7169]"
+            style="--d: 160ms"
+          >
             {{ page.desc }}
           </p>
 
@@ -53,15 +59,20 @@ useReveal(root)
           </div>
         </div>
 
-        <!-- 右列：资金流水卡 -->
+        <!-- 右列：资金流水卡；鼠标进入上浮，跟首页首屏看板同一个手感。
+             位移写 8px 不写 6px：6×1.25(缩放率)=7.5 物理像素，半像素会让卡内文字重采样发虚 -->
         <article
-          class="reveal rounded-[16px] bg-white p-[24px] shadow-[0_24px_60px_-24px_rgba(63,42,20,0.18)] ring-1 ring-black/5"
+          class="reveal rounded-[16px] bg-white p-[24px] shadow-[0_24px_60px_-24px_rgba(63,42,20,0.18)] ring-1 ring-black/5 transition-transform duration-500 ease-out hover:-translate-y-2"
           style="--d: 200ms"
         >
           <!-- 标题行 + 本月徽标 -->
           <div class="flex items-center justify-between">
-            <h2 class="text-[15px] font-bold leading-[22px] text-[#1f3d32]">{{ heroCard.title }}</h2>
-            <span class="rounded-[6px] bg-[#e7f3ec] px-[10px] py-[4px] text-[12px] font-medium leading-[16px] text-[#1c6b4d]">
+            <h2 class="text-[15px] font-bold leading-[22px] text-[#1f3d32]">
+              {{ heroCard.title }}
+            </h2>
+            <span
+              class="rounded-[6px] bg-[#e7f3ec] px-[10px] py-[4px] text-[12px] font-medium leading-[16px] text-[#1c6b4d]"
+            >
               {{ heroCard.badge }}
             </span>
           </div>
@@ -74,7 +85,10 @@ useReveal(root)
               class="rounded-[8px] px-[8px] py-[10px]"
               :class="stat.active ? 'bg-[#fdf3ea]' : 'bg-[#f8faf9]'"
             >
-              <p class="text-[11px] leading-[16px]" :class="stat.active ? 'text-[#a9611f]' : 'text-[#8aa094]'">
+              <p
+                class="text-[11px] leading-[16px]"
+                :class="stat.active ? 'text-[#a9611f]' : 'text-[#8aa094]'"
+              >
                 {{ stat.label }}
               </p>
               <p
@@ -95,7 +109,10 @@ useReveal(root)
               :class="i === 0 ? 'font-semibold text-[#13322a]' : 'text-[#7a9488]'"
             >
               {{ tab }}
-              <span v-if="i === 0" class="absolute inset-x-0 -bottom-[1px] h-[2px] rounded-full bg-[#2fae85]" />
+              <span
+                v-if="i === 0"
+                class="absolute inset-x-0 -bottom-[1px] h-[2px] rounded-full bg-[#2fae85]"
+              />
             </span>
           </div>
 
@@ -103,14 +120,26 @@ useReveal(root)
           <table class="mt-[8px] w-full border-collapse text-[12px] leading-[18px]">
             <thead>
               <tr class="bg-[#f6faf7] text-left">
-                <th class="rounded-l-[6px] px-[12px] py-[8px] font-medium text-[#6b8077]">{{ heroCard.columns[0] }}</th>
-                <th class="px-[12px] py-[8px] font-medium text-[#6b8077]">{{ heroCard.columns[1] }}</th>
-                <th class="px-[12px] py-[8px] font-medium text-[#6b8077]">{{ heroCard.columns[2] }}</th>
-                <th class="rounded-r-[6px] px-[12px] py-[8px] font-medium text-[#6b8077]">{{ heroCard.columns[3] }}</th>
+                <th class="rounded-l-[6px] px-[12px] py-[8px] font-medium text-[#6b8077]">
+                  {{ heroCard.columns[0] }}
+                </th>
+                <th class="px-[12px] py-[8px] font-medium text-[#6b8077]">
+                  {{ heroCard.columns[1] }}
+                </th>
+                <th class="px-[12px] py-[8px] font-medium text-[#6b8077]">
+                  {{ heroCard.columns[2] }}
+                </th>
+                <th class="rounded-r-[6px] px-[12px] py-[8px] font-medium text-[#6b8077]">
+                  {{ heroCard.columns[3] }}
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="row in heroCard.rows" :key="row.contract" class="border-b border-[#f2f5f3]">
+              <tr
+                v-for="row in heroCard.rows"
+                :key="row.contract"
+                class="border-b border-[#f2f5f3]"
+              >
                 <td class="px-[12px] py-[11px] font-medium text-[#1f3d32]">{{ row.name }}</td>
                 <td class="px-[12px] py-[11px] text-[#7a9488]">{{ row.contract }}</td>
                 <td class="px-[12px] py-[11px] tabular-nums text-[#13322a]">{{ row.amount }}</td>
@@ -120,9 +149,13 @@ useReveal(root)
           </table>
 
           <!-- 合计行 -->
-          <div class="mt-[12px] flex items-center justify-between rounded-[6px] bg-[#eef6f1] px-[12px] py-[10px]">
+          <div
+            class="mt-[12px] flex items-center justify-between rounded-[6px] bg-[#eef6f1] px-[12px] py-[10px]"
+          >
             <span class="text-[13px] leading-[18px] text-[#1c6b4d]">{{ heroCard.totalLabel }}</span>
-            <span class="text-[15px] font-bold leading-[20px] tabular-nums text-[#157a52]">{{ heroCard.totalValue }}</span>
+            <span class="text-[15px] font-bold leading-[20px] tabular-nums text-[#157a52]">{{
+              heroCard.totalValue
+            }}</span>
           </div>
         </article>
       </div>
