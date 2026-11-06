@@ -208,8 +208,9 @@ export interface HomeWorkflow {
   note: string
 }
 
-// 原型 08：运输协同。环形闭环图直接用设计导出的整图（collab-flow.png），
-// 文字都在图里，这里只留标题区文案；面板背景色晕由组件画
+// 原型 08：运输协同。环形闭环图用 DOM + SVG 重绘（原来是一张 2480 宽的整图，
+// 正文只有 10px，1x 屏必糊）。坐标全部是相对 2480×1195 设计画布的百分比，
+// 量自设计图；卡片尺寸由文字内容撑开，只锁 min-width，改文案不用动坐标
 export interface HomeCollab {
   /** 标题上方的橙色眉题（英文 / 中文） */
   eyebrow: string
@@ -217,6 +218,25 @@ export interface HomeCollab {
   title: string
   /** 标题下的两行说明 */
   desc: string
+  /** 中心圆的三行字：主标题 / 副标（· 分隔）/ 绿色补充句 */
+  center: { title: string; sub: string; note: string }
+  /** 环上四个节点卡，x/y 是卡片中心在画布里的百分比坐标 */
+  nodes: {
+    name: string
+    sub: string
+    /** light=白卡（化工企业 / 司机）、orange=橙卡、green=绿卡 */
+    tone: 'light' | 'orange' | 'green'
+    x: number
+    y: number
+  }[]
+  /** 环上四个流向标签，跟着箭头走 */
+  flows: { text: string; x: number; y: number }[]
+  /** 左右两列说明：左绿右橙，圆点颜色跟 tone 走 */
+  asides: {
+    title: string
+    tone: 'green' | 'orange'
+    items: { title: string; desc: string }[]
+  }[]
 }
 
 /** 首页第九屏：全链路一体化优势（定稿原型 08-S8，暗色三行对照表 + 三张支撑卡，无图标） */
