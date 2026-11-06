@@ -26,11 +26,11 @@ useReveal(root)
 const cardBg = (dark?: boolean) => (dark ? 'bg-[#13322a]' : 'bg-white')
 
 /**
- * 圆点点亮时刻：光带 3.2s 扫完整根轴，7 个点从 7% 到 93% 均匀分布，
+ * 圆点点亮时刻：光点 3.2s 走完整根轴，7 个点从 7% 到 93% 均匀分布，
  * 换算成毫秒再各减 210ms（keyframes 3% 处才最亮），就是各自该延迟的时间。
- * 写死成数组而不是算的：数值对着轴宽调出来的，改光带速度时要一起看。
+ * 写死成数组而不是算的：数值是对着轴宽调出来的，改光点速度时要一起看。
  */
-const dotWave = [300, 750, 1230, 1680, 2130, 2610, 3050]
+const dotWave = [0, 450, 950, 1400, 1850, 2300, 2750]
 </script>
 
 <template>
@@ -66,18 +66,21 @@ const dotWave = [300, 750, 1230, 1680, 2130, 2610, 3050]
           class="absolute left-0 right-0 top-[153px] z-0 h-[3px] rounded-full bg-gradient-to-r from-[#dfe0d4] via-[#c4e4d5] via-55% to-[#2fb188]"
           aria-hidden="true"
         />
-        <!-- 光带：裁切层比轴高（19px），好让光束的绿色辉光上下露出 8px，光本身仍是 3px。
-             不加这层高度，box-shadow 会被 3px 的裁切框切平，辉光就没了 -->
+        <!-- 光点：一颗 7px 的小白点沿轴滑过，只带一圈很浅的绿光。
+             千万别做成宽光带：3px 细轴上一条十几厘米的发光段，看着就是一团糊掉的污渍，
+             还会把轴"啃断"。小点滑行则像信号在走，不给细线添堵。
+             track 是 100% 宽的同层容器，位移用自身宽度百分比（0→100%），跟容器实际宽度无关 -->
         <div
-          class="pointer-events-none absolute left-0 right-0 top-[145px] z-0 flex h-[19px] items-center overflow-hidden rounded-full"
+          class="pointer-events-none absolute left-0 right-0 top-[145px] z-0 h-[19px] overflow-hidden"
           aria-hidden="true"
         >
-          <!-- w-[12%] 相对容器宽；位移写自身宽度百分比（733%×12%≈88%），
-               跟容器实际宽度无关，窄屏宽屏共用一份 keyframes。
-               两端渐隐 + 绿色辉光，浅底上才看得出是一道光在走 -->
-          <span
-            class="proc-sweep block h-[3px] w-[12%] rounded-full bg-gradient-to-r from-transparent via-white to-transparent shadow-[0_0_10px_2px_rgba(47,177,136,0.55)]"
-          />
+          <div class="proc-track relative h-full w-full">
+            <!-- 9px 白点 + 1.5px 绿描边：边缘清晰，1x 屏也看得见；
+                 别用大面积模糊辉光，3px 细线旁边一团糊光就成污渍了 -->
+            <span
+              class="proc-bead absolute left-0 top-1/2 block h-[9px] w-[9px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_1px_3px_rgba(19,50,42,0.22)] ring-[1.5px] ring-[#2fb188]"
+            />
+          </div>
         </div>
 
         <!-- 轴末端箭头：三角形，贴在渐变线右端（只敢伸 14px，lg 临界宽度下再宽就出滚动条） -->
@@ -244,22 +247,42 @@ const dotWave = [300, 750, 1230, 1680, 2130, 2610, 3050]
 </template>
 
 <style scoped>
-/* 光带：只动 transform / opacity，纯合成不重排。
-   7s 一轮里 0~46%（约 3.2s）走完整根轴，剩下 3.8s 静息，跟首页流程图箭头波同一节奏 */
-.proc-sweep {
-  animation: proc-sweep 7s linear infinite;
+/* 光点：track 负责位移（0 → 100% 自身宽度 = 整根轴），bead 只管淡入淡出，
+   两层拆开是因为位移要 linear 匀速、显隐要缓入缓出，一个 animation 塞不下两种曲线。
+   7s 一轮里 3.2s 走完，剩下 3.8s 静息，跟首页流程图箭头波同节奏 */
+.proc-track {
+  animation: proc-track 7s linear infinite;
   animation-fill-mode: backwards;
   animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
 }
 
-.in .proc-sweep {
+.in .proc-track {
   animation-play-state: running;
 }
 
-@keyframes proc-sweep {
+@keyframes proc-track {
   0% {
-    transform: translateX(-100%); /* 从轴左端外侧滑进来，入场不突兀 */
-    opacity: 0;
+    transform: translateX(0); /* 从轴左端起步 */
+  }
+  46%,
+  100% {
+    transform: translateX(100%); /* 走到轴右端（箭头处）就停住等下一轮 */
+  }
+}
+
+.proc-bead {
+  animation: proc-bead 7s ease-in-out infinite;
+  animation-fill-mode: backwards;
+  animation-play-state: paused;
+}
+
+.in .proc-bead {
+  animation-play-state: running;
+}
+
+@keyframes proc-bead {
+  0% {
+    opacity: 0; /* 一开始不可见，别在左端突然冒出来 */
   }
   3% {
     opacity: 1;
@@ -269,17 +292,16 @@ const dotWave = [300, 750, 1230, 1680, 2130, 2610, 3050]
   }
   46%,
   100% {
-    transform: translateX(733%); /* 733%×12% ≈ 88% 容器宽，正好停在轴右端 */
-    opacity: 0; /* 到终点就灭，别停在箭头上一直亮 */
+    opacity: 0; /* 抵达箭头后淡出，不留在端点一直亮 */
   }
 }
 
-/* 圆点：光带扫到哪个点，哪个点从白底（07 是深绿底）变浅绿底。
+/* 圆点：光点扫到哪个点，哪个点从白底（07 是深绿底）变浅绿底。
    底色走行内的 --dot-bg / --dot-on，01-06 白↔浅绿，07 深绿↔略亮绿，不套白底 */
 .proc-dot {
   background-color: var(--dot-bg); /* 动画关掉（reduced-motion）时的兜底底色 */
   animation: proc-dot 7s ease-in-out infinite;
-  animation-delay: var(--wd, 0ms); /* 按节点在轴上的位置决定光带何时扫到 */
+  animation-delay: var(--wd, 0ms); /* 按节点在轴上的位置决定光点何时扫到 */
   animation-fill-mode: backwards; /* delay 窗口里也压到 0% 帧，否则开头是透明的 */
   animation-play-state: paused;
 }
@@ -302,14 +324,15 @@ const dotWave = [300, 750, 1230, 1680, 2130, 2610, 3050]
 }
 
 /* reduced-motion：infinite 动画必须自己关，全局 0.01ms 规则会把它压成疯狂空转；
-   关掉后圆点回到原底色、光带彻底隐藏 */
+   关掉后圆点回到原底色、光点彻底隐藏 */
 @media (prefers-reduced-motion: reduce) {
-  .proc-sweep,
+  .proc-track,
+  .proc-bead,
   .proc-dot {
     animation: none;
   }
 
-  .proc-sweep {
+  .proc-bead {
     opacity: 0;
   }
 }
