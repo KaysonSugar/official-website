@@ -192,26 +192,28 @@ useReveal(root)
 }
 
 /* 箭头波：全部箭头按流程顺序（顶行 → 菱形 → 分支步骤 → 收尾）延迟点亮，
-   静息态压到 0.7 透明度，波峰回到 1 —— 一道从上往下的"业务在流动"光波。
-   只动 opacity：箭头是文字，动 transform 会在合成层里关次像素 AA，小字发虚 */
+   静息态就是设计稿的浅绿 #82bda2，波峰闪成饱和绿 #2f9e66（跟"发货出库"实心条同色）
+   —— 一道从上往下扫的深绿色"业务在流动"光波。
+   之前试过动 opacity（0.7↔1）：16px 小箭头差 30% 肉眼根本看不出来，改成动 color。
+   color 动画会重绘，但 14 个箭头合计不到 6000px²，每帧重绘成本可以忽略 */
 .flow-arrow {
   animation: flow-pulse 7s ease-in-out infinite;
   animation-delay: var(--wd, 0ms); /* 每个箭头在流程里的位置决定波到它的时刻 */
-  animation-fill-mode: backwards; /* delay 窗口里就压到 0% 帧的 0.7，否则亮着等波才跳暗 */
   animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
 }
 
-/* 一轮 7s：波从头走到尾 3.2s，剩下 3.8s 全静息，别一直闪 */
+/* 一轮 7s：波从头走到尾 3.2s，剩下 3.8s 全静息，别一直闪。
+   静息色等于默认色，delay 窗口没有跳变，不需要 fill-mode */
 @keyframes flow-pulse {
   0%,
   100% {
-    opacity: 0.7;
+    color: #82bda2;
   }
   5% {
-    opacity: 1; /* 350ms 亮到全亮 */
+    color: #2f9e66; /* 350ms 染成饱和绿 */
   }
   13% {
-    opacity: 0.7; /* 560ms 内暗回静息 */
+    color: #82bda2; /* 560ms 内退回浅绿 */
   }
 }
 
@@ -221,7 +223,7 @@ useReveal(root)
 }
 
 /* reduced-motion：infinite 动画必须自己关，全局 0.01ms 规则会把它变成疯狂空转；
-   关掉后回到默认 opacity 1，跟原型一致 */
+   关掉后回到默认浅绿，跟原型一致 */
 @media (prefers-reduced-motion: reduce) {
   .flow-arrow {
     animation: none;
