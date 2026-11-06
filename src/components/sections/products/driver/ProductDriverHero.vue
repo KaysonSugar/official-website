@@ -90,14 +90,28 @@ const chipPos = {
             }}</BaseButton>
           </div>
 
-          <!-- 三枚药丸标签：浅薄荷底 + 绿点，照原型 -->
-          <div class="reveal mt-[28px] flex flex-wrap gap-[12px]" style="--d: 320ms">
+          <!-- 三枚药丸标签：跟首页首屏的 feature-pill 同款——白底半透明 + 细描边 + 绿色线条勾，
+               hover 上浮 2px 出投影（样式在本文件 scoped 里） -->
+          <div class="reveal mt-[28px] flex flex-wrap gap-[10px]" style="--d: 320ms">
             <span
               v-for="pill in hero.pills"
               :key="pill"
-              class="flex items-center gap-[7px] rounded-full bg-[#e7f5ee] px-[14px] py-[7px] text-[12px] font-medium leading-[17px] text-[#13322a]"
+              class="feature-pill flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-sm font-medium text-ink-700"
             >
-              <span class="h-[6px] w-[6px] rounded-full bg-[#2fae85]" aria-hidden="true" />
+              <svg
+                class="h-[14px] w-[14px] shrink-0"
+                viewBox="0 0 14 14"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2.5 7.4 5.6 10.4 11.5 3.9"
+                  stroke="#2f9e6e"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
               {{ pill }}
             </span>
           </div>
@@ -235,6 +249,49 @@ const chipPos = {
 </template>
 
 <style scoped>
+/* 药丸 hover：跟首页 HomeHero 的 .feature-pill 一字不差地抄过来（scoped 样式不跨组件，
+   换个页面就得带一份）。上浮 2px + 投影用 ::after 淡入，不动布局 */
+.feature-pill {
+  position: relative;
+  transition:
+    transform 260ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 260ms ease,
+    background-color 260ms ease;
+}
+
+.feature-pill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit; /* 跟胶囊圆角走 */
+  box-shadow: 0 8px 18px -6px rgba(33, 50, 43, 0.3);
+  opacity: 0;
+  transition: opacity 260ms ease;
+  pointer-events: none;
+}
+
+.feature-pill:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-brand-300);
+  background-color: #fff;
+}
+
+.feature-pill:hover::after {
+  opacity: 1;
+}
+
+/* 关了动效就别浮了：位移本身也是"动"，只留颜色变化 */
+@media (prefers-reduced-motion: reduce) {
+  .feature-pill,
+  .feature-pill::after {
+    transition: none;
+  }
+
+  .feature-pill:hover {
+    transform: none;
+  }
+}
+
 /* 圆环呼吸：跟首页 hero 同款，4s 一个来回放大 3.5%。
    infinite 动画必须自己关 reduced-motion，全局规则会把它压成 0.01ms 疯狂空转 */
 @keyframes drv-breathe {
