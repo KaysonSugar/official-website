@@ -41,7 +41,7 @@ useReveal(root)
     <div class="container-page">
       <!-- 眉题：跟前几屏同款，11px 橙色宽字距 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ capabilities.eyebrow }}

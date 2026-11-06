@@ -17,11 +17,11 @@ import { siteConfig } from '@/config/site'
 const { workflow } = siteConfig
 
 // 顶部节点：底色极淡（原型 #fff8f2 / #f1faf5），边框是同色系浅一档；
-// BOM 节点白底但边框按用户要求统一橙色
+// plain 是白底节点，边框跟「生产计划」取同一个绿
 const nodeClass: Record<string, string> = {
   orange: 'border-[#fbe2dd] bg-[#fff8f2] text-[#b0602f]',
   green: 'border-[#dcebe6] bg-[#f1faf5] text-[#2f8a5f]',
-  plain: 'border-[#f0d5c4] bg-white text-ink-800',
+  plain: 'border-[#dcebe6] bg-white text-ink-800',
 }
 
 // 分支名条 / 浅色收尾条：比顶部节点深一档，边框跟着重一点
@@ -29,6 +29,12 @@ const branchClass: Record<string, string> = {
   orange: 'border-[#f0d5c4] bg-[#fff1e8] text-[#b0602f]',
   green: 'border-[#d0e5de] bg-[#e9f6ef] text-[#2f8a5f]',
   solid: 'border-transparent bg-[#2f9e66] text-white',
+}
+
+// 中间步骤：采购分支白底暖边，生产分支只换边框成生产计划的绿，底仍是白的
+const stepClass: Record<string, string> = {
+  orange: 'border-[#f0d5c4] bg-white text-ink-700',
+  green: 'border-[#dcebe6] bg-white text-ink-700',
 }
 
 const root = useTemplateRef<HTMLElement>('root')
@@ -40,7 +46,7 @@ useReveal(root)
     <div class="container-page">
       <!-- 眉题：跟前几屏同款，11px 橙色宽字距 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ workflow.eyebrow }}
@@ -119,7 +125,7 @@ useReveal(root)
               {{ branch.head }}
             </div>
 
-            <!-- 中间步骤：白底 + 极淡暖灰边框，条目之间一条 ↓ -->
+            <!-- 中间步骤：采购分支白底 + 暖灰边框；生产分支跟顶部生产计划同色（绿边浅绿底） -->
             <template v-for="(step, s) in branch.steps" :key="step">
               <span
                 class="my-[5px] text-center text-[16px] leading-[18px] text-[#82bda2]"
@@ -127,7 +133,8 @@ useReveal(root)
                 >↓</span
               >
               <div
-                class="reveal flex h-[36px] items-center justify-center rounded-[8px] border border-[#f0d5c4] bg-white text-[13px] leading-[18px] text-ink-700"
+                class="reveal flex h-[36px] items-center justify-center rounded-[8px] border text-[13px] leading-[18px]"
+                :class="stepClass[branch.tone]"
                 :style="{ '--d': `${680 + b * 80 + s * 60}ms` }"
               >
                 {{ step }}
@@ -150,9 +157,9 @@ useReveal(root)
           </div>
         </div>
 
-        <!-- 底部汇合提示：浅灰绿条 + 绿点开头 -->
+        <!-- 底部汇合提示：跟顶部生产计划同一套绿（#dcebe6 边框 / #f1faf5 底）+ 绿点开头 -->
         <div
-          class="reveal mt-[24px] flex items-center gap-[12px] rounded-[10px] bg-[#f2f5f3] px-[20px] py-[14px] lg:h-[48px] lg:py-0"
+          class="reveal mt-[24px] flex items-center gap-[12px] rounded-[10px] border border-[#dcebe6] bg-[#f1faf5] px-[20px] py-[14px] lg:h-[48px] lg:py-0"
           style="--d: 1040ms"
         >
           <span class="h-[6px] w-[6px] shrink-0 rounded-full bg-[#57d193]" aria-hidden="true" />

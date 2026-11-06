@@ -35,9 +35,9 @@ useReveal(root)
 <template>
   <section ref="root" class="bg-gradient-to-br from-[#0f241d] to-[#0b1a15] pb-[96px] pt-[88px]">
     <div class="container-page">
-      <!-- 眉题：深底上的浅绿 #86dfbf，和第二屏的橙眉题、第三屏的绿眉题都不同 -->
+      <!-- 眉题：品牌橙 #ff833f，全站统一（原来这块深底单独用浅绿） -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-[#86dfbf] sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ commitment.eyebrow }}

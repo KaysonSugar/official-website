@@ -26,9 +26,9 @@ useReveal(root)
   <!-- 深绿底：顶部更黑一点，往下微亮，都是原图采的色 -->
   <section ref="root" class="bg-gradient-to-b from-[#0d1c17] to-[#12211a] pb-[96px] pt-[96px]">
     <div class="container-page">
-      <!-- 眉题 / 标题 / 描述：深底浅绿 + 白 + 灰绿 -->
+      <!-- 眉题 / 标题 / 描述：深底品牌橙 #ff833f + 白 + 灰绿 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-[#6adbb0] sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ tour.eyebrow }}

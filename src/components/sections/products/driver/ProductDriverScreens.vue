@@ -63,7 +63,7 @@ const imgMap = {
             :alt="`${item.label}界面截图`"
             width="1220"
             height="1644"
-            class="mt-[14px] w-full select-none transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2"
+            class="mt-[14px] w-full select-none transition-transform duration-500 ease-out hover:-translate-y-2"
             loading="lazy"
           />
         </figure>

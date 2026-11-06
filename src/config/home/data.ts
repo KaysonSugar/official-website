@@ -209,7 +209,7 @@ export const lightweight: HomeLightweight = {
 }
 
 // 原型 04：平台功能结构。暗色分层图，layers 顺序即从上到下；
-// 业务层用 modules（四张棕卡），其余层用 blocks（等宽文字块）
+// 业务层用 modules（四张棕卡，层名 highlight 提亮），其余层用 blocks（等宽文字块）
 export const architecture: HomeArchitecture = {
   eyebrow: 'PLATFORM ARCHITECTURE / 平台架构',
   title: '平台功能结构',
@@ -219,6 +219,7 @@ export const architecture: HomeArchitecture = {
     { label: '用户层', blocks: ['货主', '货运公司', '司机', '平台管理'] },
     {
       label: '业务层',
+      highlight: true,
       modules: [
         {
           title: '货主模块',

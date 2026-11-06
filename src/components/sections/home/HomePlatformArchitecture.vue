@@ -13,7 +13,8 @@ import glowImg from '@/assets/home/images/glow.webp'
 /**
  * 第四屏：平台功能结构（原型 04）。
  * 暗色分层架构图，纯文字没图标：左边层名一列，右边每层一排块。
- * 业务层那排是四张棕色模块卡（模块名 + 能力清单），其余层是等高文字块。
+ * 业务层那排是四张棕色模块卡（模块名 + 能力清单），其余层是等高文字块；
+ * 这一层的层名也用同色系浅棕，跟其它层的灰绿层名拉开。
  */
 const { architecture } = siteConfig
 
@@ -64,10 +65,13 @@ useReveal(root)
           class="reveal flex flex-col gap-[8px] sm:flex-row sm:items-center sm:gap-[24px]"
           :style="{ '--d': `${240 + i * 80}ms` }"
         >
-          <!-- 层名：12px 灰绿，窄屏时整行占一行 -->
-          <span class="shrink-0 text-[12px] leading-[18px] text-night-400 sm:w-[64px]">{{
-            layer.label
-          }}</span>
+          <!-- 层名：12px 灰绿，窄屏时整行占一行；业务层那行带 highlight，层名换浅棕 #d9bd97，
+               卡片已经跟其它层同色，这行字是这层唯一的区分信号 -->
+          <span
+            class="shrink-0 text-[12px] leading-[18px] sm:w-[64px]"
+            :class="layer.highlight ? 'text-[#d9bd97]' : 'text-night-400'"
+            >{{ layer.label }}</span
+          >
 
           <!-- 普通层：等宽文字块，块数即列数（--cols 交给 scoped 样式做响应式）；
                资源服务层 5 块太挤，文字降到 13px -->
@@ -86,9 +90,10 @@ useReveal(root)
             </div>
           </div>
 
-          <!-- 业务层：四张棕卡，模块名白粗体，能力清单小字浅棕 -->
+          <!-- 业务层：四张棕卡，模块名白粗体，能力清单小字浅棕；
+               棕色只在业务层用，跟左侧浅棕层名配成一组 -->
           <div v-else-if="layer.modules" class="layer-grid flex-1" :style="{ '--cols': 4 }">
-            <!-- 四张棕卡各自延迟 70ms 错峰浮入：整层一起冒出来太呆板，
+            <!-- 四张卡各自延迟 70ms 错峰浮入：整层一起冒出来太呆板，
                  这里补上独立 --d（父层的淡入会叠一层，所以起始提前 40ms） -->
             <div
               v-for="(mod, mi) in layer.modules"

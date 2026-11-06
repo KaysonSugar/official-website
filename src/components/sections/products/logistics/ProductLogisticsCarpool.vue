@@ -25,9 +25,9 @@ useReveal(root)
 <template>
   <section ref="root" class="bg-gradient-to-b from-[#0d1c17] to-[#12211a] pb-[96px] pt-[96px]">
     <div class="container-page">
-      <!-- 眉题用橙色：这屏主题色是拼车橙，跟化工实录的绿眉题区分 -->
+      <!-- 眉题：品牌橙 #ff833f，全站统一；这屏主题色本身就是拼车橙 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-[#d98e5e] sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ carpool.eyebrow }}

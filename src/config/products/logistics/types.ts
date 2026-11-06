@@ -40,7 +40,7 @@ export interface LogisticsConfig {
   }
   /** 第二屏「免费货源广场」（原型 B 免费货源广场）：表格卡 DOM 重建（Cargo Card.png 已删） */
   cargo: {
-    /** 眉题（绿色） */
+    /** 眉题（品牌橙） */
     eyebrow: string
     /** 大标题三段：title 黑 + accent 橙（原型橙的是 5,000+）+ tail 黑 */
     title: string

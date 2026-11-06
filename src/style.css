@@ -104,15 +104,14 @@
     }
   }
 
-  /* 卡片悬浮：上浮 4px + 阴影浮现，第二屏 / 第三屏 / 产品页卡片共用。
-     阴影画在伪元素上只过渡它的 opacity——直接 transition box-shadow
-     每帧都重绘整块阴影，大屏下鼠标扫过一排卡片肉眼可见的卡顿 */
+  /* 卡片悬浮：卡片本体一动不动，只让投影浮现、微微散开。
+     为什么不再上浮：位移只能靠 transform，而 transform 会让卡片在过渡时临时进合成层，
+     Chrome 在合成层里关掉次像素抗锯齿 → 13~16px 的中文变灰发虚；不预建层则每次 hover
+     都要新建 / 销毁一层并重绘整卡，鼠标扫过一排卡就是一顿一顿的掉帧（top 位移更糟，每帧重排）。
+     所以把「上浮」换成「投影浮现 + 略扩散」：投影画在伪元素上，只过渡 opacity 和 transform，
+     纯合成动画，不重排、不重绘文字，字永远清晰、hover 不掉帧。 */
   .card-lift {
     position: relative;
-    will-change: transform; /* 提前建合成层，hover 第一帧不会抖一下 */
-    transition:
-      transform 0.3s ease,
-      border-color 0.3s ease;
   }
 
   .card-lift::after {
@@ -120,18 +119,18 @@
     position: absolute;
     inset: 0;
     border-radius: inherit; /* 跟卡片圆角走，别处改圆角这里不用管 */
-    box-shadow: 0 16px 36px -16px rgba(26, 26, 26, 0.16);
+    box-shadow: 0 18px 40px -16px rgba(26, 26, 26, 0.2);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transform: translateY(-3px) scale(0.985); /* 起手贴着卡片、略小，展开时往下沉一圈 */
+    transition:
+      opacity 0.24s ease,
+      transform 0.24s ease;
     pointer-events: none; /* 盖在内容上但不挡点击 */
-  }
-
-  .card-lift:hover {
-    transform: translateY(-4px);
   }
 
   .card-lift:hover::after {
     opacity: 1;
+    transform: translateY(0) scale(1);
   }
 
   /* 滚动进场：区块根元素被 useReveal 加上 .in 后，子元素一次性浮上来。

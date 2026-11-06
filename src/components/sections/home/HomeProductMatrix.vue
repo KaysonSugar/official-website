@@ -46,7 +46,7 @@ useReveal(root)
     <div class="container-page">
       <!-- 眉题：跟前几屏同款，11px 橙色宽字距 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ matrix.eyebrow }}
@@ -135,14 +135,11 @@ useReveal(root)
               class="mx-auto h-[64px] w-[64px] select-none drop-shadow-[0_6px_14px_rgba(26,26,26,0.08)]"
             />
 
-            <!-- 小胶囊标签：橙卡暖橙、绿卡浅绿 -->
+            <!-- 小胶囊标签：白底浮在卡面上，靠一道极淡投影跟白卡分开，
+                 只留文字色区分橙 / 绿（原型里就是白标签 + 彩字） -->
             <p
-              class="mt-[16px] inline-block rounded-full px-[12px] py-[4px] text-[12px] leading-[18px]"
-              :class="
-                card.tone === 'orange'
-                  ? 'bg-[#fbe9da] text-[#bc6a30]'
-                  : 'bg-[#dcf1e6] text-[#2f8f62]'
-              "
+              class="mt-[16px] inline-block rounded-full bg-white px-[12px] py-[4px] text-[12px] leading-[18px] shadow-[0_2px_6px_rgba(26,26,26,0.06)]"
+              :class="card.tone === 'orange' ? 'text-[#bc6a30]' : 'text-[#2f8f62]'"
             >
               {{ card.label }}
             </p>

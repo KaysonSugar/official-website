@@ -27,7 +27,7 @@ useReveal(root)
     <div class="container-page">
       <!-- 眉题 / 标题 / 描述 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-[#2fae85] sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ capability.eyebrow }}
@@ -44,7 +44,7 @@ useReveal(root)
         <article
           v-for="(card, i) in capability.cards"
           :key="card.title"
-          class="reveal rounded-[16px] bg-[#f7fbfa] p-[28px] transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2"
+          class="reveal rounded-[16px] bg-[#f7fbfa] p-[28px] transition-transform duration-500 ease-out hover:-translate-y-2"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
           <h3 class="text-[17px] font-bold leading-[24px] text-[#13322a]">{{ card.title }}</h3>

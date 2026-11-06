@@ -40,7 +40,7 @@ useReveal(root)
 
     <div class="container-page relative">
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-[#2fae85] sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ ledger.eyebrow }}
@@ -63,7 +63,7 @@ useReveal(root)
         <article
           v-for="(card, i) in ledger.cards"
           :key="card.title"
-          class="reveal rounded-[16px] border border-[#f3e9e0] bg-white p-[28px] shadow-[0_18px_44px_-30px_rgba(120,80,40,0.25)] transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2"
+          class="reveal rounded-[16px] border border-[#f3e9e0] bg-white p-[28px] shadow-[0_18px_44px_-30px_rgba(120,80,40,0.25)] transition-transform duration-500 ease-out hover:-translate-y-2"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
           <div class="flex items-center gap-[14px]">

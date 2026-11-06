@@ -32,7 +32,7 @@ const cardBg = (dark?: boolean) => (dark ? 'bg-[#13322a]' : 'bg-white')
     <div class="container-page">
       <!-- 眉题：绿色是这一屏的特例 -->
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-[#2fb188] sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ process.eyebrow }}

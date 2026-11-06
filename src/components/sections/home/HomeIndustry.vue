@@ -37,7 +37,7 @@ useReveal(root)
     <div class="container-page">
       <!-- 眉题：11px 橙色小字，宽字距，原型里的「英文 / 中文」一行 -->
       <p
-        class="reveal mt-[46px] text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
+        class="reveal mt-[46px] text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ industry.eyebrow }}

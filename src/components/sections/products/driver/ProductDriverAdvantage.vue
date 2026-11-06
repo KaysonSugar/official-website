@@ -51,13 +51,14 @@ const iconMap = {
           class="reveal flex flex-col items-center text-center"
           :style="{ '--d': `${i * 90}ms` }"
         >
-          <!-- 插画悬停轻微放大：8% 以内不糊，will-change 建合成层。
+          <!-- 插画悬停轻微放大：6% 以内不糊。纯图片没有文字，不需要防合成层，
+               也就别加 will-change——那是给有文字的卡片避坑用的反向操作。
                本屏在首屏以下，四张 120px 图标全部懒加载，不跟首屏抢带宽 -->
           <img
             :src="iconMap[item.icon]"
             alt=""
             aria-hidden="true"
-            class="h-[120px] w-[120px] select-none transition-transform duration-500 ease-out will-change-transform hover:scale-[1.06]"
+            class="h-[120px] w-[120px] select-none transition-transform duration-500 ease-out hover:scale-[1.06]"
             loading="lazy"
             decoding="async"
           />

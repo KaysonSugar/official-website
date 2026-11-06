@@ -27,7 +27,7 @@ useReveal(root)
   <section ref="root" class="bg-white pb-[64px] pt-[96px]">
     <div class="container-page">
       <p
-        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700 sm:tracking-[0.2em]"
+        class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ eyebrow }}

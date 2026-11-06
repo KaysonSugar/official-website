@@ -124,7 +124,7 @@ const chipPos = {
 
           <!-- 手机：白壳大圆角，内容全部明文假数据 -->
           <article
-            class="overflow-hidden rounded-[36px] bg-white p-[22px] shadow-[0_32px_80px_-32px_rgba(19,50,42,0.35)] ring-1 ring-black/5 transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2"
+            class="overflow-hidden rounded-[36px] bg-white p-[22px] shadow-[0_32px_80px_-32px_rgba(19,50,42,0.35)] ring-1 ring-black/5 transition-transform duration-500 ease-out hover:-translate-y-2"
           >
             <!-- 状态栏 -->
             <div class="flex items-center justify-between">

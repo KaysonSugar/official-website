@@ -128,6 +128,8 @@ export interface HomeArchitecture {
   layers: {
     /** 左侧的层名 */
     label: string
+    /** 层名用暖色点出（业务层专用）：跟这层的棕卡配成一组，六层里只有业务层是暖色 */
+    highlight?: boolean
     /** 普通层的文字块，块数即列数 */
     blocks?: string[]
     /** 业务层模块卡：模块名 + 括号里的能力清单 */
@@ -191,7 +193,7 @@ export interface HomeWorkflow {
   title: string
   /** 标题下的一句话说明 */
   desc: string
-  /** 顶部主流程节点，arrow 表示节点右侧跟一个 → 箭头 */
+  /** 顶部主流程节点，arrow 表示节点右侧跟一个 → 箭头；plain 是白底绿边节点 */
   topNodes: { text: string; tone: 'orange' | 'green' | 'plain'; arrow: boolean }[]
   /** 菱形判断块的文字 */
   judge: string

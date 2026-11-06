@@ -49,7 +49,7 @@ export interface SupportConfig {
   }
   /** 第三屏「实施流程」：七个节点上下交错挂在一条渐变轴上（原型 S2） */
   process: {
-    /** 眉题（这一屏是绿色，不是全站默认的橙） */
+    /** 眉题（全站统一品牌橙 #ff833f） */
     eyebrow: string
     /** 板块主标题 */
     title: string
@@ -78,7 +78,7 @@ export interface SupportConfig {
   }
   /** 第五屏「服务承诺」：深绿底四张交付准则卡 + 底部一行四个硬指标（原型 S4） */
   commitment: {
-    /** 眉题（绿色，同上一屏） */
+    /** 眉题（同上一屏，品牌橙） */
     eyebrow: string
     title: string
     desc: string

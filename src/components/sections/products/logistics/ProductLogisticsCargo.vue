@@ -31,7 +31,7 @@ const badgeTone = {
     <div class="container-page">
       <!-- 标题区 -->
       <div class="reveal max-w-[900px]">
-        <p class="text-[12px] font-semibold leading-[18px] tracking-[0.05em] text-mint-600 sm:tracking-[0.08em]">
+        <p class="text-[12px] font-semibold leading-[18px] tracking-[0.05em] text-brand-500 sm:tracking-[0.08em]">
           {{ cargo.eyebrow }}
         </p>
         <h2 class="mt-[14px] text-[28px] font-bold leading-[40px] text-ink-900 md:text-[36px] md:leading-[52px]">

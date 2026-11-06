@@ -191,9 +191,10 @@ onMounted(() => {
                内部 HomeWorkbench 用 rounded-[inherit] 跟随这里。
                hover 位移用 8px 不用 6px——6×1.25(缩放率)=7.5 物理像素，
                半像素位移会让文字被重采样，动画期间发虚发跳。
-               relative 之后必须带 will-change：提前建合成层，位移只合成不重绘 -->
+               这里不加 will-change：卡片里全是 10~13px 的小字，常驻合成层会让字变灰，
+               只在过渡那 0.5s 里临时合成，跑完 Chrome 自己把层丢掉，字回到彩色描边 -->
           <div
-            class="slide-in relative w-full overflow-hidden rounded-xl bg-[#eef2ef] shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] transition-transform duration-500 ease-out will-change-transform hover:-translate-y-2 lg:rounded-2xl"
+            class="slide-in relative w-full overflow-hidden rounded-xl bg-[#eef2ef] shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] transition-transform duration-500 ease-out hover:-translate-y-2 lg:rounded-2xl"
             :style="{ animationDelay: '150ms' }"
           >
             <HomeWorkbench />
