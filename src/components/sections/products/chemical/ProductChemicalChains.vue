@@ -13,13 +13,18 @@ import iconMaterial from '@/assets/products/chemical/icons/chain-material.webp'
 import iconFinance from '@/assets/products/chemical/icons/chain-finance.webp'
 
 /**
- * 三条主线（原型 P 三条主线）：左边三张链路卡（浅橙 / 浅绿 / 白），
+ * 三条主线（原型 Chain Rows.png + Flow Panel.png）：左边三张链路卡，
  * 右边 FLOW 订单驱动全流程面板。
  *
+ * 链路卡底色照原型采的极淡三色：暖白 #fff9f5 / 绿白 #f7fbf9 / 灰白 #fbfcfb，
+ * 层次感全靠图标自带的色底和标题色，卡片本身接近白。
+ * hover 跟首页同一套 card-lift：卡片不动，只有伪元素投影浮起来
+ * （不要用 hover:-translate-y-2，transform 过渡会进合成层，13~16px 中文发虚）。
+ *
  * FLOW 面板整体 DOM+SVG 重建（Flow Panel.png 是烘焙文字参考图，已删）。
- * 为了让菱形分叉线和跨支虚线的坐标算得准，面板内容用固定像素布局（412px 内宽），
- * 小屏放不下时横向滚动，不做响应式挤压——流程图挤压会断线。
- * 每张卡的编号/标题/箭头跟着 tone 变色：橙棕 #a3470f、绿 #137858、白卡黑。
+ * 连接线（竖线、分叉肘线、跨支虚线、全部箭头）收进一张固定坐标的 SVG，
+ * 节点是绝对定位的 DOM——之前用 span + calc 百分比拼线，渲染时隐时现；
+ * 现在画布固定 480×478，改节点数量/文案要同步改 SVG 里的坐标。
  */
 const { chains } = siteConfig.chemical
 
@@ -29,27 +34,58 @@ const iconMap = {
   finance: iconFinance,
 }
 
-// tone → 编号标题色 / 描述与链路行色 / 卡底
+// tone → 卡底 / 编号标题色 / 描述与链路行色（照 Chain Rows.png 采样）
 const toneClass = {
   orange: {
-    card: 'bg-[#ffebd8]',
-    head: 'text-[#a3470f]',
-    desc: 'text-[#5f5b52]',
-    chain: 'text-[#8a6a55]',
+    card: 'bg-[#fff9f5]',
+    head: 'text-[#c4520f]',
+    desc: 'text-[#6b7d75]',
+    chain: 'text-[#8a6a56]',
   },
   green: {
-    card: 'bg-[#eef7f1]',
-    head: 'text-[#137858]',
-    desc: 'text-[#4b5a53]',
-    chain: 'text-[#435f54]',
+    card: 'bg-[#f7fbf9]',
+    head: 'text-[#17795c]',
+    desc: 'text-[#6b7d75]',
+    chain: 'text-[#4e6f62]',
   },
   plain: {
-    card: 'bg-white ring-1 ring-[#ececec]',
-    head: 'text-ink-900',
-    desc: 'text-[#565e58]',
-    chain: 'text-[#4a544f]',
+    card: 'bg-[#fbfcfb]',
+    head: 'text-[#16261f]',
+    desc: 'text-[#6b7d75]',
+    chain: 'text-[#6b7d75]',
   },
 } as const
+
+// 主链节点配色（Flow Panel.png 采样）：销售订单橙、生产计划/物料清单绿
+const mainTone = {
+  orange: 'bg-[#fbeedf] text-[#b05a15]',
+  green: 'bg-[#e4f4ea] text-[#1c6b4d]',
+} as const
+
+// ---- FLOW 画布固定几何（与模板里 SVG 路径一一对应，改一处必改另一处）----
+const FLOW_W = 480
+const FLOW_H = 478
+const COL_W = 216 // 分支列宽
+const COL_GAP = 48 // 两列间隙（虚线回流走这里）
+const LEFT_CX = COL_W / 2 // 108，左列中心
+const RIGHT_CX = COL_W + COL_GAP + COL_W / 2 // 372，右列中心
+const MAIN_TOPS = [0, 60, 120] // 主链三节点 top（节点高 34）
+const DIAMOND_TOP = 184 // 菱形 150×76，底尖 260
+const BRANCH_TOP = 292 // 两支首节点 top（节点高 36，间隔 14 → 步进 50）
+
+// 主链节点绝对定位样式：水平居中
+function mainStyle(i: number) {
+  return { top: `${MAIN_TOPS[i]}px` }
+}
+
+// 分支节点定位：左列贴 0，右列从 COL_W+COL_GAP 起
+function branchStyle(i: number, side: 'left' | 'right') {
+  return {
+    top: `${BRANCH_TOP + i * 50}px`,
+    left: side === 'left' ? '0' : `${COL_W + COL_GAP}px`,
+    width: `${COL_W}px`,
+  }
+}
 
 const root = useTemplateRef<HTMLElement>('root')
 useReveal(root)
@@ -65,18 +101,21 @@ useReveal(root)
         {{ chains.eyebrow }}
       </p>
 
-      <h2 class="reveal mt-[24px] text-[32px] font-bold leading-[42px] text-ink-900" style="--d: 80ms">
+      <h2
+        class="reveal mt-[24px] text-[32px] font-bold leading-[42px] text-ink-900"
+        style="--d: 80ms"
+      >
         {{ chains.title }}
       </h2>
 
-      <!-- 左右按原型比例 736:520 分配宽度（flex-grow 比例），宽屏下 FLOW 面板跟着变宽 -->
+      <!-- 左右按原型比例 696:560 分配宽度（右面板内容固定 528px，窄屏横向滚动） -->
       <div class="mt-[36px] flex flex-col gap-[20px] lg:flex-row lg:items-stretch lg:gap-[24px]">
-        <!-- 左列：三张链路卡 -->
-        <div class="flex min-w-0 flex-1 flex-col gap-[16px] lg:flex-[736]">
+        <!-- 左列：三张链路卡，hover 用全局 card-lift（只浮投影，卡片不动） -->
+        <div class="flex min-w-0 flex-1 flex-col gap-[16px] lg:flex-[696]">
           <article
             v-for="(card, i) in chains.cards"
             :key="card.no"
-            class="reveal rounded-[12px] p-[22px] transition-transform duration-500 ease-out hover:-translate-y-2 lg:flex lg:flex-1 lg:gap-[18px]"
+            class="reveal card-lift rounded-[12px] p-[22px] lg:flex lg:flex-1 lg:gap-[18px]"
             :class="toneClass[card.tone].card"
             :style="{ '--d': `${240 + i * 90}ms` }"
           >
@@ -91,7 +130,8 @@ useReveal(root)
             />
             <div class="mt-[14px] lg:mt-0">
               <h3 class="text-[16px] font-bold leading-[24px]" :class="toneClass[card.tone].head">
-                <span class="mr-[10px] tabular-nums">{{ card.no }}</span>{{ card.title }}
+                <span class="mr-[10px] tabular-nums">{{ card.no }}</span
+                >{{ card.title }}
               </h3>
               <p class="mt-[10px] text-[13px] leading-[22px]" :class="toneClass[card.tone].desc">
                 {{ card.desc }}
@@ -104,111 +144,141 @@ useReveal(root)
           </article>
         </div>
 
-        <!-- 右列：FLOW 流程面板，占 520 份比例宽；窄屏（lg 以下）退化为 520px 起步横向滚动。
-             lg 放开 overflow 让投影完整显示（auto 会把出界阴影/描边切掉） -->
-        <div class="reveal overflow-x-auto pb-[4px] lg:min-w-0 lg:flex-[520] lg:overflow-visible" style="--d: 400ms">
-          <div class="min-w-[520px] rounded-[16px] border border-[#e2ebe4] bg-white p-[24px] shadow-[0_24px_60px_-28px_rgba(36,63,49,0.22)] lg:min-w-0">
-            <p class="text-[12px] font-semibold leading-[18px] text-[#1f6e4e]">{{ chains.flow.label }}</p>
+        <!-- 右列：FLOW 流程面板。内容固定 528px（480 画布 + 2×24 内边距），
+             lg 以下靠外层 overflow-x-auto 横向滚动，不做响应式挤压——流程图挤压会断线 -->
+        <div
+          class="reveal overflow-x-auto pb-[4px] lg:min-w-0 lg:flex-[560] lg:overflow-visible"
+          style="--d: 400ms"
+        >
+          <div
+            class="w-[528px] rounded-[16px] border border-[#e2ebe4] bg-white p-[24px] shadow-[0_24px_60px_-28px_rgba(36,63,49,0.22)]"
+          >
+            <p class="text-[12px] font-semibold leading-[18px] text-[#1f6e4e]">
+              {{ chains.flow.label }}
+            </p>
 
-            <!-- 主链：节点 + 竖向箭头（旁挂小字） -->
-            <div class="mt-[16px] flex flex-col items-center">
+            <!-- 画布：一张 SVG 画全部连接线（竖线/肘线/虚线/箭头），DOM 节点绝对定位其上 -->
+            <div class="relative mx-auto mt-[16px] h-[478px] w-[480px]">
+              <svg
+                class="absolute inset-0"
+                :width="FLOW_W"
+                :height="FLOW_H"
+                :viewBox="`0 0 ${FLOW_W} ${FLOW_H}`"
+                fill="none"
+                aria-hidden="true"
+              >
+                <!-- 主链三条竖线 + 实心三角箭头（线止于节点上沿 6px 处，三角尖正好点到节点） -->
+                <path d="M240 34V54" stroke="#a9c0b2" stroke-width="1.5" />
+                <polygon points="236,54 244,54 240,60" fill="#a9c0b2" />
+                <path d="M240 94V114" stroke="#a9c0b2" stroke-width="1.5" />
+                <polygon points="236,114 244,114 240,120" fill="#a9c0b2" />
+                <path d="M240 154V178" stroke="#a9c0b2" stroke-width="1.5" />
+                <polygon points="236,178 244,178 240,184" fill="#a9c0b2" />
+
+                <!-- 分叉：菱形底尖垂下 → 横线展开到两列中心 → 各自垂到首节点 -->
+                <path
+                  d="M240 260V278M108 278H372M108 278V286M372 278V286"
+                  stroke="#a9c0b2"
+                  stroke-width="1.5"
+                />
+                <polygon points="104,286 112,286 108,292" fill="#a9c0b2" />
+                <polygon points="368,286 376,286 372,292" fill="#a9c0b2" />
+
+                <!-- 分支内部连线：节点间隙 14px（328→342 / 378→392 / 428→442），按左 3 右 4 个节点手写 -->
+                <path d="M108 328V336M108 378V386" stroke="#a9c0b2" stroke-width="1.5" />
+                <polygon points="104,336 112,336 108,342" fill="#a9c0b2" />
+                <polygon points="104,386 112,386 108,392" fill="#a9c0b2" />
+                <path
+                  d="M372 328V336M372 378V386M372 428V436"
+                  stroke="#a9c0b2"
+                  stroke-width="1.5"
+                />
+                <polygon points="368,336 376,336 372,342" fill="#a9c0b2" />
+                <polygon points="368,386 376,386 372,392" fill="#a9c0b2" />
+                <polygon points="368,436 376,436 372,442" fill="#a9c0b2" />
+
+                <!-- 跨支虚线：物料入库右缘 → 中缝上行 → 汇入生成领料单左缘 -->
+                <path
+                  d="M216 410H240V310H258"
+                  stroke="#c0d5c7"
+                  stroke-width="1.5"
+                  stroke-dasharray="4 4"
+                />
+                <polygon points="258,306 258,314 264,310" fill="#c0d5c7" />
+              </svg>
+
+              <!-- 主链节点（绝对定位，水平居中）+ 线旁小字 -->
               <template v-for="(node, i) in chains.flow.main" :key="node.text">
                 <div
-                  class="rounded-[7px] px-[14px] py-[7px] text-center text-[13px] font-semibold leading-[20px]"
-                  :class="node.tone === 'orange' ? 'bg-[#fbeede] text-[#b05a15]' : 'bg-[#e5f4ea] text-[#1c6b4d]'"
+                  class="absolute left-1/2 flex h-[34px] -translate-x-1/2 items-center justify-center whitespace-nowrap rounded-[7px] px-[14px] text-[13px] font-semibold leading-[20px]"
+                  :class="mainTone[node.tone]"
+                  :style="mainStyle(i)"
                 >
                   {{ node.text }}
                 </div>
-                <div v-if="i < chains.flow.main.length" class="relative flex h-[30px] w-0 flex-col items-center justify-center">
-                  <span class="h-full w-[1.5px] bg-[#a9c0b2]" />
-                  <svg class="absolute bottom-[-1px] left-[-4px] h-[5px] w-[8px]" viewBox="0 0 8 5" aria-hidden="true">
-                    <path d="M0 0l4 5 4-5z" fill="#a9c0b2" />
-                  </svg>
-                  <span
-                    v-if="node.note"
-                    class="absolute left-[10px] top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] leading-[14px] text-[#9aab9f]"
-                  >
-                    {{ node.note }}
-                  </span>
-                </div>
+                <span
+                  v-if="node.note"
+                  class="absolute left-[248px] whitespace-nowrap text-[10px] leading-[14px] text-[#9aab9f]"
+                  :style="{ top: `${MAIN_TOPS[i] + 34 + 7}px` }"
+                >
+                  {{ node.note }}
+                </span>
               </template>
 
-              <!-- 菱形判断：SVG 压扁菱形 + 绝对居中文字 -->
-              <div class="relative mt-[2px] flex h-[86px] w-[150px] items-center justify-center">
-                <svg viewBox="0 0 150 86" class="absolute inset-0 h-full w-full" aria-hidden="true">
-                  <polygon points="75,0 150,43 75,86 0,43" fill="#14332a" />
-                </svg>
-                <span class="relative text-[13px] font-semibold leading-[18px] text-white">{{ chains.flow.decision }}</span>
-              </div>
-            </div>
-
-            <!-- 分叉线：菱形底尖 → 水平展开 → 两列中心，分支标签写在线上。
-                 面板宽度自适应，所以全部用 calc 百分比画：左列中心 = 25%-6px（列宽=(W-24)/2 的一半），中点 50% -->
-            <div class="relative mt-[4px] h-[50px]" aria-hidden="true">
-              <span class="absolute left-1/2 top-0 h-[16px] w-[1.5px] -translate-x-1/2 bg-[#a9c0b2]" />
-              <span class="absolute left-[calc(25%-6px)] right-[calc(25%-6px)] top-[16px] h-[1.5px] bg-[#a9c0b2]" />
-              <span class="absolute left-[calc(25%-6px)] top-[16px] h-[26px] w-[1.5px] -translate-x-1/2 bg-[#a9c0b2]" />
-              <svg class="absolute left-[calc(25%-6px)] bottom-0 h-[6px] w-[8px] -translate-x-1/2" viewBox="0 0 8 6" fill="none">
-                <path d="M0 0l4 6 4-6z" fill="#a9c0b2" />
-              </svg>
-              <span class="absolute right-[calc(25%-6px)] top-[16px] h-[26px] w-[1.5px] translate-x-1/2 bg-[#a9c0b2]" />
-              <svg class="absolute right-[calc(25%-6px)] bottom-0 h-[6px] w-[8px] translate-x-1/2" viewBox="0 0 8 6" fill="none">
-                <path d="M0 0l4 6 4-6z" fill="#a9c0b2" />
-              </svg>
-              <span class="absolute left-[calc(25%-6px)] top-0 -translate-x-1/2 whitespace-nowrap text-[11px] leading-[14px] text-[#c26116]">
+              <!-- 分支标签：骑在肘线上方，跟各列中心对齐 -->
+              <span
+                class="absolute -translate-x-1/2 whitespace-nowrap text-[11px] leading-[14px] text-[#c26116]"
+                :style="{ left: `${LEFT_CX}px`, top: '261px' }"
+              >
                 {{ chains.flow.branchLeft.label }}
               </span>
-              <span class="absolute right-[calc(25%-6px)] top-0 translate-x-1/2 whitespace-nowrap text-[11px] leading-[14px] text-[#2b6950]">
+              <span
+                class="absolute -translate-x-1/2 whitespace-nowrap text-[11px] leading-[14px] text-[#2b6950]"
+                :style="{ left: `${RIGHT_CX}px`, top: '261px' }"
+              >
                 {{ chains.flow.branchRight.label }}
               </span>
-            </div>
 
-            <!-- 两支分支：左支浅橙、右支白底绿边；物料入库到生成领料单有虚线回流。
-                 虚线同样用 calc 画：节点高 36 固定 → 左支末节点中心 y=158，右支首节点中心 y=18 -->
-            <div class="relative grid grid-cols-2 gap-[24px]">
-              <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-                <span class="absolute left-[calc(50%-12px)] top-[157px] h-[1.5px] w-[12px] border-t border-dashed border-[#c9d6cd]" />
-                <span class="absolute left-1/2 top-[18px] h-[140px] w-[1.5px] -translate-x-1/2 border-l border-dashed border-[#c9d6cd]" />
-                <span class="absolute left-1/2 top-[18px] h-[1.5px] w-[13px] border-t border-dashed border-[#c9d6cd]" />
-                <svg class="absolute left-1/2 top-[15px] h-[6px] w-[8px] translate-x-[9px]" viewBox="0 0 8 6" fill="none">
-                  <path d="M0 0l4 6 4-6z" fill="#c9d6cd" />
+              <!-- 菱形判断：SVG 压扁菱形 + 绝对居中文字 -->
+              <div
+                class="absolute left-1/2 h-[76px] w-[150px] -translate-x-1/2"
+                :style="{ top: `${DIAMOND_TOP}px` }"
+              >
+                <svg viewBox="0 0 150 76" class="absolute inset-0 h-full w-full" aria-hidden="true">
+                  <polygon points="75,0 150,38 75,76 0,38" fill="#14332a" />
                 </svg>
+                <span
+                  class="relative flex h-full items-center justify-center text-[13px] font-semibold leading-[18px] text-white"
+                >
+                  {{ chains.flow.decision }}
+                </span>
               </div>
 
-              <!-- 左支 -->
-              <div class="flex flex-col gap-[12px]">
-                <template v-for="(node, i) in chains.flow.branchLeft.nodes" :key="node.text">
-                  <div class="flex h-[36px] items-center justify-center rounded-[7px] bg-[#fceadd] text-[13px] font-semibold text-[#b9540f]">
-                    {{ node.text }}
-                  </div>
-                  <div v-if="i < chains.flow.branchLeft.nodes.length - 1" class="relative mx-auto flex h-[10px] w-0">
-                    <span class="h-full w-[1.5px] bg-[#a9c0b2]" />
-                    <svg class="absolute bottom-0 left-[-4px] h-[4px] w-[8px]" viewBox="0 0 8 4" aria-hidden="true">
-                      <path d="M0 0l4 4 4-4z" fill="#a9c0b2" />
-                    </svg>
-                    <span
-                      v-if="node.note"
-                      class="absolute left-[10px] top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] leading-[14px] text-[#9aab9f]"
-                    >
-                      {{ node.note }}
-                    </span>
-                  </div>
-                </template>
-              </div>
+              <!-- 左支：浅橙节点；第一段连线旁挂小字 -->
+              <template v-for="(node, i) in chains.flow.branchLeft.nodes" :key="node.text">
+                <div
+                  class="absolute flex h-[36px] items-center justify-center rounded-[7px] bg-[#fceadd] text-[13px] font-semibold text-[#b9540f]"
+                  :style="branchStyle(i, 'left')"
+                >
+                  {{ node.text }}
+                </div>
+                <span
+                  v-if="node.note"
+                  class="absolute whitespace-nowrap text-[10px] leading-[14px] text-[#9aab9f]"
+                  :style="{ left: `${LEFT_CX + 8}px`, top: `${BRANCH_TOP + i * 50 + 36}px` }"
+                >
+                  {{ node.note }}
+                </span>
+              </template>
 
-              <!-- 右支 -->
-              <div class="flex flex-col gap-[12px]">
-                <template v-for="(text, i) in chains.flow.branchRight.nodes" :key="text">
-                  <div class="flex h-[36px] items-center justify-center rounded-[7px] bg-white text-[13px] font-semibold text-[#1c6b4d] ring-1 ring-[#d9e6dd]">
-                    {{ text }}
-                  </div>
-                  <div v-if="i < chains.flow.branchRight.nodes.length - 1" class="relative mx-auto flex h-[10px] w-0">
-                    <span class="h-full w-[1.5px] bg-[#a9c0b2]" />
-                    <svg class="absolute bottom-[-1px] left-[-4px] h-[4px] w-[8px]" viewBox="0 0 8 4" aria-hidden="true">
-                      <path d="M0 0l4 4 4-4z" fill="#a9c0b2" />
-                    </svg>
-                  </div>
-                </template>
+              <!-- 右支：白底绿边节点 -->
+              <div
+                v-for="(text, i) in chains.flow.branchRight.nodes"
+                :key="text"
+                class="absolute flex h-[36px] items-center justify-center rounded-[7px] bg-white text-[13px] font-semibold text-[#1c6b4d] ring-1 ring-[#d9e6dd]"
+                :style="branchStyle(i, 'right')"
+              >
+                {{ text }}
               </div>
             </div>
           </div>
