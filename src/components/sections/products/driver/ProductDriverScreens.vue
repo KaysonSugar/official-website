@@ -8,26 +8,16 @@
 import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
-import screenWorkbench from '@/assets/products/driver/images/screen-workbench.webp'
-import screenMarket from '@/assets/products/driver/images/screen-market.webp'
-import screenLoad from '@/assets/products/driver/images/screen-load.webp'
-import screenRoute from '@/assets/products/driver/images/screen-route.webp'
+import DriverScreenMock from './DriverScreenMock.vue'
 
 /**
- * 核心界面一览（原型 E）：四列「编号 + 场景名 + 真机截图」。
- * 四张截图是真实界面导出图（text 烘焙在图里但这就是要展示的 App 本身），留图不重画。
+ * 核心界面一览（原型 E）：四列「编号 + 场景名 + 手机界面」。
+ * 四个界面不用导出位图，改用 DriverScreenMock 以 DOM 画（位图压到 1/4.5 后中文全糊）。
  */
 const { screens } = siteConfig.driver
 
 const root = useTemplateRef<HTMLElement>('root')
 useReveal(root)
-
-const imgMap = {
-  workbench: screenWorkbench,
-  market: screenMarket,
-  load: screenLoad,
-  route: screenRoute,
-} as const
 </script>
 
 <template>
@@ -49,13 +39,14 @@ const imgMap = {
         {{ screens.desc }}
       </p>
 
-      <!-- 四列截图：编号橙色小字 + 场景名。素材自带透明圆角，直接素图展示，
-           不加投影和描边——阴影会从透明圆角里透出来，看着像黑边 -->
-      <div class="mt-[36px] grid gap-[24px] sm:grid-cols-2 lg:grid-cols-4">
+      <!-- 四列手机界面：编号橙色小字 + 场景名 + DOM 画的界面。
+           卡片直接铺满列宽（列宽 338，之前收 6% 只有 274）——里面是手机界面小字，
+           图越小字越难认，这里把空间全给图；列间距 24→20 也是为了让四张图更大 -->
+      <div class="mt-[36px] grid gap-[20px] sm:grid-cols-2 lg:grid-cols-4">
         <figure
           v-for="(item, i) in screens.items"
           :key="item.no"
-          class="reveal px-[6%]"
+          class="reveal"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
           <figcaption class="flex items-baseline gap-[8px]">
@@ -64,20 +55,10 @@ const imgMap = {
             }}</span>
             <span class="text-[15px] font-bold leading-[21px] text-ink-900">{{ item.label }}</span>
           </figcaption>
-          <!-- 素材自带透明圆角（1220×1644），width/height 声明固有比例防布局抖动。
-               整列内容（编号 + 场景名 + 截图）在 figure 层统一收 6% 左右内边距：
-               截图铺满列宽太满，收一圈后左右各留 ~19px 白；
-               标题跟截图同一条左缘，不留在列边（留列边会跟图错开一截）。
-               hover 放大 2%：透明圆角吃不了矩形投影（会透出来当黑边），
-               缩放跟本页优势图标同一类反馈；260ms 起停都缓，跟首页 hover 同节奏 -->
-          <img
-            :src="imgMap[item.img]"
-            :alt="`${item.label}界面截图`"
-            width="1220"
-            height="1644"
-            class="mt-[14px] block w-full select-none transition-transform duration-[260ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.02]"
-            loading="lazy"
-          />
+          <!-- 界面用 DOM 画（DriverScreenMock）：固定 610×822 画布按列宽缩放，字形永远是矢量。
+               标题跟截图同一条左缘（figure 不再缩进，都在列左边缘）。
+               hover 由组件内的 card-lift 接管（投影浮现、卡片不动），跟本页其他卡片同一套 -->
+          <DriverScreenMock :kind="item.img" class="mt-[14px]" />
         </figure>
       </div>
     </div>

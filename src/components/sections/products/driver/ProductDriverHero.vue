@@ -46,7 +46,10 @@ const chipPos = {
 </script>
 
 <template>
-  <section ref="root" class="relative overflow-hidden bg-gradient-to-b from-[#fdf6f0] via-[#fefaf6] to-white pb-[72px] pt-[64px]">
+  <section
+    ref="root"
+    class="relative overflow-hidden bg-gradient-to-b from-[#fdf6f0] via-[#fefaf6] to-white pb-[72px] pt-[64px]"
+  >
     <!-- 背景装饰照原型：左半底色是暖奶油橙（渐变给出）。
          橙光晕按原型量：直径约 540、圆心在视口 39%（1440 下 ~560，落在"回程"药丸右下），
          竖直方向下半团沉到 hero 底边外被裁，顶边离 hero 顶约 118 —— 靠下才像从页面底下透上来的光 -->
@@ -74,12 +77,17 @@ const chipPos = {
             {{ page.title }}
           </h1>
 
-          <p class="reveal mt-[20px] max-w-[520px] text-[15px] leading-[28px] text-[#5e7169]" style="--d: 160ms">
+          <p
+            class="reveal mt-[20px] max-w-[520px] text-[15px] leading-[28px] text-[#5e7169]"
+            style="--d: 160ms"
+          >
             {{ page.desc }}
           </p>
 
           <div class="reveal mt-[32px]" style="--d: 240ms">
-            <BaseButton :href="siteConfig.contact.ctaHref" variant="primary" size="lg">{{ siteConfig.driver.ctaLabel }}</BaseButton>
+            <BaseButton :href="siteConfig.contact.ctaHref" variant="primary" size="lg">{{
+              siteConfig.driver.ctaLabel
+            }}</BaseButton>
           </div>
 
           <!-- 三枚药丸标签：浅薄荷底 + 绿点，照原型 -->
@@ -97,24 +105,26 @@ const chipPos = {
 
         <!-- 右列：手机演示，整屏 DOM 重建。鼠标进入上浮 8px（8×1.25=10 物理像素，整数不糊） -->
         <div class="reveal relative mx-auto w-[330px] pb-[24px]" style="--d: 200ms">
-          <!-- 薄荷光晕：照原型量直径约 570（=1.72 倍手机宽），圆心比手机中心左 35、低 30
-               （原型里左露 0.45 卡宽、右露 0.26，不是正居中），圆顶比卡顶高 8。
-               挂在这一列里跟着手机走 —— 早先按视口写死 right 定位，窗口一变卡就漂，左右露出的宽度对不上。
-               尺寸别往回减：520 时圆只盖到卡下部一半，卡片下半截两侧就空了（用户报"光晕看不全"） -->
+          <!-- 薄荷光晕：照原型量直径约 520（=1.58 倍手机宽），左侧露出约 0.36 卡宽
+               （圆心比手机中心左 35、竖直中心在卡高 44% 处），圆顶比卡顶高 8。
+               max-w-none 必须带：preflight 给 img 的 max-width:100% 会把它钳到 330 列宽，
+               之前 570 一直没生效就是这个原因，画面上只剩圆环在撑。
+               挂在这一列里跟着手机走 —— 早先按视口写死 right 定位，窗口一变卡就漂，左右露出的宽度对不上 -->
           <img
             :src="glowMint"
             alt=""
             aria-hidden="true"
-            class="pointer-events-none absolute left-[calc(50%-35px)] top-[-8px] hidden w-[570px] -translate-x-1/2 select-none lg:block"
+            class="pointer-events-none absolute left-[calc(50%-35px)] top-[-8px] hidden w-[520px] max-w-none -translate-x-1/2 select-none lg:block"
           />
-          <!-- 细圆环：照原型量宽约 1.73 倍手机宽（330→574）、圆心比手机中心左 35 低 36，
-               所以不是"顶弧贴卡顶"而是整圈包住卡：顶弧刚出卡顶 3px、底弧落卡底外 77px。
-               510 时代圈高只比卡高 13，上下几乎不露、只剩左右两条弧，看着像"环不完整"。
+          <!-- 细圆环：照原型量直径 1.48 倍手机宽（330→490）、圆心正对手机中线（原型环心 x
+               与一键接单按钮中心只差 1px，不要偏移）、竖直中心在卡高 43% 处——
+               顶弧出卡顶 ~10px，底弧藏在卡后（距卡底还差 ~20px），整圈只露上半圈，
+               之前 574 + 底部下垂的画法整圈都露，视觉比原型大一圈。
                手机端视口只有 390，用 min 收到屏宽内（留 24px 边距）不被裁；
                外层 span 定位，里层 img 只跑 scale 呼吸动画，transform 分层不互相覆盖 -->
           <span
             aria-hidden="true"
-            class="pointer-events-none absolute left-[calc(50%-35px)] top-[-3px] w-[min(574px,calc(100vw-24px))] -translate-x-1/2"
+            class="pointer-events-none absolute left-1/2 top-[-10px] w-[min(490px,calc(100vw-24px))] -translate-x-1/2"
           >
             <img :src="ringOuter" alt="" class="drv-breathe w-full select-none" />
           </span>
@@ -126,7 +136,11 @@ const chipPos = {
             class="absolute z-10 flex items-center gap-[8px] rounded-[10px] bg-white px-[16px] py-[9px] text-[12px] font-semibold leading-[17px] text-ink-900 shadow-[0_10px_28px_-10px_rgba(19,50,42,0.28)]"
             :class="chipPos[chip.pos]"
           >
-            <span class="h-[7px] w-[7px] rounded-full" :class="chip.dot === 'orange' ? 'bg-brand-500' : 'bg-[#2fae85]'" aria-hidden="true" />
+            <span
+              class="h-[7px] w-[7px] rounded-full"
+              :class="chip.dot === 'orange' ? 'bg-brand-500' : 'bg-[#2fae85]'"
+              aria-hidden="true"
+            />
             {{ chip.label }}
           </span>
 
@@ -137,11 +151,17 @@ const chipPos = {
           >
             <!-- 状态栏 -->
             <div class="flex items-center justify-between">
-              <span class="text-[13px] font-bold leading-[18px] text-ink-900">{{ hero.phone.statusLeft }}</span>
-              <span class="text-[11px] leading-[16px] text-[#9aa8a1]">{{ hero.phone.statusRight }}</span>
+              <span class="text-[13px] font-bold leading-[18px] text-ink-900">{{
+                hero.phone.statusLeft
+              }}</span>
+              <span class="text-[11px] leading-[16px] text-[#9aa8a1]">{{
+                hero.phone.statusRight
+              }}</span>
             </div>
 
-            <h3 class="mt-[16px] text-[20px] font-bold leading-[28px] text-ink-900">{{ hero.phone.title }}</h3>
+            <h3 class="mt-[16px] text-[20px] font-bold leading-[28px] text-ink-900">
+              {{ hero.phone.title }}
+            </h3>
 
             <!-- 两张货源卡：浅橙 / 浅薄荷 -->
             <div class="mt-[14px] flex flex-col gap-[12px]">
@@ -153,9 +173,14 @@ const chipPos = {
               >
                 <div class="flex items-baseline justify-between">
                   <span class="text-[16px] font-bold leading-[22px] text-ink-900">
-                    {{ order.from }} <span class="mx-[2px] text-[13px]" aria-hidden="true">→</span> {{ order.to }}
+                    {{ order.from }} <span class="mx-[2px] text-[13px]" aria-hidden="true">→</span>
+                    {{ order.to }}
                   </span>
-                  <span class="text-[15px] font-bold leading-[21px]" :class="orderTone[order.tone].price">{{ order.price }}</span>
+                  <span
+                    class="text-[15px] font-bold leading-[21px]"
+                    :class="orderTone[order.tone].price"
+                    >{{ order.price }}</span
+                  >
                 </div>
                 <p class="mt-[6px] text-[11px] leading-[16px] text-[#7d948a]">{{ order.meta }}</p>
               </div>
@@ -172,21 +197,33 @@ const chipPos = {
             <div class="mt-[14px] rounded-[14px] bg-[#f2f6f4] px-[16px] py-[12px]">
               <p class="text-[11px] leading-[16px] text-[#7d948a]">{{ hero.phone.income.label }}</p>
               <p class="mt-[3px] flex items-baseline gap-[10px]">
-                <span class="text-[20px] font-bold leading-[28px] tabular-nums text-[#1e9e74]">{{ hero.phone.income.value }}</span>
-                <span class="text-[14px] font-bold leading-[20px] text-[#1e9e74]">{{ hero.phone.income.delta }}</span>
+                <span class="text-[20px] font-bold leading-[28px] tabular-nums text-[#1e9e74]">{{
+                  hero.phone.income.value
+                }}</span>
+                <span class="text-[14px] font-bold leading-[20px] text-[#1e9e74]">{{
+                  hero.phone.income.delta
+                }}</span>
               </p>
             </div>
 
             <!-- 禁配提示条 -->
-            <div class="mt-[12px] flex items-center gap-[8px] rounded-[10px] bg-[#fdf1e8] px-[12px] py-[9px]">
+            <div
+              class="mt-[12px] flex items-center gap-[8px] rounded-[10px] bg-[#fdf1e8] px-[12px] py-[9px]"
+            >
               <span class="h-[6px] w-[6px] shrink-0 rounded-full bg-brand-500" aria-hidden="true" />
               <p class="text-[11px] leading-[16px] text-[#c2571a]">{{ hero.phone.notice }}</p>
             </div>
 
             <!-- 底部导航：圆点分隔 -->
-            <p class="mt-[16px] flex items-center justify-center gap-[10px] text-[11px] leading-[16px] text-[#9aa8a1]">
+            <p
+              class="mt-[16px] flex items-center justify-center gap-[10px] text-[11px] leading-[16px] text-[#9aa8a1]"
+            >
               <template v-for="(tab, i) in hero.phone.tabs" :key="tab">
-                <span v-if="i > 0" class="h-[3px] w-[3px] rounded-full bg-[#c6d2cc]" aria-hidden="true" />
+                <span
+                  v-if="i > 0"
+                  class="h-[3px] w-[3px] rounded-full bg-[#c6d2cc]"
+                  aria-hidden="true"
+                />
                 <span>{{ tab }}</span>
               </template>
             </p>
