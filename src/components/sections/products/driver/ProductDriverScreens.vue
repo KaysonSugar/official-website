@@ -33,10 +33,16 @@ const imgMap = {
 <template>
   <section ref="root" class="bg-white pb-[96px]">
     <div class="container-page">
-      <p class="reveal text-[12px] font-semibold leading-[18px] tracking-[0.08em] text-brand-500" style="--d: 0ms">
+      <p
+        class="reveal text-[12px] font-semibold leading-[18px] tracking-[0.08em] text-brand-500"
+        style="--d: 0ms"
+      >
         {{ screens.eyebrow }}
       </p>
-      <h2 class="reveal mt-[16px] text-[30px] font-bold leading-[40px] text-ink-900" style="--d: 80ms">
+      <h2
+        class="reveal mt-[16px] text-[30px] font-bold leading-[40px] text-ink-900"
+        style="--d: 80ms"
+      >
         {{ screens.title }}
       </h2>
       <p class="reveal mt-[12px] text-[14px] leading-[24px] text-[#6b6b6b]" style="--d: 160ms">
@@ -53,17 +59,20 @@ const imgMap = {
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
           <figcaption class="flex items-baseline gap-[8px]">
-            <span class="text-[12px] font-bold leading-[17px] tabular-nums text-brand-500">{{ item.no }}</span>
+            <span class="text-[12px] font-bold leading-[17px] tabular-nums text-brand-500">{{
+              item.no
+            }}</span>
             <span class="text-[15px] font-bold leading-[21px] text-ink-900">{{ item.label }}</span>
           </figcaption>
-          <!-- 素材自带透明圆角（1220×1644），width/height 声明固有比例防布局抖动；
-               鼠标进入上浮 8px（8×1.25=10 物理像素，整数不糊） -->
+          <!-- 素材自带透明圆角（1220×1644），width/height 声明固有比例防布局抖动。
+               hover 放大 2%：透明圆角吃不了矩形投影（会透出来当黑边），
+               缩放跟本页优势图标同一类反馈；260ms 起停都缓，跟首页 hover 同节奏 -->
           <img
             :src="imgMap[item.img]"
             :alt="`${item.label}界面截图`"
             width="1220"
             height="1644"
-            class="mt-[14px] w-full select-none transition-transform duration-500 ease-out hover:-translate-y-2"
+            class="mt-[14px] w-full select-none transition-transform duration-[260ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.02]"
             loading="lazy"
           />
         </figure>

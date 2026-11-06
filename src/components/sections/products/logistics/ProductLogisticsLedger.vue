@@ -58,12 +58,13 @@ useReveal(root)
         {{ ledger.desc }}
       </p>
 
-      <!-- 三张白卡：图标与标题同行，暖色细描边 -->
+      <!-- 三张白卡：图标与标题同行，暖色细描边。
+           hover 换全局 card-lift（投影浮现、卡片不动），跟首页同款 -->
       <div class="mt-[40px] grid gap-[24px] md:grid-cols-3">
         <article
           v-for="(card, i) in ledger.cards"
           :key="card.title"
-          class="reveal rounded-[16px] border border-[#f3e9e0] bg-white p-[28px] shadow-[0_18px_44px_-30px_rgba(120,80,40,0.25)] transition-transform duration-500 ease-out hover:-translate-y-2"
+          class="reveal card-lift rounded-[16px] border border-[#f3e9e0] bg-white p-[28px] shadow-[0_18px_44px_-30px_rgba(120,80,40,0.25)]"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
           <div class="flex items-center gap-[14px]">
@@ -83,3 +84,26 @@ useReveal(root)
     </div>
   </section>
 </template>
+
+<style scoped>
+/* 卡片 hover 时图标轻放大 6%：跟首页法规卡/功能卡同款两级反馈（投影浮现 + 图标放大）。
+   曲线用起停都缓的 0.4/0/0.2/1，260ms，全站 hover 统一节奏 */
+.card-lift img {
+  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-lift:hover img {
+  transform: scale(1.06);
+}
+
+/* 减弱动效：图标别缩放，只留投影浮现 */
+@media (prefers-reduced-motion: reduce) {
+  .card-lift img {
+    transition: none;
+  }
+
+  .card-lift:hover img {
+    transform: none;
+  }
+}
+</style>
