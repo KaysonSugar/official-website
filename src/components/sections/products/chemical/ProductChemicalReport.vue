@@ -32,11 +32,15 @@ const toneClass = {
     title: 'text-[#17795c]',
     check: 'bg-[#e2f3ea]',
     glyph: '#1c8a66',
+    // 标题下分隔线：比对勾圆底略深一档的淡绿，托得住但不抢
+    line: 'bg-[#d5ebdf]',
   },
   orange: {
     title: 'text-[#ff833f]',
     check: 'bg-[#ffeede]',
     glyph: '#e9611f',
+    // 淡橙线，跟资金/采购的暖色标题同族
+    line: 'bg-[#ffe3cf]',
   },
 } as const
 
@@ -89,8 +93,15 @@ useReveal(root)
             </h3>
           </div>
 
+          <!-- 标题下分隔线：1px 通到卡片内边距边缘，颜色跟 tone 走 -->
+          <div
+            class="mt-[14px] h-px w-full"
+            :class="toneClass[card.tone].line"
+            aria-hidden="true"
+          />
+
           <!-- 报表清单：浅色圆底 + 彩色对勾 -->
-          <ul class="mt-[20px] flex flex-col gap-[16px]">
+          <ul class="mt-[18px] flex flex-col gap-[16px]">
             <li v-for="item in card.items" :key="item" class="flex items-start gap-[12px]">
               <span
                 class="mt-[2px] flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full"
