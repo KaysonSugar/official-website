@@ -19,10 +19,12 @@ const { workflow } = siteConfig.driver
 const root = useTemplateRef<HTMLElement>('root')
 useReveal(root)
 
+// 卡片底色照原型取色：01 淡暖橙 / 02 03 近白 + 淡灰绿描边 / 04 极浅薄荷。
+// 02 03 的 #fbfcfb 跟纯白只差 4 个色阶，靠那圈 1px #e7ede9 描边才看得出边界，别去掉
 const cardTone = {
   orange: 'bg-[#fdf3ec]',
-  plain: 'bg-white ring-1 ring-ink-100',
-  green: 'bg-[#eef7f2]',
+  plain: 'bg-[#fbfcfb] ring-1 ring-[#e7ede9]',
+  green: 'bg-[#f7fbf9]',
 } as const
 </script>
 

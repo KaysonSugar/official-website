@@ -116,11 +116,12 @@ const chipPos = {
           >
             <img :src="ringOuter" alt="" class="drv-breathe w-full select-none" />
           </span>
-          <!-- 浮动徽标：白底圆角胶囊 + 彩点，DOM 重建（位图版已删） -->
+          <!-- 浮动徽标：白底圆角矩形 + 彩点，DOM 重建（位图版已删）。圆角 10px 不用 rounded-full：
+               原型是三块"小卡片"不是胶囊，全圆角会让它看着像标签条 -->
           <span
             v-for="chip in hero.chips"
             :key="chip.label"
-            class="absolute z-10 flex items-center gap-[8px] rounded-full bg-white px-[16px] py-[9px] text-[12px] font-semibold leading-[17px] text-ink-900 shadow-[0_10px_28px_-10px_rgba(19,50,42,0.28)]"
+            class="absolute z-10 flex items-center gap-[8px] rounded-[10px] bg-white px-[16px] py-[9px] text-[12px] font-semibold leading-[17px] text-ink-900 shadow-[0_10px_28px_-10px_rgba(19,50,42,0.28)]"
             :class="chipPos[chip.pos]"
           >
             <span class="h-[7px] w-[7px] rounded-full" :class="chip.dot === 'orange' ? 'bg-brand-500' : 'bg-[#2fae85]'" aria-hidden="true" />
