@@ -8,16 +8,25 @@
 /**
  * 站点内容的唯一出口。
  *
- * 文案按页面拆在同级模块文件里：brand（品牌/导航/首屏/CTA/页脚）、home（首页 11 屏）、
- * support、about、chemical、logistics、driver。这里只做拼装，不写内容。
+ * 内容按页面拆成同级目录，每个目录两个文件：types.ts 放字段形状、data.ts 放文案。
+ *   brand/                品牌、联系方式、导航、各页首屏文案、CTA、页脚
+ *   home/                 首页 11 屏
+ *   support/              服务支持
+ *   about/                关于我们
+ *   products/chemical/    产品线 - 化工生产
+ *   products/logistics/   产品线 - 物流调度
+ *   products/driver/      产品线 - 司机作业
  *
- * 组件统一从 '@/config/site' 引 siteConfig / getPage，不要直接引模块文件——
- * 整站形状（少一个模块就报红）由 types.ts 的 SiteConfig 保证。
- * 改文案去对应模块文件；改字段形状去那个模块自己的 interface。
+ * products/ 这一层跟 router 与 views/products/ 对齐，三条业务线挂在「产品矩阵」下，
+ * 不是一级导航。
+ *
+ * 这里只做拼装，不写内容。组件统一从 '@/config/site' 引 siteConfig / getPage，
+ * 不要直接引模块文件——整站形状（少一个模块就报红）由 types.ts 的 SiteConfig 保证。
+ * 改文案去 <模块>/data.ts；改字段形状去 <模块>/types.ts。
  */
 
 import type { PageIntro, SiteConfig } from './types'
-import { brand, contact, cta, footer, navItems, pages } from './brand'
+import { brand, contact, cta, footer, navItems, pages } from './brand/data'
 import {
   advantage,
   architecture,
@@ -30,12 +39,12 @@ import {
   matrix,
   service,
   workflow,
-} from './home'
-import { support } from './support'
-import { about } from './about'
-import { chemical } from './chemical'
-import { logistics } from './logistics'
-import { driver } from './driver'
+} from './home/data'
+import { support } from './support/data'
+import { about } from './about/data'
+import { chemical } from './products/chemical/data'
+import { logistics } from './products/logistics/data'
+import { driver } from './products/driver/data'
 
 /** 实际内容（当前为占位文案，上线前替换） */
 export const siteConfig: SiteConfig = {
@@ -71,7 +80,7 @@ export const siteConfig: SiteConfig = {
 export function getPage(to: string): PageIntro {
   const page = siteConfig.pages.find((item) => item.to === to)
   if (!page) {
-    throw new Error(`config/brand.ts 中缺少路径为 ${to} 的页面配置`)
+    throw new Error(`config/brand/data.ts 中缺少路径为 ${to} 的页面配置`)
   }
   return page
 }

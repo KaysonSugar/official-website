@@ -2,26 +2,15 @@
  * @Author: takaixin
  * @Email: takaixin@outlook.com
  * @StartDate: 2026.11.06
- * @Name: 关于我们页内容配置
+ * @Name: 关于我们页内容数据
  */
 
 /**
- * 关于我们页（/about）：简介、企业理念、公司使命；首屏文案在 brand.ts 的 pages 里。
- * 类型定义就在数据上方；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
+ * 关于我们页（/about）：简介、企业理念、公司使命；首屏文案在 brand/data.ts 的 pages 里。
+ * 字段形状在 ./types.ts；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
  */
 
-/** 关于我们页（原型 About Hero + S1~S3）：首屏插画背景、简介、企业理念、公司使命 */
-export interface AboutConfig {
-  /** 第二屏「简介」与第四屏「公司使命」同构：橙眉题 + 黑标题 + 若干段落，共用一个组件 */
-  intro: { eyebrow: string; title: string; paras: string[] }
-  mission: { eyebrow: string; title: string; paras: string[] }
-  /** 第三屏「企业理念」：四个圆底图标横排 */
-  philosophy: {
-    eyebrow: string
-    title: string
-    items: { icon: 'innovation' | 'persist' | 'execute' | 'excel'; label: string }[]
-  }
-}
+import type { AboutConfig } from './types'
 
 // 关于我们页（原型 About Hero + S1~S3）。首屏文案在 pages 的 /about 条目里，
 // 简介与使命同构（眉题+标题+段落）共用一个组件；段落逐字照原型，含原型原有的标点缺失。

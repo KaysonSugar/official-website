@@ -9,15 +9,15 @@
  * config 的类型总装。
  *
  * 这里只放两样东西：跨模块共用的导航 / 首屏类型（NavChild / NavItem / PageIntro），
- * 以及把 7 个模块文件的区块类型拼成的整站 SiteConfig。
- * 各区块自己的字段形状跟数据放在一起（brand.ts / home.ts / support.ts 等），
- * 改某个区块的字段就去那个模块文件，不用在这找。
+ * 以及把 7 个模块的区块类型拼成的整站 SiteConfig。
+ * 各区块自己的字段形状在各模块的 types.ts（brand/types.ts、home/types.ts ……），
+ * 文案在同目录的 data.ts。改某个区块的字段就去那个模块目录，不用在这找。
  *
  * 这里和各模块是双向引用的（模块要用 NavItem 等共享类型，这里要用各模块的区块类型），
  * 全部是 `import type`，编译后整句擦除，打包产物里不存在循环依赖。
  */
 
-import type { BrandInfo, ContactInfo, CtaConfig, FooterConfig } from './brand'
+import type { BrandInfo, ContactInfo, CtaConfig, FooterConfig } from './brand/types'
 import type {
   HomeAdvantage,
   HomeArchitecture,
@@ -30,12 +30,12 @@ import type {
   HomeMatrix,
   HomeService,
   HomeWorkflow,
-} from './home'
-import type { SupportConfig } from './support'
-import type { AboutConfig } from './about'
-import type { ChemicalConfig } from './chemical'
-import type { LogisticsConfig } from './logistics'
-import type { DriverConfig } from './driver'
+} from './home/types'
+import type { SupportConfig } from './support/types'
+import type { AboutConfig } from './about/types'
+import type { ChemicalConfig } from './products/chemical/types'
+import type { LogisticsConfig } from './products/logistics/types'
+import type { DriverConfig } from './products/driver/types'
 
 /** 二级导航项（悬停下拉里的子项） */
 export interface NavChild {
@@ -76,7 +76,7 @@ export interface PageIntro {
 /**
  * 站点整体配置
  *
- * 键的顺序与 site.ts 的拼装顺序一致。每个字段的类型来自对应模块文件，
+ * 键的顺序与 site.ts 的拼装顺序一致。每个字段的类型来自对应模块的 types.ts，
  * 少写一个键、多写一个键都会在 typecheck 时报红。
  */
 export interface SiteConfig {

@@ -2,66 +2,27 @@
  * @Author: takaixin
  * @Email: takaixin@outlook.com
  * @StartDate: 2026.11.06
- * @Name: 首页内容配置
+ * @Name: 首页内容数据
  */
 
 /**
  * 首页 11 屏（首屏到服务屏）的文案与演示数据。
- * 类型定义就在各区块上方；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
+ * 字段形状在 ./types.ts；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
  */
 
-/** 首页首屏 Hero（定稿原型 01：左文案 + 右后台看板） */
-export interface HomeHero {
-  /** 标题上方的法规对标胶囊 */
-  badge: string
-  /** 主标题第一行（黑） */
-  title: string
-  /** 主标题第二行（品牌橙） */
-  titleAccent: string
-  /** 标题下的一段说明 */
-  desc: string
-  /** 主按钮文案 */
-  primaryCta: string
-  /** 主按钮下方三个卖点胶囊 */
-  features: string[]
-  /** 首屏底部数字条；noCount 的条目不做递增、直接显示终值 */
-  stats: { value: string; label: string; noCount?: boolean }[]
-  /** 右侧工作台演示看板：整卡 DOM 重建（workbench-body*.webp 位图已删），演示数据照截图逐字转录 */
-  workbench: {
-    /** 侧栏品牌名与英文副标 */
-    brand: { name: string; sub: string }
-    /** 侧栏菜单文字，第一项为选中态；图标是组件里按序号硬编码的装饰 SVG */
-    menus: string[]
-    top: { title: string; search: string; date: string }
-    greet: { hello: string; sub: string; scope: string }
-    /** 四张统计卡；value 主数字、unit 是「万/亿」小尾巴，tone 决定卡底与图标 tile 配色 */
-    stats: {
-      label: string
-      value: string
-      unit: string
-      tone: 'orange' | 'mint' | 'gray' | 'amber'
-    }[]
-    trend: { title: string; tag: string }
-    /** 三个库存占比圆环，percent 直接驱动 stroke-dasharray */
-    donut: {
-      title: string
-      items: { label: string; percent: number; tone: 'orange' | 'green' | 'gray' }[]
-      total: string
-    }
-    production: {
-      title: string
-      note: string
-      headers: [string, string, string, string]
-      rows: {
-        no: string
-        product: string
-        qty: string
-        status: string
-        tone: 'orange' | 'amber' | 'green'
-      }[]
-    }
-  }
-}
+import type {
+  HomeHero,
+  HomeIndustry,
+  HomeLightweight,
+  HomeArchitecture,
+  HomeMatrix,
+  HomeCapabilities,
+  HomeWorkflow,
+  HomeCollab,
+  HomeAdvantage,
+  HomeCostEfficiency,
+  HomeService,
+} from './types'
 
 export const hero: HomeHero = {
   badge: '对标 2026 版《危险化学品安全法》',
@@ -135,20 +96,6 @@ export const hero: HomeHero = {
   },
 }
 
-/** 首页第二屏：行业背景与法规驱动（定稿原型 02，纯文字 + 四张法规卡片） */
-export interface HomeIndustry {
-  /** 标题上方的橙色眉题（英文 / 中文） */
-  eyebrow: string
-  /** 板块主标题 */
-  title: string
-  /** 标题下的一句话说明 */
-  desc: string
-  /** 四张法规卡片，icon 对应 assets/home/icons 下的素材名 */
-  cards: { icon: 'shield' | 'chip' | 'ban' | 'pin'; label: string; title: string; desc: string }[]
-  /** 底部「平台响应」提示条 */
-  note: string
-}
-
 // 原型 02 的四张卡片按新法条款顺序排，icon 名对应 assets/home/icons/ 下的 png
 export const industry: HomeIndustry = {
   eyebrow: 'INDUSTRY & COMPLIANCE / 行业背景与法规驱动',
@@ -181,44 +128,6 @@ export const industry: HomeIndustry = {
     },
   ],
   note: '平台响应：对标新法要求，将合规要求内置于系统流程，以全生命周期信息化手段，帮助企业轻松应对监管挑战，实现安全与合规一体化落地。',
-}
-
-/** 首页第三屏：轻量化平台（定稿原型 03，胶囊 + 痛点面板 + 两组卡片 + 底部绿条） */
-export interface HomeLightweight {
-  /** 标题上方的橙色眉题（英文 / 中文） */
-  eyebrow: string
-  /** 板块主标题 */
-  title: string
-  /** 标题下的一段说明 */
-  desc: string
-  /** 标题下四个卖点胶囊，icon 对应 assets/home/icons 下的素材名 */
-  tags: { icon: 'tag-erp' | 'tag-invest' | 'tag-speed' | 'tag-launch'; text: string }[]
-  /** 痛点面板：浅橙大底内嵌三张白卡 */
-  pain: {
-    /** 面板左上角的小标题 */
-    title: string
-    /** 三张痛点卡，编号 01/02/03 显示在卡片右上角 */
-    cards: {
-      icon: 'pain-price' | 'pain-staff' | 'pain-compliance'
-      no: string
-      title: string
-      desc: string
-    }[]
-  }
-  /** 两组「小标题 + 卡片阵列」，投入轻四卡 4 列、核心能力四卡 2×2 */
-  groups: {
-    /** 小标题 */
-    title: string
-    /** 卡片横排列数：4 竖卡一排 / 2 宽卡两排，窄屏自动降列 */
-    cols: 4 | 2
-    cards: {
-      icon: string
-      title: string
-      desc: string
-    }[]
-  }[]
-  /** 底部绿色提示条里的两条短句（左侧带勾图标） */
-  notes: string[]
 }
 
 // 原型 03：轻量化平台。icon 名即 assets/home/icons/ 下的文件名（不含 .png）
@@ -299,27 +208,6 @@ export const lightweight: HomeLightweight = {
   ],
 }
 
-/** 首页第四屏：平台功能结构（定稿原型 04，暗色分层架构图，纯文字无图标） */
-export interface HomeArchitecture {
-  /** 标题上方的橙色眉题（英文 / 中文） */
-  eyebrow: string
-  /** 板块主标题 */
-  title: string
-  /** 标题下的一句话说明 */
-  desc: string
-  /** 六层架构：普通层渲染等宽文字块，业务层渲染带能力清单的模块卡 */
-  layers: {
-    /** 左侧的层名 */
-    label: string
-    /** 普通层的文字块，块数即列数 */
-    blocks?: string[]
-    /** 业务层模块卡：模块名 + 括号里的能力清单 */
-    modules?: { title: string; desc: string }[]
-  }[]
-  /** 底部提示条（绿点开头的一句长文案） */
-  note: string
-}
-
 // 原型 04：平台功能结构。暗色分层图，layers 顺序即从上到下；
 // 业务层用 modules（四张棕卡），其余层用 blocks（等宽文字块）
 export const architecture: HomeArchitecture = {
@@ -360,36 +248,6 @@ export const architecture: HomeArchitecture = {
   note: '新法的监管逻辑是源头防控、全程监督、智能预警、永久溯源。平台按这项顶层组织功能，生产与运输共用同一套客户、数据与算法。',
 }
 
-/** 首页第五屏：三端业务运转模式（定稿原型 05，流程图整图 + 三张业务线卡片） */
-export interface HomeMatrix {
-  /** 标题上方的橙色眉题（英文 / 中文） */
-  eyebrow: string
-  /** 板块主标题 */
-  title: string
-  /** 标题下的两行说明 */
-  desc: string
-  /**
-   * 三张业务线卡片，顺序决定装饰素材（光斑 / 圆环）的取用
-   * href 填外部系统地址（新窗口打开）；司机端未上线则不填，点击提示正在上线
-   */
-  cards: {
-    /** 卡片顶部的品牌图标，对应 assets/home/images 下的素材名 */
-    icon: 'chemical' | 'logistics' | 'driver'
-    /** 配色：orange 化工卡（暖橙）/ green 物流与司机卡（薄荷绿） */
-    tone: 'orange' | 'green'
-    /** 标题上方的小胶囊标签 */
-    label: string
-    /** 卡片标题 */
-    title: string
-    /** 卡片正文 */
-    desc: string
-    /** 能力小胶囊，一行放不下自动换行 */
-    tags: string[]
-    /** 「了解 XX」的跳转地址，不填则点击后提示正在上线 */
-    href?: string
-  }[]
-}
-
 // 原型 05：三端业务运转模式。流程图是一整张透明底素材（matrix-flow.png），
 // 卡片的 href 是三个外部系统入口；司机端还没上线，故意不给 href
 export const matrix: HomeMatrix = {
@@ -424,22 +282,6 @@ export const matrix: HomeMatrix = {
       tags: ['找货接单', '在线报备', '电子回单', '合规提示', '安全培训'],
     },
   ],
-}
-
-/** 首页第六屏：核心功能详解（定稿原型 06，六张功能卡，icon 对应 assets/home/icons 的 fn-* 素材） */
-export interface HomeCapabilities {
-  /** 标题上方的橙色眉题（英文 / 中文） */
-  eyebrow: string
-  /** 板块主标题 */
-  title: string
-  /** 标题下的两行说明 */
-  desc: string
-  /** 六张功能卡，顺序即原型从左到右、从上到下 */
-  cards: {
-    icon: 'order' | 'bom' | 'stock' | 'purchase' | 'process' | 'sales'
-    title: string
-    desc: string
-  }[]
 }
 
 // 原型 06：核心功能详解。六张卡按业务流顺序排（订单 → BOM → 库存 → 采购 → 投产 → 销售），
@@ -482,29 +324,6 @@ export const capabilities: HomeCapabilities = {
   ],
 }
 
-/** 首页第七屏：生产主流程图（定稿原型 07，纯文字流程图，零图标素材） */
-export interface HomeWorkflow {
-  /** 标题上方的橙色眉题（英文 / 中文） */
-  eyebrow: string
-  /** 板块主标题 */
-  title: string
-  /** 标题下的一句话说明 */
-  desc: string
-  /** 顶部主流程节点，arrow 表示节点右侧跟一个 → 箭头 */
-  topNodes: { text: string; tone: 'orange' | 'green' | 'plain'; arrow: boolean }[]
-  /** 菱形判断块的文字 */
-  judge: string
-  /** 两条分支：head 分支名条，steps 中间步骤，tail 收尾条 */
-  branches: {
-    head: string
-    tone: 'orange' | 'green'
-    steps: string[]
-    tail: { text: string; tone: 'tinted' | 'solid' }
-  }[]
-  /** 底部汇合提示条文案 */
-  note: string
-}
-
 // 原型 07：生产主流程图。纯文字流程图无图标：顶部四节点 → 菱形判断 → 左右两条分支
 export const workflow: HomeWorkflow = {
   eyebrow: 'WORKFLOW / 生产主流程图',
@@ -536,40 +355,10 @@ export const workflow: HomeWorkflow = {
   note: '两条分支最终都汇入成品入库与发货环节：采购回来的原料进入投料生产，库存充足则直接领料投产 —— 全流程单据与批次数据自动联动，无需二次录入。',
 }
 
-// 原型 08：运输协同。环形闭环图直接用设计导出的整图（collab-flow.png），
-// 文字都在图里，这里只留标题区文案；面板背景色晕由组件画
-export interface HomeCollab {
-  /** 标题上方的橙色眉题（英文 / 中文） */
-  eyebrow: string
-  /** 板块主标题 */
-  title: string
-  /** 标题下的两行说明 */
-  desc: string
-}
-
 export const collab: HomeCollab = {
   eyebrow: 'COLLABORATION / 运输协同流程图',
   title: '运输协同',
   desc: '化工企业发布运单，货主端完成比价与合同确认，物流端派车，司机接单承运并回传在途状态。回单与结算数据回流至货主，形成完整闭环。',
-}
-
-/** 首页第九屏：全链路一体化优势（定稿原型 08-S8，暗色三行对照表 + 三张支撑卡，无图标） */
-export interface HomeAdvantage {
-  /** 标题上方的橙色眉题（英文 / 中文） */
-  eyebrow: string
-  /** 板块主标题 */
-  title: string
-  /** 三行参与方；化工企业痛点只有两条，两组条目各自独立、长度不要求相等 */
-  rows: {
-    name: string
-    pains: { title: string; desc: string }[]
-    solutions: { title: string; desc: string }[]
-  }[]
-  /** 平台层三张支撑卡；tone 决定编号颜色（原型 01/03 橙、02 绿） */
-  supports: { no: string; tone: 'orange' | 'green'; title: string; desc: string }[]
-  /** 底部核心观点条：左侧小标签 + 正文 */
-  noteTag: string
-  note: string
 }
 
 export const advantage: HomeAdvantage = {
@@ -639,20 +428,6 @@ export const advantage: HomeAdvantage = {
   note: '全流程记录在一处可查：管理层看得见瓶颈工序，合规岗调得出批次台账，客户查得到货物去向。',
 }
 
-/** 原型 09：降本增效。上排四张违规风险卡 + 下排一张四列收益宽卡 */
-export interface HomeCostEfficiency {
-  /** 标题上方的橙色眉题（英文 / 中文） */
-  eyebrow: string
-  /** 板块主标题 */
-  title: string
-  /** 标题下的一行说明 */
-  desc: string
-  /** 违规风险卡：title 黑标题、penalty 橙色处罚行、guard 灰色防控行 */
-  risks: { title: string; penalty: string; guard: string }[]
-  /** 收益宽卡四列：tone 决定顶部小色条颜色（原型前两列绿、后两列橙） */
-  gains: { tone: 'orange' | 'green'; title: string; desc: string }[]
-}
-
 // 原型 09：降本增效。处罚行按原型保留「处罚 5-50 万元 · 停产整顿」的写法，
 // 连接符用短横线；四张卡文字长短不一，靠栅格等宽对齐
 export const costEfficiency: HomeCostEfficiency = {
@@ -703,18 +478,6 @@ export const costEfficiency: HomeCostEfficiency = {
       desc: '透明、留痕、可追溯的服务体验，客户问得住，合作自然更稳、更长久。',
     },
   ],
-}
-
-/** 原型 10：我们的服务。三张服务卡，图标素材自带浅色圆角底 */
-export interface HomeService {
-  /** 标题上方的橙色眉题（英文 / 中文） */
-  eyebrow: string
-  /** 板块主标题 */
-  title: string
-  /** 标题下的一行说明 */
-  desc: string
-  /** 服务卡：icon 对应 icons 目录的短名，items 为小圆点列表 */
-  cards: { icon: 'implement' | 'custom' | 'support'; title: string; items: string[] }[]
 }
 
 // 原型 10：我们的服务。图标素材自带浅橙/浅绿圆角底，直接当图片用

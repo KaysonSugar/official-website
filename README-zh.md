@@ -49,16 +49,19 @@ wyd-official-website/
     │   │   # support/、about/。文件名全小写 kebab-case，图标进 icons/、大图进 images/；
     │   │   # 图片统一 webp（图标与二维码走无损，二维码有损压缩会出振铃伪影、影响扫码识别率）；
     │   │   # 目录里只要有素材就不需要 .gitkeep（空目录才拿它占位）
-    ├── config/
-    │   ├── site.ts             # 拼装出口：把各模块拼成 siteConfig，并提供 getPage()
-    │   ├── types.ts            # 跨模块共享类型（NavChild/NavItem/PageIntro）+ 整站形状 SiteConfig
-    │   ├── brand.ts            # 品牌、联系方式、导航 navItems、pages 路由文案、CTA、页脚
-    │   ├── home.ts             # 首页 11 屏文案
-    │   ├── support.ts          # 服务支持
-    │   ├── about.ts            # 关于我们
-    │   ├── chemical.ts         # 产品线 - 化工生产
-    │   ├── logistics.ts        # 产品线 - 物流调度
-    │   └── driver.ts           # 产品线 - 司机作业
+    ├── config/                     # 内容按页面分模块：每个目录 types.ts 放形状、data.ts 放文案
+    │   ├── site.ts                 # 拼装出口：把各模块拼成 siteConfig，并提供 getPage()
+    │   ├── types.ts                # 跨模块共享类型（NavChild/NavItem/PageIntro）+ 整站形状 SiteConfig
+    │   ├── brand/                  # 品牌、联系方式、导航、各页首屏文案、CTA、页脚
+    │   │   ├── types.ts            #   字段形状
+    │   │   └── data.ts             #   文案数据（下同，每个目录都是这两件）
+    │   ├── home/                   # 首页 11 屏
+    │   ├── support/                # 服务支持
+    │   ├── about/                  # 关于我们
+    │   └── products/               # 产品矩阵整组，与 views/products/ 同构
+    │       ├── chemical/           #   化工生产
+    │       ├── logistics/          #   物流调度
+    │       └── driver/             #   司机作业
     ├── router/
     │   └── index.ts            # 路由表（8 个页面 + 兜底）+ 切页落点 + 标题同步
     ├── views/                  # 路由页面：一页一个文件，只做区块编排
@@ -147,7 +150,7 @@ npm run format
 
 > ⚠️ **这一层已经定稿，不要再改回锚点单页。**
 > 后续所有工作（铺首页 16 个区块、补内页正文、加新页面）都在这个骨架上做，不再讨论「要不要拆页」。
-> 唯一允许的结构性变更是**新增页面**（往 `router/index.ts` 加一条 + `config/brand.ts` 的 `pages` 加一条记录）。
+> 唯一允许的结构性变更是**新增页面**（往 `router/index.ts` 加一条 + `config/brand/data.ts` 的 `pages` 加一条记录）。
 
 **一级导航 4 项（首页 / 产品矩阵 / 服务支持 / 关于我们），其中「产品矩阵」带二级下拉，共 8 个路由页**，点击切换页面，页面内部各自滚动。
 
@@ -164,7 +167,7 @@ npm run format
 | 一级     | 服务支持 | `/solutions`          | `SolutionsView.vue`        | 定稿导航改叫服务支持，页面待补 |
 | 一级     | 关于我们 | `/about`              | `AboutView.vue`            | 暂无画板（文案占位）           |
 
-导航数据源是 `config/brand.ts` 的 `navItems`：一级项 `{ label, to }`，带下拉的再挂 `children: NavChild[]`。`to` 必须与 `router/index.ts` 的 `path` 完全一致，改路由要两边同步；三条业务线在 `productLines` 里定义一次，导航下拉与 `/products` 页的卡片同源。
+导航数据源是 `config/brand/data.ts` 的 `navItems`：一级项 `{ label, to }`，带下拉的再挂 `children: NavChild[]`。`to` 必须与 `router/index.ts` 的 `path` 完全一致，改路由要两边同步；三条业务线在 `productLines` 里定义一次，导航下拉与 `/products` 页的卡片同源。
 
 ### 内容完成度（骨架已就绪，正文待铺）
 
@@ -187,7 +190,7 @@ npm run format
 
 ### 底部行动号召（CtaBanner）
 
-8 个页面共用同一个橙色横幅（原型首页第 15 区块），文案在 `config/brand.ts` 的 `cta`：
+8 个页面共用同一个橙色横幅（原型首页第 15 区块），文案在 `config/brand/data.ts` 的 `cta`：
 
 - 底色用 `brand-700`（`#d25413`）而非主色 `brand-500`：`brand-500` 上白字对比度只有 **2.6:1**，正文会发虚；`brand-700` 上白字 **4.17:1**，仍是同一支橙色的深色阶。
 - 主按钮用 `BaseButton` 的 `light` 变体（白底 + `brand-700` 字），在橙底上对比最高。
@@ -222,7 +225,7 @@ npm run format
 
 数据来源分两处：
 
-- 文案（描述 / 理念 / 三组链接 / 版权 / 定位语）在 `config/brand.ts` 的 `footer`
+- 文案（描述 / 理念 / 三组链接 / 版权 / 定位语）在 `config/brand/data.ts` 的 `footer`
 - 四张二维码与标签在 `SiteFooter.vue` 里就地定义 —— 图片必须 `import` 才能被 Vite 处理，标签跟着图走，换图时不会漏改文案
 
 ### 导航下拉（产品矩阵）
@@ -512,7 +515,7 @@ gzip 反而小了 2.8 kB —— 合并后重复的 class 字符串与模板结�
 ### 其他约定
 
 - **路径别名**：`@` 指向 `src/` 目录（`vite.config.ts` 与 `tsconfig.app.json` 已同步配置）
-- **文案配置化**：页面文案按页面拆在 `src/config/{brand,home,support,about,chemical,logistics,driver}.ts`，组件统一从 `src/config/site.ts` 的 `siteConfig` 取，改内容无需改动组件。新增/改名模块时只动 `site.ts` 的拼装对象，`SiteConfig` 会漏项报红
+- **文案配置化**：页面内容按页面分目录放在 `src/config/<模块>/data.ts`，字段形状在同目录 `types.ts`；组件统一从 `src/config/site.ts` 的 `siteConfig` 取，改内容无需改动组件。新增或改名模块时只动 `site.ts` 的拼装对象，`SiteConfig` 会漏项报红
 - **导航高亮**：直接比对当前路由 `route.path` 与 `navItems[].to`，命中项加粗；不再用滚动监听（原 `useActiveSection` 已随改版移除）
 - **锚点偏移**：页内锚点靠 `scrollBehavior` 的 `top: 84` 让出顶栏；`scroll-padding-top` 与区块 `scroll-mt-16 / lg:scroll-mt-[84px]` 作为 CSS 侧兜底，与顶栏高度（64 / 84px）对齐
 - **滚动动效**：`useReveal` 实现进场淡入，只触发一次；卡片通过 `delay` 错峰 100ms
