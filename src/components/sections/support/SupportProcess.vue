@@ -66,16 +66,17 @@ const dotWave = [300, 750, 1230, 1680, 2130, 2610, 3050]
           class="absolute left-0 right-0 top-[153px] z-0 h-[3px] rounded-full bg-gradient-to-r from-[#dfe0d4] via-[#c4e4d5] via-55% to-[#2fb188]"
           aria-hidden="true"
         />
-        <!-- 光带：跟轴线同位置同粗细的一层裁切容器，里面 18% 宽的白色柔光从左推到右。
-             裁切容器保证光不会跑到轴末端箭头外面 -->
+        <!-- 光带：裁切层比轴高（19px），好让光束的绿色辉光上下露出 8px，光本身仍是 3px。
+             不加这层高度，box-shadow 会被 3px 的裁切框切平，辉光就没了 -->
         <div
-          class="pointer-events-none absolute left-0 right-0 top-[153px] z-0 h-[3px] overflow-hidden rounded-full"
+          class="pointer-events-none absolute left-0 right-0 top-[145px] z-0 flex h-[19px] items-center overflow-hidden rounded-full"
           aria-hidden="true"
         >
-          <!-- w-[18%] 是相对容器宽度的；位移写自身宽度百分比（456%×18%≈82%），
-               跟容器实际宽度无关，窄屏宽屏共用一份 keyframes -->
+          <!-- w-[12%] 相对容器宽；位移写自身宽度百分比（733%×12%≈88%），
+               跟容器实际宽度无关，窄屏宽屏共用一份 keyframes。
+               两端渐隐 + 绿色辉光，浅底上才看得出是一道光在走 -->
           <span
-            class="proc-sweep block h-full w-[18%] rounded-full bg-gradient-to-r from-transparent via-white to-transparent"
+            class="proc-sweep block h-[3px] w-[12%] rounded-full bg-gradient-to-r from-transparent via-white to-transparent shadow-[0_0_10px_2px_rgba(47,177,136,0.55)]"
           />
         </div>
 
@@ -139,7 +140,7 @@ const dotWave = [300, 750, 1230, 1680, 2130, 2610, 3050]
                 :style="{
                   '--wd': `${dotWave[i] ?? 0}ms`,
                   '--dot-bg': step.dark ? '#13322a' : '#ffffff',
-                  '--dot-on': step.dark ? '#23604f' : '#e7f3ec',
+                  '--dot-on': step.dark ? '#2f8a72' : '#bfe8d3',
                 }"
               >
                 {{ step.no }}
@@ -268,7 +269,7 @@ const dotWave = [300, 750, 1230, 1680, 2130, 2610, 3050]
   }
   46%,
   100% {
-    transform: translateX(456%); /* 456%×18% ≈ 82% 容器宽，正好停在轴右端 */
+    transform: translateX(733%); /* 733%×12% ≈ 88% 容器宽，正好停在轴右端 */
     opacity: 0; /* 到终点就灭，别停在箭头上一直亮 */
   }
 }
