@@ -17,9 +17,6 @@ import HomeTransportCollab from '@/components/sections/home/HomeTransportCollab.
 import HomeAdvantage from '@/components/sections/home/HomeAdvantage.vue'
 import HomeCostEfficiency from '@/components/sections/home/HomeCostEfficiency.vue'
 import HomeService from '@/components/sections/home/HomeService.vue'
-
-// 首页 11 个内容模块全齐（首屏到服务屏），底下接预约演示横幅；
-// 页脚不在首页里，在 App.vue 挂的 SiteFooter
 </script>
 
 <template>

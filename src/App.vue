@@ -9,12 +9,6 @@ import { RouterView } from 'vue-router'
 import BackToTop from '@/components/ui/BackToTop.vue'
 import SiteHeader from '@/components/layout/SiteHeader.vue'
 import SiteFooter from '@/components/layout/SiteFooter.vue'
-
-/**
- * 根组件：顶栏 + 路由出口 + 页脚
- *
- * 顶栏与页脚所有页面共用，切换路由不会重建；内容由 RouterView 按路由表渲染。
- */
 </script>
 
 <template>
