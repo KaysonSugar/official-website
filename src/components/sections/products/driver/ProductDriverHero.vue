@@ -107,12 +107,14 @@ const chipPos = {
             aria-hidden="true"
             class="pointer-events-none absolute left-[calc(50%-35px)] top-[-8px] hidden w-[570px] -translate-x-1/2 select-none lg:block"
           />
-          <!-- 细圆环：1345 设计稿量出直径约 1.54 倍手机宽、与手机同心（顶弧贴手机顶、左右各探出约 70px）。
+          <!-- 细圆环：照原型量宽约 1.73 倍手机宽（330→574）、圆心比手机中心左 35 低 36，
+               所以不是"顶弧贴卡顶"而是整圈包住卡：顶弧刚出卡顶 3px、底弧落卡底外 77px。
+               510 时代圈高只比卡高 13，上下几乎不露、只剩左右两条弧，看着像"环不完整"。
                手机端视口只有 390，用 min 收到屏宽内（留 24px 边距）不被裁；
                外层 span 定位，里层 img 只跑 scale 呼吸动画，transform 分层不互相覆盖 -->
           <span
             aria-hidden="true"
-            class="pointer-events-none absolute left-1/2 top-0 w-[min(510px,calc(100vw-24px))] -translate-x-1/2"
+            class="pointer-events-none absolute left-[calc(50%-35px)] top-[-3px] w-[min(574px,calc(100vw-24px))] -translate-x-1/2"
           >
             <img :src="ringOuter" alt="" class="drv-breathe w-full select-none" />
           </span>
