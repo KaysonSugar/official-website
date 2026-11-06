@@ -54,15 +54,25 @@ const dotLeft = ['3.5%', '38%', '62%']
 </script>
 
 <template>
-  <!-- 看板根：container 查询基准，内部尺寸全用 cqw。深绿主底由主区承担，根只负责圆角裁切 -->
-  <div class="relative w-full overflow-hidden rounded-[2cqw] bg-[#eef2ef] [container-type:inline-size]">
+  <!-- 看板根：container 查询基准，内部尺寸全用 cqw。深绿主底由主区承担，根只负责圆角裁切。
+       圆角用 inherit 跟随外层 .slide-in —— 投影是从外层那个圆角矩形发出来的，
+       两层半径不一致时拐角外侧会漏出一道白月牙 -->
+  <div
+    class="relative w-full overflow-hidden rounded-[inherit] bg-[#eef2ef] [container-type:inline-size]"
+  >
     <div class="flex">
       <!-- 侧栏：深绿黑底，宽 14.3%（600 基准下 86px） -->
-      <aside class="flex w-[15.6cqw] shrink-0 flex-col items-center bg-[#1f2d27] pb-[3cqw] pt-[3.4cqw]">
+      <aside
+        class="flex w-[15.6cqw] shrink-0 flex-col items-center bg-[#1f2d27] pb-[3cqw] pt-[3.4cqw]"
+      >
         <!-- 品牌：橙色 logo mark + 名称 + 英文副标 -->
         <img :src="logoMark" alt="" aria-hidden="true" class="w-[4.4cqw] select-none" />
-        <p class="mt-[1.6cqw] text-[1.83cqw] font-bold leading-none text-white">{{ wb.brand.name }}</p>
-        <p class="mt-[1cqw] text-[0.92cqw] leading-none tracking-[0.14em] text-[#8fa39a]">{{ wb.brand.sub }}</p>
+        <p class="mt-[1.6cqw] text-[1.83cqw] font-bold leading-none text-white">
+          {{ wb.brand.name }}
+        </p>
+        <p class="mt-[1cqw] text-[0.92cqw] leading-none tracking-[0.14em] text-[#8fa39a]">
+          {{ wb.brand.sub }}
+        </p>
 
         <!-- 菜单：第一项橙底白字选中，其余灰绿；行高 4.4cqw 圆角胶囊 -->
         <nav class="mt-[2.6cqw] flex w-full flex-col gap-[0.5cqw] px-[1.2cqw]">
@@ -98,7 +108,15 @@ const dotLeft = ['3.5%', '38%', '62%']
           <span
             class="ml-auto flex h-[4.17cqw] w-[25cqw] items-center gap-[1cqw] rounded-full bg-[#f1f4f2] px-[1.7cqw]"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="#93aca1" stroke-width="2" stroke-linecap="round" aria-hidden="true" class="w-[1.9cqw]">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#93aca1"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+              class="w-[1.9cqw]"
+            >
               <circle cx="11" cy="11" r="6.5" />
               <path d="m20 20-4.2-4.2" />
             </svg>
@@ -107,32 +125,56 @@ const dotLeft = ['3.5%', '38%', '62%']
           <span class="text-[1.67cqw] leading-none text-[#5e7169]">{{ wb.top.date }}</span>
           <!-- 铃铛：右上橙点 -->
           <span class="relative">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#41544b" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" class="w-[2.2cqw]">
-              <path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9M10 20a2.2 2.2 0 0 0 4 0" />
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#41544b"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              aria-hidden="true"
+              class="w-[2.2cqw]"
+            >
+              <path
+                d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9M10 20a2.2 2.2 0 0 0 4 0"
+              />
             </svg>
-            <i class="absolute right-0 top-0 h-[0.8cqw] w-[0.8cqw] rounded-full bg-brand-500" aria-hidden="true" />
+            <i
+              class="absolute right-0 top-0 h-[0.8cqw] w-[0.8cqw] rounded-full bg-brand-500"
+              aria-hidden="true"
+            />
           </span>
-          <span class="flex h-[3.33cqw] w-[3.33cqw] items-center justify-center rounded-full bg-brand-500 text-[1.5cqw] font-semibold leading-none text-white">王</span>
+          <span
+            class="flex h-[3.33cqw] w-[3.33cqw] items-center justify-center rounded-full bg-brand-500 text-[1.5cqw] font-semibold leading-none text-white"
+            >王</span
+          >
         </header>
 
         <div class="px-[2.4cqw] pb-[2.4cqw]">
           <!-- 问候行 + 右侧公司范围胶囊 -->
           <div class="mt-[2.4cqw] flex items-center justify-between">
             <p>
-              <span class="text-[2.33cqw] font-bold leading-none text-[#21322b]">{{ wb.greet.hello }}</span>
-              <span class="ml-[1.4cqw] text-[1.75cqw] leading-none text-[#93aca1]">{{ wb.greet.sub }}</span>
+              <span class="text-[2.33cqw] font-bold leading-none text-[#21322b]">{{
+                wb.greet.hello
+              }}</span>
+              <span class="ml-[1.4cqw] text-[1.75cqw] leading-none text-[#93aca1]">{{
+                wb.greet.sub
+              }}</span>
             </p>
-            <span class="rounded-full bg-white px-[1.7cqw] py-[1cqw] text-[1.58cqw] leading-none text-[#41544b]">
+            <span
+              class="rounded-full bg-white px-[1.7cqw] py-[1cqw] text-[1.58cqw] leading-none text-[#41544b]"
+            >
               {{ wb.greet.scope }}
             </span>
           </div>
 
-          <!-- 四张统计卡：彩底 + 右上图标 tile，数字深绿黑、单位小字 -->
+          <!-- 四张统计卡：彩底 + 右上图标 tile，数字深绿黑、单位小字。
+               后三张底色很浅（合同收款的灰底几乎等于页面底色），只靠底色分不出是一张卡，
+               所以统一加一层极淡的投影把卡片从底上「托起来」，四张保持一致 -->
           <div class="mt-[2cqw] grid grid-cols-4 gap-[1.5cqw]">
             <div
               v-for="s in wb.stats"
               :key="s.label"
-              class="rounded-[1.67cqw] p-[1.9cqw]"
+              class="rounded-[1.67cqw] p-[1.9cqw] shadow-[0_1.2cqw_2.6cqw_-0.6cqw_rgba(33,50,43,0.16)]"
               :class="toneCls[s.tone].card"
             >
               <div class="flex items-start justify-between">
@@ -141,7 +183,17 @@ const dotLeft = ['3.5%', '38%', '62%']
                   class="flex h-[4.33cqw] w-[4.33cqw] items-center justify-center rounded-[1.2cqw]"
                   :class="toneCls[s.tone].tile"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="w-[2.3cqw]" :class="toneCls[s.tone].icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    class="w-[2.3cqw]"
+                    :class="toneCls[s.tone].icon"
+                  >
                     <path
                       :d="
                         s.tone === 'orange'
@@ -156,8 +208,14 @@ const dotLeft = ['3.5%', '38%', '62%']
                   </svg>
                 </span>
               </div>
-              <p class="mt-[2.2cqw] whitespace-nowrap text-[3.17cqw] font-bold leading-none text-[#21322b]">
-                {{ s.value }}<span class="ml-[0.4cqw] text-[1.5cqw] font-normal text-[#5e7169]">{{ s.unit }}</span>
+              <!-- 数值 + 单位：用 flex 基线对齐，单位不再靠行内空白，避免格式化把二者拆行 -->
+              <p
+                class="mt-[2.2cqw] flex items-baseline whitespace-nowrap text-[3.17cqw] font-bold leading-none text-[#21322b]"
+              >
+                {{ s.value }}
+                <span class="ml-[0.4cqw] text-[1.5cqw] font-normal text-[#5e7169]">{{
+                  s.unit
+                }}</span>
               </p>
             </div>
           </div>
@@ -167,13 +225,25 @@ const dotLeft = ['3.5%', '38%', '62%']
             <!-- 产量趋势：白卡 + 双折线 SVG（preserveAspectRatio none 拉伸铺满） -->
             <div class="rounded-[1.67cqw] bg-white p-[2cqw]">
               <div class="flex items-baseline justify-between">
-                <p class="text-[2cqw] font-bold leading-none text-[#21322b]">{{ wb.trend.title }}</p>
+                <p class="text-[2cqw] font-bold leading-none text-[#21322b]">
+                  {{ wb.trend.title }}
+                </p>
                 <span class="text-[1.58cqw] leading-none text-[#93aca1]">{{ wb.trend.tag }}</span>
               </div>
               <div class="relative mt-[1.8cqw] h-[12.5cqw]">
-                <svg viewBox="0 0 300 100" preserveAspectRatio="none" class="absolute inset-0 h-full w-full" aria-hidden="true">
+                <svg
+                  viewBox="0 0 300 100"
+                  preserveAspectRatio="none"
+                  class="absolute inset-0 h-full w-full"
+                  aria-hidden="true"
+                >
                   <!-- 三条横向网格线：non-scaling-stroke 保证拉伸后仍是 1px -->
-                  <path d="M0 25h300M0 50h300M0 75h300" stroke="#e8eeea" stroke-width="1" vector-effect="non-scaling-stroke" />
+                  <path
+                    d="M0 25h300M0 50h300M0 75h300"
+                    stroke="#e8eeea"
+                    stroke-width="1"
+                    vector-effect="non-scaling-stroke"
+                  />
                   <!-- 橙线（略低于绿线）：平缓 → 尖峰 → 回落 -->
                   <path
                     d="M0 80 100 79 180 78 230 74 262 16 300 70"
@@ -210,7 +280,14 @@ const dotLeft = ['3.5%', '38%', '62%']
               <div class="mt-[2.2cqw] flex items-start justify-between px-[0.4cqw]">
                 <div v-for="d in wb.donut.items" :key="d.label" class="flex flex-col items-center">
                   <svg viewBox="0 0 36 36" class="w-[4.6cqw]" aria-hidden="true">
-                    <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e3eae6" stroke-width="5.5" />
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="15.9"
+                      fill="none"
+                      stroke="#e3eae6"
+                      stroke-width="5.5"
+                    />
                     <circle
                       cx="18"
                       cy="18"
@@ -224,25 +301,35 @@ const dotLeft = ['3.5%', '38%', '62%']
                       transform="rotate(-90 18 18)"
                     />
                   </svg>
-                  <p class="mt-[1.2cqw] text-[1.58cqw] leading-none text-[#5e7169]">{{ d.label }} {{ d.percent }}%</p>
+                  <p class="mt-[1.2cqw] text-[1.58cqw] leading-none text-[#5e7169]">
+                    {{ d.label }} {{ d.percent }}%
+                  </p>
                 </div>
               </div>
-              <p class="mt-auto pt-[2cqw] text-[1.67cqw] leading-none text-[#93aca1]">{{ wb.donut.total }}</p>
+              <p class="mt-auto pt-[2cqw] text-[1.67cqw] leading-none text-[#93aca1]">
+                {{ wb.donut.total }}
+              </p>
             </div>
           </div>
 
-          <!-- 生产情况表：四列 grid，产量右对齐、状态彩签 -->
+          <!-- 生产情况表：四列 grid，全部左对齐，跟「计划单号」一条竖线起排 -->
           <div class="mt-[1.5cqw] rounded-[1.67cqw] bg-white p-[2cqw]">
             <div class="flex items-baseline justify-between">
-              <p class="text-[2cqw] font-bold leading-none text-[#21322b]">{{ wb.production.title }}</p>
-              <span class="text-[1.58cqw] leading-none text-[#93aca1]">{{ wb.production.note }}</span>
+              <p class="text-[2cqw] font-bold leading-none text-[#21322b]">
+                {{ wb.production.title }}
+              </p>
+              <span class="text-[1.58cqw] leading-none text-[#93aca1]">{{
+                wb.production.note
+              }}</span>
             </div>
             <!-- 表头 -->
-            <div class="mt-[2cqw] grid grid-cols-[1.15fr_2.4fr_0.9fr_0.75fr] text-[1.67cqw] leading-none text-[#93aca1]">
+            <div
+              class="mt-[2cqw] grid grid-cols-[1.15fr_2.4fr_0.9fr_0.75fr] text-[1.67cqw] leading-none text-[#93aca1]"
+            >
               <span>{{ wb.production.headers[0] }}</span>
               <span>{{ wb.production.headers[1] }}</span>
-              <span class="text-right">{{ wb.production.headers[2] }}</span>
-              <span class="text-right">{{ wb.production.headers[3] }}</span>
+              <span>{{ wb.production.headers[2] }}</span>
+              <span>{{ wb.production.headers[3] }}</span>
             </div>
             <!-- 数据行 -->
             <div
@@ -252,9 +339,12 @@ const dotLeft = ['3.5%', '38%', '62%']
             >
               <span class="font-medium text-[#41544b]">{{ r.no }}</span>
               <span class="truncate text-[#41544b]">{{ r.product }}</span>
-              <span class="text-right font-bold text-[#21322b]">{{ r.qty }}</span>
-              <span class="text-right">
-                <span class="inline-block rounded-[0.8cqw] px-[1.2cqw] py-[0.7cqw] text-[1.58cqw] leading-none" :class="statusCls[r.tone]">
+              <span class="font-bold text-[#21322b]">{{ r.qty }}</span>
+              <span>
+                <span
+                  class="inline-block rounded-[0.8cqw] px-[1.2cqw] py-[0.7cqw] text-[1.58cqw] leading-none"
+                  :class="statusCls[r.tone]"
+                >
                   {{ r.status }}
                 </span>
               </span>
