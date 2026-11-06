@@ -8,9 +8,11 @@
 import { RouterLink } from 'vue-router'
 import logoMark from '@/assets/brand/logo.webp'
 // 页脚素材全在 brand/ 下，带 footer- 前缀区分（页脚是全局组件，不算页面素材）
-import qrWechat from '@/assets/brand/footer-qr-gzh.jpg'
-import qrDouyin from '@/assets/brand/footer-qr-dy.jpg'
-import qrKuaishou from '@/assets/brand/footer-qr-ks.jpg'
+// 二维码统一用 webp 无损：原图是 JPG，硬边图形被有损压缩吃掉 300KB 流量还有扫码识别风险；
+// 显示只有 100px，缩到 200px 留 2 倍屏余量
+import qrWechat from '@/assets/brand/footer-qr-gzh.webp'
+import qrDouyin from '@/assets/brand/footer-qr-dy.webp'
+import qrKuaishou from '@/assets/brand/footer-qr-ks.webp'
 import qrApp from '@/assets/brand/footer-app-download.png'
 import { siteConfig } from '@/config/site'
 /** 四张二维码。图在这里 import，Vite 才会做哈希命名 */

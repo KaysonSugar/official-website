@@ -34,6 +34,8 @@ useReveal(root)
       alt=""
       aria-hidden="true"
       class="pointer-events-none absolute -right-[60px] top-[36px] hidden w-[640px] lg:block"
+      loading="lazy"
+      decoding="async"
     />
 
     <div class="container-page relative">
@@ -43,10 +45,16 @@ useReveal(root)
       >
         {{ ledger.eyebrow }}
       </p>
-      <h2 class="reveal mt-[20px] text-[32px] font-bold leading-[42px] text-ink-900" style="--d: 80ms">
+      <h2
+        class="reveal mt-[20px] text-[32px] font-bold leading-[42px] text-ink-900"
+        style="--d: 80ms"
+      >
         {{ ledger.title }}
       </h2>
-      <p class="reveal mt-[14px] max-w-[760px] text-[14px] leading-[24px] text-[#5e7169]" style="--d: 160ms">
+      <p
+        class="reveal mt-[14px] max-w-[760px] text-[14px] leading-[24px] text-[#5e7169]"
+        style="--d: 160ms"
+      >
         {{ ledger.desc }}
       </p>
 
@@ -59,7 +67,14 @@ useReveal(root)
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
           <div class="flex items-center gap-[14px]">
-            <img :src="iconMap[card.icon]" alt="" aria-hidden="true" class="h-[46px] w-[46px] shrink-0" />
+            <img
+              :src="iconMap[card.icon]"
+              alt=""
+              aria-hidden="true"
+              class="h-[46px] w-[46px] shrink-0"
+              loading="lazy"
+              decoding="async"
+            />
             <h3 class="text-[17px] font-bold leading-[24px] text-[#13322a]">{{ card.title }}</h3>
           </div>
           <p class="mt-[14px] text-[13px] leading-[22px] text-[#5e7169]">{{ card.body }}</p>
