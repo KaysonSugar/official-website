@@ -26,7 +26,8 @@ useReveal(root)
 <template>
   <section ref="root" class="bg-gradient-to-b from-[#fff6f0] via-[#fffbf8] to-white pb-[72px] pt-[64px]">
     <div class="container-page">
-      <div class="grid items-center gap-[48px] lg:grid-cols-[1fr_550px]">
+      <!-- 右列固定 660px：五张统计小卡要完整放下 15,008,876.00 这类长数字，550px 会溢出 -->
+      <div class="grid items-center gap-[48px] lg:grid-cols-[1fr_660px]">
         <!-- 左列 -->
         <div>
           <p
@@ -65,12 +66,12 @@ useReveal(root)
             </span>
           </div>
 
-          <!-- 五张统计小卡：第一张浅橙高亮 -->
+          <!-- 五张统计小卡：第一张浅橙高亮；水平内边距压到 8px，配合 660px 卡宽保证长数字不截断 -->
           <div class="mt-[16px] grid grid-cols-5 gap-[8px]">
             <div
               v-for="stat in heroCard.stats"
               :key="stat.label"
-              class="rounded-[8px] px-[10px] py-[10px]"
+              class="rounded-[8px] px-[8px] py-[10px]"
               :class="stat.active ? 'bg-[#fdf3ea]' : 'bg-[#f8faf9]'"
             >
               <p class="text-[11px] leading-[16px]" :class="stat.active ? 'text-[#a9611f]' : 'text-[#8aa094]'">
@@ -104,7 +105,7 @@ useReveal(root)
               <tr class="bg-[#f6faf7] text-left">
                 <th class="rounded-l-[6px] px-[12px] py-[8px] font-medium text-[#6b8077]">{{ heroCard.columns[0] }}</th>
                 <th class="px-[12px] py-[8px] font-medium text-[#6b8077]">{{ heroCard.columns[1] }}</th>
-                <th class="px-[12px] py-[8px] text-right font-medium text-[#6b8077]">{{ heroCard.columns[2] }}</th>
+                <th class="px-[12px] py-[8px] font-medium text-[#6b8077]">{{ heroCard.columns[2] }}</th>
                 <th class="rounded-r-[6px] px-[12px] py-[8px] font-medium text-[#6b8077]">{{ heroCard.columns[3] }}</th>
               </tr>
             </thead>
@@ -112,7 +113,7 @@ useReveal(root)
               <tr v-for="row in heroCard.rows" :key="row.contract" class="border-b border-[#f2f5f3]">
                 <td class="px-[12px] py-[11px] font-medium text-[#1f3d32]">{{ row.name }}</td>
                 <td class="px-[12px] py-[11px] text-[#7a9488]">{{ row.contract }}</td>
-                <td class="px-[12px] py-[11px] text-right tabular-nums text-[#13322a]">{{ row.amount }}</td>
+                <td class="px-[12px] py-[11px] tabular-nums text-[#13322a]">{{ row.amount }}</td>
                 <td class="px-[12px] py-[11px] text-[#7a9488]">{{ row.date }}</td>
               </tr>
             </tbody>

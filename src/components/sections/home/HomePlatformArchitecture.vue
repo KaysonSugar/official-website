@@ -25,14 +25,15 @@ useReveal(root)
 <template>
   <section ref="root" class="arch-bg relative overflow-hidden pb-[64px] pt-[136px]">
     <!-- 背景光斑：glow.png 是黑底硬边圆盘（900 见方，亮部居中），screen 混合吃掉黑底，
-         模糊把硬边和同心环纹理揉开；透明度给足才够「亮眼」，位置对准原型右上亮区 -->
+         模糊把硬边和同心环纹理揉开；透明度给足才够「亮眼」，位置对准原型右上亮区。
+         arch-glow 给它加 20s 缓慢漂移（图上没文字，缩放安全） -->
     <img
       loading="lazy"
       decoding="async"
       :src="glowImg"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute -top-[230px] right-[-130px] w-[900px] select-none opacity-80 mix-blend-screen blur-[50px]"
+      class="arch-glow pointer-events-none absolute -top-[230px] right-[-130px] w-[900px] select-none opacity-80 mix-blend-screen blur-[50px]"
     />
 
     <div class="container-page relative">
@@ -124,6 +125,31 @@ useReveal(root)
 /* 暗底：夜色绿打底，顶部的光斑由 glow.png 叠层负责（见模板里的 img） */
 .arch-bg {
   background: #0f211b;
+}
+
+/* 光斑漂移：20s 一个来回，左移 40px、下沉 24px、放大 5%。
+   alternate 来回跑不跳变；图是纯装饰无文字，scale 安全。
+   blur(50px) 已把图栅格化，transform 动画走合成层，每帧零重绘 */
+.arch-glow {
+  animation: arch-drift 20s ease-in-out infinite alternate;
+  animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
+}
+
+@keyframes arch-drift {
+  to {
+    transform: translate(-40px, 24px) scale(1.05);
+  }
+}
+
+.in .arch-glow {
+  animation-play-state: running;
+}
+
+/* reduced-motion：infinite 动画必须自己关，全局 0.01ms 规则会把它变成疯狂空转 */
+@media (prefers-reduced-motion: reduce) {
+  .arch-glow {
+    animation: none;
+  }
 }
 
 /* 每层块区的列数：窄屏先叠一列，sm 起按 --cols 等分（块数不同不能写死类名） */

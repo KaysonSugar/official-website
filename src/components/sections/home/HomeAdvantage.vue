@@ -73,7 +73,7 @@ useReveal(root)
             <div
               v-for="(row, i) in advantage.rows"
               :key="row.name"
-              class="grid grid-cols-[150px_1fr_1fr] sm:grid-cols-[185px_1fr_1fr]"
+              class="adv-row grid grid-cols-[150px_1fr_1fr] sm:grid-cols-[185px_1fr_1fr]"
               :class="i > 0 ? 'border-t border-white/10' : ''"
             >
               <!-- 参与方名称：橙渐变格里垂直居中 -->
@@ -166,5 +166,16 @@ useReveal(root)
 /* 暗底：比第四屏的 #0f211b 略偏绿，右下角渐亮（原型四角采色：左上暗右下亮） */
 .adv-bg {
   background: linear-gradient(135deg, #10251e 0%, #11271f 55%, #142e25 100%);
+}
+
+/* 对照表行 hover 高亮：三列文字跨距大（近 900px），高亮帮眼睛锁住整行。
+   白色 4.5% 透明度盖上去，左列橙格会一起亮一点点，正好是"选中"的感觉。
+   background-color 过渡只在 hover 时发生，paint 范围一行，成本可忽略 */
+.adv-row {
+  transition: background-color 200ms ease;
+}
+
+.adv-row:hover {
+  background-color: rgba(255, 255, 255, 0.045);
 }
 </style>

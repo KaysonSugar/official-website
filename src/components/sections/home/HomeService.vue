@@ -90,3 +90,26 @@ useReveal(root)
     </div>
   </section>
 </template>
+
+<style scoped>
+/* 卡片 hover 时图标轻放大 6%：transform 只作用在 img（无文字），跟全局 card-lift
+   的浮起凑成两级反馈。曲线用起停都缓的 0.4/0/0.2/1，跟首屏胶囊 hover 同款 */
+.card-lift img {
+  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-lift:hover img {
+  transform: scale(1.06);
+}
+
+/* 减弱动效：图标别缩放，只留卡片自己的浮起 */
+@media (prefers-reduced-motion: reduce) {
+  .card-lift img {
+    transition: none;
+  }
+
+  .card-lift:hover img {
+    transform: none;
+  }
+}
+</style>

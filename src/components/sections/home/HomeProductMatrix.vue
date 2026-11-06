@@ -120,7 +120,7 @@ useReveal(root)
               :src="ringMap[i]"
               alt=""
               aria-hidden="true"
-              class="pointer-events-none absolute -bottom-[130px] -right-[130px] w-[240px] select-none opacity-70"
+              class="matrix-ring pointer-events-none absolute -bottom-[130px] -right-[130px] w-[240px] select-none opacity-70"
             />
           </div>
 
@@ -190,3 +190,30 @@ useReveal(root)
     </div>
   </section>
 </template>
+
+<style scoped>
+/* 右下角圆环极慢自转：60s 一圈，绕自身中心转，圆心在卡角外只露四分之一弧，
+   转起来弧的位置缓缓变化，若隐若现。纯装饰图无文字，rotate 安全。
+   慢到 60s 是有意的：三张卡同时转，快了会抢内容的戏 */
+.matrix-ring {
+  animation: matrix-rotate 60s linear infinite;
+  animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
+}
+
+@keyframes matrix-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.in .matrix-ring {
+  animation-play-state: running;
+}
+
+/* reduced-motion：infinite 动画必须自己关，全局 0.01ms 规则会把它变成疯狂空转 */
+@media (prefers-reduced-motion: reduce) {
+  .matrix-ring {
+    animation: none;
+  }
+}
+</style>
