@@ -7,8 +7,9 @@ import prettier from 'eslint-config-prettier'
 import globals from 'globals'
 
 export default tseslint.config(
-  // 忽略构建产物与依赖目录
-  { ignores: ['dist/**', 'node_modules/**', '*.config.js'] },
+  // 忽略构建产物、依赖目录，以及 .workbuddy（本地工具目录：memory、脚本、
+  // 截图用的浏览器 profile 都在里面，混进来会刷出上千条第三方报错）
+  { ignores: ['dist/**', 'node_modules/**', '*.config.js', '.workbuddy/**'] },
 
   // JS 基础推荐规则
   js.configs.recommended,

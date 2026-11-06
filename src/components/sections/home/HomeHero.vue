@@ -8,27 +8,12 @@
 import { computed, onMounted, ref } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { siteConfig } from '@/config/site'
-// 看板用三档 srcset：显示宽度随视口变（1440 视口约 598、1920 约 827），浏览器按
-// 设备像素就近取图，采样比接近 1:1 才不糊——单一尺寸总有一档是 2 倍以上的缩小。
-// 浮层卡显示宽度有 min() 封顶，2 倍尺寸一张就够；文字都烘焙在图里
 import badgeImg from '@/assets/home/images/badge.webp'
-// 看板整卡改 DOM 绘制（workbench-body*.webp 位图已删）——位图在缩放屏上文字必糊，
-// DOM 文字走浏览器渲染任何尺寸都锐利
 import HomeWorkbench from './HomeWorkbench.vue'
-// 悬浮卡只留两个图标 tile（从 4 倍原图裁的，白底和卡体同色无缝）
 import truckIcon from '@/assets/home/images/hero-truck.webp'
 import checkIcon from '@/assets/home/images/hero-check.webp'
 import ringsImg from '@/assets/home/images/rings.webp'
 import dividerImg from '@/assets/home/images/hero-bottom-divider.webp'
-
-/**
- * 首屏 Hero，按 1440×704 画板量出来的：
- * 文案区 660、看板 596×461（顶 67、左 763）、列距 24；
- * 合规卡 188×63 左探 59，在途卡 160×63 左探 120，圆环 800×800；
- * 分隔线 562，数字条顶 600。
- *
- * 本区块的间距尺寸一律写 px 字面值，方便直接对着稿子改数字（1rem = 16px）。
- */
 
 // 数字条：拆成「数字 + 尾巴」，尾巴里没有数字才做递增（10、7 天 行，7×24 不行）
 const statsEl = ref<HTMLDListElement | null>(null)
@@ -138,13 +123,13 @@ onMounted(() => {
             </BaseButton>
           </div>
 
-          <!-- 卖点胶囊：白底半透明 + 细描边，间距 10，内边距 上7 左12 右14；
-               hover 描边转浅橙、上浮 0.5（2px） -->
+          <!-- 卖点胶囊：白底半透明 + 细描边，间距 10，内边距 上7 左12 右14。
+               hover 的规格写在 .feature-pill 里，这里不留 transition 类名 -->
           <ul class="rise mt-[36px] flex flex-wrap gap-[10px]" :style="{ animationDelay: '280ms' }">
             <li
               v-for="feature in siteConfig.hero.features"
               :key="feature"
-              class="flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-sm font-medium text-ink-700 transition-[border-color,transform] duration-200 hover:-translate-y-1 hover:border-brand-300"
+              class="feature-pill flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-sm font-medium text-ink-700"
             >
               <!-- 对勾：稿子里没有圆底，就是一根 #2f9e6e 的线条勾 -->
               <svg
@@ -301,6 +286,54 @@ onMounted(() => {
 
 .pop-in {
   animation: hero-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+/* 卖点胶囊 hover：上浮 2px + 描边转浅橙 + 底转纯白 + 浮起一圈淡阴影。
+   位移只给 2px —— 原来 4px 在 32px 高的胶囊上会把光标"抬"到盒子外面，
+   贴边悬停时 hover 反复进出，看着是一跳一跳的。
+   曲线用 0.4/0/0.2/1（起停都缓），不用 0.22/1/0.36/1：后者是强调"快出"的入场曲线，
+   40ms 就跑完三分之二，小元素上看着像瞬间弹到位，反而是生硬感的来源。
+   阴影画在伪元素上只过渡 opacity（和全局 .card-lift 同一套做法）：
+   直接 transition box-shadow 每帧都要重绘，鼠标扫过整排时能看出掉帧 */
+.feature-pill {
+  position: relative;
+  transition:
+    transform 260ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 260ms ease,
+    background-color 260ms ease;
+}
+
+.feature-pill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit; /* 跟胶囊圆角走 */
+  box-shadow: 0 8px 18px -6px rgba(33, 50, 43, 0.3);
+  opacity: 0;
+  transition: opacity 260ms ease;
+  pointer-events: none;
+}
+
+.feature-pill:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-brand-300);
+  background-color: #fff;
+}
+
+.feature-pill:hover::after {
+  opacity: 1;
+}
+
+/* 关了动效就别浮了：位移本身也是"动"，只留颜色变化 */
+@media (prefers-reduced-motion: reduce) {
+  .feature-pill,
+  .feature-pill::after {
+    transition: none;
+  }
+
+  .feature-pill:hover {
+    transform: none;
+  }
 }
 
 /* 圆环呼吸：4s 一个来回，放大 3.5%。
