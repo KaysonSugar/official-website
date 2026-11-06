@@ -131,7 +131,7 @@ useReveal(root)
         <div
           v-for="(card, ci) in advantage.supports"
           :key="card.no"
-          class="reveal rounded-xl border border-[#2a413b] bg-[#172e28] p-[32px]"
+          class="adv-card reveal card-lift card-lift-dark rounded-xl border border-[#2a413b] bg-[#172e28] p-[32px]"
           :style="{ '--d': `${320 + ci * 80}ms` }"
         >
           <!-- 编号：01/03 橙 02 绿，颜色从原型采的 -->
@@ -177,5 +177,22 @@ useReveal(root)
 
 .adv-row:hover {
   background-color: rgba(255, 255, 255, 0.045);
+}
+
+/* 支撑卡：暗底上光靠投影看不出浮起（黑投黑），所以补一条边框提亮当主信号，
+   投影（.card-lift-dark）只负责让卡底和背景「脱开」一层。
+   只过渡 border-color，1px 边线的重绘范围，比整卡重绘便宜得多 */
+.adv-card {
+  transition: border-color 240ms ease;
+}
+
+.adv-card:hover {
+  border-color: #46695d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adv-card {
+    transition: none;
+  }
 }
 </style>

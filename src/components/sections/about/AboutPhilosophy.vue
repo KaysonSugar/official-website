@@ -40,7 +40,10 @@ useReveal(root)
         {{ philosophy.eyebrow }}
       </p>
 
-      <h2 class="reveal mt-[24px] text-[32px] font-bold leading-[42px] text-ink-900" style="--d: 80ms">
+      <h2
+        class="reveal mt-[24px] text-[32px] font-bold leading-[42px] text-ink-900"
+        style="--d: 80ms"
+      >
         {{ philosophy.title }}
       </h2>
 
@@ -49,7 +52,7 @@ useReveal(root)
         <figure
           v-for="(item, i) in philosophy.items"
           :key="item.label"
-          class="reveal flex flex-col items-center"
+          class="phil-item reveal flex flex-col items-center"
           :style="{ '--d': `${240 + i * 80}ms` }"
         >
           <img
@@ -58,7 +61,7 @@ useReveal(root)
             :src="iconMap[item.icon]"
             alt=""
             aria-hidden="true"
-            class="h-[104px] w-[104px] select-none md:h-[120px] md:w-[120px]"
+            class="phil-icon h-[104px] w-[104px] select-none md:h-[120px] md:w-[120px]"
           />
           <figcaption class="mt-[18px] text-[14px] font-medium leading-[20px] text-ink-900">
             {{ item.label }}
@@ -68,3 +71,25 @@ useReveal(root)
     </div>
   </section>
 </template>
+
+<style scoped>
+/* 理念图标轻放大 6%：这四个没有卡片外壳，只放大图标本身（纯图片，无文字），
+   与司机页「平台优势」四枚插画同一套手感。图标居中在四列网格里，放大 7px 不会碰到邻居 */
+.phil-icon {
+  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.phil-item:hover .phil-icon {
+  transform: scale(1.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phil-icon {
+    transition: none;
+  }
+
+  .phil-item:hover .phil-icon {
+    transform: none;
+  }
+}
+</style>

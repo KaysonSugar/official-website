@@ -43,11 +43,17 @@ useReveal(root)
         {{ commitment.eyebrow }}
       </p>
 
-      <h2 class="reveal mt-[44px] text-[32px] font-bold leading-[42px] text-white" style="--d: 80ms">
+      <h2
+        class="reveal mt-[44px] text-[32px] font-bold leading-[42px] text-white"
+        style="--d: 80ms"
+      >
         {{ commitment.title }}
       </h2>
 
-      <p class="reveal mt-[24px] max-w-[820px] text-[14px] leading-[24px] text-[#b1c5bc]" style="--d: 160ms">
+      <p
+        class="reveal mt-[24px] max-w-[820px] text-[14px] leading-[24px] text-[#b1c5bc]"
+        style="--d: 160ms"
+      >
         {{ commitment.desc }}
       </p>
 
@@ -56,13 +62,13 @@ useReveal(root)
         <article
           v-for="(card, i) in commitment.cards"
           :key="card.title"
-          class="reveal rounded-[12px] bg-[#17322b] p-[20px]"
+          class="cmt-card reveal card-lift card-lift-dark rounded-[12px] border border-transparent bg-[#17322b] p-[20px]"
           :style="{ '--d': `${240 + i * 80}ms` }"
         >
           <!-- loop 的循环箭头没素材，SVG 照原型画；tile 底色采自 PNG 图标的圆角块 -->
           <span
             v-if="card.icon === 'loop'"
-            class="flex h-[40px] w-[40px] items-center justify-center rounded-[10px] bg-[#2a3f38]"
+            class="cmt-icon flex h-[40px] w-[40px] items-center justify-center rounded-[10px] bg-[#2a3f38]"
             aria-hidden="true"
           >
             <svg class="h-[22px] w-[22px]" viewBox="0 0 24 24" fill="none">
@@ -72,7 +78,13 @@ useReveal(root)
                 stroke-width="2.2"
                 stroke-linecap="round"
               />
-              <path d="M18.8 3.6v5h-5M5.2 20.4v-5h5" stroke="#99e2c4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              <path
+                d="M18.8 3.6v5h-5M5.2 20.4v-5h5"
+                stroke="#99e2c4"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </span>
           <img
@@ -82,10 +94,12 @@ useReveal(root)
             :src="iconMap[card.icon]"
             alt=""
             aria-hidden="true"
-            class="h-[40px] w-[40px] select-none"
+            class="cmt-icon h-[40px] w-[40px] select-none"
           />
 
-          <h3 class="mt-[16px] text-[15px] font-bold leading-[22px] text-white">{{ card.title }}</h3>
+          <h3 class="mt-[16px] text-[15px] font-bold leading-[22px] text-white">
+            {{ card.title }}
+          </h3>
           <p class="mt-[10px] text-[13px] leading-[22px] text-[#afc8c2]">{{ card.desc }}</p>
         </article>
       </div>
@@ -103,3 +117,38 @@ useReveal(root)
     </div>
   </section>
 </template>
+
+<style scoped>
+/* 四张准则卡：暗底投影（.card-lift-dark，见 style.css）+ 边框提亮两级。
+   卡片本来无边框，常态留 1px 透明边，hover 时才显色——直接加 border 会挤掉 1px 内容宽度，
+   从透明起手就没有这个跳动 */
+.cmt-card {
+  transition: border-color 240ms ease;
+}
+
+.cmt-card:hover {
+  border-color: #33544a;
+}
+
+/* 图标轻放大 6%：只作用在图标元素上（无文字），跟卡片浮起凑成两级反馈。
+   曲线 0.4/0/0.2/1 跟首页法规卡、功能卡、服务卡同款 */
+.cmt-icon {
+  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cmt-card:hover .cmt-icon {
+  transform: scale(1.06);
+}
+
+/* 减弱动效：不缩放不描边，只留卡片自己的投影浮现 */
+@media (prefers-reduced-motion: reduce) {
+  .cmt-card,
+  .cmt-icon {
+    transition: none;
+  }
+
+  .cmt-card:hover .cmt-icon {
+    transform: none;
+  }
+}
+</style>

@@ -112,7 +112,7 @@ useReveal(root)
           <div
             v-for="(card, i) in lightweight.pain.cards"
             :key="card.no"
-            class="reveal rounded-[12px] bg-white p-[20px]"
+            class="reveal card-lift rounded-[12px] bg-white p-[20px]"
             :style="{ '--d': `${500 + i * 80}ms` }"
           >
             <div class="flex items-center">
@@ -122,7 +122,7 @@ useReveal(root)
                 :src="iconMap[card.icon]"
                 alt=""
                 aria-hidden="true"
-                class="h-[40px] w-[40px] shrink-0 select-none"
+                class="pain-icon h-[40px] w-[40px] shrink-0 select-none"
               />
               <h3 class="ml-[12px] text-[16px] font-bold leading-[24px] text-[#684023]">
                 {{ card.title }}
@@ -209,3 +209,26 @@ useReveal(root)
     </div>
   </section>
 </template>
+
+<style scoped>
+/* 痛点三卡：白卡压在浅橙底（#fff8f2）上，不加投影时像「贴死」在底上，
+   用全局 card-lift 让投影浮现，卡片本体不动。
+   图标跟着放大 6%，曲线与法规卡/功能卡/服务卡同款 */
+.pain-icon {
+  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-lift:hover .pain-icon {
+  transform: scale(1.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pain-icon {
+    transition: none;
+  }
+
+  .card-lift:hover .pain-icon {
+    transform: none;
+  }
+}
+</style>

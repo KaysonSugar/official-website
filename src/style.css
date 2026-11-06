@@ -133,6 +133,13 @@
     transform: translateY(0) scale(1);
   }
 
+  /* 暗底卡片用的投影变体：默认的 rgba(26,26,26,.2) 在 #17322b / #172e28 这类深绿底上
+     基本看不见（暗色投暗色），换成更浓的纯黑、把扩散半径加大一档，暗底上才读得出「浮起来」。
+     只覆盖 box-shadow，其余结构 / 曲线 / 伪元素都沿用 .card-lift */
+  .card-lift-dark::after {
+    box-shadow: 0 20px 46px -14px rgba(0, 0, 0, 0.62);
+  }
+
   /* 滚动进场：区块根元素被 useReveal 加上 .in 后，子元素一次性浮上来。
      延迟走行内 --d（如 style="--d: 160ms"）逐块错峰。
      用 animation 而不是 transition-delay：后者会连 hover 的过渡一起拖慢。
