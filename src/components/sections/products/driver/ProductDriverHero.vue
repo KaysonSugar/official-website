@@ -47,17 +47,8 @@ const chipPos = {
 
 <template>
   <section ref="root" class="relative overflow-hidden bg-gradient-to-b from-[#fdf6f0] via-[#fefaf6] to-white pb-[72px] pt-[64px]">
-    <!-- 背景装饰照原型：左半底色是暖奶油橙（渐变给出），大薄荷光晕垫在手机后。
-         薄荷光晕按原型量：直径约 520（=1.58 倍手机宽）、与手机同心（1440 下卡 977~1307，
-         所以圆心在 1142 → 右缘离视口右 38），顶边离 hero 顶 36。
-         早先用 660 宽 + right-140，整团偏左 120，左半圈糊在卡外、右半圈被卡吃掉 -->
-    <img
-      :src="glowMint"
-      alt=""
-      aria-hidden="true"
-      class="pointer-events-none absolute right-[38px] top-[36px] hidden w-[520px] select-none lg:block"
-    />
-    <!-- 橙光晕在药丸下方偏右（原型可见直径约 450px、中心约视口 700,540，整团收在底边内不裁） -->
+    <!-- 背景装饰照原型：左半底色是暖奶油橙（渐变给出）。
+         橙光晕在药丸下方偏右（原型可见直径约 450px、中心约视口 700,540，整团收在底边内不裁） -->
     <img
       :src="glowWarm"
       alt=""
@@ -105,6 +96,15 @@ const chipPos = {
 
         <!-- 右列：手机演示，整屏 DOM 重建。鼠标进入上浮 8px（8×1.25=10 物理像素，整数不糊） -->
         <div class="reveal relative mx-auto w-[330px] pb-[24px]" style="--d: 200ms">
+          <!-- 薄荷光晕：直径约 520（=1.58 倍手机宽），挂在这一列里跟手机同心 ——
+               早先按视口写死 right 定位，视口一变卡就漂，光晕左右露出的宽度对不上；
+               现在 left-1/2 居中，左右各露 95，任何窗口都一致。top -44 = 原先离 hero 顶 36 换算过来的 -->
+          <img
+            :src="glowMint"
+            alt=""
+            aria-hidden="true"
+            class="pointer-events-none absolute left-1/2 top-[-44px] hidden w-[520px] -translate-x-1/2 select-none lg:block"
+          />
           <!-- 细圆环：1345 设计稿量出直径约 1.54 倍手机宽、与手机同心（顶弧贴手机顶、左右各探出约 70px）。
                手机端视口只有 390，用 min 收到屏宽内（留 24px 边距）不被裁；
                外层 span 定位，里层 img 只跑 scale 呼吸动画，transform 分层不互相覆盖 -->

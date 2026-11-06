@@ -55,7 +55,7 @@ const imgMap = {
         <figure
           v-for="(item, i) in screens.items"
           :key="item.no"
-          class="reveal"
+          class="reveal px-[6%]"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
           <figcaption class="flex items-baseline gap-[8px]">
@@ -65,8 +65,9 @@ const imgMap = {
             <span class="text-[15px] font-bold leading-[21px] text-ink-900">{{ item.label }}</span>
           </figcaption>
           <!-- 素材自带透明圆角（1220×1644），width/height 声明固有比例防布局抖动。
-               宽度收到列宽的 88% 并居中：四张铺满列宽时整屏太满，收一圈后左右各留 ~17px 白，
-               卡片像浮在版面上；标题仍跟列左对齐，不跟着缩进（跟着缩会跟上方标题断开对齐线）。
+               整列内容（编号 + 场景名 + 截图）在 figure 层统一收 6% 左右内边距：
+               截图铺满列宽太满，收一圈后左右各留 ~19px 白；
+               标题跟截图同一条左缘，不留在列边（留列边会跟图错开一截）。
                hover 放大 2%：透明圆角吃不了矩形投影（会透出来当黑边），
                缩放跟本页优势图标同一类反馈；260ms 起停都缓，跟首页 hover 同节奏 -->
           <img
@@ -74,7 +75,7 @@ const imgMap = {
             :alt="`${item.label}界面截图`"
             width="1220"
             height="1644"
-            class="mt-[14px] mx-auto block w-[88%] select-none transition-transform duration-[260ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.02]"
+            class="mt-[14px] block w-full select-none transition-transform duration-[260ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.02]"
             loading="lazy"
           />
         </figure>
