@@ -70,6 +70,18 @@
     <!-- 预加载顶栏 logo：它挂载后才渲染成 <img>，不提前取会比正文晚十几毫秒。
          构建时 Vite 会把路径重写成带 hash 的产物。（组合标页面里没用到，不再预加载） -->
     <link rel="preload" as="image" href="/src/assets/brand/logo.webp" />
+
+    <!-- 预加载 Inter 拉丁子集（48KB，见 style.css 的 @font-face）。
+         as="font" 必须配 crossorigin：字体请求走 CORS 模式，少了这个属性
+         预加载的响应和真正的 @font-face 请求对不上，等于白下两遍。
+         中文不在此列——unicode-range 之外的字浏览器不会去取这个文件 -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/inter-latin-wght-normal.woff2"
+      crossorigin
+    />
   </head>
   <body>
     <!-- 兜底提示：上面的 #app:empty 规则会在脚本不可用时一直隐藏页面，

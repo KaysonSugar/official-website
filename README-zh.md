@@ -32,7 +32,8 @@ wyd-official-website/
 ├── .prettierrc.json            # Prettier 格式化规则
 ├── public/
 │   ├── favicon.png             # 站点图标（由 assets/brand/logo.webp 导出）
-│   └── apple-touch-icon.png    # iOS 添加到主屏图标
+│   ├── apple-touch-icon.png    # iOS 添加到主屏图标
+│   └── fonts/                  # 自托管字体：Inter 拉丁子集（URL 固定才能 preload，见「字体」一节）
 └── src/
     ├── main.ts                 # 应用入口，等路由就绪后挂载 #app，引入全局样式
     ├── App.vue                 # 根组件：顶栏 + RouterView + 页脚（无样式、无文案）
@@ -284,6 +285,20 @@ npm run format
 | `--color-ink-50` ~ `900`   | `#fafafa` → `#1a1a1a` | 中性文字与底色                                             |
 
 业务代码统一使用语义化类名（`bg-brand-500`、`text-ink-600`），**不写死色值**；换品牌色只改 `@theme` 一处。
+
+## 字体
+
+西文和数字用自托管的 **Inter**，中文交给各系统自带字体。栈定义在 `src/style.css` 的 `--font-sans`：
+
+```
+'Inter' → system-ui → -apple-system → PingFang SC → Hiragino Sans GB → Microsoft YaHei UI → Noto Sans CJK SC
+```
+
+- 字体文件是 `public/fonts/inter-latin-wght-normal.woff2`（48KB，可变字重 100~900），**只含拉丁字母、西文标点和数字**。`@font-face` 的 `unicode-range` 把中文排除在外，所以页面里的汉字根本不触发这个文件的下载，仍是苹方 / 雅黑 / 思源黑体——这是国内站点「西文用 Web 字体、中文用系统字体」的标准做法，别改成全量中文字体（Noto Sans SC 全量 1.4MB）。
+- `index.html` 里已 `preload` 该文件。`as="font"` **必须**带 `crossorigin`：字体请求走 CORS 模式，少了它会和真正的 `@font-face` 请求对不上，等于白下两遍。
+- 升级字体：`npm i -D @fontsource-variable/inter`，从 `node_modules/@fontsource-variable/inter/files/` 取 `inter-latin-wght-normal.woff2` 覆盖，`unicode-range` 抄同目录的 `wght.css`。
+
+> ⚠️ **中文的中间字重在 Windows 上是失效的**。微软雅黑只有 Regular(400) 和 Bold(700) 两档：`font-medium`(500) 会落到 400、`font-semibold`(600) 会落到 700，而苹方有六档、Mac 上两者都成立。所以中文的层次优先用**字号和颜色**拉开，别只靠字重；西文和数字因为走 Inter 可变字体，任意字重都成立。
 
 ## 开发约定
 

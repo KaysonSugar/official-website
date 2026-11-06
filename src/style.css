@@ -1,11 +1,33 @@
 /* Tailwind v4 入口：引入核心样式（无需 tailwind.config.js） */
 @import 'tailwindcss';
 
+/* Inter 可变字体：只含拉丁字母、数字和西文标点，48KB woff2，一档覆盖 100~900 全字重。
+   unicode-range 之外的字（中文、全角标点、emoji）浏览器根本不会请求这个文件，
+   而是往字体栈下一档回退——这是「西文用 Web 字体、中文用系统字体」的标准做法，
+   中文一个字都不会多传。
+   文件放 public/ 不放 src/：URL 必须固定，index.html 里才能 preload 它。 */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* 设计 token：@theme 中定义的变量会自动生成对应的工具类，例如
    --color-brand-500 可用于 bg-brand-500 / text-brand-500 / border-brand-500 */
 @theme {
-  /* 字体：优先 Inter，中文回退苹方 / 微软雅黑 */
-  --font-sans: 'Inter', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  /* 字体：西文和数字用 Inter（自托管，见上方 @font-face），中文交给各系统自带字体。
+     顺序按平台排：system-ui 在 Windows 上落到 Segoe UI + 雅黑、在 Mac 上落到 SF + 苹方，
+     后面几档是老系统、Android、Linux 的兜底。
+     注意微软雅黑只有 400 / 700 两档：请求 500 会落到 400、请求 600 会落到 700，
+     所以中文的层次别只靠字重拉，字号和颜色更可靠。 */
+  --font-sans:
+    'Inter', system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI',
+    'Microsoft YaHei', 'Noto Sans CJK SC', 'Source Han Sans SC', sans-serif;
 
   /* 注：不要在这里加自定义断点（--breakpoint-*）来写 1440 的版式。
      Tailwind v4 会把自定义断点的媒体查询排在核心断点（sm/md/lg）之前，
