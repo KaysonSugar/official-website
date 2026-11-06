@@ -5,18 +5,6 @@
  * @Name: 站点内容类型定义
  */
 
-/**
- * config 的类型总装。
- *
- * 这里只放两样东西：跨模块共用的导航 / 首屏类型（NavChild / NavItem / PageIntro），
- * 以及把 7 个模块的区块类型拼成的整站 SiteConfig。
- * 各区块自己的字段形状在各模块的 types.ts（brand/types.ts、home/types.ts ……），
- * 文案在同目录的 data.ts。改某个区块的字段就去那个模块目录，不用在这找。
- *
- * 这里和各模块是双向引用的（模块要用 NavItem 等共享类型，这里要用各模块的区块类型），
- * 全部是 `import type`，编译后整句擦除，打包产物里不存在循环依赖。
- */
-
 import type { BrandInfo, ContactInfo, CtaConfig, FooterConfig } from './brand/types'
 import type {
   HomeAdvantage,
@@ -65,63 +53,60 @@ export interface PageIntro {
   label: string
   /** 主标题上方的小标签 */
   eyebrow: string
-  /** 页面主标题（有原型画板的直接取画板标题） */
+  /** 页面主标题 */
   title: string
   /** 标题下的一句话说明 */
   desc: string
-  /** 文字对齐：left 左对齐（原型左侧文案 + 右侧示意卡片）/ center 居中（纯文字页） */
+  /** 文字对齐：left 左对齐 */
   align: 'left' | 'center'
 }
 
 /**
  * 站点整体配置
- *
- * 键的顺序与 site.ts 的拼装顺序一致。每个字段的类型来自对应模块的 types.ts，
- * 少写一个键、多写一个键都会在 typecheck 时报红。
  */
 export interface SiteConfig {
   /** 品牌信息：导航栏与页脚共用 */
   brand: BrandInfo
-  /** 联系方式与主行动按钮（导航栏右侧） */
+  /** 联系方式与主行动按钮 */
   contact: ContactInfo
   /** 顶部导航：数组顺序即展示顺序 */
   navItems: NavItem[]
-  /** 各页面首屏文案（首页除外，首页文案在 hero 里） */
+  /** 各页面首屏文案 */
   pages: PageIntro[]
-  /** 首页首屏 Hero（定稿原型 01：左文案 + 右后台看板） */
+  /** 首页首屏 Hero */
   hero: HomeHero
-  /** 首页第二屏：行业背景与法规驱动（定稿原型 02） */
+  /** 首页第二屏：行业背景与法规驱动 */
   industry: HomeIndustry
-  /** 首页第三屏：轻量化平台（定稿原型 03） */
+  /** 首页第三屏：轻量化平台 */
   lightweight: HomeLightweight
-  /** 首页第四屏：平台功能结构（定稿原型 04，暗色分层架构图） */
+  /** 首页第四屏：平台功能结构 */
   architecture: HomeArchitecture
-  /** 首页第五屏：三端业务运转模式（定稿原型 05） */
+  /** 首页第五屏：三端业务运转模式 */
   matrix: HomeMatrix
-  /** 首页第六屏：核心功能详解（定稿原型 06） */
+  /** 首页第六屏：核心功能详解 */
   capabilities: HomeCapabilities
-  /** 首页第七屏：生产主流程图（定稿原型 07） */
+  /** 首页第七屏：生产主流程图 */
   workflow: HomeWorkflow
-  /** 首页第八屏：运输协同（原型 08，环形图里带字） */
+  /** 首页第八屏：运输协同 */
   collab: HomeCollab
-  /** 首页第九屏：全链路一体化优势（原型 08-S8） */
+  /** 首页第九屏：全链路一体化优势 */
   advantage: HomeAdvantage
-  /** 首页第十屏：降本增效（原型 09） */
+  /** 首页第十屏：降本增效 */
   costEfficiency: HomeCostEfficiency
-  /** 首页第十一屏：我们的服务（原型 10） */
+  /** 首页第十一屏：我们的服务 */
   service: HomeService
-  /** 服务支持页 /solutions（原型 Service Hero + S1~S4） */
+  /** 服务支持页 /solutions */
   support: SupportConfig
-  /** 关于我们页 /about（原型 About Hero + S1~S3） */
+  /** 关于我们页 /about */
   about: AboutConfig
-  /** 化工生产页 /products/chemical（原型 Product Hero + P 三条主线） */
+  /** 化工生产页 /products/chemical */
   chemical: ChemicalConfig
-  /** 物流调度页 /products/logistics（原型 Logistics Hero + B 免费货源广场） */
+  /** 物流调度页 /products/logistics */
   logistics: LogisticsConfig
-  /** 司机作业页 /products/driver（原型 Driver Hero + B~F 五屏） */
+  /** 司机作业页 /products/driver */
   driver: DriverConfig
-  /** 页面底部的行动号召区（首页与全部内页共用，对应原型 CTA Card） */
+  /** 页面底部的行动号召区 */
   cta: CtaConfig
-  /** 页脚（对应原型底部的深色收尾区，1440 画板下高 343） */
+  /** 页脚 */
   footer: FooterConfig
 }

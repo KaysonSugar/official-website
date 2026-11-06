@@ -16,18 +16,8 @@ const { about } = siteConfig
 
 <template>
   <AboutHero />
-  
-  <!-- 简介 -->
-  <AboutText
-    :eyebrow="about.intro.eyebrow"
-    :title="about.intro.title"
-    :paras="about.intro.paras"
-  />
-
-  <!-- 企业理念 -->
+  <AboutText :eyebrow="about.intro.eyebrow" :title="about.intro.title" :paras="about.intro.paras" />
   <AboutPhilosophy />
-
-  <!-- 公司使命 -->
   <AboutText
     :eyebrow="about.mission.eyebrow"
     :title="about.mission.title"

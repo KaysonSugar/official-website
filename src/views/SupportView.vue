@@ -27,15 +27,11 @@ const { support } = siteConfig
     :cta-label="support.ctaLabel"
     :features="support.features"
   >
-    <!-- 首屏右侧的项目节奏卡，走 PageHero 的插槽 -->
     <SupportTimeline />
   </PageHero>
-
   <SupportScope />
   <SupportProcess />
   <SupportPricing />
   <SupportCommitment />
-
-  <!-- 底部行动号召：内页共用 -->
   <CtaBanner />
 </template>

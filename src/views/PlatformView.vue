@@ -14,7 +14,5 @@ const page = getPage('/platform')
 
 <template>
   <PageHero :eyebrow="page.eyebrow" :title="page.title" :desc="page.desc" :align="page.align" />
-
-  <!-- 底部行动号召：内页共用 -->
   <CtaBanner />
 </template>

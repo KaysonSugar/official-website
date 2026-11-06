@@ -3,12 +3,6 @@
  * @Email: takaixin@outlook.com
  * @StartDate: 2026.11.03
  * @Name: 站点内容配置
- */
-
-/**
- * 站点内容的唯一出口。
- *
- * 内容按页面拆成同级目录，每个目录两个文件：types.ts 放字段形状、data.ts 放文案。
  *   brand/                品牌、联系方式、导航、各页首屏文案、CTA、页脚
  *   home/                 首页 11 屏
  *   support/              服务支持
@@ -16,13 +10,6 @@
  *   products/chemical/    产品线 - 化工生产
  *   products/logistics/   产品线 - 物流调度
  *   products/driver/      产品线 - 司机作业
- *
- * products/ 这一层跟 router 与 views/products/ 对齐，三条业务线挂在「产品矩阵」下，
- * 不是一级导航。
- *
- * 这里只做拼装，不写内容。组件统一从 '@/config/site' 引 siteConfig / getPage，
- * 不要直接引模块文件——整站形状（少一个模块就报红）由 types.ts 的 SiteConfig 保证。
- * 改文案去 <模块>/data.ts；改字段形状去 <模块>/types.ts。
  */
 
 import type { PageIntro, SiteConfig } from './types'
@@ -46,7 +33,7 @@ import { chemical } from './products/chemical/data'
 import { logistics } from './products/logistics/data'
 import { driver } from './products/driver/data'
 
-/** 实际内容（当前为占位文案，上线前替换） */
+/** 实际内容 */
 export const siteConfig: SiteConfig = {
   brand,
   contact,

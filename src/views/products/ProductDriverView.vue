@@ -11,9 +11,6 @@ import ProductDriverAdvantage from '@/components/sections/products/driver/Produc
 import ProductDriverWorkflow from '@/components/sections/products/driver/ProductDriverWorkflow.vue'
 import ProductDriverScreens from '@/components/sections/products/driver/ProductDriverScreens.vue'
 import ProductDriverRecruit from '@/components/sections/products/driver/ProductDriverRecruit.vue'
-
-// 司机作业 /products/driver，对应原型 Driver Hero + B 平台优势 + D 接单作业四步
-// + E 核心界面一览 + F 司机招募 五屏，文案与数据都在 siteConfig.driver
 </script>
 
 <template>
@@ -22,6 +19,5 @@ import ProductDriverRecruit from '@/components/sections/products/driver/ProductD
   <ProductDriverWorkflow />
   <ProductDriverScreens />
   <ProductDriverRecruit />
-  <!-- 底部行动号召：内页共用 -->
   <CtaBanner />
 </template>

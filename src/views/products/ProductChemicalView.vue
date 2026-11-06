@@ -17,7 +17,5 @@ import ProductChemicalTour from '@/components/sections/products/chemical/Product
   <ProductChemicalChains />
   <ProductChemicalTour />
   <ProductChemicalReport />
-
-  <!-- 底部行动号召：内页共用 -->
   <CtaBanner />
 </template>
