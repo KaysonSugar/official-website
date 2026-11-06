@@ -48,12 +48,13 @@ const chipPos = {
 <template>
   <section ref="root" class="relative overflow-hidden bg-gradient-to-b from-[#fdf6f0] via-[#fefaf6] to-white pb-[72px] pt-[64px]">
     <!-- 背景装饰照原型：左半底色是暖奶油橙（渐变给出）。
-         橙光晕在药丸下方偏右（原型可见直径约 450px、中心约视口 700,540，整团收在底边内不裁） -->
+         橙光晕按原型量：直径约 540、圆心在视口 39%（1440 下 ~560，落在"回程"药丸右下），
+         竖直方向下半团沉到 hero 底边外被裁，顶边离 hero 顶约 118 —— 靠下才像从页面底下透上来的光 -->
     <img
       :src="glowWarm"
       alt=""
       aria-hidden="true"
-      class="pointer-events-none absolute bottom-[40px] left-[480px] hidden w-[440px] select-none opacity-80 lg:block"
+      class="pointer-events-none absolute bottom-[-162px] left-[287px] hidden w-[540px] select-none opacity-80 lg:block"
     />
     <div class="container-page relative">
       <div class="grid items-center gap-[48px] lg:grid-cols-[1fr_480px]">
@@ -96,14 +97,15 @@ const chipPos = {
 
         <!-- 右列：手机演示，整屏 DOM 重建。鼠标进入上浮 8px（8×1.25=10 物理像素，整数不糊） -->
         <div class="reveal relative mx-auto w-[330px] pb-[24px]" style="--d: 200ms">
-          <!-- 薄荷光晕：直径约 520（=1.58 倍手机宽），挂在这一列里跟手机同心 ——
-               早先按视口写死 right 定位，视口一变卡就漂，光晕左右露出的宽度对不上；
-               现在 left-1/2 居中，左右各露 95，任何窗口都一致。top -44 = 原先离 hero 顶 36 换算过来的 -->
+          <!-- 薄荷光晕：照原型量直径约 570（=1.72 倍手机宽），圆心比手机中心左 35、低 30
+               （原型里左露 0.45 卡宽、右露 0.26，不是正居中），圆顶比卡顶高 8。
+               挂在这一列里跟着手机走 —— 早先按视口写死 right 定位，窗口一变卡就漂，左右露出的宽度对不上。
+               尺寸别往回减：520 时圆只盖到卡下部一半，卡片下半截两侧就空了（用户报"光晕看不全"） -->
           <img
             :src="glowMint"
             alt=""
             aria-hidden="true"
-            class="pointer-events-none absolute left-1/2 top-[-44px] hidden w-[520px] -translate-x-1/2 select-none lg:block"
+            class="pointer-events-none absolute left-[calc(50%-35px)] top-[-8px] hidden w-[570px] -translate-x-1/2 select-none lg:block"
           />
           <!-- 细圆环：1345 设计稿量出直径约 1.54 倍手机宽、与手机同心（顶弧贴手机顶、左右各探出约 70px）。
                手机端视口只有 390，用 min 收到屏宽内（留 24px 边距）不被裁；
