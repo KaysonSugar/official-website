@@ -76,9 +76,10 @@ const badgeTone = {
         </div>
 
         <!-- 右列：调度台演示卡，整卡 DOM 重建；鼠标进入上浮，跟首页看板同一个手感。
-             位移写 8px 不写 6px：6×1.25(缩放率)=7.5 物理像素，半像素会让卡内文字重采样发虚 -->
+             位移写 8px 不写 6px：6×1.25(缩放率)=7.5 物理像素，半像素会让卡内文字重采样发虚。
+             relative 不能省：细圆环是 absolute，非定位元素会被它画穿 -->
         <article
-          class="reveal flex overflow-hidden rounded-[16px] bg-white shadow-[0_24px_60px_-24px_rgba(19,50,42,0.28)] ring-1 ring-black/5 transition-transform duration-500 ease-out hover:-translate-y-2"
+          class="reveal relative flex overflow-hidden rounded-[16px] bg-white shadow-[0_24px_60px_-24px_rgba(19,50,42,0.28)] ring-1 ring-black/5 transition-transform duration-500 ease-out hover:-translate-y-2"
           style="--d: 200ms"
         >
           <!-- 侧栏：绿渐变，窄屏藏掉省空间；宽度按「货源广场 + VIP 徽标」一行放下量的 -->
