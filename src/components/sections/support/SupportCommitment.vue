@@ -5,7 +5,8 @@
  * @Name: 服务支持第五屏：服务承诺
 -->
 <script setup lang="ts">
-import { useTemplateRef } from 'vue'
+import { computed, useTemplateRef } from 'vue'
+import { useCountUp } from '@/composables/useCountUp'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import iconSign from '@/assets/support/icons/cmt-sign.webp'
@@ -17,7 +18,7 @@ import iconSchedule from '@/assets/support/icons/cmt-schedule.webp'
  * 深绿屏（对角渐变 #0f241d→#0b1a15，比首页 S8 的深绿更黑一点），
  * 四张准则卡 #17322b 无边框，图标 PNG 自带深绿圆角 tile；
  * 第四卡「闭环售后」的循环箭头用户没给素材，按原型内联 SVG 画，tile 用采样的 #2a3f38 补齐。
- * 底部四个硬指标直接渲染终值——7×24 递增会闪 6×24，首页踩过。
+ * 底部四个硬指标接公共 useCountUp 滚动（2026-11-06 用户要求）。
  */
 const { commitment } = siteConfig.support
 
@@ -30,6 +31,20 @@ const iconMap = {
 
 const root = useTemplateRef<HTMLElement>('root')
 useReveal(root)
+
+// 拆前导数字和尾巴：「7×24」→ 7 + 「×24」，「100%」→ 100 + 「%」。
+// 滚动只动前导数字，×24 / 对 1 / –15 这些尾巴保持静止，避免 7×24 数成 6×23 之类的怪值
+const statsView = computed(() =>
+  commitment.stats.map((stat) => {
+    const m = /^(\d+)(.*)$/.exec(stat.value)
+    return m
+      ? { num: m[1], rest: m[2], label: stat.label }
+      : { num: null, rest: stat.value, label: stat.label }
+  }),
+)
+
+const statsEl = useTemplateRef<HTMLElement>('stats')
+useCountUp(statsEl)
 </script>
 
 <template>
@@ -104,12 +119,19 @@ useReveal(root)
         </article>
       </div>
 
-      <!-- 分隔线 + 硬指标行：数字列与上面四卡对齐，左对齐 -->
+      <!-- 分隔线 + 硬指标行：数字列与上面四卡对齐，左对齐；滚进视口前导数字从 0 数上去 -->
       <div class="reveal mt-[44px] border-t border-[#2f423c] pt-[32px]" style="--d: 560ms">
-        <dl class="grid grid-cols-2 gap-y-[24px] lg:grid-cols-4">
-          <div v-for="stat in commitment.stats" :key="stat.label">
+        <dl ref="stats" class="grid grid-cols-2 gap-y-[24px] lg:grid-cols-4">
+          <div v-for="stat in statsView" :key="stat.label">
             <dt class="sr-only">{{ stat.label }}</dt>
-            <dd class="text-[22px] font-bold leading-[30px] text-white">{{ stat.value }}</dd>
+            <dd
+              class="text-[22px] font-bold leading-[30px] tabular-nums text-white"
+              :data-num="stat.num"
+              :data-rest="stat.rest"
+            >
+              <!-- 初始渲染 0+尾巴，防「闪终值再跳回 0」；拆不动的原样渲染 -->
+              {{ stat.num !== null ? `0${stat.rest}` : stat.rest }}
+            </dd>
             <p class="mt-[6px] text-[12px] leading-[18px] text-[#a8b9b1]">{{ stat.label }}</p>
           </div>
         </dl>
