@@ -83,10 +83,12 @@ useReveal(root)
             >
               {{ node.text }}
             </div>
-            <!-- 箭头：最后一个节点后面没有；窄屏隐藏（竖排时箭头没意义） -->
+            <!-- 箭头：最后一个节点后面没有；窄屏隐藏（竖排时箭头没意义）。
+                 flow-arrow + --wd 是箭头波：按流程顺序延迟点亮，见 scoped 里的 keyframes -->
             <span
               v-if="node.arrow"
-              class="hidden shrink-0 px-[6px] text-[16px] text-[#82bda2] lg:block"
+              class="flow-arrow hidden shrink-0 px-[6px] text-[16px] text-[#82bda2] lg:block"
+              :style="{ '--wd': `${i * 400}ms` }"
               aria-hidden="true"
               >→</span
             >
@@ -96,7 +98,12 @@ useReveal(root)
         <!-- 判断菱形：原型是扁长的（约 176×94，比高宽两倍），用 clip-path 裁
              方块旋转只能在正方形时才等边，非等比会连圆角一起拉变形 -->
         <div class="reveal mt-[6px] flex flex-col items-center" style="--d: 580ms">
-          <span class="text-[16px] leading-[20px] text-[#82bda2]" aria-hidden="true">↓</span>
+          <span
+            class="flow-arrow text-[16px] leading-[20px] text-[#82bda2]"
+            :style="{ '--wd': '1200ms' }"
+            aria-hidden="true"
+            >↓</span
+          >
           <div class="diamond mt-[14px] flex items-center justify-center">
             <span class="text-[13px] font-semibold text-white">{{ workflow.judge }}</span>
           </div>
@@ -109,9 +116,11 @@ useReveal(root)
             :key="branch.head"
             class="flex flex-col items-stretch"
           >
-            <!-- 每条分支自己的 ↓，窄屏隐藏（叠放时上不去） -->
+            <!-- 每条分支自己的 ↓，窄屏隐藏（叠放时上不去）。两条分支同一时刻点亮
+                 （--wd 相同）：采购和生产本来就是并行的，波不该有先后 -->
             <span
-              class="mb-[8px] hidden text-center text-[16px] leading-[20px] text-[#82bda2] md:block"
+              class="flow-arrow mb-[8px] hidden text-center text-[16px] leading-[20px] text-[#82bda2] md:block"
+              :style="{ '--wd': '1600ms' }"
               aria-hidden="true"
               >↓</span
             >
@@ -128,7 +137,8 @@ useReveal(root)
             <!-- 中间步骤：采购分支白底 + 暖灰边框；生产分支跟顶部生产计划同色（绿边浅绿底） -->
             <template v-for="(step, s) in branch.steps" :key="step">
               <span
-                class="my-[5px] text-center text-[16px] leading-[18px] text-[#82bda2]"
+                class="flow-arrow my-[5px] text-center text-[16px] leading-[18px] text-[#82bda2]"
+                :style="{ '--wd': `${2000 + s * 400}ms` }"
                 aria-hidden="true"
                 >↓</span
               >
@@ -143,7 +153,8 @@ useReveal(root)
 
             <!-- 收尾条：tinted 沿用所在分支的色调（左浅橙 / 右深绿实心） -->
             <span
-              class="my-[5px] text-center text-[16px] leading-[18px] text-[#82bda2]"
+              class="flow-arrow my-[5px] text-center text-[16px] leading-[18px] text-[#82bda2]"
+              :style="{ '--wd': '3200ms' }"
               aria-hidden="true"
               >↓</span
             >
@@ -178,5 +189,42 @@ useReveal(root)
   height: 94px;
   background: #13322a;
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+/* 箭头波：全部箭头按流程顺序（顶行 → 菱形 → 分支步骤 → 收尾）延迟点亮，
+   静息态压到 0.7 透明度，波峰回到 1 —— 一道从上往下的"业务在流动"光波。
+   只动 opacity：箭头是文字，动 transform 会在合成层里关次像素 AA，小字发虚 */
+.flow-arrow {
+  animation: flow-pulse 7s ease-in-out infinite;
+  animation-delay: var(--wd, 0ms); /* 每个箭头在流程里的位置决定波到它的时刻 */
+  animation-fill-mode: backwards; /* delay 窗口里就压到 0% 帧的 0.7，否则亮着等波才跳暗 */
+  animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
+}
+
+/* 一轮 7s：波从头走到尾 3.2s，剩下 3.8s 全静息，别一直闪 */
+@keyframes flow-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  5% {
+    opacity: 1; /* 350ms 亮到全亮 */
+  }
+  13% {
+    opacity: 0.7; /* 560ms 内暗回静息 */
+  }
+}
+
+/* 入场后（root 拿到 .in）箭头波才开跑 */
+.in .flow-arrow {
+  animation-play-state: running;
+}
+
+/* reduced-motion：infinite 动画必须自己关，全局 0.01ms 规则会把它变成疯狂空转；
+   关掉后回到默认 opacity 1，跟原型一致 */
+@media (prefers-reduced-motion: reduce) {
+  .flow-arrow {
+    animation: none;
+  }
 }
 </style>
