@@ -5,7 +5,8 @@
  * @Name: 司机端第五屏：司机招募
 -->
 <script setup lang="ts">
-import { onMounted, useTemplateRef } from 'vue'
+import { useTemplateRef } from 'vue'
+import { useCountUp } from '@/composables/useCountUp'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import recruitTruck from '@/assets/products/driver/images/recruit-truck.webp'
@@ -15,7 +16,7 @@ import qrDownload from '@/assets/products/driver/images/qr-download.png'
  * 司机招募（原型 F）：薄荷绿大圆角容器，左文案右插画。
  * 三个统计数字是品牌绿，二维码直接裸放（白卡描边去掉后不裹壳）。
  * 进场动画：容器不做整体 reveal，内部按眉标→标题→描述→统计→二维码逐层递进 ~80ms；
- * 统计数字滚到视口再从 0 数上去（复用首页 hero 的 count-up 模式，0.9s easeOutCubic）。
+ * 统计数字滚到视口再从 0 数上去（useCountUp，与首页 hero 同节奏）。
  */
 const { recruit } = siteConfig.driver
 
@@ -31,49 +32,7 @@ const statsView = recruit.stats.map((stat) => {
 const root = useTemplateRef<HTMLElement>('root')
 const statsEl = useTemplateRef<HTMLElement>('stats')
 useReveal(root)
-
-onMounted(() => {
-  // 把没走到递增逻辑的条目直接填成终值（关动效 / 老浏览器两条提前 return 的路）
-  const fillFinal = () => {
-    statsEl.value?.querySelectorAll<HTMLElement>('[data-num]').forEach((el) => {
-      el.textContent = `${el.dataset.num ?? ''}${el.dataset.rest ?? ''}`
-    })
-  }
-
-  // 关了动效或者浏览器太老，就直接显示终值
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
-    fillFinal()
-    return
-  }
-
-  const els = statsEl.value?.querySelectorAll<HTMLElement>('[data-num]')
-  if (!els?.length) return
-
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue
-        io.unobserve(entry.target)
-        const el = entry.target as HTMLElement
-        const num = Number(el.dataset.num)
-        const rest = el.dataset.rest ?? ''
-        const t0 = performance.now()
-        const DURATION = 900 // 0.9s，easeOutCubic 先快后慢，跟首页统计同一节奏
-        const tick = (t: number) => {
-          const p = Math.min((t - t0) / DURATION, 1)
-          el.textContent = String(Math.round(num * (1 - Math.pow(1 - p, 3)))) + rest
-          if (p < 1) requestAnimationFrame(tick)
-        }
-        requestAnimationFrame(tick)
-      }
-    },
-    { threshold: 0.5 }, // 露出一半再数，不然刚露头就跳完了
-  )
-  els.forEach((el) => io.observe(el))
-})
+useCountUp(statsEl)
 </script>
 
 <template>

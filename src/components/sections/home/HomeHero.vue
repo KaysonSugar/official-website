@@ -5,8 +5,9 @@
  * @Name: 首页首屏
 -->
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import { useCountUp } from '@/composables/useCountUp'
 import { siteConfig } from '@/config/site'
 import badgeImg from '@/assets/home/images/badge.webp'
 import HomeWorkbench from './HomeWorkbench.vue'
@@ -15,8 +16,9 @@ import checkIcon from '@/assets/home/images/hero-check.webp'
 import ringsImg from '@/assets/home/images/rings.webp'
 import dividerImg from '@/assets/home/images/hero-bottom-divider.webp'
 
-// 数字条：拆成「数字 + 尾巴」，尾巴里没有数字才做递增（10、7 天 行，7×24 不行）
-const statsEl = ref<HTMLDListElement | null>(null)
+// 数字条：拆成「数字 + 尾巴」，尾巴里没有数字才做递增（10、7 天 行，7×24 不行）。
+// 递增本体在 useCountUp（从这里的内联实现抽的，司机招募/物流货源广场共用）
+const statsEl = useTemplateRef<HTMLElement>('statsEl')
 
 const stats = computed(() =>
   siteConfig.hero.stats.map((stat) => {
@@ -29,48 +31,8 @@ const stats = computed(() =>
 
 // 能递增的条目初始就渲染 0（模板里拼 0 + 尾巴），不然页面先闪终值、
 // 动画启动又跳回 0 重数，肉眼看是闪一下「7 天 → 0 天 → …」
-onMounted(() => {
-  // 把没走到递增逻辑的条目直接填成终值（关动效 / 老浏览器两条提前 return 的路）
-  const fillFinal = () => {
-    statsEl.value?.querySelectorAll<HTMLElement>('[data-num]').forEach((el) => {
-      el.textContent = `${el.dataset.num ?? ''}${el.dataset.rest ?? ''}`
-    })
-  }
-
-  // 关了动效或者浏览器太老，就直接显示终值
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
-    fillFinal()
-    return
-  }
-
-  const els = statsEl.value?.querySelectorAll<HTMLElement>('[data-num]')
-  if (!els?.length) return
-
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue
-        io.unobserve(entry.target)
-        const el = entry.target as HTMLElement
-        const num = Number(el.dataset.num)
-        const rest = el.dataset.rest ?? ''
-        const t0 = performance.now()
-        const DURATION = 900 // 0.9s，easeOutCubic 先快后慢，比匀速看着舒服
-        const tick = (t: number) => {
-          const p = Math.min((t - t0) / DURATION, 1)
-          el.textContent = String(Math.round(num * (1 - Math.pow(1 - p, 3)))) + rest
-          if (p < 1) requestAnimationFrame(tick)
-        }
-        requestAnimationFrame(tick)
-      }
-    },
-    { threshold: 0.5 }, // 露出一半再数，不然刚露头就跳完了
-  )
-  els.forEach((el) => io.observe(el))
-})
+// 滚动计数交给 useCountUp：露出一半再数，关动效/老浏览器直接填终值
+useCountUp(statsEl)
 </script>
 
 <template>
