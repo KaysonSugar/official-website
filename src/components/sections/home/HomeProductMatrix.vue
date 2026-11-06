@@ -125,14 +125,16 @@ useReveal(root)
           </div>
 
           <div class="relative">
-            <!-- 品牌图标：素材自带白色圆角 tile，直接用 -->
+            <!-- 品牌图标：素材自带白色圆角 tile，直接用。
+                 matrix-logo 单独加类做 hover 放大——不能写成 .card-lift img，
+                 卡里的光斑/圆环装饰图会跟着缩放穿帮 -->
             <img
               loading="lazy"
               decoding="async"
               :src="iconMap[card.icon]"
               alt=""
               aria-hidden="true"
-              class="mx-auto h-[64px] w-[64px] select-none drop-shadow-[0_6px_14px_rgba(26,26,26,0.08)]"
+              class="matrix-logo mx-auto h-[64px] w-[64px] select-none drop-shadow-[0_6px_14px_rgba(26,26,26,0.08)]"
             />
 
             <!-- 小胶囊标签：白底浮在卡面上，靠一道极淡投影跟白卡分开，
@@ -192,6 +194,27 @@ useReveal(root)
 </template>
 
 <style scoped>
+/* 卡片 hover 时品牌图标轻放大 6%：跟法规卡 / 功能卡 / 服务卡同款两级反馈
+   （投影浮现 + 图标放大）。曲线用起停都缓的 0.4/0/0.2/1，全站 hover 同款 */
+.card-lift .matrix-logo {
+  transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-lift:hover .matrix-logo {
+  transform: scale(1.06);
+}
+
+/* 减弱动效：图标别缩放，只留卡片自己的投影浮现 */
+@media (prefers-reduced-motion: reduce) {
+  .card-lift .matrix-logo {
+    transition: none;
+  }
+
+  .card-lift:hover .matrix-logo {
+    transform: none;
+  }
+}
+
 /* 右下角圆环极慢自转：60s 一圈，绕自身中心转，圆心在卡角外只露四分之一弧，
    转起来弧的位置缓缓变化，若隐若现。纯装饰图无文字，rotate 安全。
    慢到 60s 是有意的：三张卡同时转，快了会抢内容的戏 */
