@@ -75,12 +75,12 @@ useReveal(root)
           </div>
         </div>
 
-        <!-- 右列：罐车 + 司机插画（960×698，固有尺寸防布局抖动） -->
+        <!-- 右列：罐车 + 司机插画（Illustration.png 转的 webp，1760×1280 高清版） -->
         <img
           :src="recruitTruck"
           alt="威易达司机与危化品运输车"
-          width="960"
-          height="698"
+          width="1760"
+          height="1280"
           class="w-full select-none rounded-[16px] shadow-[0_20px_50px_-24px_rgba(19,50,42,0.35)]"
           loading="lazy"
         />
