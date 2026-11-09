@@ -72,17 +72,18 @@ const classes = computed(() => [
   props.block ? 'w-full' : '',
 ])
 
-// 有 to 走路由，没有就走原生 a
-const isRoute = computed(() => props.to !== '')
+// 有 to 走路由，有 href 走原生 a，都没有就渲染 button（给「点开弹层」这类纯交互按钮用）
+const tag = computed(() => (props.to ? RouterLink : props.href ? 'a' : 'button'))
+const linkAttrs = computed(() => {
+  if (props.to) return { to: props.to }
+  if (props.href) return { href: props.href }
+  return { type: 'button' as const }
+})
 </script>
 
 <template>
-  <!-- 按 isRoute 切标签：RouterLink 用 pushState 切页，不整页刷新 -->
-  <component
-    :is="isRoute ? RouterLink : 'a'"
-    v-bind="isRoute ? { to: props.to } : { href: props.href }"
-    :class="classes"
-  >
+  <!-- 按 tag 切标签：RouterLink 走 pushState，a 给外链/tel，button 给弹层触发 -->
+  <component :is="tag" v-bind="linkAttrs" :class="classes">
     <!-- 文字由调用方给，改文案不用动这里 -->
     <slot />
   </component>

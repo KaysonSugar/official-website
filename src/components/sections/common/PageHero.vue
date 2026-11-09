@@ -8,6 +8,7 @@
 import { computed, useSlots } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { siteConfig } from '@/config/site'
+import { useLeadForm } from '@/composables/useLeadForm'
 
 /**
  * 内页首屏：小标签 + 大标题 + 一句话 + 主按钮。
@@ -29,6 +30,8 @@ interface Props {
   /** 按钮下的服务方式胶囊（橙点 + 文字）；不传就不渲染 */
   features?: string[]
 }
+
+const { openLeadForm } = useLeadForm()
 
 const props = withDefaults(defineProps<Props>(), {
   align: 'left',
@@ -75,9 +78,9 @@ const isCenter = computed(() => props.align === 'center')
             {{ props.desc }}
           </p>
 
-          <!-- 主按钮：文案可被 ctaLabel 覆盖，跳转仍走全站统一的拨号入口 -->
+          <!-- 主按钮：文案可被 ctaLabel 覆盖，点击唤起全站预约表单弹层 -->
           <div class="mt-8">
-            <BaseButton :href="siteConfig.contact.ctaHref" size="lg">
+            <BaseButton size="lg" @click="openLeadForm">
               {{ props.ctaLabel || siteConfig.contact.ctaLabel }}
             </BaseButton>
           </div>

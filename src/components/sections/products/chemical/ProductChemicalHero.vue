@@ -9,6 +9,7 @@ import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { getPage, siteConfig } from '@/config/site'
+import { useLeadForm } from '@/composables/useLeadForm'
 
 /**
  * 化工生产首屏（原型 Product Hero）：浅橙白渐变背景 + 左文案 + 右资金流水卡。
@@ -17,6 +18,7 @@ import { getPage, siteConfig } from '@/config/site'
  * 高亮统计卡浅橙底（label #a9611f、数字 #a94f12），普通卡灰绿底 #f8faf9。
  */
 const page = getPage('/products/chemical')
+const { openLeadForm } = useLeadForm()
 const { heroCard, ctaLabel } = siteConfig.chemical
 
 const root = useTemplateRef<HTMLElement>('root')
@@ -55,7 +57,7 @@ useReveal(root)
           </p>
 
           <div class="reveal mt-[32px]" style="--d: 240ms">
-            <BaseButton :href="siteConfig.contact.ctaHref" size="lg">{{ ctaLabel }}</BaseButton>
+            <BaseButton size="lg" @click="openLeadForm">{{ ctaLabel }}</BaseButton>
           </div>
         </div>
 

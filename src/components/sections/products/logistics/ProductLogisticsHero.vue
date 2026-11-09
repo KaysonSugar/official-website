@@ -9,6 +9,7 @@ import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { getPage, siteConfig } from '@/config/site'
+import { useLeadForm } from '@/composables/useLeadForm'
 import glowWarm from '@/assets/products/logistics/images/glow-warm.webp'
 import ringOuter from '@/assets/products/logistics/images/ring-outer.webp'
 import logoMark from '@/assets/products/logistics/icons/logo-mark.webp'
@@ -20,6 +21,7 @@ import logoMark from '@/assets/products/logistics/icons/logo-mark.webp'
  * 徽标沿用站点既有绿/橙/灰三档浅底色。
  */
 const page = getPage('/products/logistics')
+const { openLeadForm } = useLeadForm()
 const dash = siteConfig.logistics.heroDash
 
 const root = useTemplateRef<HTMLElement>('root')
@@ -71,7 +73,7 @@ const badgeTone = {
           </p>
 
           <div class="reveal mt-[32px]" style="--d: 240ms">
-            <BaseButton :href="siteConfig.contact.ctaHref" variant="green" size="lg">{{ siteConfig.logistics.ctaLabel }}</BaseButton>
+            <BaseButton variant="green" size="lg" @click="openLeadForm">{{ siteConfig.logistics.ctaLabel }}</BaseButton>
           </div>
         </div>
 

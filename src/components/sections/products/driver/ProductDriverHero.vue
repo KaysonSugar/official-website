@@ -9,6 +9,7 @@ import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { getPage, siteConfig } from '@/config/site'
+import { useLeadForm } from '@/composables/useLeadForm'
 import glowMint from '@/assets/products/driver/images/glow-mint.webp'
 import glowWarm from '@/assets/products/driver/images/glow-warm.webp'
 import ringOuter from '@/assets/products/driver/images/ring-outer.webp'
@@ -19,6 +20,7 @@ import ringOuter from '@/assets/products/driver/images/ring-outer.webp'
  * （Chip*.png 已删）。司机页主色是品牌橙，薄荷绿只做卡片点缀和背景光晕。
  */
 const page = getPage('/products/driver')
+const { openLeadForm } = useLeadForm()
 const hero = siteConfig.driver.hero
 
 const root = useTemplateRef<HTMLElement>('root')
@@ -85,7 +87,7 @@ const chipPos = {
           </p>
 
           <div class="reveal mt-[32px]" style="--d: 240ms">
-            <BaseButton :href="siteConfig.contact.ctaHref" variant="primary" size="lg">{{
+            <BaseButton variant="primary" size="lg" @click="openLeadForm">{{
               siteConfig.driver.ctaLabel
             }}</BaseButton>
           </div>

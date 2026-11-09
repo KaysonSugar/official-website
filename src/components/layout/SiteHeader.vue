@@ -12,6 +12,7 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import DesktopNav from '@/components/layout/DesktopNav.vue'
 import MobileMenu from '@/components/layout/MobileMenu.vue'
 import { siteConfig } from '@/config/site'
+import { useLeadForm } from '@/composables/useLeadForm'
 
 /**
  * 顶栏。这边只留壳：品牌 / 主导航 / 电话 + 按钮三段，加滚动前后的两种背景。
@@ -20,6 +21,7 @@ import { siteConfig } from '@/config/site'
  */
 const scrolled = ref(false)
 const menuOpen = ref(false)
+const { openLeadForm } = useLeadForm()
 
 const route = useRoute()
 
@@ -86,7 +88,7 @@ onUnmounted(() => {
         <!-- 主按钮：外面包一层 div 控显隐。<640 隐藏写在 div 上，
              不能直接写 BaseButton —— 它自带 inline-flex，同属 display 会被盖掉（375 下实测按钮还露着） -->
         <div class="hidden sm:block">
-          <BaseButton :href="siteConfig.contact.ctaHref" size="md">
+          <BaseButton size="md" @click="openLeadForm">
             {{ siteConfig.contact.ctaLabel }}
           </BaseButton>
         </div>

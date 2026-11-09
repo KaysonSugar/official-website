@@ -9,6 +9,7 @@ import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { siteConfig } from '@/config/site'
+import { useLeadForm } from '@/composables/useLeadForm'
 
 defineProps<{ open: boolean }>()
 
@@ -19,6 +20,13 @@ const activePath = computed(() => route.path)
 
 // 模板里好几处 @click 都要收菜单，包一层省得重复 emit
 const closeMenu = () => emit('close')
+
+const { openLeadForm } = useLeadForm()
+// 先收菜单再开弹层，不然两个层叠在一起
+const onCta = () => {
+  closeMenu()
+  openLeadForm()
+}
 </script>
 
 <template>
@@ -82,7 +90,7 @@ const closeMenu = () => emit('close')
           </BaseButton>
           <!-- 主按钮外面包一层 div 控显隐，同样不能把 sm:hidden 写在 BaseButton 上（inline-flex 会盖掉） -->
           <div class="sm:hidden">
-            <BaseButton :href="siteConfig.contact.ctaHref" block @click="closeMenu">
+            <BaseButton block @click="onCta">
               {{ siteConfig.contact.ctaLabel }}
             </BaseButton>
           </div>

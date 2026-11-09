@@ -8,6 +8,7 @@
 import { computed, ref, useTemplateRef } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { useCountUp } from '@/composables/useCountUp'
+import { useLeadForm } from '@/composables/useLeadForm'
 import { siteConfig } from '@/config/site'
 import HomeWorkbench from './HomeWorkbench.vue'
 import truckIcon from '@/assets/home/images/hero-truck.webp'
@@ -17,6 +18,9 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.webp'
 
 // 法规外链与离开确认：胶囊点击先弹层，确认后才开新标签，避免用户误点跳出官网
 const LAW_URL = 'https://www.12371.cn/2025/12/28/ARTI1766892782459341.shtml'
+
+// 预约演示按钮：唤起 App.vue 里那份全站表单弹层
+const { openLeadForm } = useLeadForm()
 const showLeaveTip = ref(false)
 
 const goExternal = () => {
@@ -109,9 +113,9 @@ useCountUp(statsEl)
                hero-cta 挂流星描边和 hover 呼吸（样式见末尾，只作用于这一颗） -->
           <div class="rise mt-[30px]" :style="{ animationDelay: '210ms' }">
             <BaseButton
-              :href="siteConfig.contact.ctaHref"
               size="lg"
               class="hero-cta w-full sm:w-auto lg:h-[50px] lg:w-[360px]"
+              @click="openLeadForm"
             >
               <span class="hero-cta-ring" aria-hidden="true">
                 <span class="hero-cta-comet" />

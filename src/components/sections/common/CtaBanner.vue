@@ -6,8 +6,10 @@
 -->
 <script setup lang="ts">
 import { siteConfig } from '@/config/site'
+import { useLeadForm } from '@/composables/useLeadForm'
 
-const { cta, contact } = siteConfig
+const { cta } = siteConfig
+const { openLeadForm } = useLeadForm()
 
 // 底部行动号召（原型 CTA Card），八个页面共用 siteConfig.cta 的文案。
 // 橙渐变 + 白按钮 + 按钮下电话小字，几何全按 4 倍原型图 ÷4 量的：
@@ -42,12 +44,13 @@ const { cta, contact } = siteConfig
         <!-- 动作区：白底主按钮 + 下方电话小字，右缘距卡右 129 由 lg:px-[57px] 加 justify-between 一起兜住 -->
         <div class="relative mt-[32px] shrink-0 lg:mt-0">
           <!-- 主按钮：白底深橙字（brand-700），原型 153×53 → 15px 字 + 左右 30 上下 16 -->
-          <a
-            :href="contact.ctaHref"
+          <button
+            type="button"
             class="inline-flex items-center justify-center rounded-[10px] bg-white px-[30px] py-[16px] text-[15px] font-medium leading-[21px] text-brand-700 transition-colors duration-200 hover:bg-brand-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            @click="openLeadForm"
           >
             {{ cta.button }}
-          </a>
+          </button>
           <!-- 小字：12px 纯白，跟按钮左对齐（原型里就是齐左）。
                别用白 80%——混深橙底只有 2.38:1，小字在强光屏上基本看不清 -->
           <p class="mt-[14px] text-[12px] leading-[18px] text-white">
