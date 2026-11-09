@@ -15,6 +15,22 @@
 export interface HomeHero {
   /** 标题上方的法规对标胶囊 */
   badge: string
+  /** 法规胶囊右侧的点击提示 */
+  badgeHint: string
+  /** 点法规胶囊后先弹的离开确认层 */
+  leaveTip: {
+    title: string
+    desc: string
+    cancel: string
+    confirm: string
+  }
+  /** 右侧看板上两张浮层卡的文字 */
+  floats: {
+    /** 左上合规卡；数字直接写在 title 里 */
+    compliance: { title: string; desc: string }
+    /** 左下在途卡；数字直接写在 title 里 */
+    transit: { title: string; desc: string }
+  }
   /** 主标题第一行（黑） */
   title: string
   /** 主标题第二行（品牌橙） */

@@ -26,6 +26,17 @@ import type {
 
 export const hero: HomeHero = {
   badge: '对标 2026 版《危险化学品安全法》',
+  badgeHint: '点击查看',
+  leaveTip: {
+    title: '即将前往外部网站',
+    desc: '您将离开威易达官网，前往共产党员网查看《危险化学品安全法》相关内容，请注意信息安全。',
+    cancel: '取消',
+    confirm: '继续访问',
+  },
+  floats: {
+    compliance: { title: '合规校验通过', desc: '危化品运输资质已核验' },
+    transit: { title: '在途运输 12 辆', desc: '4 单待签收' },
+  },
   title: '威易达化工生产 + 危化运输',
   titleAccent: '一体化平台',
   desc: '覆盖销售订单、原料入库、工厂投产、成品发货与在途运输的全过程。业务数据一处录入、多处复用，合规记录随流程自动生成。',

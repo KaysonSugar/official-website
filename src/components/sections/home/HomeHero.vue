@@ -69,7 +69,7 @@ useCountUp(statsEl)
               @click.prevent="showLeaveTip = true"
             >
               <span class="h-[6px] w-[6px] rounded-full bg-[#2fb188]" aria-hidden="true" />
-              对标 2026 版《危险化学品安全法》
+              {{ siteConfig.hero.badge }}
             </a>
 
             <!-- 提示字：absolute 定位到胶囊右外 10px，top-1/2 + -translate-y-1/2 垂直居中，
@@ -78,7 +78,7 @@ useCountUp(statsEl)
               class="pointer-events-none absolute left-[calc(100%+10px)] top-1/2 inline-flex -translate-y-1/2 items-center gap-[3px] whitespace-nowrap text-[11px] leading-none text-ink-400 transition-colors duration-200 group-hover:text-brand-500"
               aria-hidden="true"
             >
-              点击查看
+              {{ siteConfig.hero.badgeHint }}
               <svg class="h-[9px] w-[9px]" viewBox="0 0 10 10" fill="none">
                 <path
                   d="M2.5 7.5 7.2 2.8M7.2 2.8H3.6M7.2 2.8v3.6"
@@ -180,8 +180,8 @@ useCountUp(statsEl)
               class="h-[38px] w-[38px] shrink-0 select-none"
             />
             <div class="ml-[10px] min-w-0 whitespace-nowrap">
-              <p class="text-[13px] font-semibold leading-none text-ink-900">合规校验通过</p>
-              <p class="mt-[7px] text-[10px] leading-none text-ink-400">危化品运输资质已核验</p>
+              <p class="text-[13px] font-semibold leading-none text-ink-900">{{ siteConfig.hero.floats.compliance.title }}</p>
+              <p class="mt-[7px] text-[10px] leading-none text-ink-400">{{ siteConfig.hero.floats.compliance.desc }}</p>
             </div>
           </div>
 
@@ -208,8 +208,8 @@ useCountUp(statsEl)
               class="h-[38px] w-[38px] shrink-0 select-none"
             />
             <div class="ml-[10px] min-w-0 whitespace-nowrap">
-              <p class="text-[13px] font-semibold leading-none text-ink-900">在途运输 12 辆</p>
-              <p class="mt-[7px] text-[10px] leading-none text-ink-400">4 单待签收</p>
+              <p class="text-[13px] font-semibold leading-none text-ink-900">{{ siteConfig.hero.floats.transit.title }}</p>
+              <p class="mt-[7px] text-[10px] leading-none text-ink-400">{{ siteConfig.hero.floats.transit.desc }}</p>
             </div>
           </div>
         </div>
@@ -280,11 +280,11 @@ useCountUp(statsEl)
               <div class="min-w-0">
                 <!-- 标题：18px 半粗，行高 26px -->
                 <h3 id="leave-tip-title" class="text-[18px] font-semibold leading-[26px] text-ink-900">
-                  即将前往外部网站
+                  {{ siteConfig.hero.leaveTip.title }}
                 </h3>
                 <!-- 说明：14px、行高 24px，mt-[8px] 与标题间距 8px -->
                 <p class="mt-[8px] text-sm leading-[24px] text-ink-600">
-                  您将离开威易达官网，前往共产党员网查看《危险化学品安全法》相关内容，请注意信息安全。
+                  {{ siteConfig.hero.leaveTip.desc }}
                 </p>
               </div>
             </div>
@@ -305,7 +305,7 @@ useCountUp(statsEl)
                 class="rounded-lg border border-ink-200 px-[22px] py-[9px] text-sm font-medium text-ink-700 transition-colors duration-200 hover:border-ink-300 hover:bg-ink-50 hover:text-ink-900"
                 @click="showLeaveTip = false"
               >
-                取消
+                {{ siteConfig.hero.leaveTip.cancel }}
               </button>
               <!-- 继续访问：品牌橙实底，px 22 / py 9，带橙色投影 -->
               <button
@@ -313,7 +313,7 @@ useCountUp(statsEl)
                 class="rounded-lg bg-brand-500 px-[22px] py-[9px] text-sm font-medium text-white shadow-[0_6px_16px_-6px_rgba(233,97,31,0.55)] transition-colors duration-200 hover:bg-brand-600"
                 @click="goExternal"
               >
-                继续访问
+                {{ siteConfig.hero.leaveTip.confirm }}
               </button>
             </div>
           </div>
