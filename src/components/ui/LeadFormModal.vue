@@ -97,12 +97,12 @@ onBeforeUnmount(() => {
         class="fixed inset-0 z-[110] flex items-center justify-center bg-ink-900/50 px-[20px] py-[40px] backdrop-blur-[2px]"
         @click.self="closeLeadForm"
       >
-        <!-- 弹窗：宽上限 600px，内边距 32px，圆角 16px；内容超高时自身滚动 -->
+        <!-- 弹窗：宽上限 640px，内边距 32px，圆角 16px；内容超高时自身滚动 -->
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="lead-title"
-          class="max-h-full w-full max-w-[600px] overflow-y-auto rounded-2xl bg-white p-[32px] shadow-[0_40px_90px_-30px_rgba(26,26,26,0.55)]"
+          class="max-h-full w-full max-w-[640px] overflow-y-auto rounded-2xl bg-white p-[32px] shadow-[0_40px_90px_-30px_rgba(26,26,26,0.55)]"
         >
           <!-- 标题区：48px 橙底圆角托住品牌标，标题升到 20px，图标和文字一个量级才压得住 -->
           <div class="flex items-center justify-between gap-[16px]">
