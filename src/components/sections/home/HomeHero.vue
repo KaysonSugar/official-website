@@ -57,16 +57,38 @@ useCountUp(statsEl)
         <div class="lg:mt-[10px]">
           <!-- 法规胶囊：位图换 DOM（烘焙文字在缩放屏上必糊，浏览器渲染永远锐利）。
                点击不直接跳外链，先弹确认层，确认后才开新标签去 12371.cn；
-               hover 描边和底色加深一档提示可点 -->
-          <a
-            :href="LAW_URL"
-            class="rise inline-flex h-8 items-center gap-[8px] rounded-full border border-[#ffd8bf] bg-[#fff1e8] pl-[12px] pr-[14px] text-[13px] font-medium leading-none text-[#c4520f] transition-colors duration-200 hover:border-[#f2a25c] hover:bg-[#ffeadb]"
-            :style="{ animationDelay: '0ms' }"
-            @click.prevent="showLeaveTip = true"
-          >
-            <span class="h-[6px] w-[6px] rounded-full bg-[#2fb188]" aria-hidden="true" />
-            对标 2026 版《危险化学品安全法》
-          </a>
+               hover 描边和底色加深一档提示可点。
+               外面包一层 relative inline-block，给右上角的「点击查看全文」提示定位 -->
+          <div class="rise relative inline-block" :style="{ animationDelay: '0ms' }">
+            <a
+              :href="LAW_URL"
+              class="inline-flex h-8 items-center gap-[8px] rounded-full border border-[#ffd8bf] bg-[#fff1e8] pl-[12px] pr-[14px] text-[13px] font-medium leading-none text-[#c4520f] transition-colors duration-200 hover:border-[#f2a25c] hover:bg-[#ffeadb]"
+              @click.prevent="showLeaveTip = true"
+            >
+              <span class="h-[6px] w-[6px] rounded-full bg-[#2fb188]" aria-hidden="true" />
+              对标 2026 版《危险化学品安全法》
+            </a>
+
+            <!-- 右上角点击提示：纯提示不挡点击（pointer-events-none），
+                 白底描边小圆签，贴胶囊右上角外 14/18px；
+                 pointer-events-none 让鼠标穿过它照样 hover 到胶囊 -->
+            <span
+              class="law-hint pointer-events-none absolute left-[calc(100%+14px)] top-[-18px] z-10 inline-flex items-center gap-[4px] whitespace-nowrap rounded-full border border-[#ffd8bf] bg-white px-[10px] py-[4px] text-[12px] font-medium leading-none text-[#c4520f] shadow-[0_4px_10px_-4px_rgba(196,82,15,0.35)]"
+              aria-hidden="true"
+            >
+              点击查看全文
+              <!-- 小箭头指向左下角的胶囊，交代"提示说的是它" -->
+              <svg class="h-[10px] w-[10px]" viewBox="0 0 10 10" fill="none">
+                <path
+                  d="M7.5 2.5 2.8 7.2M2.8 7.2V3.4M2.8 7.2h3.8"
+                  stroke="#e0874a"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
 
           <!-- 标题：48px、行距 73（leading-1.5），第二行品牌橙；手机上降到 28px -->
           <h1
@@ -392,6 +414,22 @@ useCountUp(statsEl)
 
   .feature-pill:hover {
     transform: none;
+  }
+}
+
+@keyframes law-hint-bob {
+  to {
+    transform: translateY(-3px);
+  }
+}
+
+.law-hint {
+  animation: law-hint-bob 2s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .law-hint {
+    animation: none;
   }
 }
 
