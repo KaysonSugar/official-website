@@ -227,37 +227,67 @@ useCountUp(statsEl)
     </div>
 
     <!-- 离开官网确认层：Teleport 到 body 避开 section 的 overflow-hidden 和层级；
-         点遮罩或「取消」关闭，确认才开新标签 -->
+         点遮罩或「取消」关闭，确认才开新标签。
+         专业弹窗规格：左侧警示图标 + 标题正文 + 链接展示框 + 分割线页脚大按钮 -->
     <Teleport to="body">
       <Transition name="tip">
         <div
           v-if="showLeaveTip"
-          class="fixed inset-0 z-[100] flex items-center justify-center bg-ink-900/45 px-[20px]"
+          class="fixed inset-0 z-[100] flex items-center justify-center bg-ink-900/50 px-[20px] backdrop-blur-[2px]"
           @click.self="showLeaveTip = false"
         >
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="leave-tip-title"
-            class="w-full max-w-[380px] rounded-2xl bg-white p-[28px] shadow-[0_30px_70px_-30px_rgba(26,26,26,0.5)]"
+            class="w-full max-w-[460px] rounded-2xl bg-white p-[32px] shadow-[0_40px_90px_-30px_rgba(26,26,26,0.55)]"
           >
-            <h3 id="leave-tip-title" class="text-[17px] font-bold leading-[24px] text-ink-900">
-              即将前往外部网站
-            </h3>
-            <p class="mt-[12px] text-[13px] leading-[22px] text-ink-600">
-              您将离开威易达官网，前往共产党员网（12371.cn）查看《危险化学品安全法》相关内容。
+            <!-- 头部：40px 橙底圆托警示图标，右侧标题 + 说明，图标和文字间距 16 -->
+            <div class="flex items-start gap-[16px]">
+              <!-- 警示图标：白叹号描边风，和品牌橙同一色系提示"注意"而非"报错" -->
+              <span
+                class="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#fff1e8]"
+                aria-hidden="true"
+              >
+                <svg class="h-[20px] w-[20px]" viewBox="0 0 20 20" fill="none">
+                  <path
+                    d="M10 5.2v5.6"
+                    stroke="#e06a1f"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                  <circle cx="10" cy="14.6" r="1.3" fill="#e06a1f" />
+                </svg>
+              </span>
+              <div class="min-w-0">
+                <h3 id="leave-tip-title" class="text-[18px] font-semibold leading-[26px] text-ink-900">
+                  即将前往外部网站
+                </h3>
+                <p class="mt-[8px] text-sm leading-[24px] text-ink-600">
+                  您将离开威易达官网，前往共产党员网查看《危险化学品安全法》相关内容，请注意信息安全。
+                </p>
+              </div>
+            </div>
+
+            <!-- 链接展示框：浅灰底让用户看清到底去哪，等宽字体更像"地址栏" -->
+            <p
+              class="mt-[20px] rounded-lg bg-[#f6f7f6] px-[16px] py-[12px] font-mono text-[13px] leading-[20px] break-all text-ink-500"
+            >
+              {{ LAW_URL }}
             </p>
-            <div class="mt-[24px] flex justify-end gap-[12px]">
+
+            <!-- 页脚：分割线隔开正文，按钮放大到 sm 级别，右对齐主操作在最后 -->
+            <div class="mt-[28px] flex items-center justify-end gap-[12px] border-t border-ink-100 pt-[24px]">
               <button
                 type="button"
-                class="rounded-lg border border-ink-200 px-[16px] py-[8px] text-[13px] font-medium text-ink-700 transition-colors duration-200 hover:border-ink-300 hover:text-ink-900"
+                class="rounded-lg border border-ink-200 px-[22px] py-[9px] text-sm font-medium text-ink-700 transition-colors duration-200 hover:border-ink-300 hover:bg-ink-50 hover:text-ink-900"
                 @click="showLeaveTip = false"
               >
                 取消
               </button>
               <button
                 type="button"
-                class="rounded-lg bg-brand-500 px-[16px] py-[8px] text-[13px] font-medium text-white transition-colors duration-200 hover:bg-brand-600"
+                class="rounded-lg bg-brand-500 px-[22px] py-[9px] text-sm font-medium text-white shadow-[0_6px_16px_-6px_rgba(233,97,31,0.55)] transition-colors duration-200 hover:bg-brand-600"
                 @click="goExternal"
               >
                 继续访问
@@ -333,7 +363,8 @@ useCountUp(statsEl)
   content: '';
   position: absolute;
   inset: 0;
-  box-shadow: 0 4px 12px -5px rgba(33, 50, 43, 0.26);
+  border-radius: inherit;
+  box-shadow: 0 6px 16px -6px rgba(33, 50, 43, 0.3);
   opacity: 0;
   transition: opacity 260ms ease;
   pointer-events: none;
