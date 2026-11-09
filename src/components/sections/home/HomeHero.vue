@@ -44,22 +44,21 @@ useCountUp(statsEl)
 </script>
 
 <template>
-  <!-- 首屏：relative 给装饰定位，overflow-hidden 裁掉探出视口的圆环；背景渐变见文件末尾 .hero-bg -->
+  <!-- 首屏：relative 给装饰元素定位，overflow-hidden 裁掉探出视口的圆环，背景渐变见末尾 .hero-bg -->
   <section id="home" class="hero-bg relative overflow-hidden">
-    <!-- 内容容器：和顶栏同一条左右基准线 -->
+    <!-- container-page：内容宽度上限 + 左右留白，和顶栏同一条基准线 -->
     <div class="container-page relative">
-      <!-- 两栏 11:10，列距 24；看板顶 67 所以上留白 67；<1024 上下堆叠（文案在上） -->
+      <!-- 栅格：手机单列 gap 56px；lg(≥1024) 分两栏 11:10、列距 24px、上留白 67px -->
       <div
         class="grid items-start gap-[56px] pt-[40px] sm:pt-[48px] lg:grid-cols-[11fr_10fr] lg:gap-[24px] lg:pt-[67px]"
       >
-        <!-- 左列：胶囊 → 标题 → 说明 → 按钮 → 卖点。
-             比看板顶低 10px，几段间距都加过一点，让左列底部和看板底部齐平 -->
+        <!-- 左列：lg 下整体下移 10px（lg:mt-[10px]），让左列底和看板底齐平 -->
         <div class="lg:mt-[10px]">
-          <!-- 法规胶囊：位图换 DOM（烘焙文字在缩放屏上必糊，浏览器渲染永远锐利）。
-               点击不直接跳外链，先弹确认层，确认后才开新标签去 12371.cn；
-               hover 描边和底色加深一档提示可点。
-               外面包一层 relative inline-block，给右上角的「点击查看全文」提示定位 -->
-          <div class="rise relative inline-block" :style="{ animationDelay: '0ms' }">
+          <!-- 胶囊容器：relative inline-block 收窄到内容宽，右侧提示靠它定位；
+               group 供子元素用 group-hover 联动 -->
+          <div class="rise group relative inline-block" :style="{ animationDelay: '0ms' }">
+            <!-- 胶囊：inline-flex 横排，h-8 高 32px，gap 8px 圆点与文字间距，rounded-full 全圆角，
+                 pl 12 / pr 14 内边距，13px 字号；hover 描边、底色各深一档 -->
             <a
               :href="LAW_URL"
               class="inline-flex h-8 items-center gap-[8px] rounded-full border border-[#ffd8bf] bg-[#fff1e8] pl-[12px] pr-[14px] text-[13px] font-medium leading-none text-[#c4520f] transition-colors duration-200 hover:border-[#f2a25c] hover:bg-[#ffeadb]"
@@ -69,19 +68,17 @@ useCountUp(statsEl)
               对标 2026 版《危险化学品安全法》
             </a>
 
-            <!-- 右上角点击提示：纯提示不挡点击（pointer-events-none），
-                 白底描边小圆签，贴胶囊右上角外 14/18px；
-                 pointer-events-none 让鼠标穿过它照样 hover 到胶囊 -->
+            <!-- 提示字：absolute 定位到胶囊右外 10px，top-1/2 + -translate-y-1/2 垂直居中，
+                 11px 灰字；pointer-events-none 不挡点击，group-hover 变品牌橙 -->
             <span
-              class="law-hint pointer-events-none absolute left-[calc(100%+14px)] top-[-18px] z-10 inline-flex items-center gap-[4px] whitespace-nowrap rounded-full border border-[#ffd8bf] bg-white px-[10px] py-[4px] text-[12px] font-medium leading-none text-[#c4520f] shadow-[0_4px_10px_-4px_rgba(196,82,15,0.35)]"
+              class="pointer-events-none absolute left-[calc(100%+10px)] top-1/2 inline-flex -translate-y-1/2 items-center gap-[3px] whitespace-nowrap text-[11px] leading-none text-ink-400 transition-colors duration-200 group-hover:text-brand-500"
               aria-hidden="true"
             >
-              点击查看全文
-              <!-- 小箭头指向左下角的胶囊，交代"提示说的是它" -->
-              <svg class="h-[10px] w-[10px]" viewBox="0 0 10 10" fill="none">
+              点击查看
+              <svg class="h-[9px] w-[9px]" viewBox="0 0 10 10" fill="none">
                 <path
-                  d="M7.5 2.5 2.8 7.2M2.8 7.2V3.4M2.8 7.2h3.8"
-                  stroke="#e0874a"
+                  d="M2.5 7.5 7.2 2.8M7.2 2.8H3.6M7.2 2.8v3.6"
+                  stroke="currentColor"
                   stroke-width="1.4"
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -90,18 +87,17 @@ useCountUp(statsEl)
             </span>
           </div>
 
-          <!-- 标题：48px、行距 73（leading-1.5），第二行品牌橙；手机上降到 28px -->
+          <!-- 标题：手机 28px/1.35，sm 36px，lg 48px/1.5；mt-[30px] 与胶囊间距 30px -->
           <h1
             class="rise mt-[30px] text-[28px] font-bold leading-[1.35] text-ink-900 sm:text-4xl lg:text-[48px] lg:leading-[1.5]"
             :style="{ animationDelay: '70ms' }"
           >
             {{ siteConfig.hero.title }}
-            <!-- 第二行品牌橙强调。48px 大字按 WCAG 要 3:1，brand-500 只有 2.45，
-                 用 brand-600（3.06）；再深就成砖色了，观感差 -->
+            <!-- 第二行：block 独占一行，mt-[5px] 两行间距 5px，brand-600 橙（对比度 3.06 达标） -->
             <span class="block mt-[5px] text-brand-600">{{ siteConfig.hero.titleAccent }}</span>
           </h1>
 
-          <!-- 说明：一行最多 592，行距 26（leading-1.65） -->
+          <!-- 说明：mt-[40px] 与标题间距 40px，max-w-[592px] 一行最宽 592px，15px/1.65（lg 16px） -->
           <p
             class="rise mt-[40px] max-w-[592px] text-[15px] leading-relaxed text-ink-600 lg:text-base lg:leading-[1.65]"
             :style="{ animationDelay: '140ms' }"
@@ -109,8 +105,8 @@ useCountUp(statsEl)
             {{ siteConfig.hero.desc }}
           </p>
 
-          <!-- 主按钮：稿子 358×50，所以用 lg 尺寸又把高度压到 50、宽度定 360。
-               hero-cta 挂边框流星 + hover 呼吸（样式在本文件末尾，只作用于这一颗） -->
+          <!-- 主按钮：mt-[30px] 与说明间距 30px；lg 下高 50px、宽 360px，手机满宽；
+               hero-cta 挂流星描边和 hover 呼吸（样式见末尾，只作用于这一颗） -->
           <div class="rise mt-[30px]" :style="{ animationDelay: '210ms' }">
             <BaseButton
               :href="siteConfig.contact.ctaHref"
@@ -124,15 +120,15 @@ useCountUp(statsEl)
             </BaseButton>
           </div>
 
-          <!-- 卖点胶囊：白底半透明 + 细描边，间距 10，内边距 上7 左12 右14。
-               hover 的规格写在 .feature-pill 里，这里不留 transition 类名 -->
+          <!-- 卖点列表：mt-[36px] 与按钮间距 36px，flex-wrap 换行，gap-[10px] 胶囊间距；
+               li 白底 80%、ink-100 描边，py 7 / pl 12 / pr 14，hover 规格写在 .feature-pill -->
           <ul class="rise mt-[36px] flex flex-wrap gap-[10px]" :style="{ animationDelay: '280ms' }">
             <li
               v-for="feature in siteConfig.hero.features"
               :key="feature"
               class="feature-pill flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-sm font-medium text-ink-700"
             >
-              <!-- 对勾：稿子里没有圆底，就是一根 #2f9e6e 的线条勾 -->
+              <!-- 对勾：14px 见方，shrink-0 不被文字挤压 -->
               <svg
                 class="h-[14px] w-[14px] shrink-0"
                 viewBox="0 0 14 14"
@@ -152,13 +148,14 @@ useCountUp(statsEl)
           </ul>
         </div>
 
-        <!-- 右列：看板整图 + 两张浮层卡。整块是示意图，对读屏隐藏免得念一堆数字 -->
+        <!-- 右列：relative 给两张浮层卡定位；mx-auto 居中，max-w 手机 544 / sm 608，lg 不限宽；
+             整块是示意图，aria-hidden 对读屏隐藏 -->
         <div
           class="relative mx-auto w-full max-w-[544px] sm:max-w-[608px] lg:mt-0 lg:max-w-none"
           aria-hidden="true"
         >
-          <!-- 右上同心圆：800×800，圆心 (1062,296)。尺寸位置都按看板的百分比写，
-               窗口变宽时跟着看板等比缩放，不然会出现圆环不动、内容拉伸 -->
+          <!-- 同心圆：absolute + 百分比（left -16.9%、top -37.1%、宽 134.2%）跟着看板等比缩放；
+               max-w-none 抵消 preflight 的 img max-width:100%，否则会被钳到列宽 -->
           <img
             :src="ringsImg"
             alt=""
@@ -166,9 +163,8 @@ useCountUp(statsEl)
             class="breathe pointer-events-none absolute left-[-16.9%] top-[-37.1%] w-[134.2%] max-w-none select-none"
           />
 
-          <!-- 合规卡：改 DOM——烘焙文字的图片在缩放屏上必糊（4 倍源也救不回来），
-               文字走浏览器渲染永远锐利。设计尺寸 188×63，左探 59、卡顶在看板顶上 47
-               （= 导航栏下 20）；手机上收进看板左上角，不探出屏幕 -->
+          <!-- 合规卡：手机贴看板左上（left 10 / top -14），lg 探出左外 59px、上 47px；
+               h 63 / w 188 固定尺寸，rounded 10px，pl 10，ring-1 一圈 5% 黑描边 -->
           <div
             class="pop-in absolute left-[10px] top-[-14px] z-10 flex h-[63px] w-[188px] items-center rounded-[10px] bg-white pl-[10px] shadow-[0_18px_36px_-18px_rgba(26,26,26,0.3)] ring-1 ring-black/5 lg:left-[-59px] lg:top-[-47px]"
             :style="{ '--pop-d': '450ms' }"
@@ -185,15 +181,10 @@ useCountUp(statsEl)
             </div>
           </div>
 
-          <!-- 看板整卡：DOM 绘制（HomeWorkbench 组件）。
-               relative 不能省：圆环是 absolute，普通流元素会被它盖住。
-               圆角与投影必须挂在同一个元素上：投影是按这个元素的圆角矩形画的，
-               卡片自己再画一个小一点的圆角，拐角外侧就会漏出一道白月牙（右下角那道白边）。
-               内部 HomeWorkbench 用 rounded-[inherit] 跟随这里。
-               hover 位移用 8px 不用 6px——6×1.25(缩放率)=7.5 物理像素，
-               半像素位移会让文字被重采样，动画期间发虚发跳。
-               这里不加 will-change：卡片里全是 10~13px 的小字，常驻合成层会让字变灰，
-               只在过渡那 0.5s 里临时合成，跑完 Chrome 自己把层丢掉，字回到彩色描边 -->
+          <!-- 看板卡片：relative 让卡片压住圆环（圆环是 absolute）；rounded-xl/2xl 圆角 +
+               overflow-hidden 裁内部（HomeWorkbench 用 rounded-[inherit] 跟随）；
+               transition-transform 500ms，hover:-translate-y-2 上浮 8px（6px 是半像素会糊字）；
+               不加 will-change，10~13px 小字常驻合成层会变灰 -->
           <div
             class="slide-in relative w-full overflow-hidden rounded-xl bg-[#eef2ef] shadow-[0_28px_70px_-24px_rgba(26,26,26,0.28)] transition-transform duration-500 ease-out hover:-translate-y-2 lg:rounded-2xl"
             :style="{ animationDelay: '150ms' }"
@@ -201,8 +192,7 @@ useCountUp(statsEl)
             <HomeWorkbench />
           </div>
 
-          <!-- 在途卡：同样改 DOM。设计 160×63，左探 120、底边贴看板底；
-               手机上收进看板左下角 -->
+          <!-- 在途卡：手机 bottom 8 / left 10 贴看板左下，lg 探出左外 120px 并贴底；h 63 / w 160 -->
           <div
             class="pop-in absolute bottom-[8px] left-[10px] z-10 flex h-[63px] w-[160px] items-center rounded-[10px] bg-white pl-[10px] shadow-[0_18px_36px_-18px_rgba(26,26,26,0.3)] ring-1 ring-black/5 lg:bottom-0 lg:left-[-120px]"
             :style="{ '--pop-d': '550ms' }"
@@ -221,22 +211,22 @@ useCountUp(statsEl)
         </div>
       </div>
 
-      <!-- 分隔线：看板底 → 线 34，线 → 数字条 38，数字条 → 底 50 -->
+      <!-- 下半段：手机 pb 40px；lg 距看板 34px、底部留 50px；分隔线 h-[2px] 通栏 -->
       <div class="pb-[40px] lg:mt-[34px] lg:pb-[50px]">
         <img :src="dividerImg" alt="" aria-hidden="true" class="h-[2px] w-full" />
 
-        <!-- 四条数字：整块 1280×62，首末列贴两端；手机两列，≥640 转一行两端对齐。
-             tabular-nums 让递增时数字等宽，不然会左右抖 -->
+        <!-- 数字条：手机两列、行距 24px；sm 起 flex 一行 justify-between 两端对齐；
+             tabular-nums 等宽数字，递增时不左右抖 -->
         <dl
           ref="statsEl"
           class="rise mt-[32px] grid grid-cols-2 gap-y-[24px] sm:mt-[48px] sm:flex sm:flex-wrap sm:justify-between sm:gap-x-[32px] sm:gap-y-[24px] lg:mt-[38px] [font-variant-numeric:tabular-nums]"
           :style="{ animationDelay: '350ms' }"
         >
-          <!-- dl 规范要求 dt 在前，视觉上数值要在上面，所以面板翻过来排（col-reverse） -->
+          <!-- 每项：flex-col-reverse 让数值排在标签上方（dl 里 dt 必须写在前面） -->
           <div v-for="stat in stats" :key="stat.label" class="flex flex-col-reverse">
-            <!-- 标签：13px 弱化灰，离数值 10px -->
+            <!-- 标签：13px ink-400，mt-[10px] 与数值间距 10px -->
             <dt class="mt-[10px] text-[13px] text-ink-400">{{ stat.label }}</dt>
-            <!-- 数值：24px 加粗；能递增的交给 count-up，data-* 传目标和尾巴 -->
+            <!-- 数值：text-2xl 即 24px、加粗、无行距；data-* 给 useCountUp 传目标值和尾巴 -->
             <dd class="text-2xl font-bold leading-none text-ink-900">
               <span v-if="stat.count" :data-num="stat.count.num" :data-rest="stat.count.rest">{{
                 '0' + stat.count.rest
@@ -248,9 +238,9 @@ useCountUp(statsEl)
       </div>
     </div>
 
-    <!-- 离开官网确认层：Teleport 到 body 避开 section 的 overflow-hidden 和层级；
-         点遮罩或「取消」关闭，确认才开新标签。
-         专业弹窗规格：左侧警示图标 + 标题正文 + 链接展示框 + 分割线页脚大按钮 -->
+    <!-- 外链确认层：Teleport 到 body，避开 section 的 overflow-hidden；
+         fixed inset-0 满屏遮罩，z-[100] 盖住顶栏，bg-ink-900/50 + 2px backdrop-blur；
+         点遮罩空白处关闭，确认后才开新标签 -->
     <Teleport to="body">
       <Transition name="tip">
         <div
@@ -258,15 +248,16 @@ useCountUp(statsEl)
           class="fixed inset-0 z-[100] flex items-center justify-center bg-ink-900/50 px-[20px] backdrop-blur-[2px]"
           @click.self="showLeaveTip = false"
         >
+          <!-- 弹窗卡片：宽上限 460px、内边距 32px、圆角 16px，深投影 -->
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="leave-tip-title"
             class="w-full max-w-[460px] rounded-2xl bg-white p-[32px] shadow-[0_40px_90px_-30px_rgba(26,26,26,0.55)]"
           >
-            <!-- 头部：40px 橙底圆托警示图标，右侧标题 + 说明，图标和文字间距 16 -->
+            <!-- 头部：flex 横排，gap-[16px] 图标与文字间距，items-start 顶部对齐 -->
             <div class="flex items-start gap-[16px]">
-              <!-- 警示图标：白叹号描边风，和品牌橙同一色系提示"注意"而非"报错" -->
+              <!-- 警示图标：40px 圆形橙底（rounded-full），内含 20px 叹号，shrink-0 不被压缩 -->
               <span
                 class="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#fff1e8]"
                 aria-hidden="true"
@@ -281,25 +272,30 @@ useCountUp(statsEl)
                   <circle cx="10" cy="14.6" r="1.3" fill="#e06a1f" />
                 </svg>
               </span>
+              <!-- 文字区：min-w-0 允许收缩，长链接不会把弹窗撑宽 -->
               <div class="min-w-0">
+                <!-- 标题：18px 半粗，行高 26px -->
                 <h3 id="leave-tip-title" class="text-[18px] font-semibold leading-[26px] text-ink-900">
                   即将前往外部网站
                 </h3>
+                <!-- 说明：14px、行高 24px，mt-[8px] 与标题间距 8px -->
                 <p class="mt-[8px] text-sm leading-[24px] text-ink-600">
                   您将离开威易达官网，前往共产党员网查看《危险化学品安全法》相关内容，请注意信息安全。
                 </p>
               </div>
             </div>
 
-            <!-- 链接展示框：浅灰底让用户看清到底去哪，等宽字体更像"地址栏" -->
+            <!-- 链接框：mt-[20px]，浅灰底，px 16 / py 12 内边距；等宽字体，
+                 break-all 让长链接强制折行不撑宽弹窗 -->
             <p
               class="mt-[20px] rounded-lg bg-[#f6f7f6] px-[16px] py-[12px] font-mono text-[13px] leading-[20px] break-all text-ink-500"
             >
               {{ LAW_URL }}
             </p>
 
-            <!-- 页脚：分割线隔开正文，按钮放大到 sm 级别，右对齐主操作在最后 -->
+            <!-- 页脚：mt-[28px] + pt-[24px]，border-t 顶部分割线，gap-[12px] 按钮间距，右对齐 -->
             <div class="mt-[28px] flex items-center justify-end gap-[12px] border-t border-ink-100 pt-[24px]">
+              <!-- 取消：描边按钮，px 22 / py 9，hover 描边与底色加深 -->
               <button
                 type="button"
                 class="rounded-lg border border-ink-200 px-[22px] py-[9px] text-sm font-medium text-ink-700 transition-colors duration-200 hover:border-ink-300 hover:bg-ink-50 hover:text-ink-900"
@@ -307,6 +303,7 @@ useCountUp(statsEl)
               >
                 取消
               </button>
+              <!-- 继续访问：品牌橙实底，px 22 / py 9，带橙色投影 -->
               <button
                 type="button"
                 class="rounded-lg bg-brand-500 px-[22px] py-[9px] text-sm font-medium text-white shadow-[0_6px_16px_-6px_rgba(233,97,31,0.55)] transition-colors duration-200 hover:bg-brand-600"
@@ -414,22 +411,6 @@ useCountUp(statsEl)
 
   .feature-pill:hover {
     transform: none;
-  }
-}
-
-@keyframes law-hint-bob {
-  to {
-    transform: translateY(-3px);
-  }
-}
-
-.law-hint {
-  animation: law-hint-bob 2s ease-in-out infinite alternate;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .law-hint {
-    animation: none;
   }
 }
 
