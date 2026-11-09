@@ -104,35 +104,35 @@ onBeforeUnmount(() => {
           aria-labelledby="lead-title"
           class="max-h-full w-full max-w-[600px] overflow-y-auto rounded-2xl bg-white p-[32px] shadow-[0_40px_90px_-30px_rgba(26,26,26,0.55)]"
         >
-          <!-- 标题区：左侧标题 + 一行说明，右侧品牌 logo + 32px 关闭按钮 -->
+          <!-- 标题区：品牌标 + 标题说明在左侧，右侧只留 32px 关闭按钮 -->
           <div class="flex items-start justify-between gap-[16px]">
-            <div>
-              <h3 id="lead-title" class="text-[18px] font-semibold leading-[26px] text-ink-900">
-                预约产品演示
-              </h3>
-              <p class="mt-[6px] text-[13px] leading-[22px] text-ink-600">
-                留下联系方式，顾问将在 1 个工作日内与您联系。
-              </p>
+            <!-- 品牌标：32px 见方，纯标识不带文字（弹窗里放全称会挤），与标题间距 12 -->
+            <div class="flex min-w-0 items-center gap-[12px]">
+              <img :src="logoMark" alt="" aria-hidden="true" class="h-[32px] w-[32px] shrink-0 select-none object-contain" />
+              <div>
+                <h3 id="lead-title" class="text-[18px] font-semibold leading-[26px] text-ink-900">
+                  预约产品演示
+                </h3>
+                <p class="mt-[6px] text-[13px] leading-[22px] text-ink-600">
+                  留下联系方式，顾问将在 1 个工作日内与您联系。
+                </p>
+              </div>
             </div>
-            <!-- 品牌标：32px 见方，纯标识不带文字（弹窗里放全称会挤） -->
-            <div class="flex shrink-0 items-center gap-[10px]">
-              <img :src="logoMark" alt="" aria-hidden="true" class="h-[32px] w-[32px] select-none object-contain" />
-              <button
-                type="button"
-                aria-label="关闭"
-                class="-mr-[6px] -mt-[4px] flex h-[32px] w-[32px] items-center justify-center rounded-lg text-ink-400 transition-colors duration-200 hover:bg-ink-50 hover:text-ink-700"
-                @click="closeLeadForm"
-              >
-                <svg class="h-[16px] w-[16px]" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path
-                    d="m4 4 8 8M12 4l-8 8"
-                    stroke="currentColor"
-                    stroke-width="1.6"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </button>
-            </div>
+            <button
+              type="button"
+              aria-label="关闭"
+              class="-mr-[6px] -mt-[4px] flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-lg text-ink-400 transition-colors duration-200 hover:bg-ink-50 hover:text-ink-700"
+              @click="closeLeadForm"
+            >
+              <svg class="h-[16px] w-[16px]" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="m4 4 8 8M12 4l-8 8"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
           </div>
 
           <!-- 成功态：对勾 + 文案 + 关闭；不再显示表单 -->
