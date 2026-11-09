@@ -18,7 +18,9 @@ const { matrix } = siteConfig
 const flow = matrix.flow
 
 // 六边形节点几何（viewBox 1920×1000）：中心坐标 + 六边形宽高。
-// 竖列三颗（货主/物流/自营）间距已加大：中间行整体 455→495，自营 752→832
+// 竖列三颗（货主/物流/自营）间距已加大：中间行整体 455→495，自营 752→832。
+// 整体缩了一圈：152×172 → 128×145（约 0.84），外圈同比缩到 ~10px 色带，
+// 白图标 90×99 → 76×84；节点名跟着 HEX_H 自动上移 13.5，间距仍是 46 不用另调
 const NODE_GEO: Record<string, { x: number; y: number }> = {
   chemical: { x: 152, y: 159 },
   shipper: { x: 725, y: 159 },
@@ -28,12 +30,13 @@ const NODE_GEO: Record<string, { x: number; y: number }> = {
   national: { x: 1750, y: 497 },
   own: { x: 726, y: 832 },
 }
-const HEX_W = 152
-const HEX_H = 172
+const HEX_W = 128
+const HEX_H = 145
 
 // 连线几何：箭头尖端统一停在节点外圈外 ~8px（与节点图标距离全图一致）；
 // 竖线只占「节点文字下方 ↔ 下一颗六边形外圈上方」的短段，不穿过文字；
-// 绿色 = 正向流转（箭头指向 to 端），橙色 = 回程/调度
+// 节点缩圈后两端各朝节点回补 14（横）/ 14~16（竖），间隙保持原样，
+// 不然箭头会悬在半空；绿色 = 正向流转，橙色 = 回程/调度
 const LINES: {
   id: string
   x1: number
@@ -42,17 +45,17 @@ const LINES: {
   y2: number
   tone: 'green' | 'orange'
 }[] = [
-  { id: 'order', x1: 246, y1: 142, x2: 615, y2: 142, tone: 'green' },
-  { id: 'compare', x1: 646, y1: 176, x2: 261, y2: 176, tone: 'orange' },
-  { id: 'return', x1: 706, y1: 396, x2: 706, y2: 323, tone: 'orange' },
-  { id: 'encrypt', x1: 752, y1: 316, x2: 752, y2: 390, tone: 'green' },
-  { id: 'quote', x1: 646, y1: 493, x2: 261, y2: 493, tone: 'green' },
-  { id: 'bid', x1: 246, y1: 527, x2: 615, y2: 527, tone: 'orange' },
-  { id: 'transfer', x1: 830, y1: 493, x2: 1145, y2: 493, tone: 'green' },
-  { id: 'status', x1: 1176, y1: 527, x2: 834, y2: 527, tone: 'orange' },
-  { id: 'source', x1: 1360, y1: 493, x2: 1640, y2: 493, tone: 'green' },
-  { id: 'accept', x1: 1670, y1: 527, x2: 1364, y2: 527, tone: 'orange' },
-  { id: 'dispatch', x1: 727, y1: 644, x2: 727, y2: 711, tone: 'orange' },
+  { id: 'order', x1: 232, y1: 142, x2: 629, y2: 142, tone: 'green' },
+  { id: 'compare', x1: 660, y1: 176, x2: 247, y2: 176, tone: 'orange' },
+  { id: 'return', x1: 706, y1: 412, x2: 706, y2: 309, tone: 'orange' },
+  { id: 'encrypt', x1: 752, y1: 302, x2: 752, y2: 406, tone: 'green' },
+  { id: 'quote', x1: 660, y1: 493, x2: 247, y2: 493, tone: 'green' },
+  { id: 'bid', x1: 232, y1: 527, x2: 629, y2: 527, tone: 'orange' },
+  { id: 'transfer', x1: 816, y1: 493, x2: 1159, y2: 493, tone: 'green' },
+  { id: 'status', x1: 1190, y1: 527, x2: 820, y2: 527, tone: 'orange' },
+  { id: 'source', x1: 1346, y1: 493, x2: 1654, y2: 493, tone: 'green' },
+  { id: 'accept', x1: 1684, y1: 527, x2: 1350, y2: 527, tone: 'orange' },
+  { id: 'dispatch', x1: 727, y1: 630, x2: 727, y2: 727, tone: 'orange' },
 ]
 
 // 线上文字的锚点（x/y 为基线位置）：above 线上方 26、below 线下方 34、right 竖线右侧
@@ -109,7 +112,8 @@ function hexPoints(cx: number, cy: number, w: number, h: number): string {
     .join(' ')
 }
 
-// 箭头三角：沿 (x1,y1)→(x2,y2) 方向，尖端超出终点 13，底边宽 24
+// 箭头三角：沿 (x1,y1)→(x2,y2) 方向，尖端超出终点 13，底边宽 24 → 20（跟着细线收窄，
+// 尖端仍压 13 不动，端点才不用重算）
 function arrowPoints(l: { x1: number; y1: number; x2: number; y2: number }): string {
   const dx = l.x2 - l.x1
   const dy = l.y2 - l.y1
@@ -122,7 +126,7 @@ function arrowPoints(l: { x1: number; y1: number; x2: number; y2: number }): str
   const tipY = l.y2 + uy * 13
   const baseX = l.x2 - ux * 2
   const baseY = l.y2 - uy * 2
-  return `${tipX},${tipY} ${baseX + nx * 12},${baseY + ny * 12} ${baseX - nx * 12},${baseY - ny * 12}`
+  return `${tipX},${tipY} ${baseX + nx * 10},${baseY + ny * 10} ${baseX - nx * 10},${baseY - ny * 10}`
 }
 
 // 节点入场顺序 = 配置 nodes 顺序，每颗 +110ms
@@ -138,9 +142,10 @@ function lineDelay(i: number): string {
 </script>
 
 <template>
-  <!-- 画布：viewBox 1920×956 等比缩放；role=img + aria-label 读屏描述 -->
+  <!-- 画布：viewBox 1920×1000 等比缩放；role=img + aria-label 读屏描述 -->
   <svg class="flow-svg" viewBox="0 0 1920 1000" role="img" :aria-label="flow.alt">
-    <!-- 连线层：虚线 + 箭头，先入场再虚线流动（两段 animation，见 style） -->
+    <!-- 连线层：虚线 stroke-width 5 → 4（细一圈）、dash 22/24 不变，箭头底边 20；
+         先入场再虚线流动（两段 animation，见 style） -->
     <g v-for="(l, i) in LINES" :key="l.id" class="flow-line" :style="{ '--d': lineDelay(i) }">
       <line
         :x1="l.x1"
@@ -148,7 +153,7 @@ function lineDelay(i: number): string {
         :x2="l.x2"
         :y2="l.y2"
         :stroke="TONE[l.tone].base"
-        stroke-width="5"
+        stroke-width="4"
         stroke-dasharray="22 24"
         stroke-linecap="round"
       />
@@ -157,7 +162,7 @@ function lineDelay(i: number): string {
 
     <!-- 节点层：外圈淡色实底六边形（直接贴着实底边缘，无白缝）+ 实底六边形 + 白色图标 + 下方名称 -->
     <g v-for="n in flow.nodes" :key="n.id" class="flow-node" :style="{ '--d': nodeDelay(n.id) }">
-      <!-- 外圈：1.16 倍六边形、42% 透明同色填充，画在实底下面只露出 ~12px 的贴边色带 -->
+      <!-- 外圈：1.16 倍六边形、42% 透明同色填充，画在实底下面只露出 ~10px 的贴边色带 -->
       <polygon
         :points="hexPoints(NODE_GEO[n.id].x, NODE_GEO[n.id].y, HEX_W * 1.16, HEX_H * 1.16)"
         :fill="TONE[n.tone].ring"
@@ -166,13 +171,13 @@ function lineDelay(i: number): string {
         :points="hexPoints(NODE_GEO[n.id].x, NODE_GEO[n.id].y, HEX_W, HEX_H)"
         :fill="TONE[n.tone].base"
       />
-      <!-- 图标：90×99 裁切框居中（约为六边形宽的 6 成，留出呼吸空隙） -->
+      <!-- 图标：76×84 裁切框居中（仍是六边形宽的 6 成，留一样的呼吸空隙） -->
       <image
         :href="iconMap[n.icon]"
-        :x="NODE_GEO[n.id].x - 45"
-        :y="NODE_GEO[n.id].y - 49.5"
-        width="90"
-        height="99"
+        :x="NODE_GEO[n.id].x - 38"
+        :y="NODE_GEO[n.id].y - 42"
+        width="76"
+        height="84"
       />
       <text
         class="flow-node-label"
