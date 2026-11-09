@@ -28,14 +28,15 @@ useReveal(root)
 </script>
 
 <template>
-  <!-- 区块底：白到浅灰绿的细微渐变，原型上几乎看不出来的那层；
-       内边距在原型基础上加宽：上 90 / 下 80（用户要求上+40 下+30） -->
+  <!-- 区块：bg-[linear-gradient] 白到浅灰绿（180deg，#ffffff → #fafbfa）；
+       pt-[96px] 上留白 96px、pb-[64px] 下留白 64px -->
   <section
     ref="root"
     class="bg-[linear-gradient(180deg,#ffffff_0%,#fafbfa_100%)] pb-[64px] pt-[96px]"
   >
     <div class="container-page">
-      <!-- 眉题：11px 橙色小字，宽字距，原型里的「英文 / 中文」一行 -->
+      <!-- 眉题：reveal 走入场；mt-[46px] 与区块顶间距 46px；11px/16px 加粗，
+           字距 tracking 0.05em（sm 起 0.2em）、brand-500 橙 -->
       <p
         class="reveal mt-[46px] text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
@@ -43,7 +44,7 @@ useReveal(root)
         {{ industry.eyebrow }}
       </p>
 
-      <!-- 板块标题：32px 加粗，比首屏 48px 低一档 -->
+      <!-- 标题：mt-[44px] 与眉题间距 44px；32px/42px 加粗、ink-900 -->
       <h2
         class="reveal mt-[44px] text-[32px] font-bold leading-[42px] text-ink-900"
         style="--d: 80ms"
@@ -51,12 +52,13 @@ useReveal(root)
         {{ industry.title }}
       </h2>
 
-      <!-- 一行说明：14px 弱化灰 -->
+      <!-- 说明：mt-[46px] 与标题间距 46px；14px/22px、ink-600 弱灰 -->
       <p class="reveal mt-[46px] text-[14px] leading-[22px] text-ink-600" style="--d: 160ms">
         {{ industry.desc }}
       </p>
 
-      <!-- 四张法规卡：间距 20，卡片宽 (1280-60)/4=305；窄屏降 2 列 / 1 列 -->
+      <!-- 卡片栅格：mt-[44px] 与说明间距 44px；gap-[20px]；
+           手机 grid-cols-1 → sm 2 列 → lg 4 列，卡片宽约 305px -->
       <div class="mt-[44px] grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:grid-cols-4">
         <article
           v-for="(card, i) in industry.cards"
@@ -64,7 +66,8 @@ useReveal(root)
           class="reveal card-lift rounded-[16px] border border-ink-100 bg-white p-[24px]"
           :style="{ '--d': `${200 + i * 100}ms` }"
         >
-          <!-- 图标：素材 176×176 自带圆角浅底，显示 42 -->
+          <!-- 图标：固定 42×42（h-[42px] w-[42px]），素材自带圆角浅底；
+               hover 卡片时放大到 1.06（scale 写在末尾 style 里） -->
           <img
             loading="lazy"
             decoding="async"
@@ -74,31 +77,35 @@ useReveal(root)
             class="h-[42px] w-[42px] select-none"
           />
 
-          <!-- 条款号：11px 焦橙，原型里比眉题深一档 -->
+          <!-- 条款号：mt-[18px] 与图标间距 18px；11px/16px 加粗、
+               字距 0.05em、brand-700 深橙 -->
           <p
             class="mt-[18px] text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-700"
           >
             {{ card.label }}
           </p>
 
-          <!-- 卡片标题：16px 加粗 -->
+          <!-- 卡标题：mt-[14px] 与条款号间距 14px；16px/24px 加粗 -->
           <h3 class="mt-[14px] text-[16px] font-bold leading-[24px] text-ink-900">
             {{ card.title }}
           </h3>
 
-          <!-- 卡片正文：13px / 22 行高，和卡标题贴得近 -->
+          <!-- 卡正文：mt-[6px] 与标题间距 6px；13px/22px、ink-600 -->
           <p class="mt-[6px] text-[13px] leading-[22px] text-ink-600">
             {{ card.desc }}
           </p>
         </article>
       </div>
 
-      <!-- 平台响应提示条：72 高浅橙底，左侧 3px 橙竖条，文字暖棕 -->
+      <!-- 提示条：mt-[46px] 与卡片间距 46px；h-[72px] 定高、flex 垂直居中、
+           gap-[16px]；px-[24px] 左右内边距、rounded-[12px] 圆角、#fff6ef 浅橙底 -->
       <div
-        class="reveal mt-[46px] flex h-[72px] items-center gap-[16px] rounded-[12px] bg-[#fff6ef] pl-[24px] pr-[24px]"
+        class="reveal mt-[46px] flex h-[72px] items-center gap-[16px] rounded-[12px] bg-[#fff6ef] px-[24px]"
         style="--d: 600ms"
       >
+        <!-- 竖条：w-[3px] h-[36px]，shrink-0 不被文字挤压，rounded-full 全圆角、brand-400 -->
         <span class="h-[36px] w-[3px] shrink-0 rounded-full bg-brand-400" aria-hidden="true" />
+        <!-- 提示文字：13px/22px、#6b5138 暖棕 -->
         <p class="text-[13px] leading-[22px] text-[#6b5138]">{{ industry.note }}</p>
       </div>
     </div>
@@ -106,8 +113,6 @@ useReveal(root)
 </template>
 
 <style scoped>
-/* 卡片 hover 时图标轻放大 6%：transform 只作用在 img（无文字），跟全局 card-lift
-   的浮起凑成两级反馈。曲线用起停都缓的 0.4/0/0.2/1，跟首屏胶囊 hover 同款 */
 .card-lift img {
   transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -116,7 +121,6 @@ useReveal(root)
   transform: scale(1.06);
 }
 
-/* 减弱动效：图标别缩放，只留卡片自己的浮起 */
 @media (prefers-reduced-motion: reduce) {
   .card-lift img {
     transition: none;

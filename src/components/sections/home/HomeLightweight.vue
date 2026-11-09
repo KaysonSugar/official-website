@@ -56,9 +56,10 @@ useReveal(root)
 </script>
 
 <template>
+  <!-- 区块：bg-white 白底、pt-[96px] 上留白 96px、pb-[64px] 下留白 64px -->
   <section ref="root" class="bg-white pb-[64px] pt-[96px]">
     <div class="container-page">
-      <!-- 眉题：跟第二屏同款，11px 橙色宽字距 -->
+      <!-- 眉题：reveal 走入场；11px/16px 加粗、字距 0.05em（sm 起 0.2em）、brand-500 橙 -->
       <p
         class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
@@ -66,7 +67,7 @@ useReveal(root)
         {{ lightweight.eyebrow }}
       </p>
 
-      <!-- 板块标题：32px 加粗 -->
+      <!-- 标题：mt-[44px] 与眉题间距 44px；32px/42px 加粗、ink-900 -->
       <h2
         class="reveal mt-[44px] text-[32px] font-bold leading-[42px] text-ink-900"
         style="--d: 80ms"
@@ -74,17 +75,19 @@ useReveal(root)
         {{ lightweight.title }}
       </h2>
 
-      <!-- 一行说明：14px 弱化灰 -->
+      <!-- 说明：mt-[40px] 与标题间距 40px；14px/22px、ink-600 弱灰 -->
       <p class="reveal mt-[40px] text-[14px] leading-[22px] text-ink-600" style="--d: 160ms">
         {{ lightweight.desc }}
       </p>
 
-      <!-- 四个卖点胶囊：等宽 60 高浅绿底，内容居中（白 tile 图标 + 深绿粗体）；
-           窄屏 1 列，sm 起 2 列，lg 四列铺满 -->
+      <!-- 胶囊栅格：mt-[30px] 与说明间距 30px；gap-[20px]；
+           手机 1 列 → sm 2 列 → lg 4 列等宽 -->
       <div
         class="reveal mt-[30px] grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:grid-cols-4"
         style="--d: 220ms"
       >
+        <!-- 单颗胶囊：h-[60px] 定高、flex 居中、gap-[12px] 图标与文字间距、
+             px-[12px] 左右内边距、rounded-[12px] 圆角、#ecf7f1 浅绿底 -->
         <div
           v-for="tag in lightweight.tags"
           :key="tag.text"
@@ -98,16 +101,19 @@ useReveal(root)
             aria-hidden="true"
             class="h-[40px] w-[40px] shrink-0 select-none"
           />
+          <!-- 胶囊文字：16px/24px 加粗、#2a5044 深绿 -->
           <span class="text-[16px] font-bold leading-[24px] text-[#2a5044]">{{ tag.text }}</span>
         </div>
       </div>
 
-      <!-- 痛点面板：浅橙大底，三张白卡横排；卡内上行是图标+标题+右上角编号 -->
+      <!-- 痛点面板：mt-[36px] 与胶囊间距 36px；p-[24px] 内边距、
+           rounded-[16px] 圆角、#fff8f2 浅橙底 -->
       <div class="reveal mt-[36px] rounded-[16px] bg-[#fff8f2] p-[24px]" style="--d: 460ms">
         <p class="text-[12px] font-semibold leading-[18px] tracking-[0.02em] text-[#a35c30]">
           {{ lightweight.pain.title }}
         </p>
 
+        <!-- 三卡栅格：mt-[16px] 与小标题间距 16px；gap-[20px]，手机 1 列 → md 3 列 -->
         <div class="mt-[16px] grid grid-cols-1 gap-[20px] md:grid-cols-3">
           <div
             v-for="(card, i) in lightweight.pain.cards"
@@ -116,6 +122,7 @@ useReveal(root)
             :style="{ '--d': `${500 + i * 80}ms` }"
           >
             <div class="flex items-center">
+              <!-- 图标：40×40 固定、shrink-0 不参与压缩；hover 卡片时放大到 1.06（见末尾 style） -->
               <img
                 loading="lazy"
                 decoding="async"
@@ -127,7 +134,7 @@ useReveal(root)
               <h3 class="ml-[12px] text-[16px] font-bold leading-[24px] text-[#684023]">
                 {{ card.title }}
               </h3>
-              <!-- 编号：右上角浅棕 01/02/03 -->
+              <!-- 编号：ml-auto 推到最右；13px 加粗、#b5865f 浅棕 -->
               <span class="ml-auto text-[13px] font-semibold text-[#b5865f]">{{ card.no }}</span>
             </div>
             <p class="mt-[12px] text-[13px] leading-[22px] text-[#726054]">{{ card.desc }}</p>
@@ -135,16 +142,18 @@ useReveal(root)
         </div>
       </div>
 
-      <!-- 两组「小标题 + 卡片」：cols=4 竖卡一排（投入轻那组），cols=2 宽卡两排（核心能力） -->
+      <!-- 两组「小标题 + 卡片」：group.cols=4 走竖卡，group.cols=2 走宽卡 -->
       <template v-for="(group, g) in lightweight.groups" :key="group.title">
+        <!-- 分组小标题：mt-[42px] 与上一组间距 42px；16px/24px 加粗、ink-900 -->
         <h3
-          class="reveal text-[16px] font-bold leading-[24px] text-ink-900"
-          :class="g === 0 ? 'mt-[42px]' : 'mt-[42px]'"
+          class="reveal mt-[42px] text-[16px] font-bold leading-[24px] text-ink-900"
           :style="{ '--d': `${g === 0 ? 740 : 1100}ms` }"
         >
           {{ group.title }}
         </h3>
 
+        <!-- 卡栅格：mt-[32px] 与小标题间距 32px；gap-[24px]；
+             手机 1 列，cols=4 → sm 2 列 / lg 4 列，cols=2 → lg 2 列 -->
         <div
           class="mt-[32px] grid grid-cols-1 gap-[24px]"
           :class="group.cols === 4 ? 'sm:grid-cols-2 lg:grid-cols-4' : 'lg:grid-cols-2'"
@@ -156,7 +165,8 @@ useReveal(root)
             :class="group.cols === 4 ? 'p-[24px]' : 'flex items-start gap-[16px] p-[32px]'"
             :style="{ '--d': `${(g === 0 ? 780 : 1140) + i * 80}ms` }"
           >
-            <!-- 竖卡（4 列）：图标在上标题在下；宽卡（2 列）：图标标题一行，正文跟标题对齐 -->
+            <!-- 竖卡：图标 42px 在上，mt-[18px] 接 16px 标题；
+                 宽卡：64px 图标与文字横排，gap-[16px] 间距 -->
             <template v-if="group.cols === 4">
               <img
                 loading="lazy"
@@ -189,11 +199,13 @@ useReveal(root)
         </div>
       </template>
 
-      <!-- 底部绿条：两条带勾短句左右排，窄屏上下堆 -->
+      <!-- 绿条：mt-[24px] 与上方间距 24px；手机 1 列、lg 2 列；
+           px-[24px]，手机 py-[20px]，lg 下 py-0 + h-[82px] 定高 -->
       <div
         class="reveal mt-[24px] grid grid-cols-1 items-center gap-[12px] rounded-[12px] bg-[#e7f2eb] px-[24px] py-[20px] lg:grid-cols-2 lg:py-0 lg:h-[82px]"
         style="--d: 1420ms"
       >
+        <!-- 单条：flex 横排、gap-[12px] 图标与文字间距 -->
         <div v-for="note in lightweight.notes" :key="note" class="flex items-center gap-[12px]">
           <img
             loading="lazy"
@@ -211,9 +223,6 @@ useReveal(root)
 </template>
 
 <style scoped>
-/* 痛点三卡：白卡压在浅橙底（#fff8f2）上，不加投影时像「贴死」在底上，
-   用全局 card-lift 让投影浮现，卡片本体不动。
-   图标跟着放大 6%，曲线与法规卡/功能卡/服务卡同款 */
 .pain-icon {
   transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
 }
