@@ -26,7 +26,7 @@ useReveal(layers, 0.35)
   <section ref="root" class="arch-bg relative overflow-hidden pb-[64px] pt-[136px]">
     <!-- 背景光斑：absolute -top-[230px] right-[-130px] 探出右上角、w-[900px]；
          mix-blend-screen 吃掉素材黑底、blur-[50px] 揉开硬边、opacity-80；
-         arch-glow 类挂 20s 漂移动画，视口外暂停（见末尾 style） -->
+         arch-glow 类挂 6s 呼吸动画（亮度 + 尺寸脉动），视口外暂停（见末尾 style） -->
     <img
       loading="lazy"
       decoding="async"
@@ -140,7 +140,6 @@ useReveal(layers, 0.35)
   opacity: 0;
 }
 
-/* 通电入场只认架构图自己的 .in：露出 35% 才开播，不会提前在视口外播完 */
 .arch-layers.in .arch-name,
 .arch-layers.in .arch-on,
 .arch-layers.in + .arch-note {
@@ -177,13 +176,18 @@ useReveal(layers, 0.35)
 }
 
 .arch-glow {
-  animation: arch-drift 20s ease-in-out infinite alternate;
+  animation: arch-breathe 6s ease-in-out infinite alternate;
   animation-play-state: paused;
 }
 
-@keyframes arch-drift {
+@keyframes arch-breathe {
+  from {
+    opacity: 0.45;
+    transform: scale(1);
+  }
   to {
-    transform: translate(-40px, 24px) scale(1.05);
+    opacity: 0.95;
+    transform: scale(1.07);
   }
 }
 
