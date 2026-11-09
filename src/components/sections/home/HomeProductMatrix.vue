@@ -7,6 +7,7 @@
 <script setup lang="ts">
 import { ref, useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
+import { useLeaveConfirm } from '@/composables/useLeaveConfirm'
 import { siteConfig } from '@/config/site'
 import MatrixFlowDiagram from './MatrixFlowDiagram.vue'
 import logoChemical from '@/assets/home/images/brand-chemical.webp'
@@ -32,10 +33,13 @@ const comingSoon = ref(false)
 const root = useTemplateRef<HTMLElement>('root')
 useReveal(root)
 
+// 卡片外链：点击先弹全站确认层，确认后才开新标签
+const { openLeaveConfirm } = useLeaveConfirm()
+
 // 流程图入场单独触发：区块太高，跟着根的 .in 会在标题探头时就播完，
 // 滚到流程图露出 35% 才点亮（与第四屏架构图同一套门控）
 const flowPanel = useTemplateRef<HTMLElement>('flowPanel')
-useReveal(flowPanel, 0.35)
+useReveal(flowPanel, 0.12)
 </script>
 
 <template>
@@ -73,7 +77,7 @@ useReveal(flowPanel, 0.35)
       <!-- 流程图面板：mt-[36px] 与说明间距 36px；overflow-x-auto 窄屏横向滚动看全；
            rounded-[16px] 圆角、px-[40px] py-[28px] 内边距、
            shadow-[0_18px_40px_-30px] 极淡投影；
-           flow-panel 自带入场淡入（.in 由面板自己的观察器加，露出 35% 才播） -->
+           flow-panel 自带入场淡入（.in 由面板自己的观察器加，露出 12% 就播） -->
       <div
         ref="flowPanel"
         class="flow-panel mt-[36px] overflow-x-auto rounded-[16px] border border-ink-100 bg-white px-[40px] py-[28px] shadow-[0_18px_40px_-30px_rgba(26,26,26,0.12)]"
@@ -168,14 +172,14 @@ useReveal(flowPanel, 0.35)
             </div>
 
             <!-- 底部链接：mt-[20px] 与胶囊间距 20px；13px/20px 加粗；
-                 有 href 走 a 新窗口跳外部系统，没有则点一下换「正在上线中」 -->
+                 有 href 先弹全站外链确认层（确认才新标签打开外部系统），
+                 没有则点一下换「正在上线中」 -->
             <a
               v-if="card.href"
               :href="card.href"
-              target="_blank"
-              rel="noopener"
               class="mt-[20px] inline-block text-[13px] font-semibold leading-[20px]"
               :class="card.tone === 'orange' ? 'text-brand-600' : 'text-[#2f8f62]'"
+              @click.prevent="openLeaveConfirm(card.href, matrix.leaveDesc)"
             >
               {{ matrix.linkPrefix }}{{ card.title }}{{ matrix.linkArrow }}
             </a>

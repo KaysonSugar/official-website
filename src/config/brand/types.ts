@@ -30,6 +30,20 @@ export interface ContactInfo {
 }
 
 /**
+ * 外链确认弹层（全站共用，首页法规胶囊 / 产品矩阵卡片链接都会唤起）
+ *
+ * 说明文字因跳转目标而异，由调用方在打开时传入；这里只放固定文案。
+ */
+export interface LeaveConfirmConfig {
+  /** 弹窗标题 */
+  title: string
+  /** 取消按钮文案 */
+  cancel: string
+  /** 确认按钮文案 */
+  confirm: string
+}
+
+/**
  * 预约演示表单弹层（全站所有「预约产品演示」按钮共用）
  *
  * 只放文案与选项，提交接口地址走环境变量 VITE_LEAD_ENDPOINT，不在这里配。

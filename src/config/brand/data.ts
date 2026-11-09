@@ -10,7 +10,14 @@
  * 字段形状在 ./types.ts；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
  */
 
-import type { BrandInfo, ContactInfo, CtaConfig, FooterConfig, LeadFormConfig } from './types'
+import type {
+  BrandInfo,
+  ContactInfo,
+  CtaConfig,
+  FooterConfig,
+  LeaveConfirmConfig,
+  LeadFormConfig,
+} from './types'
 import type { NavChild, NavItem, PageIntro } from '../types'
 
 export const brand: BrandInfo = {
@@ -22,6 +29,13 @@ export const contact: ContactInfo = {
   phone: '400-001-8355',
   phoneHref: 'tel:4000018355',
   ctaLabel: '预约演示',
+}
+
+/** 外链确认弹层的固定文案（说明文字因目标而异，由调用方传入） */
+export const leaveConfirm: LeaveConfirmConfig = {
+  title: '即将前往外部网站',
+  cancel: '取消',
+  confirm: '继续访问',
 }
 
 /** 预约演示表单弹层的文案与选项（表单结构在 LeadFormModal，这里只改字） */

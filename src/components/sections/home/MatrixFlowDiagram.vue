@@ -52,7 +52,7 @@ const LINES: {
   { id: 'status', x1: 1176, y1: 527, x2: 834, y2: 527, tone: 'orange' },
   { id: 'source', x1: 1360, y1: 493, x2: 1640, y2: 493, tone: 'green' },
   { id: 'accept', x1: 1670, y1: 527, x2: 1364, y2: 527, tone: 'orange' },
-  { id: 'dispatch', x1: 727, y1: 604, x2: 727, y2: 711, tone: 'orange' },
+  { id: 'dispatch', x1: 727, y1: 644, x2: 727, y2: 711, tone: 'orange' },
 ]
 
 // 线上文字的锚点（x/y 为基线位置）：above 线上方 26、below 线下方 34、right 竖线右侧
@@ -88,8 +88,9 @@ const TONE: Record<string, { base: string; ring: string }> = {
 }
 
 const root = useTemplateRef<HTMLElement>('root')
-// 入场触发点挂流程图自己：整屏太高，挂根上会在标题探头时就播完，滚到这就看不到了
-useReveal(root, 0.35)
+// 入场触发点挂流程图自己（阈值 12%：图顶刚进视口就开播，节点从上往下依次点亮，
+// 滚到哪播到哪；阈值高了会出现「要停下等一会才动」的体感）
+useReveal(root, 0.12)
 
 // 尖顶六边形顶点串（cx,cy 中心；w 宽 h 高）
 function hexPoints(cx: number, cy: number, w: number, h: number): string {

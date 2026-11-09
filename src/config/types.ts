@@ -5,7 +5,14 @@
  * @Name: 站点内容类型定义
  */
 
-import type { BrandInfo, ContactInfo, CtaConfig, FooterConfig, LeadFormConfig } from './brand/types'
+import type {
+  BrandInfo,
+  ContactInfo,
+  CtaConfig,
+  FooterConfig,
+  LeaveConfirmConfig,
+  LeadFormConfig,
+} from './brand/types'
 import type {
   HomeAdvantage,
   HomeArchitecture,
@@ -69,6 +76,8 @@ export interface SiteConfig {
   brand: BrandInfo
   /** 联系方式与主行动按钮 */
   contact: ContactInfo
+  /** 外链确认弹层的固定文案 */
+  leaveConfirm: LeaveConfirmConfig
   /** 预约演示表单弹层的文案与选项 */
   leadForm: LeadFormConfig
   /** 顶部导航：数组顺序即展示顺序 */

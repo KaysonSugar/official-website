@@ -17,13 +17,8 @@ export interface HomeHero {
   badge: string
   /** 法规胶囊右侧的点击提示 */
   badgeHint: string
-  /** 点法规胶囊后先弹的离开确认层 */
-  leaveTip: {
-    title: string
-    desc: string
-    cancel: string
-    confirm: string
-  }
+  /** 点法规胶囊后先弹的离开确认层说明文字（标题/按钮在全局 leaveConfirm 配置） */
+  leaveTip: string
   /** 右侧看板上两张浮层卡的文字 */
   floats: {
     /** 左上合规卡；数字直接写在 title 里 */
@@ -211,6 +206,8 @@ export interface HomeMatrix {
   linkArrow: string
   /** 未上线端点击后的提示文案 */
   comingSoonLabel: string
+  /** 点卡片链接后弹的外链确认层说明文字（标题/按钮在全局 leaveConfirm 配置） */
+  leaveDesc: string
   /**
    * 三张业务线卡片，顺序决定装饰素材（光斑 / 圆环）的取用
    * href 填外部系统地址（新窗口打开）；司机端未上线则不填，点击提示正在上线

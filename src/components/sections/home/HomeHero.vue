@@ -5,10 +5,11 @@
  * @Name: 首页首屏
 -->
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { useCountUp } from '@/composables/useCountUp'
 import { useLeadForm } from '@/composables/useLeadForm'
+import { useLeaveConfirm } from '@/composables/useLeaveConfirm'
 import { siteConfig } from '@/config/site'
 import HomeWorkbench from './HomeWorkbench.vue'
 import truckIcon from '@/assets/home/images/hero-truck.webp'
@@ -16,17 +17,13 @@ import checkIcon from '@/assets/home/images/hero-check.webp'
 import ringsImg from '@/assets/home/images/rings.webp'
 import dividerImg from '@/assets/home/images/hero-bottom-divider.webp'
 
-// 法规外链与离开确认：胶囊点击先弹层，确认后才开新标签，避免用户误点跳出官网
+// 法规外链与离开确认：胶囊点击先弹全站确认层（App.vue 挂的 LeaveConfirmModal），
+// 确认后才开新标签，避免用户误点跳出官网
 const LAW_URL = 'https://www.12371.cn/2025/12/28/ARTI1766892782459341.shtml'
+const { openLeaveConfirm } = useLeaveConfirm()
 
 // 预约演示按钮：唤起 App.vue 里那份全站表单弹层
 const { openLeadForm } = useLeadForm()
-const showLeaveTip = ref(false)
-
-const goExternal = () => {
-  showLeaveTip.value = false
-  window.open(LAW_URL, '_blank', 'noopener')
-}
 
 // 数字条：拆成「数字 + 尾巴」，尾巴里没有数字才做递增（10、7 天 行，7×24 不行）。
 // 递增本体在 useCountUp（从这里的内联实现抽的，司机招募/物流货源广场共用）
@@ -66,7 +63,7 @@ useCountUp(statsEl)
             <a
               :href="LAW_URL"
               class="inline-flex h-8 items-center gap-[8px] rounded-full border border-[#ffd8bf] bg-[#fff1e8] pl-[12px] pr-[14px] text-[13px] font-medium leading-none text-[#c4520f] transition-colors duration-200 hover:border-[#f2a25c] hover:bg-[#ffeadb]"
-              @click.prevent="showLeaveTip = true"
+              @click.prevent="openLeaveConfirm(LAW_URL, siteConfig.hero.leaveTip)"
             >
               <span class="h-[6px] w-[6px] rounded-full bg-[#2fb188]" aria-hidden="true" />
               {{ siteConfig.hero.badge }}
@@ -242,84 +239,6 @@ useCountUp(statsEl)
       </div>
     </div>
 
-    <!-- 外链确认层：Teleport 到 body，避开 section 的 overflow-hidden；
-         fixed inset-0 满屏遮罩，z-[100] 盖住顶栏，bg-ink-900/50 + 2px backdrop-blur；
-         点遮罩空白处关闭，确认后才开新标签 -->
-    <Teleport to="body">
-      <Transition name="tip">
-        <div
-          v-if="showLeaveTip"
-          class="fixed inset-0 z-[100] flex items-center justify-center bg-ink-900/50 px-[20px] backdrop-blur-[2px]"
-          @click.self="showLeaveTip = false"
-        >
-          <!-- 弹窗卡片：宽上限 460px、内边距 32px、圆角 16px，深投影 -->
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="leave-tip-title"
-            class="w-full max-w-[460px] rounded-2xl bg-white p-[32px] shadow-[0_40px_90px_-30px_rgba(26,26,26,0.55)]"
-          >
-            <!-- 头部：flex 横排，gap-[16px] 图标与文字间距，items-start 顶部对齐 -->
-            <div class="flex items-start gap-[16px]">
-              <!-- 警示图标：40px 圆形橙底（rounded-full），内含 20px 叹号，shrink-0 不被压缩 -->
-              <span
-                class="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#fff1e8]"
-                aria-hidden="true"
-              >
-                <svg class="h-[20px] w-[20px]" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M10 5.2v5.6"
-                    stroke="#e06a1f"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                  />
-                  <circle cx="10" cy="14.6" r="1.3" fill="#e06a1f" />
-                </svg>
-              </span>
-              <!-- 文字区：min-w-0 允许收缩，长链接不会把弹窗撑宽 -->
-              <div class="min-w-0">
-                <!-- 标题：18px 半粗，行高 26px -->
-                <h3 id="leave-tip-title" class="text-[18px] font-semibold leading-[26px] text-ink-900">
-                  {{ siteConfig.hero.leaveTip.title }}
-                </h3>
-                <!-- 说明：14px、行高 24px，mt-[8px] 与标题间距 8px -->
-                <p class="mt-[8px] text-sm leading-[24px] text-ink-600">
-                  {{ siteConfig.hero.leaveTip.desc }}
-                </p>
-              </div>
-            </div>
-
-            <!-- 链接框：mt-[20px]，浅灰底，px 16 / py 12 内边距；等宽字体，
-                 break-all 让长链接强制折行不撑宽弹窗 -->
-            <p
-              class="mt-[20px] rounded-lg bg-[#f6f7f6] px-[16px] py-[12px] font-mono text-[13px] leading-[20px] break-all text-ink-500"
-            >
-              {{ LAW_URL }}
-            </p>
-
-            <!-- 页脚：mt-[28px] + pt-[24px]，border-t 顶部分割线，gap-[12px] 按钮间距，右对齐 -->
-            <div class="mt-[28px] flex items-center justify-end gap-[12px] border-t border-ink-100 pt-[24px]">
-              <!-- 取消：描边按钮，px 22 / py 9，hover 描边与底色加深 -->
-              <button
-                type="button"
-                class="rounded-lg border border-ink-200 px-[22px] py-[9px] text-sm font-medium text-ink-700 transition-colors duration-200 hover:border-ink-300 hover:bg-ink-50 hover:text-ink-900"
-                @click="showLeaveTip = false"
-              >
-                {{ siteConfig.hero.leaveTip.cancel }}
-              </button>
-              <!-- 继续访问：品牌橙实底，px 22 / py 9，带橙色投影 -->
-              <button
-                type="button"
-                class="rounded-lg bg-brand-500 px-[22px] py-[9px] text-sm font-medium text-white shadow-[0_6px_16px_-6px_rgba(233,97,31,0.55)] transition-colors duration-200 hover:bg-brand-600"
-                @click="goExternal"
-              >
-                {{ siteConfig.hero.leaveTip.confirm }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
   </section>
 </template>
 
@@ -519,22 +438,6 @@ useCountUp(statsEl)
   }
 }
 
-.tip-enter-active,
-.tip-leave-active {
-  transition: opacity 200ms ease;
-}
-
-.tip-enter-from,
-.tip-leave-to {
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tip-enter-active,
-  .tip-leave-active {
-    transition: none;
-  }
-}
 
 .hero-bg {
   background:
