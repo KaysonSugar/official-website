@@ -31,9 +31,9 @@ const nameEl = useTemplateRef<HTMLInputElement>('nameEl')
 
 // 只在提交时校验，填的过程中不打断；四段手机号：1 开头、第二位 3-9、共 11 位
 const validate = () => {
-  errors.name = form.name.trim() ? undefined : '请填写联系人姓名'
-  errors.company = form.company.trim() ? undefined : '请填写公司名称'
-  errors.phone = /^1[3-9]\d{9}$/.test(form.phone.trim()) ? undefined : '请填写 11 位手机号'
+  errors.name = form.name.trim() ? undefined : leadForm.errors.name
+  errors.company = form.company.trim() ? undefined : leadForm.errors.company
+  errors.phone = /^1[3-9]\d{9}$/.test(form.phone.trim()) ? undefined : leadForm.errors.phone
   return !errors.name && !errors.company && !errors.phone
 }
 
@@ -58,7 +58,7 @@ const onSubmit = async () => {
     await submitLead({ ...form, name: form.name.trim(), company: form.company.trim(), phone: form.phone.trim() })
     status.value = 'done'
   } catch (err) {
-    submitError.value = err instanceof Error ? err.message : '提交失败，请稍后重试'
+    submitError.value = err instanceof Error ? err.message : leadForm.errors.submit
     status.value = 'idle'
   }
 }
@@ -124,7 +124,7 @@ onBeforeUnmount(() => {
             </div>
             <button
               type="button"
-              aria-label="关闭"
+              :aria-label="leadForm.closeLabel"
               class="-mr-[6px] -mt-[4px] flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-lg text-ink-400 transition-colors duration-200 hover:bg-ink-50 hover:text-ink-700"
               @click="closeLeadForm"
             >
@@ -163,7 +163,7 @@ onBeforeUnmount(() => {
               class="mt-[24px] rounded-lg bg-brand-500 px-[24px] py-[10px] text-sm font-medium text-white transition-colors duration-200 hover:bg-brand-600"
               @click="closeLeadForm"
             >
-              完成
+              {{ leadForm.doneLabel }}
             </button>
           </div>
 
@@ -172,7 +172,7 @@ onBeforeUnmount(() => {
             <div class="grid gap-[16px] sm:grid-cols-2">
               <!-- 名称两项：标签 13px，输入框高 44px、圆角 8px，聚焦时品牌橙描边 -->
               <label class="block">
-                <span class="text-[13px] font-medium text-ink-700">姓名 <em class="not-italic text-[#d9534f]">*</em></span>
+                <span class="text-[13px] font-medium text-ink-700">{{ leadForm.labels.name }} <em class="not-italic text-[#d9534f]">*</em></span>
                 <input
                   ref="nameEl"
                   v-model="form.name"
@@ -188,7 +188,7 @@ onBeforeUnmount(() => {
               </label>
 
               <label class="block">
-                <span class="text-[13px] font-medium text-ink-700">公司 <em class="not-italic text-[#d9534f]">*</em></span>
+                <span class="text-[13px] font-medium text-ink-700">{{ leadForm.labels.company }} <em class="not-italic text-[#d9534f]">*</em></span>
                 <input
                   v-model="form.company"
                   type="text"
@@ -205,7 +205,7 @@ onBeforeUnmount(() => {
 
             <!-- 手机号：单独一行，type=tel 唤起数字键盘，inputmode 数字 -->
             <label class="mt-[16px] block">
-              <span class="text-[13px] font-medium text-ink-700">手机号 <em class="not-italic text-[#d9534f]">*</em></span>
+              <span class="text-[13px] font-medium text-ink-700">{{ leadForm.labels.phone }} <em class="not-italic text-[#d9534f]">*</em></span>
               <input
                 v-model="form.phone"
                 type="tel"
@@ -222,7 +222,7 @@ onBeforeUnmount(() => {
 
             <!-- 关注产品：单选胶囊，选中品牌橙描边 + 浅橙底；不选也能提交 -->
             <div class="mt-[16px]">
-              <span class="text-[13px] font-medium text-ink-700">想了解的产品</span>
+              <span class="text-[13px] font-medium text-ink-700">{{ leadForm.labels.interests }}</span>
               <div class="mt-[8px] flex flex-wrap gap-[8px]">
                 <button
                   v-for="item in leadForm.interests"
@@ -243,7 +243,7 @@ onBeforeUnmount(() => {
 
             <!-- 备注：选填，三行高，右下角字数提示 -->
             <label class="mt-[16px] block">
-              <span class="text-[13px] font-medium text-ink-700">需求备注 <span class="font-normal text-ink-400">（选填）</span></span>
+              <span class="text-[13px] font-medium text-ink-700">{{ leadForm.labels.note }} <span class="font-normal text-ink-400">{{ leadForm.optionalTip }}</span></span>
               <textarea
                 v-model="form.note"
                 rows="3"
@@ -269,7 +269,7 @@ onBeforeUnmount(() => {
                   class="rounded-lg border border-ink-200 px-[20px] py-[9px] text-sm font-medium text-ink-700 transition-colors duration-200 hover:border-ink-300 hover:bg-ink-50 hover:text-ink-900"
                   @click="closeLeadForm"
                 >
-                  取消
+                  {{ leadForm.cancelLabel }}
                 </button>
                 <button
                   type="submit"

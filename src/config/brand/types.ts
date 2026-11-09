@@ -41,6 +41,14 @@ export interface LeadFormConfig {
   desc: string
   /** 「想了解的产品」选项，点选其一，可不选 */
   interests: string[]
+  /** 各字段的标签文字 */
+  labels: {
+    name: string
+    company: string
+    phone: string
+    interests: string
+    note: string
+  }
   /** 三个输入框的占位文字 */
   placeholders: {
     name: string
@@ -49,10 +57,25 @@ export interface LeadFormConfig {
   }
   /** 备注框占位文字 */
   notePlaceholder: string
+  /** 选填字段后面跟的小字，含括号 */
+  optionalTip: string
+  /** 校验不通过时的提示 */
+  errors: {
+    name: string
+    company: string
+    phone: string
+    submit: string
+  }
   /** 提交按钮文案 */
   submitLabel: string
   /** 提交中的按钮文案 */
   submittingLabel: string
+  /** 取消按钮文案 */
+  cancelLabel: string
+  /** 成功态的确认按钮文案 */
+  doneLabel: string
+  /** 右上角关闭按钮的无障碍名称 */
+  closeLabel: string
   /** 提交成功后的标题 */
   successTitle: string
   /** 提交成功后的说明 */
