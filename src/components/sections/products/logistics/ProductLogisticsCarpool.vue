@@ -20,6 +20,8 @@ import { siteConfig } from '@/config/site'
  * 连线 scaleX 从苏州画到北京 → 圆点跟着线头逐站回弹弹出 → 城市行/货物行随各自
  * 站点浮现（延迟跟同列圆点对齐）→ 底部橙条最后回弹落定。全部一次性动画，
  * reduced-motion 交给全局 0.01ms 规则压平，不用自己写 media query。
+ * 光点滑行（2026-11-09）：照服务支持流程轴同款，白点沿线来回滑，两层拆分
+ * （track 位移 linear / bead 显隐 ease），2s 起跑给进场序列让路。
  */
 const { carpool } = siteConfig.logistics
 
@@ -118,6 +120,20 @@ useReveal(root)
                   class="carpool-line absolute left-[8.33%] right-[8.33%] top-1/2 h-[2px] -translate-y-1/2 bg-[#f6c9a6]"
                   aria-hidden="true"
                 />
+                <!-- 光点：照服务支持流程轴同款，白点橙描边沿线滑行。
+                     track 同层 100% 宽、位移用自身宽度百分比（0→100%），跟线实际宽度无关；
+                     外壳 overflow-hidden 裁掉滑出线两端的部分。z 夹在线和站点点（z-10）之间 -->
+                <div
+                  class="pointer-events-none absolute left-[8.33%] right-[8.33%] top-1/2 z-[5] h-[19px] -translate-y-1/2 overflow-hidden"
+                  aria-hidden="true"
+                >
+                  <div class="carpool-bead-track relative h-full w-full">
+                    <!-- 9px 白点 + 1.5px 橙描边：别用模糊辉光，2px 细线旁一团糊光就是污渍 -->
+                    <span
+                      class="carpool-bead absolute left-0 top-1/2 block h-[9px] w-[9px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_1px_3px_rgba(19,50,42,0.22)] ring-[1.5px] ring-[#f5823c]"
+                    />
+                  </div>
+                </div>
                 <span
                   v-for="(stop, i) in carpool.card.stops"
                   :key="`dot-${stop.city}`"
@@ -243,6 +259,71 @@ useReveal(root)
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* ---- 光点滑行：照服务支持流程轴同款 ----
+   track 负责位移（0 → 100% 自身宽度 = 整根线），bead 只管淡入淡出，
+   两层拆开是因为位移要 linear 匀速、显隐要缓入缓出，一个 animation 塞不下两种曲线。
+   7s 一轮里 3.2s（46%）走完，剩下静息，跟支持页同节奏。
+   delay 2s 给进场序列让路（橙条 1450ms 落定后光点才开跑）；
+   infinite 动画必须自己关 reduced-motion，全局 0.01ms 规则会把它压成疯狂空转 */
+.carpool-bead-track {
+  animation: carpool-slide 7s linear infinite;
+  animation-delay: 2s;
+  animation-fill-mode: backwards;
+  animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
+}
+
+.in .carpool-bead-track {
+  animation-play-state: running;
+}
+
+@keyframes carpool-slide {
+  0% {
+    transform: translateX(0); /* 从苏州端起步 */
+  }
+  46%,
+  100% {
+    transform: translateX(100%); /* 走到北京端停住等下一轮 */
+  }
+}
+
+.carpool-bead {
+  animation: carpool-bead-fade 7s ease-in-out infinite;
+  animation-delay: 2s;
+  animation-fill-mode: backwards;
+  animation-play-state: paused;
+}
+
+.in .carpool-bead {
+  animation-play-state: running;
+}
+
+@keyframes carpool-bead-fade {
+  0% {
+    opacity: 0; /* 一开始不可见，别在左端突然冒出来 */
+  }
+  3% {
+    opacity: 1;
+  }
+  43% {
+    opacity: 1;
+  }
+  46%,
+  100% {
+    opacity: 0; /* 走到终点前淡出，别在右端生硬消失 */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carpool-bead-track,
+  .carpool-bead {
+    animation: none;
+  }
+
+  .carpool-bead {
+    opacity: 0; /* 关动效后光点彻底隐藏 */
   }
 }
 </style>
