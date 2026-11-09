@@ -30,7 +30,8 @@ const NODE_GEO: Record<string, { x: number; y: number }> = {
 const HEX_W = 152
 const HEX_H = 172
 
-// 连线几何：端点统一收在外圈六边形外 ~8px（外圈 1.16 倍，横向半宽 88），箭头不被节点遮住；
+// 连线几何：箭头尖端统一停在节点外圈外 ~8px（与节点图标距离全图一致）；
+// 竖线只占「节点文字下方 ↔ 下一颗六边形外圈上方」的短段，不穿过文字；
 // 绿色 = 正向流转（箭头指向 to 端），橙色 = 回程/调度
 const LINES: {
   id: string
@@ -41,16 +42,16 @@ const LINES: {
   tone: 'green' | 'orange'
 }[] = [
   { id: 'order', x1: 246, y1: 142, x2: 615, y2: 142, tone: 'green' },
-  { id: 'compare', x1: 646, y1: 176, x2: 288, y2: 176, tone: 'orange' },
-  { id: 'return', x1: 712, y1: 372, x2: 712, y2: 276, tone: 'orange' },
-  { id: 'encrypt', x1: 746, y1: 256, x2: 746, y2: 346, tone: 'green' },
-  { id: 'quote', x1: 246, y1: 453, x2: 615, y2: 453, tone: 'green' },
-  { id: 'bid', x1: 646, y1: 487, x2: 288, y2: 487, tone: 'orange' },
+  { id: 'compare', x1: 646, y1: 176, x2: 261, y2: 176, tone: 'orange' },
+  { id: 'return', x1: 712, y1: 354, x2: 712, y2: 321, tone: 'orange' },
+  { id: 'encrypt', x1: 746, y1: 314, x2: 746, y2: 339, tone: 'green' },
+  { id: 'quote', x1: 646, y1: 453, x2: 261, y2: 453, tone: 'green' },
+  { id: 'bid', x1: 646, y1: 487, x2: 261, y2: 487, tone: 'orange' },
   { id: 'transfer', x1: 830, y1: 453, x2: 1145, y2: 453, tone: 'green' },
-  { id: 'status', x1: 1176, y1: 487, x2: 792, y2: 487, tone: 'orange' },
+  { id: 'status', x1: 1176, y1: 487, x2: 818, y2: 487, tone: 'orange' },
   { id: 'source', x1: 1360, y1: 453, x2: 1640, y2: 453, tone: 'green' },
-  { id: 'accept', x1: 1670, y1: 487, x2: 1322, y2: 487, tone: 'orange' },
-  { id: 'dispatch', x1: 727, y1: 564, x2: 727, y2: 631, tone: 'orange' },
+  { id: 'accept', x1: 1670, y1: 487, x2: 1348, y2: 487, tone: 'orange' },
+  { id: 'dispatch', x1: 727, y1: 598, x2: 727, y2: 640, tone: 'orange' },
 ]
 
 // 线上文字的锚点（x/y 为基线位置）：above 线上方 26、below 线下方 34、right 竖线右侧
@@ -64,7 +65,7 @@ const LABEL_POS: Record<string, { x: number; y: number; anchor: 'middle' | 'star
   status: { x: 985, y: 521, anchor: 'middle' },
   source: { x: 1490, y: 427, anchor: 'middle' },
   accept: { x: 1490, y: 521, anchor: 'middle' },
-  dispatch: { x: 762, y: 612, anchor: 'start' },
+  dispatch: { x: 780, y: 612, anchor: 'start' },
 }
 
 // 配置 link id → 线上文字（含 labelPos）；组件几何里多一条 return 回程线，无文字
