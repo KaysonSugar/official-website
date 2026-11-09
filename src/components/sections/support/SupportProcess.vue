@@ -25,12 +25,18 @@ useReveal(root)
 // 生效哪个看样式表顺序，不可靠，所以底色整个走三目
 const cardBg = (dark?: boolean) => (dark ? 'bg-[#13322a]' : 'bg-white')
 
+// ---- 进场序列节奏（2026-11-09 升级，照物流智能拼车时间轴同款思路）----
+// 轴线 240ms 起画 1s 画完；圆点跟着线头逐站弹出，01 在 280ms、每站 +160ms
+const DOT_BASE = 280
+const DOT_STEP = 160
+
 /**
- * 圆点点亮时刻：光点 3.2s 走完整根轴，7 个点从 7% 到 93% 均匀分布，
- * 换算成毫秒再各减 210ms（keyframes 3% 处才最亮），就是各自该延迟的时间。
+ * 圆点点亮时刻（光点循环扫过用）：光点 3.2s 走完整根轴，7 个点从 7% 到 93% 均匀分布，
+ * 换算成毫秒再各减 210ms（keyframes 3% 处才最亮）。整体 +1500ms 是给进场序列让路——
+ * 轴画完、圆点弹完（~1.7s）光点循环才开跑，不然信号珠跑在一根还没画出来的线上。
  * 写死成数组而不是算的：数值是对着轴宽调出来的，改光点速度时要一起看。
  */
-const dotWave = [0, 450, 950, 1400, 1850, 2300, 2750]
+const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
 </script>
 
 <template>
@@ -61,9 +67,10 @@ const dotWave = [0, 450, 950, 1400, 1850, 2300, 2750]
 
       <!-- ============ 桌面端：横向交错时间轴（lg 起） ============ -->
       <div class="relative mt-[56px] hidden lg:block">
-        <!-- 横轴：左灰右绿的渐变，向右伸出容器一点接箭头；z 在圆点之下 -->
+        <!-- 横轴：左灰右绿的渐变，向右伸出容器一点接箭头；z 在圆点之下。
+             进场从左往右画开（clip-path 揭显，渐变不被拉伸变形） -->
         <div
-          class="absolute left-0 right-0 top-[153px] z-0 h-[3px] rounded-full bg-gradient-to-r from-[#dfe0d4] via-[#c4e4d5] via-55% to-[#2fb188]"
+          class="proc-axis absolute left-0 right-0 top-[153px] z-0 h-[3px] rounded-full bg-gradient-to-r from-[#dfe0d4] via-[#c4e4d5] via-55% to-[#2fb188]"
           aria-hidden="true"
         />
         <!-- 光点：一颗 7px 的小白点沿轴滑过，只带一圈很浅的绿光。
@@ -83,9 +90,10 @@ const dotWave = [0, 450, 950, 1400, 1850, 2300, 2750]
           </div>
         </div>
 
-        <!-- 轴末端箭头：三角形，贴在渐变线右端（只敢伸 14px，lg 临界宽度下再宽就出滚动条） -->
+        <!-- 轴末端箭头：三角形，贴在渐变线右端（只敢伸 14px，lg 临界宽度下再宽就出滚动条）；
+             线画到头才回弹出现 -->
         <svg
-          class="absolute right-[-14px] top-[147px] z-0 h-[15px] w-[16px]"
+          class="proc-arrow absolute right-[-14px] top-[147px] z-0 h-[15px] w-[16px]"
           viewBox="0 0 16 15"
           fill="none"
           aria-hidden="true"
@@ -101,13 +109,14 @@ const dotWave = [0, 450, 950, 1400, 1850, 2300, 2750]
         <!-- 七列：每列上槽(卡) + 圆点 + 下槽(卡/绿盒) -->
         <div class="grid grid-cols-7 gap-[14px]">
           <div v-for="(step, i) in process.steps" :key="step.no" class="flex flex-col items-center">
-            <!-- 上槽：单数节点（i 为偶数）的卡贴着轴线，空槽也占高保持对称 -->
+            <!-- 上槽：单数节点（i 为偶数）的卡贴着轴线，空槽也占高保持对称。
+                 卡片延迟跟同列圆点对齐（圆点弹出后 100ms 卡片升起） -->
             <div class="flex h-[140px] w-full flex-col items-center justify-end">
               <template v-if="i % 2 === 0">
                 <article
                   class="reveal w-full rounded-[14px] p-[16px]"
                   :class="cardBg(step.dark)"
-                  :style="{ '--d': `${240 + i * 70}ms` }"
+                  :style="{ '--d': `${DOT_BASE + i * DOT_STEP + 100}ms` }"
                 >
                   <p
                     class="text-[14px] font-bold leading-[18px] tracking-[0.04em]"
@@ -128,15 +137,19 @@ const dotWave = [0, 450, 950, 1400, 1850, 2300, 2750]
                     {{ step.desc }}
                   </p>
                 </article>
-                <!-- 竖向连接短线：卡底到圆点 -->
-                <span class="h-[14px] w-px shrink-0 bg-[#d2e1d7]" aria-hidden="true" />
+                <!-- 竖向连接短线：卡底到圆点，跟卡片同拍淡入 -->
+                <span
+                  class="proc-link h-[14px] w-px shrink-0 bg-[#d2e1d7]"
+                  :style="{ '--d': `${DOT_BASE + i * DOT_STEP + 100}ms` }"
+                  aria-hidden="true"
+                />
               </template>
             </div>
 
             <!-- 圆点：01-06 白底橙字，07 深绿底白字；白底把轴线盖断。
-                 外层只管入场（.reveal 自己带 animation），内层单独做点亮脉冲，
+                 外层只管进场弹出（线画到哪站哪站点冒出来），内层单独做点亮脉冲，
                  两个 animation 写在同一个元素上会互相覆盖 -->
-            <span class="reveal z-10 shrink-0" :style="{ '--d': `${240 + i * 70}ms` }">
+            <span class="proc-pop z-10 shrink-0" :style="{ '--d': `${DOT_BASE + i * DOT_STEP}ms` }">
               <span
                 class="proc-dot flex h-[28px] w-[28px] items-center justify-center rounded-full text-[11px] font-bold"
                 :class="step.dark ? 'text-white' : 'text-[#f5821f]'"
@@ -153,10 +166,14 @@ const dotWave = [0, 450, 950, 1400, 1850, 2300, 2750]
             <!-- 下槽：双数节点；第 7 列的下槽放「验收之后」绿盒 -->
             <div class="flex h-[140px] w-full flex-col items-center justify-start">
               <template v-if="i % 2 === 1">
-                <span class="h-[14px] w-px shrink-0 bg-[#d2e1d7]" aria-hidden="true" />
+                <span
+                  class="proc-link h-[14px] w-px shrink-0 bg-[#d2e1d7]"
+                  :style="{ '--d': `${DOT_BASE + i * DOT_STEP + 100}ms` }"
+                  aria-hidden="true"
+                />
                 <article
                   class="reveal w-full rounded-[14px] bg-white p-[16px]"
-                  :style="{ '--d': `${240 + i * 70}ms` }"
+                  :style="{ '--d': `${DOT_BASE + i * DOT_STEP + 100}ms` }"
                 >
                   <p class="text-[14px] font-bold leading-[18px] tracking-[0.04em] text-[#f5821f]">
                     {{ step.no }}
@@ -168,10 +185,14 @@ const dotWave = [0, 450, 950, 1400, 1850, 2300, 2750]
                 </article>
               </template>
               <template v-else-if="i === process.steps.length - 1">
-                <span class="h-[14px] w-px shrink-0 bg-[#d2e1d7]" aria-hidden="true" />
+                <span
+                  class="proc-link h-[14px] w-px shrink-0 bg-[#d2e1d7]"
+                  :style="{ '--d': `${DOT_BASE + i * DOT_STEP + 260}ms` }"
+                  aria-hidden="true"
+                />
                 <div
                   class="reveal w-full rounded-[14px] bg-[#e7f3ec] p-[16px]"
-                  :style="{ '--d': `${240 + i * 70 + 120}ms` }"
+                  :style="{ '--d': `${DOT_BASE + i * DOT_STEP + 260}ms` }"
                 >
                   <p class="text-[13px] font-bold leading-[18px] text-[#2fb188]">
                     {{ process.afterLabel }}
@@ -247,11 +268,81 @@ const dotWave = [0, 450, 950, 1400, 1850, 2300, 2750]
 </template>
 
 <style scoped>
+/* ---- 进场序列（一次性，reduced-motion 交给全局 0.01ms 规则）----
+   节奏：轴 240ms 起画 1s → 圆点 280ms 起每站 +160ms 跟着线头弹出 → 卡片/竖线
+   跟同列圆点错 100ms 升起 → 箭头 1240ms 回弹 → 光点循环延迟 1.5s 再开跑 */
+
+/* 横轴：clip-path 从右往左揭显，渐变不被拉伸（scaleX 会把渐变压扁再弹开，看着脏） */
+.proc-axis {
+  clip-path: inset(0 100% 0 0);
+}
+
+.in .proc-axis {
+  animation: proc-draw 1000ms cubic-bezier(0.22, 1, 0.36, 1) 240ms both;
+}
+
+@keyframes proc-draw {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* 圆点进场：线画到哪站哪站弹出，回弹曲线跟浮层弹入同族 */
+.proc-pop {
+  transform: scale(0);
+}
+
+.in .proc-pop {
+  animation: proc-pop 500ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both;
+}
+
+@keyframes proc-pop {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* 竖向连接短线：跟卡片同拍淡入 */
+.proc-link {
+  opacity: 0;
+}
+
+.in .proc-link {
+  animation: proc-fade 200ms ease var(--d, 0ms) both;
+}
+
+@keyframes proc-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 末端箭头：线画到头（~1.24s）才冒出来 */
+.proc-arrow {
+  transform: scale(0);
+  transform-origin: left center;
+}
+
+.in .proc-arrow {
+  animation: proc-pop 400ms cubic-bezier(0.34, 1.56, 0.64, 1) 1240ms both;
+}
+
 /* 光点：track 负责位移（0 → 100% 自身宽度 = 整根轴），bead 只管淡入淡出，
    两层拆开是因为位移要 linear 匀速、显隐要缓入缓出，一个 animation 塞不下两种曲线。
-   7s 一轮里 3.2s 走完，剩下 3.8s 静息，跟首页流程图箭头波同节奏 */
+   7s 一轮里 3.2s 走完，剩下 3.8s 静息，跟首页流程图箭头波同节奏。
+   delay 1500ms 给进场序列让路（跟 dotWave 的整体偏移配套） */
 .proc-track {
   animation: proc-track 7s linear infinite;
+  animation-delay: 1500ms;
   animation-fill-mode: backwards;
   animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
 }
@@ -272,6 +363,7 @@ const dotWave = [0, 450, 950, 1400, 1850, 2300, 2750]
 
 .proc-bead {
   animation: proc-bead 7s ease-in-out infinite;
+  animation-delay: 1500ms;
   animation-fill-mode: backwards;
   animation-play-state: paused;
 }
