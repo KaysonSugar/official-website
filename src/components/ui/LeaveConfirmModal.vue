@@ -48,19 +48,25 @@ watch(visible, (open) => {
         >
           <!-- 头部：flex 横排，gap-[16px] 图标与文字间距，items-start 顶部对齐 -->
           <div class="flex items-start gap-[16px]">
-            <!-- 警示图标：40px 圆形橙底（rounded-full），内含 20px 叹号，shrink-0 不被压缩 -->
+            <!-- 图标托底：48px 圆角方块（rounded-xl=12px），浅橙底 + 1px 橙描边，白卡片上不糊，shrink-0 不被文字挤压 -->
             <span
-              class="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[#fff1e8]"
+              class="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-xl bg-[#fff1e8] ring-1 ring-[#ffdfcc]"
               aria-hidden="true"
             >
-              <svg class="h-[20px] w-[20px]" viewBox="0 0 20 20" fill="none">
-                <path
-                  d="M10 5.2v5.6"
-                  stroke="#e06a1f"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-                <circle cx="10" cy="14.6" r="1.3" fill="#e06a1f" />
+              <!-- 跳出图标：28px 见方，2px 品牌橙描边，方框开口 + 右上箭头表示新标签打开 -->
+              <svg
+                class="h-[28px] w-[28px]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#e9611f"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M15 3h6v6" />
+                <path d="M10 15 21 4" />
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
               </svg>
             </span>
             <!-- 文字区：min-w-0 允许收缩，长说明不会把弹窗撑宽 -->
