@@ -17,15 +17,16 @@ import iconTruck from '@/assets/home/images/flow-icon-truck.webp'
 const { matrix } = siteConfig
 const flow = matrix.flow
 
-// 六边形节点几何（viewBox 1920×956，量自原位图）：中心坐标 + 六边形宽高
+// 六边形节点几何（viewBox 1920×1000）：中心坐标 + 六边形宽高。
+// 竖列三颗（货主/物流/自营）间距已加大：中间行整体 455→495，自营 752→832
 const NODE_GEO: Record<string, { x: number; y: number }> = {
   chemical: { x: 152, y: 159 },
   shipper: { x: 725, y: 159 },
-  partner: { x: 152, y: 455 },
-  hub: { x: 725, y: 455 },
-  driver: { x: 1255, y: 455 },
-  national: { x: 1750, y: 457 },
-  own: { x: 726, y: 752 },
+  partner: { x: 152, y: 495 },
+  hub: { x: 725, y: 495 },
+  driver: { x: 1255, y: 495 },
+  national: { x: 1750, y: 497 },
+  own: { x: 726, y: 832 },
 }
 const HEX_W = 152
 const HEX_H = 172
@@ -43,29 +44,29 @@ const LINES: {
 }[] = [
   { id: 'order', x1: 246, y1: 142, x2: 615, y2: 142, tone: 'green' },
   { id: 'compare', x1: 646, y1: 176, x2: 261, y2: 176, tone: 'orange' },
-  { id: 'return', x1: 706, y1: 354, x2: 706, y2: 323, tone: 'orange' },
-  { id: 'encrypt', x1: 752, y1: 316, x2: 752, y2: 339, tone: 'green' },
-  { id: 'quote', x1: 646, y1: 453, x2: 261, y2: 453, tone: 'green' },
-  { id: 'bid', x1: 246, y1: 487, x2: 615, y2: 487, tone: 'orange' },
-  { id: 'transfer', x1: 830, y1: 453, x2: 1145, y2: 453, tone: 'green' },
-  { id: 'status', x1: 1176, y1: 487, x2: 834, y2: 487, tone: 'orange' },
-  { id: 'source', x1: 1360, y1: 453, x2: 1640, y2: 453, tone: 'green' },
-  { id: 'accept', x1: 1670, y1: 487, x2: 1364, y2: 487, tone: 'orange' },
-  { id: 'dispatch', x1: 727, y1: 598, x2: 727, y2: 631, tone: 'orange' },
+  { id: 'return', x1: 706, y1: 396, x2: 706, y2: 323, tone: 'orange' },
+  { id: 'encrypt', x1: 752, y1: 316, x2: 752, y2: 390, tone: 'green' },
+  { id: 'quote', x1: 646, y1: 493, x2: 261, y2: 493, tone: 'green' },
+  { id: 'bid', x1: 246, y1: 527, x2: 615, y2: 527, tone: 'orange' },
+  { id: 'transfer', x1: 830, y1: 493, x2: 1145, y2: 493, tone: 'green' },
+  { id: 'status', x1: 1176, y1: 527, x2: 834, y2: 527, tone: 'orange' },
+  { id: 'source', x1: 1360, y1: 493, x2: 1640, y2: 493, tone: 'green' },
+  { id: 'accept', x1: 1670, y1: 527, x2: 1364, y2: 527, tone: 'orange' },
+  { id: 'dispatch', x1: 727, y1: 604, x2: 727, y2: 711, tone: 'orange' },
 ]
 
 // 线上文字的锚点（x/y 为基线位置）：above 线上方 26、below 线下方 34、right 竖线右侧
 const LABEL_POS: Record<string, { x: number; y: number; anchor: 'middle' | 'start' }> = {
   order: { x: 436, y: 116, anchor: 'middle' },
   compare: { x: 436, y: 210, anchor: 'middle' },
-  encrypt: { x: 782, y: 334, anchor: 'start' },
-  quote: { x: 436, y: 427, anchor: 'middle' },
-  bid: { x: 436, y: 521, anchor: 'middle' },
-  transfer: { x: 985, y: 427, anchor: 'middle' },
-  status: { x: 985, y: 521, anchor: 'middle' },
-  source: { x: 1490, y: 427, anchor: 'middle' },
-  accept: { x: 1490, y: 521, anchor: 'middle' },
-  dispatch: { x: 800, y: 612, anchor: 'start' },
+  encrypt: { x: 782, y: 356, anchor: 'start' },
+  quote: { x: 436, y: 467, anchor: 'middle' },
+  bid: { x: 436, y: 561, anchor: 'middle' },
+  transfer: { x: 985, y: 467, anchor: 'middle' },
+  status: { x: 985, y: 561, anchor: 'middle' },
+  source: { x: 1490, y: 467, anchor: 'middle' },
+  accept: { x: 1490, y: 561, anchor: 'middle' },
+  dispatch: { x: 800, y: 656, anchor: 'start' },
 }
 
 // 配置 link id → 线上文字（含 labelPos）；组件几何里多一条 return 回程线，无文字
@@ -137,7 +138,7 @@ function lineDelay(i: number): string {
 
 <template>
   <!-- 画布：viewBox 1920×956 等比缩放；role=img + aria-label 读屏描述 -->
-  <svg class="flow-svg" viewBox="0 0 1920 956" role="img" :aria-label="flow.alt">
+  <svg class="flow-svg" viewBox="0 0 1920 1000" role="img" :aria-label="flow.alt">
     <!-- 连线层：虚线 + 箭头，先入场再虚线流动（两段 animation，见 style） -->
     <g v-for="(l, i) in LINES" :key="l.id" class="flow-line" :style="{ '--d': lineDelay(i) }">
       <line
