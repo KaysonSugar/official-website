@@ -110,7 +110,9 @@ const routeCards = [
 
         <!-- 头像 + 姓名 / 手机号 / 公司：头像 58 圆、浅薄荷底、绿色线描人像 -->
         <div class="absolute left-[28px] top-[38px] flex items-center gap-[14px]">
-          <span class="grid h-[58px] w-[58px] shrink-0 place-items-center rounded-full bg-[#cdeee1]">
+          <span
+            class="grid h-[58px] w-[58px] shrink-0 place-items-center rounded-full bg-[#cdeee1]"
+          >
             <svg width="30" height="30" viewBox="0 0 26 26" fill="none">
               <circle cx="13" cy="9.6" r="4.3" stroke="#17b47d" stroke-width="1.5" />
               <path
@@ -143,9 +145,13 @@ const routeCards = [
         />
 
         <!-- 今日货源卡：562 宽白卡，行距 18 让三条线路均匀铺开 -->
-        <div class="absolute left-[24px] top-[414px] w-[562px] rounded-[12px] bg-white px-[24px] pb-[22px] pt-[18px]">
+        <div
+          class="absolute left-[24px] top-[414px] w-[562px] rounded-[12px] bg-white px-[24px] pb-[22px] pt-[18px]"
+        >
           <div class="flex items-baseline justify-between">
-            <p class="text-[20px] font-bold leading-[26px] text-[#1f2422]">今日货源已更新 4880 条</p>
+            <p class="text-[20px] font-bold leading-[26px] text-[#1f2422]">
+              今日货源已更新 4880 条
+            </p>
             <span class="text-[14px] leading-[20px] text-[#9aa19d]">更多</span>
           </div>
           <div class="mt-[18px] flex flex-col gap-[18px]">
@@ -170,7 +176,9 @@ const routeCards = [
         </div>
 
         <!-- 回程开关：灰底胶囊 + 白色圆钮贴右（表示已开启返程推荐） -->
-        <div class="absolute left-[24px] right-[24px] top-[630px] flex items-center justify-between">
+        <div
+          class="absolute left-[24px] right-[24px] top-[630px] flex items-center justify-between"
+        >
           <span class="text-[19px] leading-[24px] text-[#1f2422]">回程</span>
           <span class="relative block h-[24px] w-[48px] rounded-full bg-[#dfe9e4]">
             <span
@@ -181,13 +189,15 @@ const routeCards = [
 
         <!-- 下线：白底绿描边按钮 66 高，1px 边，圆角 6 -->
         <div
-          class="absolute left-[24px] right-[24px] top-[676px] flex h-[66px] items-center justify-center rounded-[8px] border border-[#17b47d] text-[20px] leading-[28px] text-[#17b47d]"
+          class="absolute left-[24px] bg-white right-[24px] top-[676px] flex h-[66px] items-center justify-center rounded-[8px] border border-[#17b47d] text-[20px] leading-[28px] text-[#17b47d]"
         >
           下线
         </div>
 
         <!-- 底部提示：橙红小字 -->
-        <p class="absolute left-[24px] right-[24px] top-[757px] text-[15px] leading-[20px] text-[#b95a42]">
+        <p
+          class="absolute left-[24px] right-[24px] top-[757px] text-[15px] leading-[20px] text-[#b95a42]"
+        >
           注：若您在线上已装货，请填写配载信息后再上线
         </p>
       </template>
@@ -217,7 +227,12 @@ const routeCards = [
           <span v-for="filter in marketFilters" :key="filter" class="flex items-center gap-[6px]">
             {{ filter }}
             <svg width="11" height="7" viewBox="0 0 11 7" fill="none">
-              <path d="M1 1l4.5 4.5L10 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              <path
+                d="M1 1l4.5 4.5L10 1"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+              />
             </svg>
           </span>
         </div>
@@ -229,10 +244,17 @@ const routeCards = [
             :key="card.from"
             class="rounded-[12px] bg-white px-[24px] pb-[20px] pt-[22px]"
           >
-            <div class="flex items-center justify-center gap-[12px] text-[20px] font-bold leading-[26px] text-[#1f2422]">
+            <div
+              class="flex items-center justify-center gap-[12px] text-[20px] font-bold leading-[26px] text-[#1f2422]"
+            >
               <span>{{ card.from }}</span>
               <svg width="36" height="24" viewBox="0 0 34 22" fill="none">
-                <path d="M1.5 4h15v11.5h-15z" stroke="#17b47d" stroke-width="1.6" stroke-linejoin="round" />
+                <path
+                  d="M1.5 4h15v11.5h-15z"
+                  stroke="#17b47d"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                />
                 <path
                   d="M16.5 8h6.2l4.5 4.4v3.1h-10.7z"
                   stroke="#17b47d"
@@ -251,10 +273,14 @@ const routeCards = [
               <p>装货开始时间：2026-10-30 00:00:00</p>
             </div>
             <div class="mt-[20px] flex justify-end gap-[14px]">
-              <span class="flex h-[40px] items-center rounded-[8px] bg-[#17b47d] px-[18px] text-[16px] text-white">
+              <span
+                class="flex h-[40px] items-center rounded-[8px] bg-[#17b47d] px-[18px] text-[16px] text-white"
+              >
                 分享
               </span>
-              <span class="flex h-[40px] items-center rounded-[8px] bg-[#17b47d] px-[18px] text-[16px] text-white">
+              <span
+                class="flex h-[40px] items-center rounded-[8px] bg-[#17b47d] px-[18px] text-[16px] text-white"
+              >
                 电话议价
               </span>
             </div>
@@ -268,10 +294,24 @@ const routeCards = [
         <div class="absolute inset-x-0 top-0 h-[80px] bg-[#17b47d]"></div>
 
         <!-- 返回箭头 + 居中标题 -->
-        <svg class="absolute left-[26px] top-[28px]" width="14" height="24" viewBox="0 0 14 24" fill="none">
-          <path d="M11.5 2L2.5 12l9 10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+        <svg
+          class="absolute left-[26px] top-[28px]"
+          width="14"
+          height="24"
+          viewBox="0 0 14 24"
+          fill="none"
+        >
+          <path
+            d="M11.5 2L2.5 12l9 10"
+            stroke="#fff"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
-        <p class="absolute inset-x-0 top-[26px] text-center text-[20px] leading-[28px] text-white">配载信息</p>
+        <p class="absolute inset-x-0 top-[26px] text-center text-[20px] leading-[28px] text-white">
+          配载信息
+        </p>
 
         <!-- 六个字段：左灰标签、右深色值，行高统一 48 -->
         <div class="absolute inset-x-[24px] top-[92px] flex flex-col">
@@ -293,7 +333,9 @@ const routeCards = [
           </div>
         </div>
 
-        <p class="absolute left-[24px] top-[402px] text-[17px] font-bold leading-[24px] text-[#17b47d]">
+        <p
+          class="absolute left-[24px] top-[402px] text-[17px] font-bold leading-[24px] text-[#17b47d]"
+        >
           查看运输要求
         </p>
 
@@ -307,7 +349,9 @@ const routeCards = [
           <p class="mt-[12px] text-[15.5px] leading-[25px] text-[#4a514d]">
             运输注意事项：严禁与酸类、易燃物、有机物、还原剂、自燃物品、遇湿易燃物品等混装混运。运输时车辆应配备相应品种和数量的消防器材及泄漏应急处理设备。
           </p>
-          <div class="mt-[16px] flex h-[38px] items-center justify-center rounded-[8px] bg-[#f2f4f3] text-[17px] text-[#1f2422]">
+          <div
+            class="mt-[16px] flex h-[38px] items-center justify-center rounded-[8px] bg-[#f2f4f3] text-[17px] text-[#1f2422]"
+          >
             关闭
           </div>
         </div>
@@ -324,7 +368,9 @@ const routeCards = [
       <template v-else>
         <!-- 整屏绿底，卡片浮在上面 -->
         <div class="absolute inset-0 bg-[#17b47d]"></div>
-        <p class="absolute inset-x-0 top-[30px] text-center text-[20px] leading-[28px] text-white">路线</p>
+        <p class="absolute inset-x-0 top-[30px] text-center text-[20px] leading-[28px] text-white">
+          路线
+        </p>
 
         <div class="absolute left-[23px] top-[102px] flex w-[564px] flex-col gap-[20px]">
           <div
@@ -333,9 +379,14 @@ const routeCards = [
             class="rounded-[14px] px-[16px] pb-[20px] pt-[20px]"
             :class="card.tinted ? 'bg-[#e6f5ee]' : 'bg-[#f6f9f8]'"
           >
-            <p class="flex items-center justify-center gap-[8px] text-[20px] font-bold leading-[26px] text-[#1f2422]">
+            <p
+              class="flex items-center justify-center gap-[8px] text-[20px] font-bold leading-[26px] text-[#1f2422]"
+            >
               <svg v-if="card.pinned" width="15" height="19" viewBox="0 0 15 19" fill="none">
-                <path d="M7.5 18.4s6-5.5 6-10.2A6 6 0 1 0 1.5 8.2c0 4.7 6 10.2 6 10.2z" fill="#17b47d" />
+                <path
+                  d="M7.5 18.4s6-5.5 6-10.2A6 6 0 1 0 1.5 8.2c0 4.7 6 10.2 6 10.2z"
+                  fill="#17b47d"
+                />
                 <circle cx="7.5" cy="7.7" r="2.2" fill="#fff" />
               </svg>
               {{ card.city }}
@@ -350,7 +401,9 @@ const routeCards = [
                 >
                   {{ row.tag }}
                 </span>
-                <span class="flex-1 rounded-[4px] bg-white px-[12px] py-[8px] text-[15px] leading-[20px] text-[#1f2422]">
+                <span
+                  class="flex-1 rounded-[4px] bg-white px-[12px] py-[8px] text-[15px] leading-[20px] text-[#1f2422]"
+                >
                   {{ row.addr }}
                 </span>
                 <span

@@ -16,6 +16,7 @@ import checkIcon from '@/assets/home/images/hero-check.webp'
 import ringsImg from '@/assets/home/images/rings.webp'
 import dividerImg from '@/assets/home/images/hero-bottom-divider.webp'
 
+
 // 数字条：拆成「数字 + 尾巴」，尾巴里没有数字才做递增（10、7 天 行，7×24 不行）。
 // 递增本体在 useCountUp（从这里的内联实现抽的，司机招募/物流货源广场共用）
 const statsEl = useTemplateRef<HTMLElement>('statsEl')
