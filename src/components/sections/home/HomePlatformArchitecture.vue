@@ -13,7 +13,11 @@ import glowImg from '@/assets/home/images/glow.webp'
 const { architecture } = siteConfig
 
 const root = useTemplateRef<HTMLElement>('root')
+// 通电动画的触发点单独挂在架构图上：section 太高，挂在根上会在标题刚探头时就开播，
+// 等用户滚到能看见架构图早就播完了。露出 35% 才点亮，滚到哪播到哪
+const layers = useTemplateRef<HTMLElement>('layers')
 useReveal(root)
+useReveal(layers, 0.35)
 </script>
 
 <template>
@@ -55,8 +59,8 @@ useReveal(root)
       </p>
 
       <!-- 六层架构：mt-[36px] 与说明间距 36px；flex-col gap-[14px] 行距 14px；
-           层名先亮，该层块从左到右逐个点亮（arch-on，通电式入场） -->
-      <div class="mt-[36px] flex flex-col gap-[14px]">
+           通电入场由本块自己的 .in 触发（层名先亮，块从左到右逐个点亮） -->
+      <div ref="layers" class="arch-layers mt-[36px] flex flex-col gap-[14px]">
         <div
           v-for="(layer, i) in architecture.layers"
           :key="layer.label"
@@ -64,9 +68,9 @@ useReveal(root)
         >
           <!-- 层名：12px/18px、shrink-0 不被压缩、sm:w-[64px] 定宽；
                业务层 highlight 时换 #d9bd97 浅棕，其余层 night-400 灰绿；
-               reveal 先亮层名（--d = 240 + 层序 × 80ms） -->
+               arch-name 先亮层名（--d = 240 + 层序 × 80ms） -->
           <span
-            class="reveal shrink-0 text-[12px] leading-[18px] sm:w-[64px]"
+            class="arch-name shrink-0 text-[12px] leading-[18px] sm:w-[64px]"
             :class="layer.highlight ? 'text-[#d9bd97]' : 'text-night-400'"
             :style="{ '--d': `${240 + i * 80}ms` }"
             >{{ layer.label }}</span
@@ -110,9 +114,10 @@ useReveal(root)
       </div>
 
       <!-- 提示条：mt-[80px] 与架构图间距 80px；flex 垂直居中、gap-[12px]；
-           px-[20px] py-[14px]，lg 下改 h-[48px] 定高 + py-0；bg #162c23、圆角 10px -->
+           px-[20px] py-[14px]，lg 下改 h-[48px] 定高 + py-0；bg #162c23、圆角 10px；
+           arch-note 跟随架构图的 .in 一起入场（紧邻兄弟选择器） -->
       <div
-        class="reveal mt-[80px] flex items-center gap-[12px] rounded-[10px] bg-[#162c23] px-[20px] py-[14px] lg:h-[48px] lg:py-0"
+        class="arch-note mt-[80px] flex items-center gap-[12px] rounded-[10px] bg-[#162c23] px-[20px] py-[14px] lg:h-[48px] lg:py-0"
         style="--d: 760ms"
       >
         <!-- 绿点：6×6 圆点，shrink-0 不被文字挤压，#57d193 绿 -->
@@ -129,11 +134,16 @@ useReveal(root)
   background: #0f211b;
 }
 
-.arch-on {
+.arch-name,
+.arch-on,
+.arch-note {
   opacity: 0;
 }
 
-.in .arch-on {
+/* 通电入场只认架构图自己的 .in：露出 35% 才开播，不会提前在视口外播完 */
+.arch-layers.in .arch-name,
+.arch-layers.in .arch-on,
+.arch-layers.in + .arch-note {
   opacity: 1;
   animation: arch-power 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
   animation-delay: var(--d, 0ms);
@@ -155,8 +165,12 @@ useReveal(root)
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .arch-name,
   .arch-on,
-  .in .arch-on {
+  .arch-note,
+  .arch-layers.in .arch-name,
+  .arch-layers.in .arch-on,
+  .arch-layers.in + .arch-note {
     opacity: 1;
     animation: none;
   }
