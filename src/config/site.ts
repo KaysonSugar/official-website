@@ -13,7 +13,7 @@
  */
 
 import type { PageIntro, SiteConfig } from './types'
-import { brand, contact, cta, footer, navItems, pages } from './brand/data'
+import { brand, contact, cta, footer, leadForm, navItems, pages } from './brand/data'
 import {
   advantage,
   architecture,
@@ -37,6 +37,7 @@ import { driver } from './products/driver/data'
 export const siteConfig: SiteConfig = {
   brand,
   contact,
+  leadForm,
   navItems,
   pages,
   hero,

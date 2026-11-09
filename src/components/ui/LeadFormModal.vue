@@ -13,8 +13,8 @@ import logoMark from '@/assets/brand/logo.webp'
 
 const { open, closeLeadForm } = useLeadForm()
 
-// 产品线选项：和导航三条业务线对齐，最后一项兜「都看看」的客户
-const INTERESTS = ['化工生产', '物流调度', '司机端', '整体方案']
+// 文案和选项都在 config/brand/data.ts 的 leadForm 里，这里不写死
+const { leadForm } = siteConfig
 
 const form = reactive<LeadPayload>({
   name: '',
@@ -115,10 +115,10 @@ onBeforeUnmount(() => {
               </span>
               <div>
                 <h3 id="lead-title" class="text-[20px] font-semibold leading-[28px] text-ink-900">
-                  预约产品演示
+                  {{ leadForm.title }}
                 </h3>
                 <p class="mt-[4px] text-[13px] leading-[20px] text-ink-600">
-                  留下联系方式，顾问将在 1 个工作日内与您联系。
+                  {{ leadForm.desc }}
                 </p>
               </div>
             </div>
@@ -154,9 +154,9 @@ onBeforeUnmount(() => {
                 />
               </svg>
             </span>
-            <p class="mt-[16px] text-[16px] font-semibold text-ink-900">提交成功</p>
+            <p class="mt-[16px] text-[16px] font-semibold text-ink-900">{{ leadForm.successTitle }}</p>
             <p class="mt-[8px] text-[13px] leading-[22px] text-ink-600">
-              我们已收到您的预约，顾问会尽快与您联系。
+              {{ leadForm.successDesc }}
             </p>
             <button
               type="button"
@@ -178,7 +178,7 @@ onBeforeUnmount(() => {
                   v-model="form.name"
                   type="text"
                   maxlength="20"
-                  placeholder="您的称呼"
+                  :placeholder="leadForm.placeholders.name"
                   :class="[
                     'mt-[6px] h-[44px] w-full rounded-lg border bg-white px-[12px] text-sm text-ink-900 outline-none transition-colors duration-200 placeholder:text-ink-400 focus:border-brand-500',
                     errors.name ? 'border-[#e05b3f]' : 'border-ink-200 hover:border-ink-300',
@@ -193,7 +193,7 @@ onBeforeUnmount(() => {
                   v-model="form.company"
                   type="text"
                   maxlength="40"
-                  placeholder="公司全称"
+                  :placeholder="leadForm.placeholders.company"
                   :class="[
                     'mt-[6px] h-[44px] w-full rounded-lg border bg-white px-[12px] text-sm text-ink-900 outline-none transition-colors duration-200 placeholder:text-ink-400 focus:border-brand-500',
                     errors.company ? 'border-[#e05b3f]' : 'border-ink-200 hover:border-ink-300',
@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
                 type="tel"
                 inputmode="numeric"
                 maxlength="11"
-                placeholder="便于顾问与您联系"
+                :placeholder="leadForm.placeholders.phone"
                 :class="[
                   'mt-[6px] h-[44px] w-full rounded-lg border bg-white px-[12px] text-sm text-ink-900 outline-none transition-colors duration-200 placeholder:text-ink-400 focus:border-brand-500',
                   errors.phone ? 'border-[#e05b3f]' : 'border-ink-200 hover:border-ink-300',
@@ -225,7 +225,7 @@ onBeforeUnmount(() => {
               <span class="text-[13px] font-medium text-ink-700">想了解的产品</span>
               <div class="mt-[8px] flex flex-wrap gap-[8px]">
                 <button
-                  v-for="item in INTERESTS"
+                  v-for="item in leadForm.interests"
                   :key="item"
                   type="button"
                   :class="[
@@ -248,7 +248,7 @@ onBeforeUnmount(() => {
                 v-model="form.note"
                 rows="3"
                 maxlength="200"
-                placeholder="简单描述您的场景或想看的模块"
+                :placeholder="leadForm.notePlaceholder"
                 class="mt-[6px] w-full resize-none rounded-lg border border-ink-200 bg-white px-[12px] py-[10px] text-sm leading-[22px] text-ink-900 outline-none transition-colors duration-200 placeholder:text-ink-400 hover:border-ink-300 focus:border-brand-500"
               />
             </label>
@@ -261,7 +261,7 @@ onBeforeUnmount(() => {
                 :href="siteConfig.contact.phoneHref"
                 class="text-[13px] text-ink-500 transition-colors duration-200 hover:text-brand-500"
               >
-                或直接致电 {{ siteConfig.contact.phone }}
+                {{ leadForm.phoneTip }} {{ siteConfig.contact.phone }}
               </a>
               <div class="flex items-center gap-[12px]">
                 <button
@@ -276,7 +276,7 @@ onBeforeUnmount(() => {
                   :disabled="status === 'submitting'"
                   class="rounded-lg bg-brand-500 px-[20px] py-[9px] text-sm font-medium text-white shadow-[0_6px_16px_-6px_rgba(233,97,31,0.55)] transition-colors duration-200 hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {{ status === 'submitting' ? '提交中…' : '提交预约' }}
+                  {{ status === 'submitting' ? leadForm.submittingLabel : leadForm.submitLabel }}
                 </button>
               </div>
             </div>

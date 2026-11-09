@@ -27,8 +27,38 @@ export interface ContactInfo {
   phoneHref: string
   /** 主按钮文案 */
   ctaLabel: string
-  /** 主按钮跳转地址：当前直接拨号，后续接表单页或企微客服时改这里即可 */
-  ctaHref: string
+}
+
+/**
+ * 预约演示表单弹层（全站所有「预约产品演示」按钮共用）
+ *
+ * 只放文案与选项，提交接口地址走环境变量 VITE_LEAD_ENDPOINT，不在这里配。
+ */
+export interface LeadFormConfig {
+  /** 弹窗标题 */
+  title: string
+  /** 标题下一行说明 */
+  desc: string
+  /** 「想了解的产品」选项，点选其一，可不选 */
+  interests: string[]
+  /** 三个输入框的占位文字 */
+  placeholders: {
+    name: string
+    company: string
+    phone: string
+  }
+  /** 备注框占位文字 */
+  notePlaceholder: string
+  /** 提交按钮文案 */
+  submitLabel: string
+  /** 提交中的按钮文案 */
+  submittingLabel: string
+  /** 提交成功后的标题 */
+  successTitle: string
+  /** 提交成功后的说明 */
+  successDesc: string
+  /** 弹窗页脚电话前面的引导语，后接 contact.phone */
+  phoneTip: string
 }
 
 /** 页面底部的行动号召区（首页与全部内页共用同一份文案，对应原型 CTA Card） */

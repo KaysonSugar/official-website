@@ -10,7 +10,7 @@
  * 字段形状在 ./types.ts；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
  */
 
-import type { BrandInfo, ContactInfo, CtaConfig, FooterConfig } from './types'
+import type { BrandInfo, ContactInfo, CtaConfig, FooterConfig, LeadFormConfig } from './types'
 import type { NavChild, NavItem, PageIntro } from '../types'
 
 export const brand: BrandInfo = {
@@ -22,7 +22,24 @@ export const contact: ContactInfo = {
   phone: '400-001-8355',
   phoneHref: 'tel:4000018355',
   ctaLabel: '预约演示',
-  ctaHref: 'tel:4000018355',
+}
+
+/** 预约演示表单弹层的文案与选项（表单结构在 LeadFormModal，这里只改字） */
+export const leadForm: LeadFormConfig = {
+  title: '预约产品演示',
+  desc: '留下联系方式，顾问将在 1 个工作日内与您联系。',
+  interests: ['化工生产', '物流调度', '司机端', '整体方案'],
+  placeholders: {
+    name: '您的称呼',
+    company: '公司全称',
+    phone: '便于顾问与您联系',
+  },
+  notePlaceholder: '简单描述您的场景或想看的模块',
+  submitLabel: '提交预约',
+  submittingLabel: '提交中…',
+  successTitle: '提交成功',
+  successDesc: '我们已收到您的预约，顾问会尽快与您联系。',
+  phoneTip: '或直接致电',
 }
 
 /** 产品矩阵下挂的三条业务线（与导航下拉同源，改这里两处一起变） */
