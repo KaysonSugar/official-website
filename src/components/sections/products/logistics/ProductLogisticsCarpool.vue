@@ -5,7 +5,7 @@
  * @Name: 物流第四屏：智能拼车（深绿屏 + 拼车时间轴卡）
 -->
 <script setup lang="ts">
-import { useTemplateRef } from 'vue'
+import { onMounted, onUnmounted, useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 
@@ -16,9 +16,10 @@ import { siteConfig } from '@/config/site'
  * 左右各缩进半列（8.33%）正好从首点到末点，列数变了这段要跟着改。
  * 六列在手机上放不下，整卡套 overflow-x-auto + min-w 横滚，跟货源表格一个处理。
  *
- * 时间轴序列动画（2026-11-09）：蹭根元素 .in 触发（scoped 里写 .in 后代选择器），
- * 连线 scaleX 从苏州画到北京 → 圆点跟着线头逐站回弹弹出 → 城市行/货物行随各自
- * 站点浮现（延迟跟同列圆点对齐）→ 底部橙条最后回弹落定。全部一次性动画，
+ * 时间轴序列动画（2026-11-09）：连线 scaleX 从苏州画到北京 → 圆点跟着线头逐站
+ * 回弹弹出 → 城市行/货物行随各自站点浮现 → 底部橙条最后回弹落定。
+ * 触发不用整屏的 .in（区块一露头 15% 就开跑，用户看到卡时早播完了——第一天就踩过），
+ * 单独盯卡片本身，露出 35% 才加 .play 开演。全部一次性动画，
  * reduced-motion 交给全局 0.01ms 规则压平，不用自己写 media query。
  */
 const { carpool } = siteConfig.logistics
@@ -29,6 +30,35 @@ const DOT_STEP = 130
 
 const root = useTemplateRef<HTMLElement>('root')
 useReveal(root)
+
+// 序列动画开关：卡片露出一半左右才开演，滚动慢悠悠刷到的时候正好看上全场
+const cardEl = useTemplateRef<HTMLElement>('card')
+let cardObserver: IntersectionObserver | null = null
+
+onMounted(() => {
+  const el = cardEl.value
+  if (!el) return
+  // 关动效 / 老浏览器：直接加 .play，全局 0.01ms 规则把动画压成瞬间完成，内容不会锁在透明态
+  if (
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    !('IntersectionObserver' in window)
+  ) {
+    el.classList.add('play')
+    return
+  }
+  cardObserver = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        el.classList.add('play')
+        cardObserver?.disconnect()
+      }
+    },
+    { threshold: 0.35 },
+  )
+  cardObserver.observe(el)
+})
+
+onUnmounted(() => cardObserver?.disconnect())
 </script>
 
 <template>
@@ -69,8 +99,10 @@ useReveal(root)
         </div>
 
         <!-- 右侧拼车方案卡：窄屏横滚 -->
+        <!-- 右侧拼车方案卡：窄屏横滚；序列动画盯着这张卡，露 35% 才加 .play -->
         <div class="overflow-x-auto pb-[6px]">
           <div
+            ref="card"
             class="min-w-[760px] rounded-[16px] bg-white p-[28px] shadow-[0_28px_70px_-30px_rgba(0,0,0,0.55)]"
           >
             <!-- 卡头：方案名 + 起终点 + 绿徽标 + 汇总，整体淡入在时间轴之前 -->
@@ -161,9 +193,10 @@ useReveal(root)
 </template>
 
 <style scoped>
-/* ---- 时间轴序列动画：蹭根元素 .in 触发，全部一次性动画（reduced-motion 交给全局 0.01ms 规则）----
-   初始态写死在类上（透明 / 缩到 0），.in 后才开播；fill-mode both 让延迟期保持首帧、
-   播完保持终帧。节奏：卡头 320 → 线 420 起画 0.75s → 圆点 480 起每站 +130ms 回弹弹出
+/* ---- 时间轴序列动画：盯卡片自己的 .play 触发（整屏 .in 露头 15% 就跑，用户看到卡时早播完了）----
+   初始态写死在类上（透明 / 缩到 0），.play 后才开播；fill-mode both 让延迟期保持首帧、
+   播完保持终帧。全部一次性动画，reduced-motion 交给全局 0.01ms 规则。
+   节奏：卡头 320 → 线 420 起画 0.75s → 圆点 480 起每站 +130ms 回弹弹出
    → 城市/事件/货物三行跟同列圆点错 40/80/120ms 浮现 → 橙条 1450ms 回弹收尾 */
 
 /* 卡头与文字单元：淡入 + 从上往下 6px 落位（挂到圆点下方的感觉） */
@@ -173,8 +206,8 @@ useReveal(root)
   transform: translateY(-6px);
 }
 
-.in .carpool-head,
-.in .carpool-cell {
+.play .carpool-head,
+.play .carpool-cell {
   animation: carpool-fade 220ms ease var(--d, 0ms) both;
 }
 
@@ -195,7 +228,7 @@ useReveal(root)
   transform-origin: left center;
 }
 
-.in .carpool-line {
+.play .carpool-line {
   animation: carpool-draw 750ms cubic-bezier(0.22, 1, 0.36, 1) 420ms both;
 }
 
@@ -213,7 +246,7 @@ useReveal(root)
   transform: scale(0);
 }
 
-.in .carpool-dot {
+.play .carpool-dot {
   animation: carpool-pop 500ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both;
 }
 
@@ -231,7 +264,7 @@ useReveal(root)
   opacity: 0;
 }
 
-.in .carpool-strip {
+.play .carpool-strip {
   animation: carpool-strip-in 500ms cubic-bezier(0.34, 1.56, 0.64, 1) 1450ms both;
 }
 

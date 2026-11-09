@@ -5,7 +5,7 @@
  * @Name: 服务支持第三屏：实施流程
 -->
 <script setup lang="ts">
-import { useTemplateRef } from 'vue'
+import { onMounted, onUnmounted, useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 
@@ -15,6 +15,10 @@ import { siteConfig } from '@/config/site'
  * 07 是深绿卡，轴末端右下角一个「验收之后」浅绿盒。
  * 轴上的橙是 #f5821f，比全站品牌橙 #ff833f 深一档，照原型采的色，别混用。
  * 窄屏（lg 以下）退化为竖向时间线：点在左、卡在右，顺序不变。
+ *
+ * 进场序列（2026-11-09 升级）：轴线画开 → 圆点跟线头逐站弹出 → 卡片随站升起 →
+ * 箭头收尾 → 光点循环再开跑。触发盯轴区自己（.play，露 40% 才演）——
+ * 不用整屏 .in（露头 15% 就跑，用户看到轴时早播完了）。
  */
 const { process } = siteConfig.support
 
@@ -25,7 +29,7 @@ useReveal(root)
 // 生效哪个看样式表顺序，不可靠，所以底色整个走三目
 const cardBg = (dark?: boolean) => (dark ? 'bg-[#13322a]' : 'bg-white')
 
-// ---- 进场序列节奏（2026-11-09 升级，照物流智能拼车时间轴同款思路）----
+// ---- 进场序列节奏 ----
 // 轴线 240ms 起画 1s 画完；圆点跟着线头逐站弹出，01 在 280ms、每站 +160ms
 const DOT_BASE = 280
 const DOT_STEP = 160
@@ -37,6 +41,35 @@ const DOT_STEP = 160
  * 写死成数组而不是算的：数值是对着轴宽调出来的，改光点速度时要一起看。
  */
 const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
+
+// 序列动画开关：盯桌面轴区（竖屏时间线还是跟整屏 .in 的逐条 reveal）
+const stageEl = useTemplateRef<HTMLElement>('stage')
+let stageObserver: IntersectionObserver | null = null
+
+onMounted(() => {
+  const el = stageEl.value
+  if (!el) return
+  // 关动效 / 老浏览器：直接加 .play，全局 0.01ms 规则把动画压成瞬间完成，内容不锁在透明态
+  if (
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    !('IntersectionObserver' in window)
+  ) {
+    el.classList.add('play')
+    return
+  }
+  stageObserver = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        el.classList.add('play')
+        stageObserver?.disconnect()
+      }
+    },
+    { threshold: 0.4 },
+  )
+  stageObserver.observe(el)
+})
+
+onUnmounted(() => stageObserver?.disconnect())
 </script>
 
 <template>
@@ -65,8 +98,8 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
         {{ process.desc }}
       </p>
 
-      <!-- ============ 桌面端：横向交错时间轴（lg 起） ============ -->
-      <div class="relative mt-[56px] hidden lg:block">
+      <!-- ============ 桌面端：横向交错时间轴（lg 起）；序列动画盯这块，露 40% 才加 .play ============ -->
+      <div ref="stage" class="relative mt-[56px] hidden lg:block">
         <!-- 横轴：左灰右绿的渐变，向右伸出容器一点接箭头；z 在圆点之下。
              进场从左往右画开（clip-path 揭显，渐变不被拉伸变形） -->
         <div
@@ -114,7 +147,7 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
             <div class="flex h-[140px] w-full flex-col items-center justify-end">
               <template v-if="i % 2 === 0">
                 <article
-                  class="reveal w-full rounded-[14px] p-[16px]"
+                  class="proc-card w-full rounded-[14px] p-[16px]"
                   :class="cardBg(step.dark)"
                   :style="{ '--d': `${DOT_BASE + i * DOT_STEP + 100}ms` }"
                 >
@@ -172,7 +205,7 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
                   aria-hidden="true"
                 />
                 <article
-                  class="reveal w-full rounded-[14px] bg-white p-[16px]"
+                  class="proc-card w-full rounded-[14px] bg-white p-[16px]"
                   :style="{ '--d': `${DOT_BASE + i * DOT_STEP + 100}ms` }"
                 >
                   <p class="text-[14px] font-bold leading-[18px] tracking-[0.04em] text-[#f5821f]">
@@ -191,7 +224,7 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
                   aria-hidden="true"
                 />
                 <div
-                  class="reveal w-full rounded-[14px] bg-[#e7f3ec] p-[16px]"
+                  class="proc-card w-full rounded-[14px] bg-[#e7f3ec] p-[16px]"
                   :style="{ '--d': `${DOT_BASE + i * DOT_STEP + 260}ms` }"
                 >
                   <p class="text-[13px] font-bold leading-[18px] text-[#2fb188]">
@@ -277,7 +310,7 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
   clip-path: inset(0 100% 0 0);
 }
 
-.in .proc-axis {
+.play .proc-axis {
   animation: proc-draw 1000ms cubic-bezier(0.22, 1, 0.36, 1) 240ms both;
 }
 
@@ -295,7 +328,7 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
   transform: scale(0);
 }
 
-.in .proc-pop {
+.play .proc-pop {
   animation: proc-pop 500ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both;
 }
 
@@ -313,7 +346,7 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
   opacity: 0;
 }
 
-.in .proc-link {
+.play .proc-link {
   animation: proc-fade 200ms ease var(--d, 0ms) both;
 }
 
@@ -326,13 +359,35 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
   }
 }
 
+/* 卡片：从站点下方 10px 升起（跟全局 .reveal 拆开——这里要跟轴自己的 .play 同步，
+   整屏 .in 露头太早，卡片会跟圆点对不上拍） */
+.proc-card {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.play .proc-card {
+  animation: proc-rise 400ms cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms) both;
+}
+
+@keyframes proc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* 末端箭头：线画到头（~1.24s）才冒出来 */
 .proc-arrow {
   transform: scale(0);
   transform-origin: left center;
 }
 
-.in .proc-arrow {
+.play .proc-arrow {
   animation: proc-pop 400ms cubic-bezier(0.34, 1.56, 0.64, 1) 1240ms both;
 }
 
@@ -347,7 +402,7 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
   animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
 }
 
-.in .proc-track {
+.play .proc-track {
   animation-play-state: running;
 }
 
@@ -368,7 +423,7 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
   animation-play-state: paused;
 }
 
-.in .proc-bead {
+.play .proc-bead {
   animation-play-state: running;
 }
 
@@ -398,7 +453,7 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
   animation-play-state: paused;
 }
 
-.in .proc-dot {
+.play .proc-dot {
   animation-play-state: running;
 }
 
