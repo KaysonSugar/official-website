@@ -8,7 +8,7 @@
 import { ref, useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
-import flowImg from '@/assets/home/images/matrix-flow.webp'
+import MatrixFlowDiagram from './MatrixFlowDiagram.vue'
 import logoChemical from '@/assets/home/images/brand-chemical.webp'
 import logoLogistics from '@/assets/home/images/brand-logistics.webp'
 import logoDriver from '@/assets/home/images/brand-driver.webp'
@@ -31,6 +31,11 @@ const comingSoon = ref(false)
 
 const root = useTemplateRef<HTMLElement>('root')
 useReveal(root)
+
+// 流程图入场单独触发：区块太高，跟着根的 .in 会在标题探头时就播完，
+// 滚到流程图露出 35% 才点亮（与第四屏架构图同一套门控）
+const flowPanel = useTemplateRef<HTMLElement>('flowPanel')
+useReveal(flowPanel, 0.35)
 </script>
 
 <template>
@@ -67,20 +72,14 @@ useReveal(root)
 
       <!-- 流程图面板：mt-[36px] 与说明间距 36px；overflow-x-auto 窄屏横向滚动看全；
            rounded-[16px] 圆角、px-[40px] py-[28px] 内边距、
-           shadow-[0_18px_40px_-30px] 极淡投影 -->
+           shadow-[0_18px_40px_-30px] 极淡投影；
+           flow-panel 自带入场淡入（.in 由面板自己的观察器加，露出 35% 才播） -->
       <div
-        class="reveal mt-[36px] overflow-x-auto rounded-[16px] border border-ink-100 bg-white px-[40px] py-[28px] shadow-[0_18px_40px_-30px_rgba(26,26,26,0.12)]"
-        style="--d: 240ms"
+        ref="flowPanel"
+        class="flow-panel mt-[36px] overflow-x-auto rounded-[16px] border border-ink-100 bg-white px-[40px] py-[28px] shadow-[0_18px_40px_-30px_rgba(26,26,26,0.12)]"
       >
-        <!-- 图：mx-auto 居中；w-full 随容器缩放，min-w-[960px] 保住最小可读宽度 -->
-        <img
-          loading="lazy"
-          decoding="async"
-          :src="flowImg"
-          :alt="matrix.flowAlt"
-          class="mx-auto w-full min-w-[960px] max-w-[1200px] select-none"
-          draggable="false"
-        />
+        <!-- DOM 流程图：节点/连线几何见 MatrixFlowDiagram.vue，文字在 matrix.flow 配置 -->
+        <MatrixFlowDiagram />
       </div>
 
       <!-- 三卡栅格：mt-[48px] 与面板间距 48px；gap-[18px]；手机 1 列 → md 3 列 -->
@@ -201,6 +200,23 @@ useReveal(root)
 </template>
 
 <style scoped>
+/* 面板入场：露出 35% 才淡入上浮，不跟 section 的 .in 提前触发 */
+.flow-panel {
+  opacity: 0;
+}
+
+.flow-panel.in {
+  opacity: 1;
+  animation: flow-panel-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@keyframes flow-panel-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
 .card-lift .matrix-logo {
   transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -210,6 +226,12 @@ useReveal(root)
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .flow-panel,
+  .flow-panel.in {
+    opacity: 1;
+    animation: none;
+  }
+
   .card-lift .matrix-logo {
     transition: none;
   }

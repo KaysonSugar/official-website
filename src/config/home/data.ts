@@ -260,14 +260,37 @@ export const architecture: HomeArchitecture = {
   note: '新法的监管逻辑是源头防控、全程监督、智能预警、永久溯源。平台按这项顶层组织功能，生产与运输共用同一套客户、数据与算法。',
 }
 
-// 原型 05：三端业务运转模式。流程图是一整张透明底素材（matrix-flow.png），
+// 原型 05：三端业务运转模式。流程图为 DOM/SVG 绘制（原位图已弃用），
+// 节点与线的几何坐标在 MatrixFlowDiagram.vue 里，这里的文字改完即生效；
 // 卡片的 href 是三个外部系统入口；司机端还没上线，故意不给 href
 export const matrix: HomeMatrix = {
   eyebrow: 'PRODUCT MATRIX / 产品矩阵',
   title: '三端业务运转模式',
   desc: '化工企业用「威易达化工」管生产、合同与资金；货运公司用「威易达物流」管车辆、人员与调度；司机用「威易达司机」接单、报备、回单。三端共用同一套订单与数据。',
-  flowAlt:
-    '化工企业、威易达化工、合作物流公司、威易达物流、威易达司机与全国危化物流公司的业务流转关系图',
+  flow: {
+    alt: '化工企业、威易达货主、合作物流公司、威易达物流、威易达司机、全国危化物流公司与自营车辆的业务流转关系图',
+    nodes: [
+      { id: 'chemical', label: '化工企业', tone: 'orange', icon: 'factory' },
+      { id: 'shipper', label: '威易达货主', tone: 'green', icon: 'fleet' },
+      { id: 'partner', label: '合作物流公司', tone: 'orange', icon: 'warehouse' },
+      { id: 'hub', label: '威易达物流', tone: 'green', icon: 'fleet' },
+      { id: 'driver', label: '威易达司机', tone: 'green', icon: 'fleet' },
+      { id: 'national', label: '全国危化物流公司', tone: 'orange', icon: 'airlift' },
+      { id: 'own', label: '自营车辆', tone: 'orange', icon: 'truck' },
+    ],
+    links: [
+      { id: 'order', label: '填写运单发货,选择合作物流', labelPos: 'above' },
+      { id: 'compare', label: '比价,确定承运公司', labelPos: 'below' },
+      { id: 'encrypt', label: '数据流转加密', labelPos: 'right' },
+      { id: 'quote', label: '展示化工企业运单信息', labelPos: 'above' },
+      { id: 'bid', label: '报价，接单', labelPos: 'below' },
+      { id: 'transfer', label: '转单', labelPos: 'above' },
+      { id: 'status', label: '运输状态', labelPos: 'below' },
+      { id: 'source', label: '展示货源、自动寻车', labelPos: 'above' },
+      { id: 'accept', label: '接单', labelPos: 'below' },
+      { id: 'dispatch', label: '系统自动调度', labelPos: 'right' },
+    ],
+  },
   linkPrefix: '了解',
   linkArrow: ' →',
   comingSoonLabel: '正在上线中…',

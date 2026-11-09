@@ -155,7 +155,47 @@ export interface HomeArchitecture {
   note: string
 }
 
-/** 首页第五屏：三端业务运转模式（定稿原型 05，流程图整图 + 三张业务线卡片） */
+/** 流程图节点：id 对应组件里的几何坐标表，label 显示在六边形下方 */
+export interface FlowNode {
+  id: 'chemical' | 'shipper' | 'partner' | 'hub' | 'driver' | 'national' | 'own'
+  /** 节点名（六边形下方的加粗文字） */
+  label: string
+  /** 六边形配色：orange 橙 / green 绿 */
+  tone: 'orange' | 'green'
+  /** 六边形里的白色图标，对应 assets/home/images/flow-icon-* 素材 */
+  icon: 'factory' | 'fleet' | 'warehouse' | 'airlift' | 'truck'
+}
+
+/** 流程图连线：id 对应组件里的线段坐标表，label 是线上的说明文字 */
+export interface FlowLink {
+  id:
+    | 'order'
+    | 'compare'
+    | 'quote'
+    | 'bid'
+    | 'transfer'
+    | 'status'
+    | 'source'
+    | 'accept'
+    | 'encrypt'
+    | 'dispatch'
+  /** 线上的说明文字；空串表示这条线不配文字（纯视觉连线） */
+  label: string
+  /** 文字位置：above 线上方 / below 线下方 / right 竖线右侧 */
+  labelPos: 'above' | 'below' | 'right'
+}
+
+/** 流程图整体配置：文字都在这，几何坐标（节点位置 / 线段端点）在组件里 */
+export interface HomeFlow {
+  /** 无障碍描述（读屏用，替代原位图 alt） */
+  alt: string
+  /** 节点顺序 = 入场点亮顺序 */
+  nodes: FlowNode[]
+  /** 连线与线上文字 */
+  links: FlowLink[]
+}
+
+/** 首页第五屏：三端业务运转模式（定稿原型 05，DOM 流程图 + 三张业务线卡片） */
 export interface HomeMatrix {
   /** 标题上方的橙色眉题（英文 / 中文） */
   eyebrow: string
@@ -163,8 +203,8 @@ export interface HomeMatrix {
   title: string
   /** 标题下的两行说明 */
   desc: string
-  /** 流程图整图的 alt 文本（读屏用） */
-  flowAlt: string
+  /** 流程图（DOM 绘制，节点/连线/文字全配置化） */
+  flow: HomeFlow
   /** 底部链接前缀，拼在卡片标题前面 */
   linkPrefix: string
   /** 底部链接结尾的箭头 */
