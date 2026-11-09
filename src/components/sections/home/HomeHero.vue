@@ -5,16 +5,24 @@
  * @Name: 首页首屏
 -->
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { useCountUp } from '@/composables/useCountUp'
 import { siteConfig } from '@/config/site'
-import badgeImg from '@/assets/home/images/badge.webp'
 import HomeWorkbench from './HomeWorkbench.vue'
 import truckIcon from '@/assets/home/images/hero-truck.webp'
 import checkIcon from '@/assets/home/images/hero-check.webp'
 import ringsImg from '@/assets/home/images/rings.webp'
 import dividerImg from '@/assets/home/images/hero-bottom-divider.webp'
+
+// 法规外链与离开确认：胶囊点击先弹层，确认后才开新标签，避免用户误点跳出官网
+const LAW_URL = 'https://www.12371.cn/2025/12/28/ARTI1766892782459341.shtml'
+const showLeaveTip = ref(false)
+
+const goExternal = () => {
+  showLeaveTip.value = false
+  window.open(LAW_URL, '_blank', 'noopener')
+}
 
 // 数字条：拆成「数字 + 尾巴」，尾巴里没有数字才做递增（10、7 天 行，7×24 不行）。
 // 递增本体在 useCountUp（从这里的内联实现抽的，司机招募/物流货源广场共用）
@@ -47,13 +55,18 @@ useCountUp(statsEl)
         <!-- 左列：胶囊 → 标题 → 说明 → 按钮 → 卖点。
              比看板顶低 10px，几段间距都加过一点，让左列底部和看板底部齐平 -->
         <div class="lg:mt-[10px]">
-          <!-- 法规胶囊：素材 924×128，高 32 时宽 231（稿子 236）；入场动画从这里开始 -->
-          <img
-            :src="badgeImg"
-            alt="对标 2026 版《危险化学品安全法》"
-            class="rise h-8 w-auto"
+          <!-- 法规胶囊：位图换 DOM（烘焙文字在缩放屏上必糊，浏览器渲染永远锐利）。
+               点击不直接跳外链，先弹确认层，确认后才开新标签去 12371.cn；
+               hover 描边和底色加深一档提示可点 -->
+          <a
+            :href="LAW_URL"
+            class="rise inline-flex h-8 items-center gap-[8px] rounded-full border border-[#ffd8bf] bg-[#fff1e8] pl-[12px] pr-[14px] text-[13px] font-medium leading-none text-[#c4520f] transition-colors duration-200 hover:border-[#f2a25c] hover:bg-[#ffeadb]"
             :style="{ animationDelay: '0ms' }"
-          />
+            @click.prevent="showLeaveTip = true"
+          >
+            <span class="h-[6px] w-[6px] rounded-full bg-[#2fb188]" aria-hidden="true" />
+            对标 2026 版《危险化学品安全法》
+          </a>
 
           <!-- 标题：48px、行距 73（leading-1.5），第二行品牌橙；手机上降到 28px -->
           <h1
@@ -74,13 +87,17 @@ useCountUp(statsEl)
             {{ siteConfig.hero.desc }}
           </p>
 
-          <!-- 主按钮：稿子 358×50，所以用 lg 尺寸又把高度压到 50、宽度定 360 -->
+          <!-- 主按钮：稿子 358×50，所以用 lg 尺寸又把高度压到 50、宽度定 360。
+               hero-cta 挂边框流星 + hover 呼吸（样式在本文件末尾，只作用于这一颗） -->
           <div class="rise mt-[30px]" :style="{ animationDelay: '210ms' }">
             <BaseButton
               :href="siteConfig.contact.ctaHref"
               size="lg"
-              class="w-full sm:w-auto lg:h-[50px] lg:w-[360px]"
+              class="hero-cta w-full sm:w-auto lg:h-[50px] lg:w-[360px]"
             >
+              <span class="hero-cta-ring" aria-hidden="true">
+                <span class="hero-cta-comet" />
+              </span>
               {{ siteConfig.hero.primaryCta }}
             </BaseButton>
           </div>
@@ -208,13 +225,52 @@ useCountUp(statsEl)
         </dl>
       </div>
     </div>
+
+    <!-- 离开官网确认层：Teleport 到 body 避开 section 的 overflow-hidden 和层级；
+         点遮罩或「取消」关闭，确认才开新标签 -->
+    <Teleport to="body">
+      <Transition name="tip">
+        <div
+          v-if="showLeaveTip"
+          class="fixed inset-0 z-[100] flex items-center justify-center bg-ink-900/45 px-[20px]"
+          @click.self="showLeaveTip = false"
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="leave-tip-title"
+            class="w-full max-w-[380px] rounded-2xl bg-white p-[28px] shadow-[0_30px_70px_-30px_rgba(26,26,26,0.5)]"
+          >
+            <h3 id="leave-tip-title" class="text-[17px] font-bold leading-[24px] text-ink-900">
+              即将前往外部网站
+            </h3>
+            <p class="mt-[12px] text-[13px] leading-[22px] text-ink-600">
+              您将离开威易达官网，前往共产党员网（12371.cn）查看《危险化学品安全法》相关内容。
+            </p>
+            <div class="mt-[24px] flex justify-end gap-[12px]">
+              <button
+                type="button"
+                class="rounded-lg border border-ink-200 px-[16px] py-[8px] text-[13px] font-medium text-ink-700 transition-colors duration-200 hover:border-ink-300 hover:text-ink-900"
+                @click="showLeaveTip = false"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                class="rounded-lg bg-brand-500 px-[16px] py-[8px] text-[13px] font-medium text-white transition-colors duration-200 hover:bg-brand-600"
+                @click="goExternal"
+              >
+                继续访问
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </section>
 </template>
 
 <style scoped>
-/* 入场动画：只动 opacity/transform，不重排。
-   keyframes 只写 from，终态就是元素本身的样子；fill 用 backwards，
-   这样 delay 期间是隐藏的，播完又完全释放，不会压住 hover 的 transform（forwards 会压住） */
 @keyframes hero-rise {
   from {
     opacity: 0;
@@ -229,9 +285,6 @@ useCountUp(statsEl)
   }
 }
 
-/* pop-in 原来是 scale(0.92)：scale 动画会让 Chrome 按中间状态光栅化图层，
-   播完缓存的糊纹理留在屏上（刷新后「先清晰后发糊」就是它）。
-   改纯位移 + 淡入，观感接近（回弹曲线带一点落定感），但没有缩放重采样 */
 @keyframes hero-pop {
   from {
     opacity: 0;
@@ -248,14 +301,9 @@ useCountUp(statsEl)
 }
 
 .pop-in {
-  /* 进场落定一次性动画；延迟走 --pop-d 变量（两张卡错 100ms） */
   animation: hero-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) var(--pop-d, 0ms) backwards;
 }
 
-/* 阴影呼吸：卡片和文字完全不动（小中文一动就在合成层里重采样发虚），
-   只在 ::after 画一圈更大的软影、opacity 0.45↔1 缓慢涨落——和 card-lift
-   同一哲学：动的只有阴影。4s 与右上圆环呼吸同节奏。
-   ::after inset:0 和卡身重合，外阴影只画在卡外，不会糊到卡面 */
 .pop-in::after {
   content: '';
   position: absolute;
@@ -273,13 +321,6 @@ useCountUp(statsEl)
   }
 }
 
-/* 卖点胶囊 hover：上浮 2px + 描边转浅橙 + 底转纯白 + 浮起一圈淡阴影。
-   位移只给 2px —— 原来 4px 在 32px 高的胶囊上会把光标"抬"到盒子外面，
-   贴边悬停时 hover 反复进出，看着是一跳一跳的。
-   曲线用 0.4/0/0.2/1（起停都缓），不用 0.22/1/0.36/1：后者是强调"快出"的入场曲线，
-   40ms 就跑完三分之二，小元素上看着像瞬间弹到位，反而是生硬感的来源。
-   阴影画在伪元素上只过渡 opacity（和全局 .card-lift 同一套做法）：
-   直接 transition box-shadow 每帧都要重绘，鼠标扫过整排时能看出掉帧 */
 .feature-pill {
   position: relative;
   transition:
@@ -292,8 +333,7 @@ useCountUp(statsEl)
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: inherit; /* 跟胶囊圆角走 */
-  box-shadow: 0 8px 18px -6px rgba(33, 50, 43, 0.3);
+  box-shadow: 0 4px 12px -5px rgba(33, 50, 43, 0.26);
   opacity: 0;
   transition: opacity 260ms ease;
   pointer-events: none;
@@ -309,8 +349,6 @@ useCountUp(statsEl)
   opacity: 1;
 }
 
-/* 关了动效就别呼吸了：infinite 的阴影涨落必须自己关——
-   全局 0.01ms 规则会把它压成疯狂空转；关掉后阴影停在静态中值 */
 @media (prefers-reduced-motion: reduce) {
   .pop-in::after {
     animation: none;
@@ -326,8 +364,6 @@ useCountUp(statsEl)
   }
 }
 
-/* 圆环呼吸：4s 一个来回，放大 3.5%。
-   infinite 动画必须自己关掉 reduced-motion —— 全局规则会把它压成 0.01ms，变成疯狂空转 */
 @keyframes hero-breathe {
   to {
     transform: scale(1.035);
@@ -344,8 +380,108 @@ useCountUp(statsEl)
   }
 }
 
-/* 背景三层：右上橙光晕 960×512 → 左下绿光晕 880×480 → 纵向暖橙到近白。
-   颜色是从设计稿取的，多层渐变写成 CSS 比堆工具类清楚 */
+.hero-cta {
+  position: relative;
+}
+
+.hero-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    0 0 0 5px rgba(255, 255, 255, 0.55),
+    0 16px 40px -8px rgba(233, 97, 31, 0.6);
+  opacity: 0;
+  transition: opacity 260ms ease;
+  pointer-events: none;
+}
+
+.hero-cta:hover::after {
+  animation: hero-cta-glow 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes hero-cta-glow {
+  from {
+    opacity: 0.12;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-cta-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-cta-comet {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 440px;
+  height: 440px;
+  margin: -220px 0 0 -220px;
+  background: conic-gradient(
+    transparent 0turn,
+    transparent 0.62turn,
+    rgba(255, 236, 214, 0.25) 0.82turn,
+    rgba(255, 255, 255, 0.8) 0.955turn,
+    #fff 0.995turn,
+    transparent 1turn
+  );
+  animation: hero-meteor 4.2s linear infinite;
+}
+
+@keyframes hero-meteor {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta-comet,
+  .hero-cta::after {
+    animation: none;
+  }
+
+  .hero-cta:hover::after {
+    opacity: 0.75;
+  }
+}
+
+.tip-enter-active,
+.tip-leave-active {
+  transition: opacity 200ms ease;
+}
+
+.tip-enter-from,
+.tip-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tip-enter-active,
+  .tip-leave-active {
+    transition: none;
+  }
+}
+
 .hero-bg {
   background:
     radial-gradient(960px 512px at 88% -8%, rgba(255, 131, 63, 0.26), transparent 68%),
