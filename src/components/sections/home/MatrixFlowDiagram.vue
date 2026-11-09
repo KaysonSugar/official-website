@@ -30,7 +30,8 @@ const NODE_GEO: Record<string, { x: number; y: number }> = {
 const HEX_W = 152
 const HEX_H = 172
 
-// 连线几何：端点量自原位图；绿色 = 正向流转（箭头指向 to 端），橙色 = 回程/调度
+// 连线几何：端点统一收在外圈六边形外 ~8px（外圈 1.16 倍，横向半宽 88），箭头不被节点遮住；
+// 绿色 = 正向流转（箭头指向 to 端），橙色 = 回程/调度
 const LINES: {
   id: string
   x1: number
@@ -39,17 +40,17 @@ const LINES: {
   y2: number
   tone: 'green' | 'orange'
 }[] = [
-  { id: 'order', x1: 246, y1: 142, x2: 646, y2: 142, tone: 'green' },
-  { id: 'compare', x1: 630, y1: 176, x2: 288, y2: 176, tone: 'orange' },
-  { id: 'return', x1: 712, y1: 360, x2: 712, y2: 256, tone: 'orange' },
-  { id: 'encrypt', x1: 746, y1: 252, x2: 746, y2: 356, tone: 'green' },
-  { id: 'quote', x1: 246, y1: 453, x2: 646, y2: 453, tone: 'green' },
-  { id: 'bid', x1: 630, y1: 487, x2: 288, y2: 487, tone: 'orange' },
-  { id: 'transfer', x1: 830, y1: 453, x2: 1166, y2: 453, tone: 'green' },
-  { id: 'status', x1: 1150, y1: 487, x2: 838, y2: 487, tone: 'orange' },
-  { id: 'source', x1: 1360, y1: 453, x2: 1660, y2: 453, tone: 'green' },
-  { id: 'accept', x1: 1644, y1: 487, x2: 1374, y2: 487, tone: 'orange' },
-  { id: 'dispatch', x1: 727, y1: 552, x2: 727, y2: 650, tone: 'orange' },
+  { id: 'order', x1: 246, y1: 142, x2: 615, y2: 142, tone: 'green' },
+  { id: 'compare', x1: 646, y1: 176, x2: 288, y2: 176, tone: 'orange' },
+  { id: 'return', x1: 712, y1: 372, x2: 712, y2: 276, tone: 'orange' },
+  { id: 'encrypt', x1: 746, y1: 256, x2: 746, y2: 346, tone: 'green' },
+  { id: 'quote', x1: 246, y1: 453, x2: 615, y2: 453, tone: 'green' },
+  { id: 'bid', x1: 646, y1: 487, x2: 288, y2: 487, tone: 'orange' },
+  { id: 'transfer', x1: 830, y1: 453, x2: 1145, y2: 453, tone: 'green' },
+  { id: 'status', x1: 1176, y1: 487, x2: 792, y2: 487, tone: 'orange' },
+  { id: 'source', x1: 1360, y1: 453, x2: 1640, y2: 453, tone: 'green' },
+  { id: 'accept', x1: 1670, y1: 487, x2: 1322, y2: 487, tone: 'orange' },
+  { id: 'dispatch', x1: 727, y1: 564, x2: 727, y2: 631, tone: 'orange' },
 ]
 
 // 线上文字的锚点（x/y 为基线位置）：above 线上方 26、below 线下方 34、right 竖线右侧
@@ -151,26 +152,24 @@ function lineDelay(i: number): string {
       <polygon :points="arrowPoints(l)" :fill="TONE[l.tone].base" />
     </g>
 
-    <!-- 节点层：外圈浅色描边六边形 + 实底六边形 + 白色图标 + 下方名称 -->
+    <!-- 节点层：外圈淡色实底六边形（直接贴着实底边缘，无白缝）+ 实底六边形 + 白色图标 + 下方名称 -->
     <g v-for="n in flow.nodes" :key="n.id" class="flow-node" :style="{ '--d': nodeDelay(n.id) }">
+      <!-- 外圈：1.16 倍六边形、42% 透明同色填充，画在实底下面只露出 ~12px 的贴边色带 -->
       <polygon
-        class="flow-node-ring"
-        :points="hexPoints(NODE_GEO[n.id].x, NODE_GEO[n.id].y, HEX_W * 1.18, HEX_H * 1.18)"
-        fill="none"
-        :stroke="TONE[n.tone].ring"
-        stroke-width="8"
+        :points="hexPoints(NODE_GEO[n.id].x, NODE_GEO[n.id].y, HEX_W * 1.16, HEX_H * 1.16)"
+        :fill="TONE[n.tone].ring"
       />
       <polygon
         :points="hexPoints(NODE_GEO[n.id].x, NODE_GEO[n.id].y, HEX_W, HEX_H)"
         :fill="TONE[n.tone].base"
       />
-      <!-- 图标：120×132 裁切框对准六边形中心，图标落位与原位图逐像素一致 -->
+      <!-- 图标：90×99 裁切框居中（约为六边形宽的 6 成，留出呼吸空隙） -->
       <image
         :href="iconMap[n.icon]"
-        :x="NODE_GEO[n.id].x - 60"
-        :y="NODE_GEO[n.id].y - 66"
-        width="120"
-        height="132"
+        :x="NODE_GEO[n.id].x - 45"
+        :y="NODE_GEO[n.id].y - 49.5"
+        width="90"
+        height="99"
       />
       <text
         class="flow-node-label"
@@ -205,7 +204,6 @@ function lineDelay(i: number): string {
   min-width: 960px;
 }
 
-/* 节点入场：整组缩放弹出；transform-box 让 scale 以节点自身为中心 */
 .flow-node {
   opacity: 0;
   transform-box: fill-box;
@@ -225,7 +223,6 @@ function lineDelay(i: number): string {
   }
 }
 
-/* 连线入场：淡入即可（虚线流动是第二段动画） */
 .flow-line {
   opacity: 0;
 }
@@ -244,7 +241,6 @@ function lineDelay(i: number): string {
   }
 }
 
-/* 虚线流动：offset 走一个完整周期（22+24=46）实现无缝循环，方向沿线段从 x1 指向 x2 */
 @keyframes flow-dash {
   to {
     stroke-dashoffset: -46;
