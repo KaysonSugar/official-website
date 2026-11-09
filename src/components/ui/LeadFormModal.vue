@@ -104,16 +104,20 @@ onBeforeUnmount(() => {
           aria-labelledby="lead-title"
           class="max-h-full w-full max-w-[600px] overflow-y-auto rounded-2xl bg-white p-[32px] shadow-[0_40px_90px_-30px_rgba(26,26,26,0.55)]"
         >
-          <!-- 标题区：品牌标 + 标题说明在左侧，右侧只留 32px 关闭按钮 -->
-          <div class="flex items-start justify-between gap-[16px]">
-            <!-- 品牌标：32px 见方，纯标识不带文字（弹窗里放全称会挤），与标题间距 12 -->
-            <div class="flex min-w-0 items-center gap-[12px]">
-              <img :src="logoMark" alt="" aria-hidden="true" class="h-[32px] w-[32px] shrink-0 select-none object-contain" />
+          <!-- 标题区：48px 橙底圆角托住品牌标，标题升到 20px，图标和文字一个量级才压得住 -->
+          <div class="flex items-center justify-between gap-[16px]">
+            <div class="flex min-w-0 items-center gap-[14px]">
+              <span
+                class="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-xl bg-[#fff1e8]"
+                aria-hidden="true"
+              >
+                <img :src="logoMark" alt="" class="h-[28px] w-[28px] select-none object-contain" />
+              </span>
               <div>
-                <h3 id="lead-title" class="text-[18px] font-semibold leading-[26px] text-ink-900">
+                <h3 id="lead-title" class="text-[20px] font-semibold leading-[28px] text-ink-900">
                   预约产品演示
                 </h3>
-                <p class="mt-[6px] text-[13px] leading-[22px] text-ink-600">
+                <p class="mt-[4px] text-[13px] leading-[20px] text-ink-600">
                   留下联系方式，顾问将在 1 个工作日内与您联系。
                 </p>
               </div>
