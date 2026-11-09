@@ -163,6 +163,14 @@ export interface HomeMatrix {
   title: string
   /** 标题下的两行说明 */
   desc: string
+  /** 流程图整图的 alt 文本（读屏用） */
+  flowAlt: string
+  /** 底部链接前缀，拼在卡片标题前面 */
+  linkPrefix: string
+  /** 底部链接结尾的箭头 */
+  linkArrow: string
+  /** 未上线端点击后的提示文案 */
+  comingSoonLabel: string
   /**
    * 三张业务线卡片，顺序决定装饰素材（光斑 / 圆环）的取用
    * href 填外部系统地址（新窗口打开）；司机端未上线则不填，点击提示正在上线

@@ -25,11 +25,6 @@ import capDispatch from '@/assets/home/icons/cap-dispatch.webp'
 import capTrace from '@/assets/home/icons/cap-trace.webp'
 import capFinance from '@/assets/home/icons/cap-finance.webp'
 
-/**
- * 第三屏：轻量化平台（原型 03）。
- * 这屏内容最多：四个卖点胶囊、痛点面板、两组卡片、底部绿条。
- * 图标素材自带圆角底 tile，直接当图片用。
- */
 const { lightweight } = siteConfig
 
 // icon 名 → 素材。配置里存文件名，换图只动这里

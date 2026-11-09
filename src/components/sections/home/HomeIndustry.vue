@@ -13,11 +13,6 @@ import chipIcon from '@/assets/home/icons/chip.webp'
 import banIcon from '@/assets/home/icons/ban.webp'
 import pinIcon from '@/assets/home/icons/pin.webp'
 
-/**
- * 第二屏：行业背景与法规驱动（原型 02）。
- * 结构很简单：眉题 + 大标题 + 一行说明 + 四张法规卡 + 底部提示条。
- * 卡片图标素材自带浅色圆角底，直接当图片用，不用再套底色。
- */
 const { industry } = siteConfig
 
 // icon 名 → 素材。配置里存短名，素材换图只动这里

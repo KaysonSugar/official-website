@@ -19,11 +19,6 @@ import ringOrange from '@/assets/home/images/card-ring-orange.webp'
 import ringMint from '@/assets/home/images/card-ring-mint.webp'
 import ringGreen from '@/assets/home/images/card-ring-green.webp'
 
-/**
- * 第五屏：三端业务运转模式（原型 05）。
- * 上面是流程图整图（设计直接导出的透明底素材，节点箭头都在图里），
- * 下面三张业务线卡：化工暖橙、物流 / 司机薄荷绿，点击跳外部系统。
- */
 const { matrix } = siteConfig
 
 // icon 名 → 素材。光斑 / 圆环按卡片顺序取用：化工橙、物流浅绿、司机深绿
@@ -39,12 +34,14 @@ useReveal(root)
 </script>
 
 <template>
+  <!-- 区块：bg-[linear-gradient] 白到浅灰绿（180deg，#ffffff → #fafbfa）；
+       pt-[96px] 上留白 96px、pb-[64px] 下留白 64px -->
   <section
     ref="root"
     class="bg-[linear-gradient(180deg,#ffffff_0%,#fafbfa_100%)] pb-[64px] pt-[96px]"
   >
     <div class="container-page">
-      <!-- 眉题：跟前几屏同款，11px 橙色宽字距 -->
+      <!-- 眉题：reveal 走入场；11px/16px 加粗、字距 0.05em（sm 起 0.2em）、brand-500 橙 -->
       <p
         class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
@@ -52,7 +49,7 @@ useReveal(root)
         {{ matrix.eyebrow }}
       </p>
 
-      <!-- 板块标题：32px 加粗 -->
+      <!-- 标题：mt-[24px] 与眉题间距 24px；32px/42px 加粗、ink-900 -->
       <h2
         class="reveal mt-[24px] text-[32px] font-bold leading-[42px] text-ink-900"
         style="--d: 80ms"
@@ -60,7 +57,7 @@ useReveal(root)
         {{ matrix.title }}
       </h2>
 
-      <!-- 两行说明：14px 弱化灰，限宽防止拉太长 -->
+      <!-- 说明：mt-[48px] 与标题间距 48px；max-w-[860px] 限宽两行；14px/22px、ink-600 弱灰 -->
       <p
         class="reveal mt-[48px] max-w-[860px] text-[14px] leading-[22px] text-ink-600"
         style="--d: 160ms"
@@ -68,23 +65,25 @@ useReveal(root)
         {{ matrix.desc }}
       </p>
 
-      <!-- 流程图面板：白底圆角卡，整图缩放放进来；
-           图是桌面版式，窄屏横向滚动看全 -->
+      <!-- 流程图面板：mt-[36px] 与说明间距 36px；overflow-x-auto 窄屏横向滚动看全；
+           rounded-[16px] 圆角、px-[40px] py-[28px] 内边距、
+           shadow-[0_18px_40px_-30px] 极淡投影 -->
       <div
         class="reveal mt-[36px] overflow-x-auto rounded-[16px] border border-ink-100 bg-white px-[40px] py-[28px] shadow-[0_18px_40px_-30px_rgba(26,26,26,0.12)]"
         style="--d: 240ms"
       >
+        <!-- 图：mx-auto 居中；w-full 随容器缩放，min-w-[960px] 保住最小可读宽度 -->
         <img
           loading="lazy"
           decoding="async"
           :src="flowImg"
-          alt="化工企业、威易达化工、合作物流公司、威易达物流、威易达司机与全国危化物流公司的业务流转关系图"
+          :alt="matrix.flowAlt"
           class="mx-auto w-full min-w-[960px] max-w-[1200px] select-none"
           draggable="false"
         />
       </div>
 
-      <!-- 三张业务线卡：化工橙、物流 / 司机绿；装饰光斑在图标后面、圆环在右下角裁掉一半 -->
+      <!-- 三卡栅格：mt-[48px] 与面板间距 48px；gap-[18px]；手机 1 列 → md 3 列 -->
       <div class="mt-[48px] grid grid-cols-1 gap-[18px] md:grid-cols-3">
         <article
           v-for="(card, i) in matrix.cards"
@@ -92,10 +91,13 @@ useReveal(root)
           class="reveal card-lift relative rounded-[16px] border border-ink-100 bg-white px-[28px] pb-[28px] pt-[36px] text-center shadow-[0_18px_40px_-30px_rgba(26,26,26,0.12)]"
           :style="{ '--d': `${340 + i * 80}ms` }"
         >
-          <!-- 装饰层：光斑和圆环都往外溢，得靠这层裁掉（卡片本体不能再 overflow-hidden，
-               否则 card-lift 画在卡外的阴影会被一起裁没） -->
+          <!-- 卡：rounded-[16px]、border-ink-100、白底 + 极淡投影；
+               px-[28px] 左右、pt-[36px] 上、pb-[28px] 下。
+               装饰裁切层：absolute inset-0 + overflow-hidden 负责裁掉探出的光斑圆环
+               （卡片本体不能 overflow-hidden，否则 card-lift 的卡外阴影会被一起裁没） -->
           <div class="pointer-events-none absolute inset-0 overflow-hidden rounded-[16px]">
-            <!-- 光斑：透明底圆盘素材，模糊后只垫在 logo 区域，卡片本体保持白底 -->
+            <!-- 顶部光斑：absolute -top-[130px] left-1/2 -translate-x-1/2 居中探出上沿；
+                 w-[380px]、blur-[40px]、opacity-80 -->
             <img
               loading="lazy"
               decoding="async"
@@ -104,8 +106,8 @@ useReveal(root)
               aria-hidden="true"
               class="pointer-events-none absolute -top-[130px] left-1/2 w-[380px] -translate-x-1/2 select-none opacity-80 blur-[40px]"
             />
-            <!-- 右下角装饰：尺寸位置全部钉死（不随屏幕缩放），
-                 先一团光斑填充、再压圆环线；圆心在角外，只露四分之一弧 -->
+            <!-- 右下角装饰：-bottom-[130px] -right-[130px] 钉死不随屏幕缩放，
+                 圆心在角外只露四分之一弧；光斑 w-[220px] 垫底 + 圆环 w-[240px] 压线 -->
             <img
               loading="lazy"
               decoding="async"
@@ -125,9 +127,9 @@ useReveal(root)
           </div>
 
           <div class="relative">
-            <!-- 品牌图标：素材自带白色圆角 tile，直接用。
-                 matrix-logo 单独加类做 hover 放大——不能写成 .card-lift img，
-                 卡里的光斑/圆环装饰图会跟着缩放穿帮 -->
+            <!-- 品牌图标：mx-auto 居中、64×64、drop-shadow 轻投影。
+                 hover 放大 1.06 挂在 matrix-logo 类上（不能写 .card-lift img，
+                 否则光斑圆环装饰图会跟着缩放穿帮） -->
             <img
               loading="lazy"
               decoding="async"
@@ -137,8 +139,8 @@ useReveal(root)
               class="matrix-logo mx-auto h-[64px] w-[64px] select-none drop-shadow-[0_6px_14px_rgba(26,26,26,0.08)]"
             />
 
-            <!-- 小胶囊标签：白底浮在卡面上，靠一道极淡投影跟白卡分开，
-                 只留文字色区分橙 / 绿（原型里就是白标签 + 彩字） -->
+            <!-- 小胶囊标签：inline-block、rounded-full 全圆角、px-[12px] py-[4px]；
+                 白底 + shadow-[0_2px_6px] 极淡投影跟白卡分开；文字色按 tone 分橙 / 绿 -->
             <p
               class="mt-[16px] inline-block rounded-full bg-white px-[12px] py-[4px] text-[12px] leading-[18px] shadow-[0_2px_6px_rgba(26,26,26,0.06)]"
               :class="card.tone === 'orange' ? 'text-[#bc6a30]' : 'text-[#2f8f62]'"
@@ -146,15 +148,16 @@ useReveal(root)
               {{ card.label }}
             </p>
 
-            <!-- 卡片标题：20px 加粗 -->
+            <!-- 卡标题：mt-[12px] 与胶囊间距 12px；20px/28px 加粗、ink-900 -->
             <h3 class="mt-[12px] text-[20px] font-bold leading-[28px] text-ink-900">
               {{ card.title }}
             </h3>
 
-            <!-- 正文：14px 居中，与原型同款换行节奏 -->
+            <!-- 卡正文：mt-[14px] 与标题间距 14px；14px/24px 居中、ink-600 -->
             <p class="mt-[14px] text-[14px] leading-[24px] text-ink-600">{{ card.desc }}</p>
 
-            <!-- 能力胶囊：装不下自动换行 -->
+            <!-- 能力胶囊：mt-[18px] 与正文间距 18px；flex-wrap 装不下自动换行、
+                 gap-[8px] 间距；单颗 rounded-[8px]、px-[12px] py-[5px]、12px/20px -->
             <div class="mt-[18px] flex flex-wrap justify-center gap-[8px]">
               <span
                 v-for="tag in card.tags"
@@ -165,8 +168,8 @@ useReveal(root)
               </span>
             </div>
 
-            <!-- 底部链接：有 href 跳外部系统（新窗口）；
-                 司机端未上线，点一下把文案换成「正在上线中」 -->
+            <!-- 底部链接：mt-[20px] 与胶囊间距 20px；13px/20px 加粗；
+                 有 href 走 a 新窗口跳外部系统，没有则点一下换「正在上线中」 -->
             <a
               v-if="card.href"
               :href="card.href"
@@ -175,7 +178,7 @@ useReveal(root)
               class="mt-[20px] inline-block text-[13px] font-semibold leading-[20px]"
               :class="card.tone === 'orange' ? 'text-brand-600' : 'text-[#2f8f62]'"
             >
-              了解{{ card.title }} →
+              {{ matrix.linkPrefix }}{{ card.title }}{{ matrix.linkArrow }}
             </a>
             <button
               v-else
@@ -184,7 +187,11 @@ useReveal(root)
               :class="comingSoon ? 'text-ink-400' : 'text-[#2f8f62]'"
               @click="comingSoon = true"
             >
-              {{ comingSoon ? '正在上线中…' : `了解${card.title} →` }}
+              {{
+                comingSoon
+                  ? matrix.comingSoonLabel
+                  : matrix.linkPrefix + card.title + matrix.linkArrow
+              }}
             </button>
           </div>
         </article>
@@ -194,8 +201,6 @@ useReveal(root)
 </template>
 
 <style scoped>
-/* 卡片 hover 时品牌图标轻放大 6%：跟法规卡 / 功能卡 / 服务卡同款两级反馈
-   （投影浮现 + 图标放大）。曲线用起停都缓的 0.4/0/0.2/1，全站 hover 同款 */
 .card-lift .matrix-logo {
   transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -204,7 +209,6 @@ useReveal(root)
   transform: scale(1.06);
 }
 
-/* 减弱动效：图标别缩放，只留卡片自己的投影浮现 */
 @media (prefers-reduced-motion: reduce) {
   .card-lift .matrix-logo {
     transition: none;
@@ -215,12 +219,9 @@ useReveal(root)
   }
 }
 
-/* 右下角圆环极慢自转：60s 一圈，绕自身中心转，圆心在卡角外只露四分之一弧，
-   转起来弧的位置缓缓变化，若隐若现。纯装饰图无文字，rotate 安全。
-   慢到 60s 是有意的：三张卡同时转，快了会抢内容的戏 */
 .matrix-ring {
   animation: matrix-rotate 60s linear infinite;
-  animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
+  animation-play-state: paused;
 }
 
 @keyframes matrix-rotate {
@@ -233,7 +234,6 @@ useReveal(root)
   animation-play-state: running;
 }
 
-/* reduced-motion：infinite 动画必须自己关，全局 0.01ms 规则会把它变成疯狂空转 */
 @media (prefers-reduced-motion: reduce) {
   .matrix-ring {
     animation: none;

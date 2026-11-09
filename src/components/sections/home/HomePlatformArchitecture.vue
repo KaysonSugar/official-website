@@ -10,12 +10,6 @@ import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import glowImg from '@/assets/home/images/glow.webp'
 
-/**
- * 第四屏：平台功能结构（原型 04）。
- * 暗色分层架构图，纯文字没图标：左边层名一列，右边每层一排块。
- * 业务层那排是四张棕色模块卡（模块名 + 能力清单），其余层是等高文字块；
- * 这一层的层名也用同色系浅棕，跟其它层的灰绿层名拉开。
- */
 const { architecture } = siteConfig
 
 const root = useTemplateRef<HTMLElement>('root')
@@ -23,10 +17,12 @@ useReveal(root)
 </script>
 
 <template>
+  <!-- 区块：arch-bg 暗绿底（写在末尾 style）；relative + overflow-hidden 裁掉探出的光斑；
+       pt-[136px] 上留白 136px、pb-[64px] 下留白 64px -->
   <section ref="root" class="arch-bg relative overflow-hidden pb-[64px] pt-[136px]">
-    <!-- 背景光斑：glow.png 是黑底硬边圆盘（900 见方，亮部居中），screen 混合吃掉黑底，
-         模糊把硬边和同心环纹理揉开；透明度给足才够「亮眼」，位置对准原型右上亮区。
-         arch-glow 给它加 20s 缓慢漂移（图上没文字，缩放安全） -->
+    <!-- 背景光斑：absolute -top-[230px] right-[-130px] 探出右上角、w-[900px]；
+         mix-blend-screen 吃掉素材黑底、blur-[50px] 揉开硬边、opacity-80；
+         arch-glow 类挂 20s 漂移动画，视口外暂停（见末尾 style） -->
     <img
       loading="lazy"
       decoding="async"
@@ -37,7 +33,7 @@ useReveal(root)
     />
 
     <div class="container-page relative">
-      <!-- 眉题：跟前三屏同款，11px 橙色宽字距 -->
+      <!-- 眉题：reveal 走入场；11px/16px 加粗、字距 0.05em（sm 起 0.2em）、brand-500 橙 -->
       <p
         class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
@@ -45,7 +41,7 @@ useReveal(root)
         {{ architecture.eyebrow }}
       </p>
 
-      <!-- 板块标题：32px 加粗，暗底上用白字 -->
+      <!-- 标题：mt-[20px] 与眉题间距 20px；32px/42px 加粗、暗底上用 text-white -->
       <h2
         class="reveal mt-[20px] text-[32px] font-bold leading-[42px] text-white"
         style="--d: 80ms"
@@ -53,54 +49,58 @@ useReveal(root)
         {{ architecture.title }}
       </h2>
 
-      <!-- 一行说明：原型里离标题远、贴着架构图，14px 灰绿 -->
+      <!-- 说明：mt-[72px] 与标题间距 72px；14px/22px、#9db4a8 灰绿 -->
       <p class="reveal mt-[72px] text-[14px] leading-[22px] text-[#9db4a8]" style="--d: 160ms">
         {{ architecture.desc }}
       </p>
 
-      <!-- 六层架构：左列层名 64px + 右侧块区；行距 14，一行一层依次浮上来 -->
+      <!-- 六层架构：mt-[36px] 与说明间距 36px；flex-col gap-[14px] 行距 14px；
+           层名先亮，该层块从左到右逐个点亮（arch-on，通电式入场） -->
       <div class="mt-[36px] flex flex-col gap-[14px]">
         <div
           v-for="(layer, i) in architecture.layers"
           :key="layer.label"
-          class="reveal flex flex-col gap-[8px] sm:flex-row sm:items-center sm:gap-[24px]"
-          :style="{ '--d': `${240 + i * 80}ms` }"
+          class="flex flex-col gap-[8px] sm:flex-row sm:items-center sm:gap-[24px]"
         >
-          <!-- 层名：12px 灰绿，窄屏时整行占一行；业务层那行带 highlight，层名换浅棕 #d9bd97，
-               卡片已经跟其它层同色，这行字是这层唯一的区分信号 -->
+          <!-- 层名：12px/18px、shrink-0 不被压缩、sm:w-[64px] 定宽；
+               业务层 highlight 时换 #d9bd97 浅棕，其余层 night-400 灰绿；
+               reveal 先亮层名（--d = 240 + 层序 × 80ms） -->
           <span
-            class="shrink-0 text-[12px] leading-[18px] sm:w-[64px]"
+            class="reveal shrink-0 text-[12px] leading-[18px] sm:w-[64px]"
             :class="layer.highlight ? 'text-[#d9bd97]' : 'text-night-400'"
+            :style="{ '--d': `${240 + i * 80}ms` }"
             >{{ layer.label }}</span
           >
 
-          <!-- 普通层：等宽文字块，块数即列数（--cols 交给 scoped 样式做响应式）；
-               资源服务层 5 块太挤，文字降到 13px -->
+          <!-- 块区：flex-1 占满层名右侧；列数走 --cols 变量（sm 起生效，见末尾 style）；
+               块数 ≥5 时文字降到 13px；arch-on 通电点亮：层名亮后 140ms 起、每块 +55ms -->
           <div
             v-if="layer.blocks"
             class="layer-grid flex-1"
             :style="{ '--cols': layer.blocks.length }"
           >
             <div
-              v-for="block in layer.blocks"
+              v-for="(block, bi) in layer.blocks"
               :key="block"
-              class="flex h-[44px] items-center justify-center rounded-[8px] bg-night-800 text-center text-[14px] leading-[20px] text-white"
+              class="arch-on flex h-[44px] items-center justify-center rounded-[8px] bg-night-800 text-center text-[14px] leading-[20px] text-white"
               :class="layer.blocks!.length >= 5 ? 'px-[8px] text-[13px]' : ''"
+              :style="{ '--d': `${240 + i * 80 + 140 + bi * 55}ms` }"
             >
               {{ block }}
             </div>
           </div>
 
-          <!-- 业务层：四张棕卡，模块名白粗体，能力清单小字浅棕；
-               棕色只在业务层用，跟左侧浅棕层名配成一组 -->
+          <!-- 业务层：与普通层同构，只是块换成棕卡；
+               --cols 固定 4，四张卡也是 arch-on 逐张点亮（每张 +70ms） -->
           <div v-else-if="layer.modules" class="layer-grid flex-1" :style="{ '--cols': 4 }">
-            <!-- 四张卡各自延迟 70ms 错峰浮入：整层一起冒出来太呆板，
-                 这里补上独立 --d（父层的淡入会叠一层，所以起始提前 40ms） -->
+            <!-- 模块卡：rounded-[10px] 圆角、border #7d5530 + bg #5b391d 棕系；
+                 px-[12px] 左右、pt-[12px] 上、pb-[38px] 下留白；
+                 card-lift-dark 给 hover 投影浮现，描边亮起写在末尾 style -->
             <div
               v-for="(mod, mi) in layer.modules"
               :key="mod.title"
-              class="reveal rounded-[10px] border border-[#7d5530] bg-[#5b391d] px-[12px] pb-[38px] pt-[12px]"
-              :style="{ '--d': `${240 + i * 80 + 40 + mi * 70}ms` }"
+              class="arch-on arch-module card-lift card-lift-dark rounded-[10px] border border-[#7d5530] bg-[#5b391d] px-[12px] pb-[38px] pt-[12px]"
+              :style="{ '--d': `${240 + i * 80 + 140 + mi * 70}ms` }"
             >
               <h3 class="text-[15px] font-bold leading-[22px] text-white">{{ mod.title }}</h3>
               <p class="mt-[4px] text-[11px] leading-[16px] text-[#d9bd97]">（{{ mod.desc }}）</p>
@@ -109,12 +109,15 @@ useReveal(root)
         </div>
       </div>
 
-      <!-- 底部提示条：比架构图低一截，绿点开头，窄屏自动加高 -->
+      <!-- 提示条：mt-[80px] 与架构图间距 80px；flex 垂直居中、gap-[12px]；
+           px-[20px] py-[14px]，lg 下改 h-[48px] 定高 + py-0；bg #162c23、圆角 10px -->
       <div
         class="reveal mt-[80px] flex items-center gap-[12px] rounded-[10px] bg-[#162c23] px-[20px] py-[14px] lg:h-[48px] lg:py-0"
         style="--d: 760ms"
       >
+        <!-- 绿点：6×6 圆点，shrink-0 不被文字挤压，#57d193 绿 -->
         <span class="h-[6px] w-[6px] shrink-0 rounded-full bg-[#57d193]" aria-hidden="true" />
+        <!-- 提示文字：13px/22px、#a9c0b4 灰绿 -->
         <p class="text-[13px] leading-[22px] text-[#a9c0b4]">{{ architecture.note }}</p>
       </div>
     </div>
@@ -122,17 +125,46 @@ useReveal(root)
 </template>
 
 <style scoped>
-/* 暗底：夜色绿打底，顶部的光斑由 glow.png 叠层负责（见模板里的 img） */
 .arch-bg {
   background: #0f211b;
 }
 
-/* 光斑漂移：20s 一个来回，左移 40px、下沉 24px、放大 5%。
-   alternate 来回跑不跳变；图是纯装饰无文字，scale 安全。
-   blur(50px) 已把图栅格化，transform 动画走合成层，每帧零重绘 */
+.arch-on {
+  opacity: 0;
+}
+
+.in .arch-on {
+  opacity: 1;
+  animation: arch-power 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes arch-power {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+.arch-module {
+  transition: border-color 260ms ease;
+}
+
+.arch-module:hover {
+  border-color: #b8823f;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arch-on,
+  .in .arch-on {
+    opacity: 1;
+    animation: none;
+  }
+}
+
 .arch-glow {
   animation: arch-drift 20s ease-in-out infinite alternate;
-  animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
+  animation-play-state: paused;
 }
 
 @keyframes arch-drift {
@@ -145,14 +177,12 @@ useReveal(root)
   animation-play-state: running;
 }
 
-/* reduced-motion：infinite 动画必须自己关，全局 0.01ms 规则会把它变成疯狂空转 */
 @media (prefers-reduced-motion: reduce) {
   .arch-glow {
     animation: none;
   }
 }
 
-/* 每层块区的列数：窄屏先叠一列，sm 起按 --cols 等分（块数不同不能写死类名） */
 .layer-grid {
   display: grid;
   gap: 10px;

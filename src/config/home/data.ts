@@ -266,6 +266,11 @@ export const matrix: HomeMatrix = {
   eyebrow: 'PRODUCT MATRIX / 产品矩阵',
   title: '三端业务运转模式',
   desc: '化工企业用「威易达化工」管生产、合同与资金；货运公司用「威易达物流」管车辆、人员与调度；司机用「威易达司机」接单、报备、回单。三端共用同一套订单与数据。',
+  flowAlt:
+    '化工企业、威易达化工、合作物流公司、威易达物流、威易达司机与全国危化物流公司的业务流转关系图',
+  linkPrefix: '了解',
+  linkArrow: ' →',
+  comingSoonLabel: '正在上线中…',
   cards: [
     {
       icon: 'chemical',
