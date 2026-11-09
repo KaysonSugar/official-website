@@ -204,7 +204,6 @@ useReveal(flowPanel, 0.12)
 </template>
 
 <style scoped>
-/* 面板入场：露出 35% 才淡入上浮，不跟 section 的 .in 提前触发 */
 .flow-panel {
   opacity: 0;
 }

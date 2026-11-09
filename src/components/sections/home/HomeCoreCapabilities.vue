@@ -15,11 +15,6 @@ import fnPurchase from '@/assets/home/icons/fn-purchase.webp'
 import fnProcess from '@/assets/home/icons/fn-process.webp'
 import fnSales from '@/assets/home/icons/fn-sales.webp'
 
-/**
- * 第六屏：核心功能详解（原型 06）。
- * 简单的一屏：眉题 + 标题 + 两行说明 + 六张功能卡（2 行 3 列）。
- * 卡片图标素材自带浅色圆角底，橙绿交替，直接当图片用。
- */
 const { capabilities } = siteConfig
 
 // icon 名 → 素材。配置里存短名，换图只动这里
@@ -37,9 +32,10 @@ useReveal(root)
 </script>
 
 <template>
+  <!-- 区块：白底；pt-[96px] 上留白 96px、pb-[64px] 下留白 64px -->
   <section ref="root" class="bg-white pb-[64px] pt-[96px]">
     <div class="container-page">
-      <!-- 眉题：跟前几屏同款，11px 橙色宽字距 -->
+      <!-- 眉题：11px/16px 加粗、字距 0.05em（sm 起 0.2em）、brand-500 橙 -->
       <p
         class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
@@ -47,7 +43,7 @@ useReveal(root)
         {{ capabilities.eyebrow }}
       </p>
 
-      <!-- 板块标题：32px 加粗 -->
+      <!-- 标题：mt-[44px] 与眉题间距 44px；32px/42px 加粗、ink-900 -->
       <h2
         class="reveal mt-[44px] text-[32px] font-bold leading-[42px] text-ink-900"
         style="--d: 80ms"
@@ -55,7 +51,7 @@ useReveal(root)
         {{ capabilities.title }}
       </h2>
 
-      <!-- 两行说明：14px 弱化灰，限宽对齐原型换行位置 -->
+      <!-- 说明：mt-[48px] 与标题间距 48px；max-w-[880px] 限宽、14px/24px、ink-600 弱灰 -->
       <p
         class="reveal mt-[48px] max-w-[880px] text-[14px] leading-[24px] text-ink-600"
         style="--d: 160ms"
@@ -63,8 +59,8 @@ useReveal(root)
         {{ capabilities.desc }}
       </p>
 
-      <!-- 六张功能卡：2 行 3 列；浅灰卡底无描边，图标橙绿交替。
-           逐张错峰 70ms 浮入，整组一起冒出来看着跟没动画一样 -->
+      <!-- 功能卡栅格：mt-[40px] 与说明间距 40px；gap-[24px]；
+           手机 1 列 → sm 2 列 → lg 3 列，卡片逐张错峰 70ms 浮入 -->
       <div class="mt-[40px] grid grid-cols-1 gap-[24px] sm:grid-cols-2 lg:grid-cols-3">
         <article
           v-for="(card, i) in capabilities.cards"
@@ -72,6 +68,8 @@ useReveal(root)
           class="reveal card-lift rounded-[16px] bg-[#fafbfa] p-[24px]"
           :style="{ '--d': `${240 + i * 70}ms` }"
         >
+          <!-- 图标：固定 46×46（h-[46px] w-[46px]），素材自带圆角浅底、橙绿交替；
+               hover 卡片时放大到 1.06（写在末尾 style 里） -->
           <img
             loading="lazy"
             decoding="async"
@@ -80,9 +78,13 @@ useReveal(root)
             aria-hidden="true"
             class="h-[46px] w-[46px] select-none"
           />
+
+          <!-- 卡标题：mt-[16px] 与图标间距 16px；16px/24px 加粗 -->
           <h3 class="mt-[16px] text-[16px] font-bold leading-[24px] text-ink-900">
             {{ card.title }}
           </h3>
+
+          <!-- 卡正文：mt-[8px] 与标题间距 8px；13px/22px、ink-600 -->
           <p class="mt-[8px] text-[13px] leading-[22px] text-ink-600">{{ card.desc }}</p>
         </article>
       </div>
@@ -91,8 +93,6 @@ useReveal(root)
 </template>
 
 <style scoped>
-/* 卡片 hover 时图标轻放大 6%：transform 只作用在 img（无文字），跟全局 card-lift
-   的浮起凑成两级反馈。曲线用起停都缓的 0.4/0/0.2/1，跟首屏胶囊 hover 同款 */
 .card-lift img {
   transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -101,7 +101,6 @@ useReveal(root)
   transform: scale(1.06);
 }
 
-/* 减弱动效：图标别缩放，只留卡片自己的浮起 */
 @media (prefers-reduced-motion: reduce) {
   .card-lift img {
     transition: none;
