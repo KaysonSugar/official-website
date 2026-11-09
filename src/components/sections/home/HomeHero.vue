@@ -16,7 +16,6 @@ import checkIcon from '@/assets/home/images/hero-check.webp'
 import ringsImg from '@/assets/home/images/rings.webp'
 import dividerImg from '@/assets/home/images/hero-bottom-divider.webp'
 
-
 // 数字条：拆成「数字 + 尾巴」，尾巴里没有数字才做递增（10、7 天 行，7×24 不行）。
 // 递增本体在 useCountUp（从这里的内联实现抽的，司机招募/物流货源广场共用）
 const statsEl = useTemplateRef<HTMLElement>('statsEl')
@@ -133,7 +132,7 @@ useCountUp(statsEl)
                （= 导航栏下 20）；手机上收进看板左上角，不探出屏幕 -->
           <div
             class="pop-in absolute left-[10px] top-[-14px] z-10 flex h-[63px] w-[188px] items-center rounded-[10px] bg-white pl-[10px] shadow-[0_18px_36px_-18px_rgba(26,26,26,0.3)] ring-1 ring-black/5 lg:left-[-59px] lg:top-[-47px]"
-            :style="{ animationDelay: '450ms' }"
+            :style="{ '--pop-d': '450ms' }"
           >
             <img
               :src="checkIcon"
@@ -167,7 +166,7 @@ useCountUp(statsEl)
                手机上收进看板左下角 -->
           <div
             class="pop-in absolute bottom-[8px] left-[10px] z-10 flex h-[63px] w-[160px] items-center rounded-[10px] bg-white pl-[10px] shadow-[0_18px_36px_-18px_rgba(26,26,26,0.3)] ring-1 ring-black/5 lg:bottom-0 lg:left-[-120px]"
-            :style="{ animationDelay: '550ms' }"
+            :style="{ '--pop-d': '550ms' }"
           >
             <img
               :src="truckIcon"
@@ -249,7 +248,23 @@ useCountUp(statsEl)
 }
 
 .pop-in {
-  animation: hero-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  /* 双动画：hero-pop 进场落定，hero-float 等 pop 播完 200ms 后接棒上下浮 6px。
+     两个都是 transform 动画、同时活跃时列表后面的赢——所以 float 的延迟用
+     calc(var(--pop-d) + 700ms) 错开（≥ pop 的 delay+时长），不会截胡进场。
+     延迟用 --pop-d 变量而不是内联 animationDelay：内联一个值会同时灌给两个
+     动画，float 提前开跑就会盖掉 pop 的中间帧。两个小卡的常驻合成层，开销可忽略 */
+  animation:
+    hero-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) var(--pop-d, 0ms) backwards,
+    hero-float 4s ease-in-out calc(var(--pop-d, 0ms) + 700ms) infinite alternate;
+}
+
+@keyframes hero-float {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-6px);
+  }
 }
 
 /* 卖点胶囊 hover：上浮 2px + 描边转浅橙 + 底转纯白 + 浮起一圈淡阴影。
@@ -288,8 +303,14 @@ useCountUp(statsEl)
   opacity: 1;
 }
 
-/* 关了动效就别浮了：位移本身也是"动"，只留颜色变化 */
+/* 关了动效就别浮了：位移本身也是"动"，只留颜色变化。
+   infinite 的 float 必须自己关——全局 0.01ms 规则会把它压成疯狂空转；
+   这里直接把动画列表退回只剩一次性进场，浮动整个拿掉 */
 @media (prefers-reduced-motion: reduce) {
+  .pop-in {
+    animation: hero-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) var(--pop-d, 0ms) backwards;
+  }
+
   .feature-pill,
   .feature-pill::after {
     transition: none;
