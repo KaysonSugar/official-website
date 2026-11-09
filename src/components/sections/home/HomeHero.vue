@@ -248,22 +248,28 @@ useCountUp(statsEl)
 }
 
 .pop-in {
-  /* 双动画：hero-pop 进场落定，hero-float 等 pop 播完 200ms 后接棒上下浮 6px。
-     两个都是 transform 动画、同时活跃时列表后面的赢——所以 float 的延迟用
-     calc(var(--pop-d) + 700ms) 错开（≥ pop 的 delay+时长），不会截胡进场。
-     延迟用 --pop-d 变量而不是内联 animationDelay：内联一个值会同时灌给两个
-     动画，float 提前开跑就会盖掉 pop 的中间帧。两个小卡的常驻合成层，开销可忽略 */
-  animation:
-    hero-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) var(--pop-d, 0ms) backwards,
-    hero-float 4s ease-in-out calc(var(--pop-d, 0ms) + 700ms) infinite alternate;
+  /* 进场落定一次性动画；延迟走 --pop-d 变量（两张卡错 100ms） */
+  animation: hero-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) var(--pop-d, 0ms) backwards;
 }
 
-@keyframes hero-float {
-  from {
-    transform: translateY(0);
-  }
+/* 阴影呼吸：卡片和文字完全不动（小中文一动就在合成层里重采样发虚），
+   只在 ::after 画一圈更大的软影、opacity 0.45↔1 缓慢涨落——和 card-lift
+   同一哲学：动的只有阴影。4s 与右上圆环呼吸同节奏。
+   ::after inset:0 和卡身重合，外阴影只画在卡外，不会糊到卡面 */
+.pop-in::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 22px 44px -16px rgba(26, 26, 26, 0.35);
+  opacity: 0.45;
+  animation: hero-shadow 4s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes hero-shadow {
   to {
-    transform: translateY(-6px);
+    opacity: 1;
   }
 }
 
@@ -303,12 +309,11 @@ useCountUp(statsEl)
   opacity: 1;
 }
 
-/* 关了动效就别浮了：位移本身也是"动"，只留颜色变化。
-   infinite 的 float 必须自己关——全局 0.01ms 规则会把它压成疯狂空转；
-   这里直接把动画列表退回只剩一次性进场，浮动整个拿掉 */
+/* 关了动效就别呼吸了：infinite 的阴影涨落必须自己关——
+   全局 0.01ms 规则会把它压成疯狂空转；关掉后阴影停在静态中值 */
 @media (prefers-reduced-motion: reduce) {
-  .pop-in {
-    animation: hero-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) var(--pop-d, 0ms) backwards;
+  .pop-in::after {
+    animation: none;
   }
 
   .feature-pill,
