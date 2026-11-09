@@ -12,11 +12,6 @@ import svcImplement from '@/assets/home/icons/svc-implement.webp'
 import svcCustom from '@/assets/home/icons/svc-custom.webp'
 import svcSupport from '@/assets/home/icons/svc-support.webp'
 
-/**
- * 第十一屏：我们的服务（原型 S10）。
- * 纯白底三张服务卡：图标素材自带浅橙/浅绿圆角底，下面标题 + 小圆点列表。
- * 卡片内容长短不一（实施三条最长），靠 grid 等宽对齐。
- */
 const { service } = siteConfig
 
 // icon 名 → 素材。配置里存短名，换图只动这里
@@ -31,9 +26,10 @@ useReveal(root)
 </script>
 
 <template>
+  <!-- 区块：白底；pt-[96px] 上留白 96px、pb-[64px] 下留白 64px -->
   <section ref="root" class="bg-white pb-[64px] pt-[96px]">
     <div class="container-page">
-      <!-- 眉题：跟前几屏同款，11px 橙色宽字距 -->
+      <!-- 眉题：11px/16px 加粗、字距 0.05em（sm 起 0.2em）、brand-500 橙 -->
       <p
         class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
@@ -41,7 +37,7 @@ useReveal(root)
         {{ service.eyebrow }}
       </p>
 
-      <!-- 板块标题：32px 加粗 -->
+      <!-- 标题：mt-[44px] 与眉题间距 44px；32px/42px 加粗、ink-900 -->
       <h2
         class="reveal mt-[44px] text-[32px] font-bold leading-[42px] text-ink-900"
         style="--d: 80ms"
@@ -49,12 +45,13 @@ useReveal(root)
         {{ service.title }}
       </h2>
 
-      <!-- 一行说明：14px 弱化灰 -->
+      <!-- 说明：mt-[24px] 与标题间距 24px；14px/24px、ink-600 -->
       <p class="reveal mt-[24px] text-[14px] leading-[24px] text-ink-600" style="--d: 160ms">
         {{ service.desc }}
       </p>
 
-      <!-- 三张服务卡：浅灰细边框白卡。逐张错峰浮入 -->
+      <!-- 服务卡栅格：mt-[36px] 与说明间距 36px、gap-[18px]；
+           手机 1 列 → md 3 列，逐张错峰 80ms 浮入。浅灰细边框 #efefef 白卡 -->
       <div class="mt-[36px] grid grid-cols-1 gap-[18px] md:grid-cols-3">
         <article
           v-for="(card, i) in service.cards"
@@ -62,7 +59,8 @@ useReveal(root)
           class="reveal card-lift rounded-[16px] border border-[#efefef] bg-white p-[28px]"
           :style="{ '--d': `${240 + i * 80}ms` }"
         >
-          <!-- 图标素材自带浅色圆角底，46px 跟第六屏的功能卡一致 -->
+          <!-- 图标：固定 46×46，素材自带浅色圆角底（跟第六屏功能卡同规格）；
+               hover 卡片时放大到 1.06（写在末尾 style 里） -->
           <img
             loading="lazy"
             decoding="async"
@@ -71,10 +69,14 @@ useReveal(root)
             aria-hidden="true"
             class="h-[46px] w-[46px] select-none"
           />
+
+          <!-- 卡标题：mt-[20px] 与图标间距 20px；16px/24px 加粗 -->
           <h3 class="mt-[20px] text-[16px] font-bold leading-[24px] text-ink-900">
             {{ card.title }}
           </h3>
-          <!-- 小圆点列表：点用 3px 灰点，跟文字基线对齐 -->
+
+          <!-- 小圆点列表：space-y-[10px] 行距；点 3×3 灰（ink-400）跟文字基线对齐；
+               正文 13px/22px、ink-600 -->
           <ul class="mt-[14px] space-y-[10px]">
             <li
               v-for="item in card.items"
@@ -92,8 +94,6 @@ useReveal(root)
 </template>
 
 <style scoped>
-/* 卡片 hover 时图标轻放大 6%：transform 只作用在 img（无文字），跟全局 card-lift
-   的浮起凑成两级反馈。曲线用起停都缓的 0.4/0/0.2/1，跟首屏胶囊 hover 同款 */
 .card-lift img {
   transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -102,7 +102,6 @@ useReveal(root)
   transform: scale(1.06);
 }
 
-/* 减弱动效：图标别缩放，只留卡片自己的浮起 */
 @media (prefers-reduced-motion: reduce) {
   .card-lift img {
     transition: none;

@@ -306,12 +306,16 @@ export interface HomeAdvantage {
   eyebrow: string
   /** 板块主标题 */
   title: string
+  /** 对照表三列表头：参与方 / 核心痛点 / 解决方案 */
+  tableHead: { party: string; pain: string; solution: string }
   /** 三行参与方；化工企业痛点只有两条，两组条目各自独立、长度不要求相等 */
   rows: {
     name: string
     pains: { title: string; desc: string }[]
     solutions: { title: string; desc: string }[]
   }[]
+  /** 支撑卡组的小标题 */
+  supportsTitle: string
   /** 平台层三张支撑卡；tone 决定编号颜色（原型 01/03 橙、02 绿） */
   supports: { no: string; tone: 'orange' | 'green'; title: string; desc: string }[]
   /** 底部核心观点条：左侧小标签 + 正文 */

@@ -441,6 +441,8 @@ export const collab: HomeCollab = {
 export const advantage: HomeAdvantage = {
   eyebrow: 'FULL-CHAIN ADVANTAGE / 全链路一体化优势',
   title: '三类参与方的核心痛点与对应方案',
+  tableHead: { party: '参与方', pain: '核心痛点', solution: '威易达解决方案' },
+  supportsTitle: '平台层的三项支撑能力',
   rows: [
     {
       name: '化工企业',
