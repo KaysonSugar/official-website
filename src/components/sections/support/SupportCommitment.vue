@@ -17,12 +17,12 @@ import iconSchedule from '@/assets/support/icons/cmt-schedule.webp'
  * 第五屏：四项交付准则，写入服务范围（原型 S4）。
  * 深绿屏（对角渐变 #0f241d→#0b1a15，比首页 S8 的深绿更黑一点），
  * 四张准则卡 #17322b 无边框，图标 PNG 自带深绿圆角 tile；
- * 第四卡「闭环售后」的循环箭头用户没给素材，按原型内联 SVG 画，tile 用采样的 #2a3f38 补齐。
- * 底部四个硬指标接公共 useCountUp 滚动（2026-11-06 用户要求）。
+ * 「闭环售后」的循环箭头没素材，按原型内联 SVG 画，tile 用采样的 #2a3f38 补齐。
  */
 const { commitment } = siteConfig.support
 
-const iconMap = {
+// icon 短名 → 素材；loop 没有素材，走模板里的内联 SVG，这里留空占位
+const iconMap: Record<(typeof commitment.cards)[number]['icon'], string> = {
   sign: iconSign,
   checklist: iconChecklist,
   schedule: iconSchedule,
@@ -48,9 +48,10 @@ useCountUp(statsEl)
 </script>
 
 <template>
+  <!-- 区块：深绿对角渐变 #0f241d→#0b1a15，上留白 88px、下 96px -->
   <section ref="root" class="bg-gradient-to-br from-[#0f241d] to-[#0b1a15] pb-[96px] pt-[88px]">
     <div class="container-page">
-      <!-- 眉题：品牌橙 #ff833f，全站统一（原来这块深底单独用浅绿） -->
+      <!-- 眉题：11px/16px 加粗、字距 0.05em（sm 起 0.2em）、brand-500 橙，深底上照样用品牌橙 -->
       <p
         class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
@@ -58,6 +59,7 @@ useCountUp(statsEl)
         {{ commitment.eyebrow }}
       </p>
 
+      <!-- 标题：mt-[44px] 与眉题间距 44px；32px/42px 加粗，深底用纯白 -->
       <h2
         class="reveal mt-[44px] text-[32px] font-bold leading-[42px] text-white"
         style="--d: 80ms"
@@ -65,6 +67,7 @@ useCountUp(statsEl)
         {{ commitment.title }}
       </h2>
 
+      <!-- 说明：mt-[24px] 与标题间距 24px，max-w 820px；14px/24px，深底用 #b1c5bc 灰绿 -->
       <p
         class="reveal mt-[24px] max-w-[820px] text-[14px] leading-[24px] text-[#b1c5bc]"
         style="--d: 160ms"
@@ -72,7 +75,10 @@ useCountUp(statsEl)
         {{ commitment.desc }}
       </p>
 
-      <!-- 四张准则卡：md 四列，手机单列；卡底 #17322b，无边框，靠底色差分层 -->
+      <!-- 四张准则卡：mt-[36px] 与说明间距 36px、gap 18px；
+           手机 1 列 → sm 2 列 → lg 4 列，每张错峰 80ms。
+           卡底 #17322b 无边框，靠底色差分层；border-transparent 常留 1px 透明边，
+           hover 才显 #33544a（直接加 border 会挤掉 1px 内容宽度，文字跳一下），投影走 .card-lift-dark -->
       <div class="mt-[36px] grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
         <article
           v-for="(card, i) in commitment.cards"
@@ -80,7 +86,7 @@ useCountUp(statsEl)
           class="cmt-card reveal card-lift card-lift-dark rounded-[12px] border border-transparent bg-[#17322b] p-[20px]"
           :style="{ '--d': `${240 + i * 80}ms` }"
         >
-          <!-- loop 的循环箭头没素材，SVG 照原型画；tile 底色采自 PNG 图标的圆角块 -->
+          <!-- 闭环售后的循环箭头：SVG 照原型画，tile 40×40 底色采自 PNG 图标的圆角块 -->
           <span
             v-if="card.icon === 'loop'"
             class="cmt-icon flex h-[40px] w-[40px] items-center justify-center rounded-[10px] bg-[#2a3f38]"
@@ -102,6 +108,7 @@ useCountUp(statsEl)
               />
             </svg>
           </span>
+          <!-- 其余三张：40×40 PNG，素材自带深绿圆角底；hover 卡片时图标放大到 1.06 -->
           <img
             v-else
             loading="lazy"
@@ -112,26 +119,32 @@ useCountUp(statsEl)
             class="cmt-icon h-[40px] w-[40px] select-none"
           />
 
+          <!-- 卡标题：mt-[16px] 与图标间距 16px；15px/22px 加粗纯白 -->
           <h3 class="mt-[16px] text-[15px] font-bold leading-[22px] text-white">
             {{ card.title }}
           </h3>
+          <!-- 卡正文：mt-[10px] 与标题间距 10px；13px/22px，#afc8c2 浅灰绿 -->
           <p class="mt-[10px] text-[13px] leading-[22px] text-[#afc8c2]">{{ card.desc }}</p>
         </article>
       </div>
 
-      <!-- 分隔线 + 硬指标行：数字列与上面四卡对齐，左对齐；滚进视口前导数字从 0 数上去 -->
+      <!-- 指标区：mt-[44px] 与卡片间距 44px，1px 分隔线 #2f423c，pt-[32px] 后开始 -->
       <div class="reveal mt-[44px] border-t border-[#2f423c] pt-[32px]" style="--d: 560ms">
+        <!-- 指标栅格：手机 2 列、lg 4 列，行距 24px；tabular-nums 等宽数字，递增时不左右抖 -->
         <dl ref="stats" class="grid grid-cols-2 gap-y-[24px] lg:grid-cols-4">
           <div v-for="stat in statsView" :key="stat.label">
+            <!-- 标签给读屏用（视觉上是 dd 下方那行），所以这里 sr-only -->
             <dt class="sr-only">{{ stat.label }}</dt>
+            <!-- 数值：22px/30px 加粗纯白，data-* 给 useCountUp 传目标值和尾巴 -->
             <dd
               class="text-[22px] font-bold leading-[30px] tabular-nums text-white"
               :data-num="stat.num"
               :data-rest="stat.rest"
             >
-              <!-- 初始渲染 0+尾巴，防「闪终值再跳回 0」；拆不动的原样渲染 -->
+              <!-- 初始渲染 0+尾巴，防「先闪终值再跳回 0」；拆不出数字的原样渲染 -->
               {{ stat.num !== null ? `0${stat.rest}` : stat.rest }}
             </dd>
+            <!-- 指标名：mt-[6px] 与数值间距 6px；12px/18px，#a8b9b1 -->
             <p class="mt-[6px] text-[12px] leading-[18px] text-[#a8b9b1]">{{ stat.label }}</p>
           </div>
         </dl>
@@ -141,9 +154,6 @@ useCountUp(statsEl)
 </template>
 
 <style scoped>
-/* 四张准则卡：暗底投影（.card-lift-dark，见 style.css）+ 边框提亮两级。
-   卡片本来无边框，常态留 1px 透明边，hover 时才显色——直接加 border 会挤掉 1px 内容宽度，
-   从透明起手就没有这个跳动 */
 .cmt-card {
   transition: border-color 240ms ease;
 }
@@ -152,8 +162,6 @@ useCountUp(statsEl)
   border-color: #33544a;
 }
 
-/* 图标轻放大 6%：只作用在图标元素上（无文字），跟卡片浮起凑成两级反馈。
-   曲线 0.4/0/0.2/1 跟首页法规卡、功能卡、服务卡同款 */
 .cmt-icon {
   transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -162,7 +170,6 @@ useCountUp(statsEl)
   transform: scale(1.06);
 }
 
-/* 减弱动效：不缩放不描边，只留卡片自己的投影浮现 */
 @media (prefers-reduced-motion: reduce) {
   .cmt-card,
   .cmt-icon {

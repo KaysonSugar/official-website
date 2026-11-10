@@ -12,7 +12,6 @@
 
 import type { SupportConfig } from './types'
 
-// 服务支持页（原型 Service Hero + S1），文案逐字照画板
 export const support: SupportConfig = {
   ctaLabel: '预约实施评估',
   features: ['线上远程实施', '线下上门实施', '7–15 天试运行', '7×24 技术支持'],
