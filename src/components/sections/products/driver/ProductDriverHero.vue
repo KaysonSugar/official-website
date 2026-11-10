@@ -13,11 +13,6 @@ import glowMint from '@/assets/products/driver/images/glow-mint.webp'
 import glowWarm from '@/assets/products/driver/images/glow-warm.webp'
 import ringOuter from '@/assets/products/driver/images/ring-outer.webp'
 
-/**
- * 司机端首屏（原型 Driver Hero）：左侧文案 + 右侧手机演示。
- * 手机整屏 DOM 重建（Phone Mock.png 是烘焙文字位图，已删），三枚浮动徽标同理
- * （Chip*.png 已删）。司机页主色是品牌橙，薄荷绿只做卡片点缀和背景光晕。
- */
 const page = getPage('/products/driver')
 const hero = siteConfig.driver.hero
 
@@ -84,8 +79,9 @@ const chipPos = {
             {{ page.desc }}
           </p>
 
+          <!-- 下载司机端：不在本页弹窗，直接滚到页面末尾的招募屏（二维码在那） -->
           <div class="reveal mt-[32px]" style="--d: 240ms">
-            <HeroCta :label="siteConfig.driver.ctaLabel" />
+            <HeroCta :label="siteConfig.driver.ctaLabel" scroll-to="driver-recruit" />
           </div>
 
           <!-- 三枚药丸标签：跟首页首屏的 feature-pill 同款——白底半透明 + 细描边 + 绿色线条勾，

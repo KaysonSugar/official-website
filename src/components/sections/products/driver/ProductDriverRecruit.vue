@@ -31,7 +31,9 @@ useCountUp(statsEl)
 </script>
 
 <template>
-  <section ref="root" class="bg-white pb-[96px]">
+  <!-- id 给首屏「下载司机端」当滚动落点；让开固定顶栏由全局 html 的 scroll-padding-top 负责，
+       这里别再写 scroll-mt，两份会叠加（84+84 会多空出整整一个顶栏） -->
+  <section id="driver-recruit" ref="root" class="bg-white pb-[96px]">
     <div class="container-page">
       <!-- 薄荷绿大容器：不做整体 reveal，进场交给内部元素逐层浮（容器先动整体会糊成一块） -->
       <div

@@ -8,15 +8,31 @@
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { useLeadForm } from '@/composables/useLeadForm'
 
-/** 全站首屏主按钮：点开预约弹层，样式与首页首屏那颗一致 */
+/** 全站首屏主按钮：样式与首页首屏那颗一致；默认点开预约弹层，传 scrollTo 就改成滚到页面里某一屏 */
 interface Props {
   /** 按钮文字 */
   label: string
+  /** 要滚到的元素 id（如司机页末尾的下载二维码屏），不传就走预约弹层 */
+  scrollTo?: string
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  scrollTo: '',
+})
 
 const { openLeadForm } = useLeadForm()
+
+// 目标块自己带 scroll-margin-top 让开固定顶栏；系统开了减少动效就直接跳，不做平滑滑行
+function handleClick() {
+  const target = props.scrollTo && document.getElementById(props.scrollTo)
+  if (!target) {
+    openLeadForm()
+    return
+  }
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+}
 </script>
 
 <template>
@@ -24,7 +40,7 @@ const { openLeadForm } = useLeadForm()
   <BaseButton
     size="lg"
     class="hero-cta w-full sm:w-auto lg:h-[50px] lg:w-[360px]"
-    @click="openLeadForm"
+    @click="handleClick"
   >
     <span class="hero-cta-ring" aria-hidden="true">
       <span class="hero-cta-comet" />
