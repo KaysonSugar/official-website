@@ -10,7 +10,7 @@ import { useCountUp } from '@/composables/useCountUp'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import recruitTruck from '@/assets/products/driver/images/recruit-truck.webp'
-import recruitTruckSm from '@/assets/products/driver/images/recruit-truck-700.webp'
+import recruitTruckSm from '@/assets/products/driver/images/recruit-truck-820.webp'
 import qrDownload from '@/assets/products/driver/images/qr-download.png'
 
 const { recruit } = siteConfig.driver
@@ -102,10 +102,11 @@ useCountUp(statsEl)
         </div>
 
         <!-- 右列：罐车 + 司机插画，跟左列统计同时浮起来。
-             桌面列宽约 600px，1x 下 700w 那份 24KB 就够，2x 才取 1760w -->
+             桌面列宽约 600px、手机满宽约 350px；820w 那份 28KB 够 1x 和手机 2x，
+             桌面 2x 才取 1760w -->
         <img
           :src="recruitTruckSm"
-          :srcset="`${recruitTruckSm} 700w, ${recruitTruck} 1760w`"
+          :srcset="`${recruitTruckSm} 820w, ${recruitTruck} 1760w`"
           sizes="(min-width:1024px) 600px, 100vw"
           alt="威易达司机与危化品运输车"
           width="1760"
