@@ -130,23 +130,23 @@ useCountUp(statsEl)
 <style scoped>
 .drv-qr-glow {
   position: absolute;
-  inset: -12px;
-  border-radius: 18px;
+  inset: -6px;
+  border-radius: 14px;
   box-shadow:
-    0 0 0 3px rgba(255, 255, 255, 0.95),
-    0 0 26px 8px rgba(47, 174, 133, 0.5);
+    0 0 0 2px rgba(255, 255, 255, 0.7),
+    0 0 14px 2px rgba(47, 174, 133, 0.28);
   animation: drv-qr-breathe 2.6s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
 @keyframes drv-qr-breathe {
   from {
-    opacity: 0.2;
-    transform: scale(0.95);
+    opacity: 0.25;
+    transform: scale(0.99);
   }
   to {
-    opacity: 1;
-    transform: scale(1.08);
+    opacity: 0.85;
+    transform: scale(1.02);
   }
 }
 
