@@ -68,16 +68,16 @@ useReveal(layers, 0.35)
         >
           <!-- 层名：12px/18px、shrink-0 不被压缩、sm:w-[64px] 定宽；
                业务层 highlight 时换 #d9bd97 浅棕，其余层 night-400 灰绿；
-               arch-name 先亮层名（--d = 240 + 层序 × 80ms） -->
+               arch-name 先亮层名（--d = 160 + 层序 × 50ms） -->
           <span
             class="arch-name shrink-0 text-[12px] leading-[18px] sm:w-[64px]"
             :class="layer.highlight ? 'text-[#d9bd97]' : 'text-night-400'"
-            :style="{ '--d': `${240 + i * 80}ms` }"
+            :style="{ '--d': `${160 + i * 50}ms` }"
             >{{ layer.label }}</span
           >
 
           <!-- 块区：flex-1 占满层名右侧；列数走 --cols 变量（sm 起生效，见末尾 style）；
-               块数 ≥5 时文字降到 13px；arch-on 通电点亮：层名亮后 140ms 起、每块 +55ms -->
+               块数 ≥5 时文字降到 13px；arch-on 通电点亮：层名亮后 100ms 起、每块 +40ms -->
           <div
             v-if="layer.blocks"
             class="layer-grid flex-1"
@@ -88,14 +88,14 @@ useReveal(layers, 0.35)
               :key="block"
               class="arch-on flex h-[44px] items-center justify-center rounded-[8px] bg-night-800 text-center text-[14px] leading-[20px] text-white"
               :class="layer.blocks!.length >= 5 ? 'px-[8px] text-[13px]' : ''"
-              :style="{ '--d': `${240 + i * 80 + 140 + bi * 55}ms` }"
+              :style="{ '--d': `${260 + i * 50 + bi * 40}ms` }"
             >
               {{ block }}
             </div>
           </div>
 
           <!-- 业务层：与普通层同构，只是块换成棕卡；
-               --cols 固定 4，四张卡也是 arch-on 逐张点亮（每张 +70ms） -->
+               --cols 固定 4，四张卡也是 arch-on 逐张点亮（每张 +45ms） -->
           <div v-else-if="layer.modules" class="layer-grid flex-1" :style="{ '--cols': 4 }">
             <!-- 模块卡：rounded-[10px] 圆角、border #7d5530 + bg #5b391d 棕系；
                  px-[12px] 左右、pt-[12px] 上、pb-[38px] 下留白；
@@ -104,7 +104,7 @@ useReveal(layers, 0.35)
               v-for="(mod, mi) in layer.modules"
               :key="mod.title"
               class="arch-on arch-module card-lift card-lift-dark rounded-[10px] border border-[#7d5530] bg-[#5b391d] px-[12px] pb-[38px] pt-[12px]"
-              :style="{ '--d': `${240 + i * 80 + 140 + mi * 70}ms` }"
+              :style="{ '--d': `${260 + i * 50 + mi * 45}ms` }"
             >
               <h3 class="text-[15px] font-bold leading-[22px] text-white">{{ mod.title }}</h3>
               <p class="mt-[4px] text-[11px] leading-[16px] text-[#d9bd97]">（{{ mod.desc }}）</p>
@@ -118,7 +118,7 @@ useReveal(layers, 0.35)
            arch-note 跟随架构图的 .in 一起入场（紧邻兄弟选择器） -->
       <div
         class="arch-note mt-[80px] flex items-center gap-[12px] rounded-[10px] bg-[#162c23] px-[20px] py-[14px] lg:h-[48px] lg:py-0"
-        style="--d: 760ms"
+        style="--d: 620ms"
       >
         <!-- 绿点：6×6 圆点，shrink-0 不被文字挤压，#57d193 绿 -->
         <span class="h-[6px] w-[6px] shrink-0 rounded-full bg-[#57d193]" aria-hidden="true" />

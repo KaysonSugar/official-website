@@ -65,21 +65,22 @@ useReveal(root)
       <!-- 标题：mt-[44px] 与眉题间距 44px；32px/42px 加粗、ink-900 -->
       <h2
         class="reveal mt-[44px] text-[32px] font-bold leading-[42px] text-ink-900"
-        style="--d: 80ms"
+        style="--d: 50ms"
       >
         {{ lightweight.title }}
       </h2>
 
       <!-- 说明：mt-[40px] 与标题间距 40px；14px/22px、ink-600 弱灰 -->
-      <p class="reveal mt-[40px] text-[14px] leading-[22px] text-ink-600" style="--d: 160ms">
+      <p class="reveal mt-[40px] text-[14px] leading-[22px] text-ink-600" style="--d: 100ms">
         {{ lightweight.desc }}
       </p>
 
       <!-- 胶囊栅格：mt-[30px] 与说明间距 30px；gap-[20px]；
-           手机 1 列 → sm 2 列 → lg 4 列等宽 -->
+           手机 1 列 → sm 2 列 → lg 4 列等宽。
+           整屏入场压在 620ms 内：超了用户滚过去还在等，看着像卡住 -->
       <div
         class="reveal mt-[30px] grid grid-cols-1 gap-[20px] sm:grid-cols-2 lg:grid-cols-4"
-        style="--d: 220ms"
+        style="--d: 140ms"
       >
         <!-- 单颗胶囊：h-[60px] 定高、flex 居中、gap-[12px] 图标与文字间距、
              px-[12px] 左右内边距、rounded-[12px] 圆角、#ecf7f1 浅绿底 -->
@@ -103,7 +104,7 @@ useReveal(root)
 
       <!-- 痛点面板：mt-[36px] 与胶囊间距 36px；p-[24px] 内边距、
            rounded-[16px] 圆角、#fff8f2 浅橙底 -->
-      <div class="reveal mt-[36px] rounded-[16px] bg-[#fff8f2] p-[24px]" style="--d: 460ms">
+      <div class="reveal mt-[36px] rounded-[16px] bg-[#fff8f2] p-[24px]" style="--d: 180ms">
         <p class="text-[12px] font-semibold leading-[18px] tracking-[0.02em] text-[#a35c30]">
           {{ lightweight.pain.title }}
         </p>
@@ -114,7 +115,7 @@ useReveal(root)
             v-for="(card, i) in lightweight.pain.cards"
             :key="card.no"
             class="reveal card-lift rounded-[12px] bg-white p-[20px]"
-            :style="{ '--d': `${500 + i * 80}ms` }"
+            :style="{ '--d': `${205 + i * 35}ms` }"
           >
             <div class="flex items-center">
               <!-- 图标：40×40 固定、shrink-0 不参与压缩；hover 卡片时放大到 1.06（见末尾 style） -->
@@ -142,7 +143,7 @@ useReveal(root)
         <!-- 分组小标题：mt-[42px] 与上一组间距 42px；16px/24px 加粗、ink-900 -->
         <h3
           class="reveal mt-[42px] text-[16px] font-bold leading-[24px] text-ink-900"
-          :style="{ '--d': `${g === 0 ? 740 : 1100}ms` }"
+          :style="{ '--d': `${g === 0 ? 330 : 500}ms` }"
         >
           {{ group.title }}
         </h3>
@@ -158,7 +159,7 @@ useReveal(root)
             :key="card.title"
             class="reveal card-lift rounded-[16px] border border-ink-100 bg-white"
             :class="group.cols === 4 ? 'p-[24px]' : 'flex items-start gap-[16px] p-[32px]'"
-            :style="{ '--d': `${(g === 0 ? 780 : 1140) + i * 80}ms` }"
+            :style="{ '--d': `${(g === 0 ? 350 : 520) + i * 35}ms` }"
           >
             <!-- 竖卡：图标 42px 在上，mt-[18px] 接 16px 标题；
                  宽卡：64px 图标与文字横排，gap-[16px] 间距 -->
@@ -198,7 +199,7 @@ useReveal(root)
            px-[24px]，手机 py-[20px]，lg 下 py-0 + h-[82px] 定高 -->
       <div
         class="reveal mt-[24px] grid grid-cols-1 items-center gap-[12px] rounded-[12px] bg-[#e7f2eb] px-[24px] py-[20px] lg:grid-cols-2 lg:py-0 lg:h-[82px]"
-        style="--d: 1420ms"
+        style="--d: 610ms"
       >
         <!-- 单条：flex 横排、gap-[12px] 图标与文字间距 -->
         <div v-for="note in lightweight.notes" :key="note" class="flex items-center gap-[12px]">

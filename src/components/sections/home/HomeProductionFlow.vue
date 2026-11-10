@@ -55,7 +55,7 @@ useReveal(root)
       <!-- 标题：mt-[24px] 与眉题间距 24px；32px/42px 加粗、ink-900 -->
       <h2
         class="reveal mt-[24px] text-[32px] font-bold leading-[42px] text-ink-900"
-        style="--d: 80ms"
+        style="--d: 50ms"
       >
         {{ workflow.title }}
       </h2>
@@ -63,7 +63,7 @@ useReveal(root)
       <!-- 说明：mt-[32px] 与标题间距 32px；max-w-[860px] 限宽、14px/22px、ink-600 -->
       <p
         class="reveal mt-[32px] max-w-[860px] text-[14px] leading-[22px] text-ink-600"
-        style="--d: 160ms"
+        style="--d: 100ms"
       >
         {{ workflow.desc }}
       </p>
@@ -72,7 +72,7 @@ useReveal(root)
            border-ink-100 描边、白底、p-[24px]（sm 起 32px）、极淡投影 -->
       <div
         class="reveal mt-[36px] rounded-[16px] border border-ink-100 bg-white p-[24px] shadow-[0_18px_40px_-30px_rgba(26,26,26,0.12)] sm:p-[32px]"
-        style="--d: 240ms"
+        style="--d: 150ms"
       >
         <!-- 顶部主流程：lg:flex-row 一行排开（手机竖排 flex-col、gap-[8px]）；
              节点 h-[48px] flex-1 等宽、rounded-[8px]、13px/18px -->
@@ -81,7 +81,7 @@ useReveal(root)
             <div
               class="reveal flex h-[48px] flex-1 items-center justify-center rounded-[8px] border px-[12px] text-center text-[13px] leading-[18px] font-medium"
               :class="nodeClass[node.tone]"
-              :style="{ '--d': `${320 + i * 60}ms` }"
+              :style="{ '--d': `${180 + i * 35}ms` }"
             >
               {{ node.text }}
             </div>
@@ -99,7 +99,7 @@ useReveal(root)
 
         <!-- 判断菱形：原型量出来 176×94（宽是高的一倍多）；
              用 clip-path 直接裁四边形——rotate 方块在非等比时会连角一起拉变形 -->
-        <div class="reveal mt-[6px] flex flex-col items-center" style="--d: 580ms">
+        <div class="reveal mt-[6px] flex flex-col items-center" style="--d: 300ms">
           <span
             class="flow-arrow text-[16px] leading-[20px] text-[#82bda2]"
             :style="{ '--wd': '1200ms' }"
@@ -131,7 +131,7 @@ useReveal(root)
             <div
               class="reveal flex h-[36px] items-center justify-center rounded-[8px] border text-[13px] font-semibold leading-[18px]"
               :class="branchClass[branch.tone]"
-              :style="{ '--d': `${640 + b * 80}ms` }"
+              :style="{ '--d': `${330 + b * 50}ms` }"
             >
               {{ branch.head }}
             </div>
@@ -147,7 +147,7 @@ useReveal(root)
               <div
                 class="reveal flex h-[36px] items-center justify-center rounded-[8px] border text-[13px] leading-[18px]"
                 :class="stepClass[branch.tone]"
-                :style="{ '--d': `${680 + b * 80 + s * 60}ms` }"
+                :style="{ '--d': `${360 + b * 50 + s * 35}ms` }"
               >
                 {{ step }}
               </div>
@@ -163,7 +163,7 @@ useReveal(root)
             <div
               class="reveal flex h-[36px] items-center justify-center rounded-[8px] border text-[13px] font-semibold leading-[18px]"
               :class="branchClass[branch.tail.tone === 'tinted' ? branch.tone : branch.tail.tone]"
-              :style="{ '--d': `${880 + b * 80}ms` }"
+              :style="{ '--d': `${460 + b * 50}ms` }"
             >
               {{ branch.tail.text }}
             </div>
@@ -174,7 +174,7 @@ useReveal(root)
              px-[20px] py-[14px]（lg 起 h-[48px] 定高垂直居中）；绿点 w-[6px] h-[6px] 开头 -->
         <div
           class="reveal mt-[24px] flex items-center gap-[12px] rounded-[10px] border border-[#dcebe6] bg-[#f1faf5] px-[20px] py-[14px] lg:h-[48px] lg:py-0"
-          style="--d: 1040ms"
+          style="--d: 560ms"
         >
           <span class="h-[6px] w-[6px] shrink-0 rounded-full bg-[#57d193]" aria-hidden="true" />
           <p class="text-[13px] leading-[22px] text-[#4b5b52]">{{ workflow.note }}</p>
