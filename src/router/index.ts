@@ -6,13 +6,15 @@
  */
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
-import PlatformView from '@/views/PlatformView.vue'
-import ProductChemicalView from '@/views/products/ProductChemicalView.vue'
-import ProductLogisticsView from '@/views/products/ProductLogisticsView.vue'
-import ProductDriverView from '@/views/products/ProductDriverView.vue'
-import SupportView from '@/views/SupportView.vue'
-import AboutView from '@/views/AboutView.vue'
 import { siteConfig } from '@/config/site'
+
+// 首页静态引入、其余页面按需加载：首屏只下首页那份代码，点导航再去取对应的 chunk
+const PlatformView = () => import('@/views/PlatformView.vue')
+const ProductChemicalView = () => import('@/views/products/ProductChemicalView.vue')
+const ProductLogisticsView = () => import('@/views/products/ProductLogisticsView.vue')
+const ProductDriverView = () => import('@/views/products/ProductDriverView.vue')
+const SupportView = () => import('@/views/SupportView.vue')
+const AboutView = () => import('@/views/AboutView.vue')
 
 /**
  * 路由表：URL 层级与导航层级一致

@@ -14,6 +14,7 @@ import HomeWorkbench from './HomeWorkbench.vue'
 import truckIcon from '@/assets/home/images/hero-truck.webp'
 import checkIcon from '@/assets/home/images/hero-check.webp'
 import ringsImg from '@/assets/home/images/rings.webp'
+import ringsSm from '@/assets/home/images/rings-900.webp'
 import dividerImg from '@/assets/home/images/hero-bottom-divider.webp'
 
 // 法规外链与离开确认：胶囊点击先弹全站确认层（App.vue 挂的 LeaveConfirmModal），
@@ -142,9 +143,12 @@ useCountUp(statsEl)
           aria-hidden="true"
         >
           <!-- 同心圆：absolute + 百分比（left -16.9%、top -37.1%、宽 134.2%）跟着看板等比缩放；
-               max-w-none 抵消 preflight 的 img max-width:100%，否则会被钳到列宽 -->
+               max-w-none 抵消 preflight 的 img max-width:100%，否则会被钳到列宽。
+               最大显示 832px，1x 屏取 900w 那份（61KB），只有 2x 才下 1660w 原图 -->
           <img
-            :src="ringsImg"
+            :src="ringsSm"
+            :srcset="`${ringsSm} 900w, ${ringsImg} 1660w`"
+            sizes="832px"
             alt=""
             aria-hidden="true"
             class="breathe pointer-events-none absolute left-[-16.9%] top-[-37.1%] w-[134.2%] max-w-none select-none"

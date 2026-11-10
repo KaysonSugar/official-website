@@ -10,14 +10,9 @@ import { useCountUp } from '@/composables/useCountUp'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import recruitTruck from '@/assets/products/driver/images/recruit-truck.webp'
+import recruitTruckSm from '@/assets/products/driver/images/recruit-truck-700.webp'
 import qrDownload from '@/assets/products/driver/images/qr-download.png'
 
-/**
- * 司机招募（原型 F）：薄荷绿大圆角容器，左文案右插画。
- * 三个统计数字是品牌绿，二维码直接裸放（白卡描边去掉后不裹壳）。
- * 进场动画：容器不做整体 reveal，内部按眉标→标题→描述→统计→二维码逐层递进 ~80ms；
- * 统计数字滚到视口再从 0 数上去（useCountUp，与首页 hero 同节奏）。
- */
 const { recruit } = siteConfig.driver
 
 // 拆数字和尾巴：「1500+」→ num 1500 / rest「+」，「0 元」→ num 0 / rest「 元」。
@@ -106,9 +101,12 @@ useCountUp(statsEl)
           </div>
         </div>
 
-        <!-- 右列：罐车 + 司机插画，跟左列统计同时浮起来 -->
+        <!-- 右列：罐车 + 司机插画，跟左列统计同时浮起来。
+             桌面列宽约 600px，1x 下 700w 那份 24KB 就够，2x 才取 1760w -->
         <img
-          :src="recruitTruck"
+          :src="recruitTruckSm"
+          :srcset="`${recruitTruckSm} 700w, ${recruitTruck} 1760w`"
+          sizes="(min-width:1024px) 600px, 100vw"
           alt="威易达司机与危化品运输车"
           width="1760"
           height="1280"
