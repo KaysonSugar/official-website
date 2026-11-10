@@ -177,8 +177,12 @@ useCountUp(statsEl)
               class="h-[38px] w-[38px] shrink-0 select-none"
             />
             <div class="ml-[10px] min-w-0 whitespace-nowrap">
-              <p class="text-[13px] font-semibold leading-none text-ink-900">{{ siteConfig.hero.floats.compliance.title }}</p>
-              <p class="mt-[7px] text-[10px] leading-none text-ink-400">{{ siteConfig.hero.floats.compliance.desc }}</p>
+              <p class="text-[13px] font-semibold leading-none text-ink-900">
+                {{ siteConfig.hero.floats.compliance.title }}
+              </p>
+              <p class="mt-[7px] text-[10px] leading-none text-ink-400">
+                {{ siteConfig.hero.floats.compliance.desc }}
+              </p>
             </div>
           </div>
 
@@ -205,8 +209,12 @@ useCountUp(statsEl)
               class="h-[38px] w-[38px] shrink-0 select-none"
             />
             <div class="ml-[10px] min-w-0 whitespace-nowrap">
-              <p class="text-[13px] font-semibold leading-none text-ink-900">{{ siteConfig.hero.floats.transit.title }}</p>
-              <p class="mt-[7px] text-[10px] leading-none text-ink-400">{{ siteConfig.hero.floats.transit.desc }}</p>
+              <p class="text-[13px] font-semibold leading-none text-ink-900">
+                {{ siteConfig.hero.floats.transit.title }}
+              </p>
+              <p class="mt-[7px] text-[10px] leading-none text-ink-400">
+                {{ siteConfig.hero.floats.transit.desc }}
+              </p>
             </div>
           </div>
         </div>
@@ -238,7 +246,6 @@ useCountUp(statsEl)
         </dl>
       </div>
     </div>
-
   </section>
 </template>
 
@@ -293,47 +300,9 @@ useCountUp(statsEl)
   }
 }
 
-.feature-pill {
-  position: relative;
-  transition:
-    transform 260ms cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 260ms ease,
-    background-color 260ms ease;
-}
-
-.feature-pill::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 6px 16px -6px rgba(33, 50, 43, 0.3);
-  opacity: 0;
-  transition: opacity 260ms ease;
-  pointer-events: none;
-}
-
-.feature-pill:hover {
-  transform: translateY(-2px);
-  border-color: var(--color-brand-300);
-  background-color: #fff;
-}
-
-.feature-pill:hover::after {
-  opacity: 1;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .pop-in::after {
     animation: none;
-  }
-
-  .feature-pill,
-  .feature-pill::after {
-    transition: none;
-  }
-
-  .feature-pill:hover {
-    transform: none;
   }
 }
 
@@ -437,7 +406,6 @@ useCountUp(statsEl)
     opacity: 0.75;
   }
 }
-
 
 .hero-bg {
   background:

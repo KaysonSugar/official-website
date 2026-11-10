@@ -85,12 +85,13 @@ const isCenter = computed(() => props.align === 'center')
             </BaseButton>
           </div>
 
-          <!-- 服务方式胶囊：白底细边 + 橙色小圆点，和首页 hero 的对勾胶囊同一套骨架 -->
-          <ul v-if="props.features.length" class="mt-8 flex flex-wrap gap-3">
+          <!-- 服务方式胶囊：mt-[36px] 与按钮间距 36px、gap-[10px] 胶囊间距；
+               白底 80%、ink-100 描边，py 7 / pl 12 / pr 14，hover 规格走全局 .feature-pill（跟首页首屏同一份） -->
+          <ul v-if="props.features.length" class="mt-[36px] flex flex-wrap gap-[10px]">
             <li
               v-for="feature in props.features"
               :key="feature"
-              class="flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[13px] pr-[15px] text-sm font-medium text-ink-700"
+              class="feature-pill flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-sm font-medium text-ink-700"
             >
               <!-- 橙点：6px，垂直居中靠 flex，不用管基线 -->
               <span class="h-[6px] w-[6px] shrink-0 rounded-full bg-brand-500" aria-hidden="true" />
