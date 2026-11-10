@@ -152,7 +152,7 @@
   .in .reveal,
   .in.reveal {
     opacity: 1;
-    animation: reveal-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation: reveal-rise 0.4s cubic-bezier(0.22, 1, 0.36, 1) backwards;
     animation-delay: var(--d, 0ms);
   }
 

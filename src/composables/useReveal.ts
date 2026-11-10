@@ -11,7 +11,7 @@ import { onMounted, onUnmounted, type ShallowRef } from 'vue'
  * 动画本体在 style.css 的全局 .reveal，各屏别再各写一份 keyframes。
  * 用法：<section ref="root">…</section> + useReveal(useTemplateRef('root'))
  */
-export function useReveal(target: Readonly<ShallowRef<HTMLElement | null>>, threshold = 0.15) {
+export function useReveal(target: Readonly<ShallowRef<HTMLElement | null>>, threshold = 0.02) {
   let observer: IntersectionObserver | null = null
 
   onMounted(() => {
@@ -27,6 +27,7 @@ export function useReveal(target: Readonly<ShallowRef<HTMLElement | null>>, thre
       return
     }
 
+    // 一露头就触发，别等整块露出 15%——1000px 高的屏要再滚 150px 才动，看着就是迟钝
     observer = new IntersectionObserver(
       (entries) => {
         // 播一次就断开，省得来回滚反复触发
