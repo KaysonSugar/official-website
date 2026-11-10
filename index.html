@@ -2,13 +2,10 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <!--  viewport：移动端按设备宽度渲染、初始不缩放，响应式适配的前提 -->
+    <!-- viewport：按设备宽度渲染、初始不缩放，响应式适配的前提 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- 空白期底色：brand-50 与首屏渐变同色，滚动条槽透出的也是这层暖白，
-         不会在深色页脚旁划出冷白边。
-         scrollbar-gutter: stable 预留滚动条槽位，避免内容变长时整页被挤窄 10px。
-         注意：这里不要给内容加任何淡入过渡，内容出现时就是最终样子。 -->
+    <!-- 空白期底色用 brand-50，scrollbar-gutter 预留滚动条槽，避免内容变长时整页挤窄 -->
     <style>
       html {
         background-color: #fff7f2;
@@ -16,29 +13,27 @@
       }
     </style>
 
-    <!-- 关掉浏览器的自动滚动恢复，刷新后回到页面顶部。
-         必须写在 <head> 同步脚本里：main.ts 是 type="module"（等效 defer），
-         等它执行时浏览器已经恢复过位置了。 -->
+    <!-- 关掉自动滚动恢复，必须写在 head 同步脚本里，等 main.ts 执行时浏览器已经恢复过了 -->
     <script>
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
     </script>
 
-    <!-- 页面标题：搜索结果里显示的蓝色大标题，建议 30 字以内 -->
+    <!-- 标题：搜索结果里的蓝色大标题，30 字以内 -->
     <title>威易达化工 - 企业级解决方案与服务</title>
 
-    <!-- 描述：搜索结果摘要，建议 80~120 字，自然包含核心业务关键词（不要堆砌） -->
+    <!-- 描述：搜索结果摘要，80~120 字，自然带业务关键词 -->
     <meta
       name="description"
       content="威易达化工官方网站，提供化工行业数字化平台架构、产品矩阵与解决方案介绍，帮助企业提升生产效率、降低运营成本。"
     />
-    <!-- 关键词：现代搜索引擎权重很低，保留仅用于部分内网/老式搜索引擎 -->
+    <!-- 关键词：现代搜索引擎权重很低，保留给部分老式搜索引擎 -->
     <meta name="keywords" content="威易达化工,WEIYIDA,化工,数字化平台,解决方案,产品矩阵" />
     <meta name="author" content="威易达化工" />
 
-    <!-- canonical：声明页面唯一地址，避免被重复收录（上线时替换为正式域名） -->
+    <!-- canonical：声明唯一地址避免重复收录，上线时换成正式域名 -->
     <link rel="canonical" href="https://example.com/" />
 
-    <!-- Open Graph：微信、飞书、LinkedIn、X 等平台分享时生成的卡片信息 -->
+    <!-- Open Graph：微信、飞书、LinkedIn 等平台分享时的卡片信息 -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="威易达化工" />
     <meta property="og:title" content="威易达化工 - 企业级解决方案与服务" />
@@ -47,10 +42,10 @@
       content="威易达化工官方网站，提供化工行业数字化平台架构、产品矩阵与解决方案介绍。"
     />
     <meta property="og:url" content="https://example.com/" />
-    <!-- 分享封面图：需为绝对地址，建议 1200×630；上传后替换此路径 -->
+    <!-- 分享封面：必须绝对地址，建议 1200×630 -->
     <meta property="og:image" content="https://example.com/og-cover.png" />
 
-    <!-- Twitter / X 卡片：summary_large_image 表示大图卡片 -->
+    <!-- Twitter / X 大图卡片 -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="威易达化工 - 企业级解决方案与服务" />
     <meta
@@ -59,22 +54,18 @@
     />
     <meta name="twitter:image" content="https://example.com/og-cover.png" />
 
-    <!-- 移动端浏览器地址栏配色，与品牌主色 brand-500 (#FF833F) 保持一致 -->
+    <!-- 手机浏览器地址栏配色，与品牌主色 brand-500 (#FF833F) 一致 -->
     <meta name="theme-color" content="#FF833F" />
 
-    <!-- 站点图标：由 src/assets/brand/logo.webp（品牌图形 mark）导出，构建后从 public/ 拷贝到根目录 -->
+    <!-- 站点图标，由品牌 logo 导出，放在 public/ 下 -->
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <!-- iOS 添加到主屏时使用的图标，建议 180×180，当前复用同一张图 -->
+    <!-- iOS 添加到主屏的图标，建议 180×180 -->
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- 预加载顶栏 logo：它挂载后才渲染成 <img>，不提前取会比正文晚十几毫秒。
-         构建时 Vite 会把路径重写成带 hash 的产物。（组合标页面里没用到，不再预加载） -->
+    <!-- 预加载顶栏 logo，构建时 Vite 会把路径重写成带 hash 的产物 -->
     <link rel="preload" as="image" href="/src/assets/brand/logo.webp" />
 
-    <!-- 预加载 Inter 拉丁子集（48KB，见 style.css 的 @font-face）。
-         as="font" 必须配 crossorigin：字体请求走 CORS 模式，少了这个属性
-         预加载的响应和真正的 @font-face 请求对不上，等于白下两遍。
-         中文不在此列——unicode-range 之外的字浏览器不会去取这个文件 -->
+    <!-- 预加载 Inter 拉丁子集，as="font" 必须配 crossorigin，否则等于白下两遍 -->
     <link
       rel="preload"
       as="font"
@@ -84,8 +75,7 @@
     />
   </head>
   <body>
-    <!-- 兜底提示：上面的 #app:empty 规则会在脚本不可用时一直隐藏页面，
-         这里给禁用 JS 的访客一个说明，避免面对一片空白无从下手 -->
+    <!-- 禁用 JS 时的兜底提示，不然访客只看到一片空白 -->
     <noscript>
       <div
         style="
@@ -103,9 +93,9 @@
       </div>
     </noscript>
 
-    <!-- Vue 应用挂载点，对应 main.ts 中的 mount('#app') -->
+    <!-- Vue 挂载点，对应 main.ts 的 mount('#app') -->
     <div id="app"></div>
-    <!-- 入口脚本：type="module" 启用 ES 模块，开发时由 Vite 实时编译 -->
+    <!-- 入口脚本，开发时由 Vite 实时编译 -->
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
-// Vue 单文件组件支持插件
+// Vue 单文件组件支持
 import vue from '@vitejs/plugin-vue'
-// Tailwind CSS v4 官方 Vite 插件（v4 无需 tailwind.config.js，样式入口在 src/style.css）
+// Tailwind v4 的 Vite 插件，v4 不需要 tailwind.config.js，入口在 src/style.css
 import tailwindcss from '@tailwindcss/vite'
 import { fileURLToPath, URL } from 'node:url'
 
@@ -9,22 +9,20 @@ export default defineConfig({
   plugins: [vue(), tailwindcss()],
   resolve: {
     alias: {
-      // 路径别名：@ 指向 src 目录，组件中统一写 '@/components/xxx.vue'
-      // 注意：此处与 tsconfig.app.json 的 paths 必须保持一致，否则类型检查会报错
+      // @ 指向 src，改了要和 tsconfig.app.json 的 paths 同步，否则类型检查报错
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   server: {
     port: 5173,
-    // 启动开发服务器时自动打开浏览器
+    // 启动开发服务器自动开浏览器
     open: true,
   },
   build: {
-    // 生产构建输出目录，静态托管时指向 dist 即可
+    // 静态托管时把根目录指向 dist 即可
     outDir: 'dist',
     assetsDir: 'assets',
-    // 图标转 webp 后普遍只有 1~3KB，默认会被 base64 塞进 JS（gzip 后白涨 26KB）。
-    // 关掉内联，让它们单独成文件，走浏览器缓存、也能和 JS 并行下载。
+    // 图标转 webp 后只有 1~3KB，默认内联进 JS 会白涨 26KB，关掉让它们单独走缓存
     assetsInlineLimit: 0,
   },
 })

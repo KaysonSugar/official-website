@@ -1,544 +1,86 @@
-# 威易达化工官网（wyd-official-website）
+# 威易达化工官网
 
-威易达化工官方网站前端项目，基于 Vue 3 + Vite 8 + TypeScript + Tailwind CSS v4 构建，5 个导航项对应 5 个独立路由页。
+威易达化工官方网站前端，Vue 3 + Vite 8 + TypeScript + Tailwind CSS v4。纯静态站点，无后端，构建产物丢到静态服务器即可。
 
 ## 技术栈
 
-| 技术                                               | 版本 | 说明                                                  |
-| -------------------------------------------------- | ---- | ----------------------------------------------------- |
-| [Vue](https://vuejs.org/)                          | ^3.5 | 渐进式前端框架，全部使用 `<script setup>` 组合式 API  |
-| [Vite](https://vite.dev/)                          | ^8.3 | 下一代前端构建工具，开发环境秒级热更新                |
-| [TypeScript](https://www.typescriptlang.org/)      | ~5.9 | 类型安全，严格模式（`strict: true`）                  |
-| [Tailwind CSS](https://tailwindcss.com/)           | ^4.3 | 原子化 CSS 框架 v4，通过 `@tailwindcss/vite` 插件集成 |
-| [Vue Router](https://router.vuejs.org/)            | ^4   | 官方路由，History 模式；5 个导航项 = 5 个独立路由页   |
-| [vue-tsc](https://github.com/vuejs/language-tools) | ^3.3 | Vue 单文件组件类型检查                                |
-| [ESLint](https://eslint.org/)                      | ^10  | 代码质量检查（flat config + Vue/TS 规则）             |
-| [Prettier](https://prettier.io/)                   | ^3.9 | 代码格式化（无分号、单引号、行宽 100）                |
+| 技术        | 版本 | 说明                                    |
+| ----------- | ---- | --------------------------------------- |
+| Vue         | ^3.5 | 全部用 `<script setup>` 组合式 API      |
+| Vite        | ^8.3 | 开发与构建                              |
+| TypeScript  | ~5.9 | 严格模式                                |
+| Tailwind v4 | ^4.3 | 走 `@tailwindcss/vite` 插件，无配置文件 |
+| Vue Router  | ^4   | History 模式                            |
+| ESLint      | ^10  | flat config + Vue/TS 规则               |
+| Prettier    | ^3.9 | 无分号、单引号、行宽 100                |
 
-> ⚠️ TypeScript 固定在 5.9 稳定线：TS 7（Go 原生编译器）暂未被 vue-tsc 支持，待兼容后可升级。
-
-## 目录结构
-
-组件按「品牌 / 布局 / 区块 / 通用 UI」四层组织，新增页面模块时按层归位，不要在 `components/` 根目录堆文件。
-
-```
-wyd-official-website/
-├── index.html                  # HTML 入口（含 SEO / 分享卡元信息 / favicon / 首帧防闪烁内联资源）
-├── vite.config.ts              # Vite 配置（Vue + Tailwind 插件、@ 别名）
-├── tsconfig.json               # TS 项目引用配置
-├── tsconfig.app.json           # 应用代码 TS 配置（严格模式）
-├── tsconfig.node.json          # Node 层（vite.config.ts）TS 配置
-├── eslint.config.js            # ESLint flat config（Vue + TS 规则）
-├── .prettierrc.json            # Prettier 格式化规则
-├── public/
-│   ├── favicon.png             # 站点图标（由 assets/brand/logo.webp 导出）
-│   ├── apple-touch-icon.png    # iOS 添加到主屏图标
-│   └── fonts/                  # 自托管字体：Inter 拉丁子集（URL 固定才能 preload，见「字体」一节）
-└── src/
-    ├── main.ts                 # 应用入口，等路由就绪后挂载 #app，引入全局样式
-    ├── App.vue                 # 根组件：顶栏 + RouterView + 页脚（无样式、无文案）
-    ├── style.css               # 全局样式入口 + 设计 token（@theme）+ 基础样式
-    ├── vite-env.d.ts           # Vite 类型声明
-    ├── assets/                 # 素材按「导航层级」分包：页面专属素材进同名目录，全局品牌素材进 brand/
-    │   ├── brand/              # 全局品牌素材：顶栏、页脚、二维码共用
-    │   │   ├── logo.webp               # 品牌图形 mark（导航栏与页脚使用）
-    │   │   ├── footer-qr-gzh.webp      # 微信公众号二维码（无损 webp，硬边图形不能有损压缩）
-    │   │   ├── footer-qr-dy.webp       # 官方抖音号二维码
-    │   │   ├── footer-qr-ks.webp       # 官方快手号二维码
-    │   │   └── footer-app-download.png # 扫码下载 App（中间嵌品牌 logo）
-    │   │   # 页面素材按导航层级落位：home/、products/{chemical,logistics,driver}/、
-    │   │   # support/、about/。文件名全小写 kebab-case，图标进 icons/、大图进 images/；
-    │   │   # 图片统一 webp（图标与二维码走无损，二维码有损压缩会出振铃伪影、影响扫码识别率）；
-    │   │   # 目录里只要有素材就不需要 .gitkeep（空目录才拿它占位）
-    ├── config/                     # 内容按页面分模块：每个目录 types.ts 放形状、data.ts 放文案
-    │   ├── site.ts                 # 拼装出口：把各模块拼成 siteConfig，并提供 getPage()
-    │   ├── types.ts                # 跨模块共享类型（NavChild/NavItem/PageIntro）+ 整站形状 SiteConfig
-    │   ├── brand/                  # 品牌、联系方式、导航、各页首屏文案、CTA、页脚
-    │   │   ├── types.ts            #   字段形状
-    │   │   └── data.ts             #   文案数据（下同，每个目录都是这两件）
-    │   ├── home/                   # 首页 11 屏
-    │   ├── support/                # 服务支持
-    │   ├── about/                  # 关于我们
-    │   └── products/               # 产品矩阵整组，与 views/products/ 同构
-    │       ├── chemical/           #   化工生产
-    │       ├── logistics/          #   物流调度
-    │       └── driver/             #   司机作业
-    ├── router/
-    │   └── index.ts            # 路由表（8 个页面 + 兜底）+ 切页落点 + 标题同步
-    ├── views/                  # 路由页面：一页一个文件，只做区块编排
-    │   ├── HomeView.vue            # /
-    │   ├── PlatformView.vue        # /platform             平台架构（已从导航撤下，页脚仍可进入）
-    │   ├── SolutionsView.vue       # /solutions            服务支持
-    │   ├── AboutView.vue           # /about                关于我们
-    │   └── products/               # 产品矩阵整组，与 /products/* 层级对应
-    │       ├── ProductChemicalView.vue # /products/chemical 化工生产
-    │       ├── ProductLogisticsView.vue# /products/logistics 物流调度
-    │       └── ProductDriverView.vue   # /products/driver  司机作业
-    ├── composables/
-    │   └── useReveal.ts        # 滚动进场动效（IntersectionObserver，只触发一次）
-    └── components/
-        ├── brand/
-        │   └── BrandLogo.vue   # 品牌标识：图形 + 中文 + 英文（对应原型左上角）
-        ├── layout/
-        │   ├── SiteHeader.vue  # 顶栏壳：三段式布局、滚动两态、电话 / 预约演示 / 汉堡开关
-        │   ├── DesktopNav.vue  # 桌面主导航（≥1024px）：悬停下拉 + 路由高亮
-        │   ├── MobileMenu.vue  # 移动端菜单（<1024px）：收到 open 后展示，点链接发 close
-        │   └── SiteFooter.vue  # 页脚：组合标 / 快速导航 / 联系方式 / 版权
-        ├── sections/               # 按导航模块分子目录，和 views 的层级一一对应
-        │   │                       #   命名规则：<模块><屏名>.vue，首屏收 Hero、横幅收 Banner
-        │   ├── common/             # 多页共用：PageHero（内页首屏）、CtaBanner（底部横幅）
-        │   ├── home/               # 首页：HomeHero + HomeWorkbench（首屏右侧看板）、
-        │   │                       #   HomeAdvantage / HomeCoreCapabilities / HomeProductMatrix
-        │   │                       #   HomeIndustry / HomeProductionFlow / HomeTransportCollab
-        │   │                       #   HomeCostEfficiency / HomeLightweight / HomeService
-        │   │                       #   HomePlatformArchitecture
-        │   ├── products/
-        │   │   ├── chemical/       # 化工生产：Hero、Chains、Tour、Report
-        │   │   ├── logistics/      # 物流调度：Hero、Capability、Ledger、Cargo、Carpool
-        │   │   └── driver/         # 司机作业：Hero、Advantage、Workflow、Screens、Recruit
-        │   ├── support/            # 服务支持（/solutions，视图文件是 SupportView）：
-        │   │                       #   Scope、Pricing、Process、Commitment、Timeline
-        │   └── about/              # 关于我们：AboutHero、AboutPhilosophy、AboutText
-        └── ui/
-            ├── BaseButton.vue   # 通用按钮（to 走路由 / href 走外链；primary / outline / ghost / light）
-            └── BackToTop.vue    # 右下角回到顶部
-```
-
-### 分层职责
-
-| 层          | 职责                                         | 不该做的事                                       |
-| ----------- | -------------------------------------------- | ------------------------------------------------ |
-| `views/`    | 把某个路由的区块按顺序排好                   | 不写具体区块内容（交给 `sections/`）             |
-| `sections/` | 组装某一屏的内容，从 `config/site.ts` 取数据 | 不写容器宽度、间距、进场动效（交给 `useReveal`） |
-| `ui/`       | 与业务无关的可复用件，全部走 props           | 不直接 import `siteConfig`                       |
-| `layout/`   | 全站骨架（顶栏、页脚）                       | 不含页面内容区块                                 |
-| `brand/`    | 品牌相关视觉资产                             | 不处理业务逻辑                                   |
+> TypeScript 锁在 5.9：TS 7 是 Go 原生编译器，vue-tsc 还不支持。
 
 ## 环境要求
 
-- Node.js ≥ 20.19（Vite 8 要求）
-- npm ≥ 10
+Node.js ≥ 20.19（Vite 8 要求），npm ≥ 10。
 
 ## 快速开始
 
 ```bash
-# 安装依赖
-npm install
-
-# 启动开发服务器（默认 http://localhost:5173，自动打开浏览器）
-npm run dev
-
-# 类型检查
-npm run typecheck
-
-# 生产构建（先 vue-tsc 类型检查，再 vite build）
-npm run build
-
-# 本地预览生产构建产物
-npm run preview
-
-# 代码检查（ESLint）
-npm run lint
-
-# 代码检查并自动修复
-npm run lint:fix
-
-# 格式化源码（Prettier）
-npm run format
+npm install        # 安装依赖
+npm run dev        # 开发，http://localhost:5173
+npm run build      # 类型检查 + 构建到 dist/
+npm run preview    # 预览构建产物
+npm run typecheck  # 只跑类型检查
+npm run lint       # ESLint，加 :fix 自动修
+npm run format     # Prettier 格式化 src
 ```
 
-## 页面结构（已锁定）
+## 页面路由
 
-> ⚠️ **这一层已经定稿，不要再改回锚点单页。**
-> 后续所有工作（铺首页 16 个区块、补内页正文、加新页面）都在这个骨架上做，不再讨论「要不要拆页」。
-> 唯一允许的结构性变更是**新增页面**（往 `router/index.ts` 加一条 + `config/brand/data.ts` 的 `pages` 加一条记录）。
+| 路由                  | 页面          |
+| --------------------- | ------------- |
+| `/`                   | 首页（11 屏） |
+| `/platform`           | 平台架构      |
+| `/products/chemical`  | 化工生产      |
+| `/products/logistics` | 物流调度      |
+| `/products/driver`    | 司机作业      |
+| `/solutions`          | 服务支持      |
+| `/about`              | 关于我们      |
 
-**一级导航 4 项（首页 / 产品矩阵 / 服务支持 / 关于我们），其中「产品矩阵」带二级下拉，共 8 个路由页**，点击切换页面，页面内部各自滚动。
+`/products` 重定向到化工生产，未知路径回首页。导航数据源是 `config/brand/data.ts` 的 `navItems`，`to` 必须和 `router/index.ts` 的 `path` 一致。
 
-这个结论来自原型画板本身：`01 首页` 是一张 1440×约 10600 的长画板，里面没有化工 / 物流 / 司机 / 解决方案这些标题；后四项各自对应另外一张画板（宽高比 1:1.87 / 1:2.63 / 1:1.38 / 1:1.65）。其中化工/物流/司机三张是**三条业务线**，挂在「产品矩阵」之下，不是一级导航。
-
-| 导航层级 | 页面     | 路由                  | 组件                       | 原型画板                       |
-| -------- | -------- | --------------------- | -------------------------- | ------------------------------ |
-| 一级     | 首页     | `/`                   | `HomeView.vue`             | 01 首页（16 个区块，待铺）     |
-| 一级     | 平台架构 | `/platform`           | `PlatformView.vue`         | 暂无画板（文案占位）           |
-| 一级     | 产品矩阵 | `/products`           | `ProductsView.vue`         | 暂无独立画板（三条业务线总览） |
-| └ 二级   | 化工生产 | `/products/chemical`  | `ProductChemicalView.vue`  | 威易达化工：生产与经营管理     |
-| └ 二级   | 物流调度 | `/products/logistics` | `ProductLogisticsView.vue` | 威易达物流：调度与合规         |
-| └ 二级   | 司机作业 | `/products/driver`    | `ProductDriverView.vue`    | 威易达司机：接单与作业         |
-| 一级     | 服务支持 | `/solutions`          | `SolutionsView.vue`        | 定稿导航改叫服务支持，页面待补 |
-| 一级     | 关于我们 | `/about`              | `AboutView.vue`            | 暂无画板（文案占位）           |
-
-导航数据源是 `config/brand/data.ts` 的 `navItems`：一级项 `{ label, to }`，带下拉的再挂 `children: NavChild[]`。`to` 必须与 `router/index.ts` 的 `path` 完全一致，改路由要两边同步；三条业务线在 `productLines` 里定义一次，导航下拉与 `/products` 页的卡片同源。
-
-### 内容完成度（骨架已就绪，正文待铺）
-
-| 页面     | 首屏                                          | 正文区块                     | 底部 CTA |
-| -------- | --------------------------------------------- | ---------------------------- | -------- |
-| 首页     | 旧版居中单列，待改为「左文 + 右看板卡片」两栏 | **0 / 16**（原型 16 个区块） | ✅       |
-| 平台架构 | ✅ 占位文案                                   | 待设计（无原型画板）         | ✅       |
-| 产品矩阵 | ✅                                            | ✅ 三条业务线卡片            | ✅       |
-| 化工生产 | ✅ 取原型画板标题                             | 待铺（原型 2~4 屏）          | ✅       |
-| 物流调度 | ✅ 取原型画板标题                             | 待铺（原型 2~4 屏）          | ✅       |
-| 司机作业 | ✅ 取原型画板标题                             | 待铺（原型 2~4 屏）          | ✅       |
-| 服务支持 | ✅ 居中对齐                                   | 待铺（原型 2~4 屏）          | ✅       |
-| 关于我们 | ✅ 占位文案                                   | 待设计（无原型画板）         | ✅       |
-
-**内容分工已定**：首页放「完整叙事 + 每块留一个进内页的口子」，内页放该板块的全部细节。
-两边不重复 —— 首页回答「为什么值得看」，内页回答「具体怎么做」。
-
-> 首页原有的 4 个临时占位区块（平台架构 / 产品矩阵 / 解决方案 / 关于我们）在锁定结构时已删除：
-> 切成独立页面之后它们与内页内容重复、锚点也无人使用，留着只会在铺 16 个区块时混淆归属。
-
-### 底部行动号召（CtaBanner）
-
-8 个页面共用同一个橙色横幅（原型首页第 15 区块），文案在 `config/brand/data.ts` 的 `cta`：
-
-- 底色用 `brand-700`（`#d25413`）而非主色 `brand-500`：`brand-500` 上白字对比度只有 **2.6:1**，正文会发虚；`brand-700` 上白字 **4.17:1**，仍是同一支橙色的深色阶。
-- 主按钮用 `BaseButton` 的 `light` 变体（白底 + `brand-700` 字），在橙底上对比最高。
-- 说明文字一律纯白，不要写 `text-white/85` —— 任何降低透明度的写法都会把这块的对比度拉回不合格。
-
-### 页脚（Footer）
-
-深色收尾区，版式取自设计稿一张 1440×343 的画板，数值全部是像素实测（见 `SiteFooter.vue` 顶部注释）。
-
-| 项       | 值                                    |
-| -------- | ------------------------------------- |
-| 底色     | `#0f211b`（带绿的墨黑，不是纯黑）     |
-| 分隔线   | `#22392f`                             |
-| 次要文字 | `#8fa8a0`（列表项、描述、二维码标签） |
-| 最弱文字 | `#5f7a70`（版权、品牌理念）           |
-| 页脚总高 | 343（1440 视口）                      |
-
-四档断点：
-
-| 视口        | 版式                                                                    |
-| ----------- | ----------------------------------------------------------------------- |
-| < 640       | 单列堆叠                                                                |
-| 640 ~ 1023  | 两列（品牌栏跨两列）                                                    |
-| 1024 ~ 1439 | 三列（品牌栏、关注我们都跨三列）                                        |
-| ≥ 1440      | 五栏：品牌 ~358 / 产品 87 / 解决方案 87 / 关于 62 / 关注 430，栏间距 58 |
-
-三个实现要点，改之前请先看：
-
-1. **1440 的五栏用 `<style scoped>` 里的原生 `@media`，不是 Tailwind 断点。** Tailwind v4 会把 `@theme` 里自定义 `--breakpoint-*` 生成的媒体查询排在核心断点（sm/md/lg）**之前**，同特异性下 `lg:` 的规则反而赢，1440 下拿到的还是三列。
-2. **链接项必须加 `block`。** `a` 是 inline 时 `li` 的行盒高度由父级 line-height 决定（实测 24px），比文字自身的 18px 多 6px，四行累计把页脚撑高十几像素。
-3. **二维码区加 `max-w-[430px]`。** 4×100 + 3×10 是画板上的上限，不加的话在 640~1439 的两列/三列布局里每张会被拉到 170px 以上。
-
-数据来源分两处：
-
-- 文案（描述 / 理念 / 三组链接 / 版权 / 定位语）在 `config/brand/data.ts` 的 `footer`
-- 四张二维码与标签在 `SiteFooter.vue` 里就地定义 —— 图片必须 `import` 才能被 Vite 处理，标签跟着图走，换图时不会漏改文案
-
-### 导航下拉（产品矩阵）
-
-| 端              | 交互                                                                                                                                |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| 桌面（≥1024px） | 鼠标悬停「产品矩阵」展开白色圆角面板，列出三条业务线（标题 + 一句定位）；移出收起；当前所在子页在下拉里高亮；父项在子页面上保持加粗 |
-| 移动（<1024px） | 汉堡菜单里一级项纵排，三条业务线缩进平铺在「产品矩阵」下方（只有 3 条，一屏能看完，不做二次折叠）                                   |
-
-实现要点：
-
-- **面板与顶栏连体，不是浮在下面的独立卡片**。四条缺一不可：
-  1. 导航项外层用 `h-16 lg:h-[84px]` 撑满顶栏，`top-full` 才落在顶栏下沿而不是文字下沿；
-  2. `-mt-px` 再向上压 1px，把顶栏自己的 `border-b` 盖住 —— 否则滚动态那条 `#f2f2f2` 的分隔线会横穿面板顶部，一眼看出是两块；
-  3. 圆角只留底部（`rounded-b-xl`），顶部为直角；
-  4. 只写 `border-x border-b`，不写上边框。
-     四条合起来，观感才是"从导航栏长下来的一片白"，而不是"挂在下面的一张卡"。
-- 面板顶边与导航项底边重叠 1px，鼠标从文字移进面板中间**没有透明间隙**，不会触发 `mouseleave` 闪退（早期版本用 `pt-2` 留 8px 视觉间隙，虽然也能防闪退，但会露出底色、破坏连体感，已废弃）。
-- 同时监听 `focusin` / `focusout`，键盘 Tab 也能展开与收起（`focusout` 里判断 `relatedTarget` 是否仍在容器内）。
-- 切页后 `watch(route.path)` 自动收起所有浮层（下拉 + 汉堡菜单）。
-- 只用 hover 不写 click 切换：鼠标用户不需要点两下，触屏用户走的是移动端菜单分支。
-- **父项「产品矩阵」点击仍跳 `/products` 总览页**，不跳第一个子项。理由：跳子项会让总览页失去唯一入口，且"点产品矩阵却进了化工生产"违反导航预期。总览页要靠内容差异化（讲三条线如何打通）避免与下拉重复，而不是靠改跳转。
-
-### 路由约定
-
-- **History 模式**：地址栏是 `/products/chemical` 而不是 `/#/products/chemical`。
-- **切换落点**：默认回页面顶部（`behavior: 'instant'`，绕开 `html { scroll-behavior: smooth }`，否则会从页底"滑行"回顶部）；带 hash 时定位到目标元素并预留 84px 顶栏；浏览器前进/后退还原上次位置。
-- **页面标题**：`afterEach` 统一写成「页面名 - 品牌名」；首页为「品牌名 - 定位语」，与 `index.html` 里的静态 `title` 完全一致（避免加载完成后标题跳变）。全站只用短横线一种分隔符，不要混用全角「｜」。
-- **兜底**：未匹配路径一律重定向回 `/`，避免空白页。
-- **站内跳转一律用 `RouterLink` / `BaseButton` 的 `to`**，不要写 `<a href="/products">`——那会整页刷新，丢掉 SPA 的切页体验。
-- **部署要求**：静态托管需要把未命中的路径回退到 `index.html`（Nginx `try_files $uri $uri/ /index.html;`，Vercel/Netlify 配 rewrite），否则直接访问 `/products/chemical` 会 404。
-
-## 响应式断点
-
-移动优先策略，三档主要断点：
-
-| 断点  | 宽度                | 卡片列数 | 导航形态 | 顶栏高度 |
-| ----- | ------------------- | -------- | -------- | -------- |
-| 默认  | < 640px（如 375）   | 1 列     | 汉堡菜单 | 64px     |
-| `sm:` | ≥ 640px（如 768）   | 2 列     | 汉堡菜单 | 64px     |
-| `lg:` | ≥ 1024px（如 1440） | 3 列     | 横向导航 | 84px     |
-
-> 导航在 768~1023px 仍用汉堡：5 个导航项 + 电话 + 按钮在该区间会互相挤压，
-> 因此完整导航从 `lg`（1024px）才展开，不降到 `md`。
-
-已在 375 / 768 / 1440 三档实测：无横向溢出（`scrollWidth === clientWidth`），
-顶栏高度与 `scroll-padding-top`、各区块 `scroll-mt-*` 严格对齐。
-
-## 设计 token
-
-定义在 `src/style.css` 的 `@theme` 中（Tailwind v4 无需 `tailwind.config.js`）：
-
-| 变量                       | 值                    | 用途                                                       |
-| -------------------------- | --------------------- | ---------------------------------------------------------- |
-| `--color-brand-50` ~ `900` | `#fff7f2` → `#7d300b` | 品牌橙，取自 logo 渐变中间值 `#FF833F`（对应 `brand-500`） |
-| `--color-ink-50` ~ `900`   | `#fafafa` → `#1a1a1a` | 中性文字与底色                                             |
-
-业务代码统一使用语义化类名（`bg-brand-500`、`text-ink-600`），**不写死色值**；换品牌色只改 `@theme` 一处。
-
-## 字体
-
-西文和数字用自托管的 **Inter**，中文交给各系统自带字体。栈定义在 `src/style.css` 的 `--font-sans`：
+## 目录结构
 
 ```
-'Inter' → system-ui → -apple-system → PingFang SC → Hiragino Sans GB → Microsoft YaHei UI → Noto Sans CJK SC
+├── index.html            # 入口，含 SEO / 分享卡 / 首帧防闪烁内联脚本
+├── vite.config.ts        # Vue + Tailwind 插件、@ 别名
+├── eslint.config.js      # flat config
+├── public/               # favicon、iOS 图标、自托管字体
+└── src/
+    ├── main.ts           # 入口，等路由就绪再挂载
+    ├── App.vue           # 顶栏 + RouterView + 页脚
+    ├── style.css         # 全局样式 + 设计 token（@theme）
+    ├── assets/           # brand/ 放全局素材，其余按导航层级分目录
+    ├── config/           # 内容数据，每个模块 types.ts 放形状、data.ts 放文案
+    ├── components/
+    │   ├── layout/       # 顶栏、页脚
+    │   ├── sections/     # 各页区块，按页面分目录（home / support / about / products/*）
+    │   └── ui/           # 按钮、弹层、回到顶部
+    ├── composables/      # useReveal / useCountUp / useLeadForm 等
+    ├── router/           # 路由表
+    └── views/            # 页面组装，一级页平铺，/products/* 收进子目录
 ```
 
-- 字体文件是 `public/fonts/inter-latin-wght-normal.woff2`（48KB，可变字重 100~900），**只含拉丁字母、西文标点和数字**。`@font-face` 的 `unicode-range` 把中文排除在外，所以页面里的汉字根本不触发这个文件的下载，仍是苹方 / 雅黑 / 思源黑体——这是国内站点「西文用 Web 字体、中文用系统字体」的标准做法，别改成全量中文字体（Noto Sans SC 全量 1.4MB）。
-- `index.html` 里已 `preload` 该文件。`as="font"` **必须**带 `crossorigin`：字体请求走 CORS 模式，少了它会和真正的 `@font-face` 请求对不上，等于白下两遍。
-- 升级字体：`npm i -D @fontsource-variable/inter`，从 `node_modules/@fontsource-variable/inter/files/` 取 `inter-latin-wght-normal.woff2` 覆盖，`unicode-range` 抄同目录的 `wght.css`。
-
-> ⚠️ **中文的中间字重在 Windows 上是失效的**。微软雅黑只有 Regular(400) 和 Bold(700) 两档：`font-medium`(500) 会落到 400、`font-semibold`(600) 会落到 700，而苹方有六档、Mac 上两者都成立。所以中文的层次优先用**字号和颜色**拉开，别只靠字重；西文和数字因为走 Inter 可变字体，任意字重都成立。
+分层职责：`views` 只排区块顺序，`sections` 组装单屏内容并从 `config` 取数据，`ui` 是与业务无关的可复用件。
 
 ## 开发约定
 
-### 布局基准：`container-page`
+- 文案全部进 `src/config`：组件里不写中文，模板只取 `siteConfig.xxx`，统一从 `@/config/site` 引。
+- 注释只写一行，讲重点。`config/` 只保留文件头注释，`<style scoped>` 零注释。
+- 设计稿还原的区块，间距和尺寸写 px 字面值（`mt-[28px]`），不写 rem 档位。
+- 布局、间距、字号、颜色用 Tailwind；动画、伪元素、第三方覆盖写 `<style scoped>`。
+- 同组类名重复三次以上就抽组件，不用 `@apply`。
+- 图片统一 webp，图标和二维码走无损；文件名小写 kebab-case。
+- 装饰性大图记得加 `max-w-none`，Tailwind preflight 会把 img 钳到 100%。
+- 动效只动 transform 和 opacity，无限动画和 `<Transition>` 要自己处理 `prefers-reduced-motion`。
 
-原型稿按 **1440 × 84** 出图（宽 1440、顶栏高 84），内容区宽度 **1280px**，即左右各留 **80px**。这个基准由 `src/style.css` 中的 `.container-page` 统一提供，**顶栏、首屏、各内容区块、页脚都必须套这一层**，保证 logo 左边缘、首屏标题左边缘、卡片左边缘落在同一条垂直线上。
+## 提交规范
 
-```
-断点：  <640px  16px   |   ≥640px  24px  |  ≥1024px  48px  |  ≥1440px  80px
-容器：  max-width: 1920px（120rem），1440 视口下内容区 = 1440 - 80×2 = 1280px
-顶栏：  <1024px  h-16 (64px)  |  ≥1024px  h-[84px]
-```
-
-> ⚠️ 容器最大宽**不设 1440**。设成 1440 后，在 1920 / 2K 屏上内容会被锁死在 1280 并居中，
-> 两侧各多出 240px 以上空白，页面看起来非常松散，与设计稿「内容贴边」的观感正好相反。
-> 上限取 1920px：常规宽屏内容随视口伸展、左右恒为 80px，1440 视口下依然精确等于 1280 内容宽。
-
-### 顶栏元素尺寸（设计稿标定值）
-
-| 元素             | 尺寸 / 字号                                                      | 实现位置                                             |
-| ---------------- | ---------------------------------------------------------------- | ---------------------------------------------------- |
-| logo 图形        | 36 × 36                                                          | `BrandLogo.vue` → `lg:h-9 lg:w-9`                    |
-| 品牌中文名       | 19px / 行高 28 / 宽 95                                           | `BrandLogo.vue` → `lg:text-[19px] lg:leading-[28px]` |
-| 品牌英文名       | 8px / 宽 95（`tracking-[0.135em]` 调校值）                       | `BrandLogo.vue`                                      |
-| 中文 ↔ 英文间距  | 4px（`mt-1`）；中文行框还自带约 4.5px 下沿空白，视觉缺口约 8.5px | `BrandLogo.vue`                                      |
-| 导航项           | 15px                                                             | `SiteHeader.vue` → `text-[15px]`                     |
-| 电话号码         | 14px                                                             | `SiteHeader.vue` → `lg:text-[14px]`                  |
-| 「预约演示」按钮 | 104 × 44                                                         | `BaseButton.vue` → `size="md"`                       |
-| 电话 ↔ 按钮间距  | 24px                                                             | `SiteHeader.vue` → `lg:gap-6`                        |
-
-三类高度必须三处同步改，否则锚点跳转会被顶栏挡住：
-
-| 位置           | 文件                                                                                           |
-| -------------- | ---------------------------------------------------------------------------------------------- |
-| 顶栏高度       | `layout/SiteHeader.vue` → `h-16 lg:h-[84px]`                                                   |
-| 内容区顶部让位 | `App.vue` → `main` 的 `pt-16 lg:pt-[84px]`                                                     |
-| 锚点偏移       | `style.css` 的 `scroll-padding-top` + `SectionShell.vue` 的 `scroll-mt-16 lg:scroll-mt-[84px]` |
-
-### 顶栏背景两态（固定导航的遮挡规则）
-
-固定导航下内容从导航下方滚过是官网通用行为，但导航本身必须把内容**挡住**，不能让它"透"出来：
-
-| 状态                        | 类名                                                           | 意图                                                     |
-| --------------------------- | -------------------------------------------------------------- | -------------------------------------------------------- |
-| 页面在顶部（`scrollY ≤ 8`） | `border-transparent bg-white/95 backdrop-blur`                 | 白底微微透出首屏浅橙渐变，顶栏与首屏连成一体             |
-| 已滚动                      | `border-ink-100 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]` | **纯实心**白底 + 浅灰分隔线 + 投影，滚动内容被 100% 遮住 |
-
-> ⚠️ 滚动态不要再用 `bg-white/95` 之类的半透明值：哪怕只留 5% 透明，
-> 文字从导航栏下方滑过时仍会隐约透出，加上浅色边框会让人误以为内容"穿透"了导航栏。
-
-> ⚠️ 不要用 `max-w-7xl px-8` 这类组合替代：`max-w-7xl` 是 1280 的**容器**宽，再加 `px-8`(32px) 内边距后，
-> 内容实际从 112px 才开始，比原型整体内缩 32px（顶栏 logo 偏右、按钮偏左就是这么来的）。
->
-> 纯文字段落需要更窄时，在 `container-page` 上叠 `max-w-3xl` 即可（工具类优先级高于组件层）。
-
-### 顶栏动作区的响应式显隐（与移动菜单互补）
-
-同一个入口全局只出现**一份**：顶栏放得下就留在顶栏，放不下才收进移动菜单底部。
-
-| 元素         | 顶栏显示条件                       | 菜单补位条件                            |
-| ------------ | ---------------------------------- | --------------------------------------- |
-| 电话号码     | `md:block`（≥768）                 | 动作区容器 `md:hidden`（<768 才出现）   |
-| 预约演示按钮 | 外层 `div.hidden sm:block`（≥640） | 按钮外层 `div.sm:hidden`（<640 才出现） |
-
-> ⚠️ `hidden` / `sm:hidden` **不要直接写在 `BaseButton` 上**：组件基础类含 `inline-flex`，
-> 同属 display 属性且不带媒体查询，会把 `hidden` 覆盖掉（实测 375px 下按钮照样显示）。
-> 显隐一律用外层 `div` 承担。
-
-### 滚动条（全局基础样式）
-
-Windows / Linux 的系统默认滚动条 15~17px 宽、深灰实心、无圆角，会在一屏浅色页面的右侧凭空切出一条灰带。
-统一收成细窄圆角半透明条，实现位置 `src/style.css` 的 `@layer base`：
-
-| 项         | 值                                                                         | 说明                                                            |
-| ---------- | -------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| 槽宽       | 10px                                                                       | 系统默认 15~17px，约减半                                        |
-| 滑块着色宽 | 6px                                                                        | 槽 10px − 左右各 2px 透明边框（`background-clip: content-box`） |
-| 滑块色     | `rgba(0,0,0,.16)` → hover `.3` → active `.42`                              | 用半透明黑而非 ink 色阶：白底/浅橙渐变/深色页脚上都成立         |
-| 轨道       | `rgba(0,0,0,.045)`                                                         | 见下                                                            |
-| Firefox    | `@supports not selector(::-webkit-scrollbar)` 内写 `scrollbar-width: thin` | 必须隔离；Chromium 121+ 也认标准属性，同时写会顶掉 WebKit 定制  |
-
-> 轨道**不能**设成完全透明：页面底部是 `#0f211b` 的深色页脚，透明槽会透出 html 的浅色底，
-> 在深色页脚旁划出一条醒目的白边（滚到底部时尤其明显）。4.5% 半透明黑在白底上几乎看不出，
-> 在深色底上自动融进去，两种底色都成立。
-
-### 滚动落点（刷新 / 切页 / 锚点）
-
-| 场景                      | 期望行为                     | 实现位置                                                                   |
-| ------------------------- | ---------------------------- | -------------------------------------------------------------------------- |
-| 按 F5 刷新                | 不停在上次位置               | `index.html` 的 `<head>` 内联脚本 → `history.scrollRestoration = 'manual'` |
-| 刷新/首屏进入             | 回到页面顶部                 | `main.ts` 挂载前兜底 + `router/index.ts` → `scrollBehavior` 返回 `top: 0`  |
-| 点击导航切页              | 新页面从顶部开始             | 同上                                                                       |
-| 前进/后退                 | 还原上次位置                 | `scrollBehavior` 返回 `savedPosition`                                      |
-| 带锚点 `/production#flow` | 定位到该元素并让出 84px 顶栏 | `scrollBehavior` 返回 `{ el: to.hash, top: 84 }`                           |
-
-> ⚠️ 浏览器默认 `scrollRestoration = 'auto'`，刷新会停在上一位置，长滚动官网必须显式改成 `'manual'`。
-> **这句必须写在 `index.html` 的 `<head>` 同步脚本里，不能只写在 `main.ts`** ——
-> `main.ts` 是 `type="module"`（等效 defer），执行时浏览器早已恢复过滚动位置，改 manual 属于亡羊补牢。
-> `main.ts` 里保留一份只为兜底（入口被别的宿主内联时仍能生效）。
->
-> 回顶部务必带 `behavior: 'instant'`：否则会被 `html { scroll-behavior: smooth }` 接管，
-> 变成"从页面中部一路滑回首屏"的动画。带 hash 时不能归零，要让浏览器按锚点定位。
-
-### 首帧防闪烁
-
-刷新时那一下"闪烁 + 文字穿透"，实际是几件事叠加，逐条治：
-
-| 现象                                 | 成因                                                  | 处理                                                      |
-| ------------------------------------ | ----------------------------------------------------- | --------------------------------------------------------- |
-| 先停在页面中段（看到底部横幅、页脚） | 浏览器按 `scrollRestoration='auto'` 恢复了上次位置    | `index.html` head 内联脚本改 `manual`，执行早于浏览器恢复 |
-| 顶栏直接压着页脚闪一下               | 直接 `mount` 时 `RouterView` 还是空的，页面塌到 594px | `router.isReady()` 后再 `mount`，首帧就是完整页面         |
-| 刷新时整片惨白                       | 加载期画布是纯白，与深色页脚反差极大                  | `html` 底色改 `brand-50`（`#fff7f2`），与首屏同色系       |
-| 内容出现后又"淡入"一次、文字跟着跳   | 见下面两条                                            | 删掉过渡与加载环                                          |
-| 内容从 0 长到一屏时横向抖一下        | 滚动条出现才占位，把整页挤窄 10px                     | `html { scrollbar-gutter: stable }` 预留槽位              |
-
-#### 为什么删掉了淡入和加载环
-
-早先的做法是给 `#app` 加 `opacity` 过渡（140ms 淡入），空白期再用 `#boot` 加载环顶上。
-用 CDP 逐帧录屏（1440×900，每帧算像素差分）证明这个思路是错的 —— 它把**一次跳变拆成了三次**：
-
-```
-  0 — 160ms   空白（Vue 还没挂载，只有底色）
-160ms        内容一次性出现                           ← 跳变 1，全屏 100% 像素变化
-160 — 262ms  整页从 0 淡到 1（9 帧，每帧 32% 在变）    ← 跳变 2，这就是"淡入"
-297ms        文字抗锯齿方式切换，整片文字"跳"一下      ← 跳变 3，最隐蔽
-```
-
-第 3 次尤其容易被忽略：`opacity` 过渡会把 `#app` 提升为独立的**合成层**，层内文字用灰度
-抗锯齿渲染；过渡结束、层被销毁后浏览器改回子像素抗锯齿，于是所有文字在同一帧里突然变粗
-变锐——看起来就是"页面闪了一下"。
-
-所以现在的规矩只有一条：**内容出现时就是最终样子，不许有任何过渡**。
-
-```css
-html {
-  background-color: #fff7f2; /* 空白期只是这层暖白 */
-  scrollbar-gutter: stable; /* 预留滚动条槽，避免内容变长时整页横移 10px */
-}
-```
-
-```html
-<div id="app"></div>
-```
-
-改后实测结果（CDP screencast 逐帧取证）：
-
-| 环境                  | 空白期   | 视觉变化           | 之后                       |
-| --------------------- | -------- | ------------------ | -------------------------- |
-| `npm run dev`（5173） | ~100ms   | 1 次，内容一次到位 | 后续帧与内容帧像素完全一致 |
-| 生产构建（静态托管）  | 1 帧白帧 | 1 次，内容一次到位 | 后续帧与最终帧字节级一致   |
-
-剩下那一次是"内容出现"，不是"闪"——中间没有塌缩、没有淡入、没有二次重排。
-再往下压就需要预渲染（HTML 里直接带首屏结构），当前内容还在铺，暂不引入。
-
-> 实测口径：`Page.startScreencast` 抓真实渲染帧 + 页面内 `requestAnimationFrame` 记录
-> `#app` 子节点数 / `main` 高度 / 文档高度 / 页脚位置的时间线，两边对齐后逐帧算像素差分。
-
-#### 8 个页面全部同步引入，不做懒加载
-
-一开始只有首页是同步引入，其余 7 个页面懒加载。结果就是**首页刷新不闪、内页刷新闪**：
-内页多一次串行往返——
-
-```
-index.js 下载执行 → 解析路由 → 才发现要请求 PlatformView 的 chunk
-→ 等它返回 → router.isReady() resolve → 才 mount
-```
-
-而 mount 之前页面上什么都没有。实测（CDP 抓帧）：首页空白期 1 帧，内页 2 帧。
-
-改成全部同步引入后，8 个页面走同一条路径。代价与收益都很小、但方向明确：
-
-| 指标             | 改动前（7 个懒加载 chunk） | 改动后（单一入口） |
-| ---------------- | -------------------------- | ------------------ |
-| JS 产物数量      | 1 个入口 + 8 个 chunk      | 1 个入口           |
-| 入口 gzip        | 45.00 kB                   | **42.21 kB**       |
-| 各内页刷新空白帧 | 2 帧                       | **1 帧**           |
-
-gzip 反而小了 2.8 kB —— 合并后重复的 class 字符串与模板结构能被同一个字典压掉。
-**懒加载只在单个页面几十上百 KB 时才划算**；这个站的页面是纯静态排版（最大的
-`ProductsView` 源码 3.5 KB），拆包换不来收益，却给每条内页都加了一次往返。
-
-顶栏 logo 用 `<link rel="preload">` 提前取：它由 `BrandLogo` 组件挂载后才渲染成 `<img>`，
-等组件跑起来才开始下载，会比正文晚十几毫秒 —— 顶栏左侧会"空一格再冒出 logo"。
-
-> 还剩一个拦不住的极短白帧：浏览器在文档切换瞬间用的是自身默认白画布，CSS 管不到，
-> 实测 0~1 帧（0~33ms），肉眼不可见。
-
-### 页面切换过渡：评估过，没做
-
-试过给 `RouterView` 包 `<Transition name="page-fade" mode="out-in">`（只做 opacity、
-不带位移、不加 `appear`）。切页确实柔和了——实测 21 帧 / 333ms，页码零位移、无两页重叠——
-**但刷新时反而出现了闪烁**，于是整体撤掉。
-
-原因：`<Transition>` 要生效，`RouterView` 的内容必须包一层可过渡的元素，
-首帧的挂载路径就从「直接插入」变成「先建包裹层、再插入」。而首帧恰恰是整个项目
-花最多力气才做干净的地方（见上一节）。为了 0.25s 的切页动效去动首帧的挂载时序，不划算。
-
-> 结论：**首帧的"一次到位"优先级高于切页的动效。**
->
-> 将来若确实要做，方向是纯 CSS `@keyframes` 挂在页面根节点上 —— 它不接管首帧，
-> 不会干扰刷新；同时要给 `prefers-reduced-motion` 兜底。
->
-> 另记一笔：Vue 2 的 `.fade-enter` / `.fade-leave` 在 Vue 3 改名为
-> `.fade-enter-from` / `.fade-leave-to`，照抄 Vue 2 的过渡 CSS 在 Vue 3 下是**静默失效**的
-> （不报错、只是没动画），这是迁移时最常见的坑之一。
-
-### 样式写法（三条规范）
-
-1. **布局、间距、字号、颜色、响应式 → 一律用 Tailwind 工具类**
-   例：`grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3`、`text-2xl sm:text-3xl`。
-
-2. **动画、伪元素、第三方组件样式覆盖 → 用组件内的 `<style scoped>` 写原生 CSS**
-   Tailwind 不擅长 `@keyframes`、`::before/::after`、`:nth-child`、`clip-path` 等场景，不要硬凑任意值。
-
-3. **同一组类名重复出现 3 次以上 → 抽成组件，不要复制粘贴**
-   抽组件优先于使用 `@apply`。
-
-> 判据：当一个元素上的类名超过 10 个、或需要大量 `[]` 任意值才能表达时，就该抽组件或改用 CSS。
->
-> ⚠️ 踩坑记录：不要给组件的根元素写 `display` 类（如 `inline-flex`）后再用外部的 `hidden` 控制显隐 ——
-> 两者同属 `display` 属性，基础类会覆盖 `hidden`。正确做法是用一层 `<div class="hidden sm:block">` 包裹。
-
-### 注释规范
-
-- **所有 Tailwind 样式必须在其上方加中文注释**，说明类名含义与关键数值（如 `p-8` = 2rem、`gap-6` = 1.5rem），并写明设计意图（为什么限制行长、为什么预留偏移等）。
-- 新增或修改样式时同步更新注释，避免注释与实现不一致。
-- 配置文件（`vite.config.ts`、`tsconfig.*.json`、`src/config/*.ts`）同样需要注释说明每一项的作用。
-
-### 其他约定
-
-- **路径别名**：`@` 指向 `src/` 目录（`vite.config.ts` 与 `tsconfig.app.json` 已同步配置）
-- **文案配置化**：页面内容按页面分目录放在 `src/config/<模块>/data.ts`，字段形状在同目录 `types.ts`；组件统一从 `src/config/site.ts` 的 `siteConfig` 取，改内容无需改动组件。新增或改名模块时只动 `site.ts` 的拼装对象，`SiteConfig` 会漏项报红
-- **导航高亮**：直接比对当前路由 `route.path` 与 `navItems[].to`，命中项加粗；不再用滚动监听（原 `useActiveSection` 已随改版移除）
-- **锚点偏移**：页内锚点靠 `scrollBehavior` 的 `top: 84` 让出顶栏；`scroll-padding-top` 与区块 `scroll-mt-16 / lg:scroll-mt-[84px]` 作为 CSS 侧兜底，与顶栏高度（64 / 84px）对齐
-- **滚动动效**：`useReveal` 实现进场淡入，只触发一次；卡片通过 `delay` 错峰 100ms
-- **动效无障碍**：全局尊重 `prefers-reduced-motion`，系统开启减弱动效时自动关闭过渡并直接显示内容
-- **SEO**：`index.html` 内含 title / description / canonical / Open Graph / Twitter 卡片 / theme-color；上线前需替换 `example.com` 域名与分享封面图 `og-cover.png`（建议 1200×630）
-- **TypeScript**：新组件统一使用 `<script setup lang="ts">`，数据结构优先定义 `interface` 并导出复用
-- **构建产物**：输出至 `dist/`，已通过 `.gitignore` 排除版本管理
-
-## Git 提交规范
-
-提交信息遵循 Conventional Commits 格式：`feat: | fix: | docs: | style: | refactor: | chore:`
+Conventional Commits，描述用中文，如 `refactor(common): 内页首屏尺寸改 px 字面值`。
