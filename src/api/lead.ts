@@ -7,8 +7,10 @@
 export interface LeadPayload {
   /** 联系人姓名 */
   name: string
-  /** 公司名称 */
+  /** 公司名称，可不填 */
   company: string
+  /** 所在地区，可不填 */
+  region: string
   /** 手机号，已通过前端校验 */
   phone: string
   /** 关注的产品线，没选是空串 */

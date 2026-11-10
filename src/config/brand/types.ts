@@ -29,6 +29,7 @@ export interface LeadFormConfig {
   labels: {
     name: string
     company: string
+    region: string
     phone: string
     interests: string
     note: string
@@ -36,13 +37,13 @@ export interface LeadFormConfig {
   placeholders: {
     name: string
     company: string
+    region: string
     phone: string
   }
   notePlaceholder: string
   optionalTip: string
   errors: {
     name: string
-    company: string
     phone: string
     submit: string
   }

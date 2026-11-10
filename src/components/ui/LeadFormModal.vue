@@ -19,32 +19,33 @@ const { leadForm } = siteConfig
 const form = reactive<LeadPayload>({
   name: '',
   company: '',
+  region: '',
   phone: '',
   interest: '',
   note: '',
 })
 
-const errors = reactive<{ name?: string; company?: string; phone?: string }>({})
+const errors = reactive<{ name?: string; phone?: string }>({})
 const status = ref<'idle' | 'submitting' | 'done'>('idle')
 const submitError = ref('')
 const nameEl = useTemplateRef<HTMLInputElement>('nameEl')
 
-// 只在提交时校验，填的过程中不打断；四段手机号：1 开头、第二位 3-9、共 11 位
+// 只在提交时校验，填的过程中不打断；公司、地区选填不拦。
+// 手机号四段：1 开头、第二位 3-9、共 11 位
 const validate = () => {
   errors.name = form.name.trim() ? undefined : leadForm.errors.name
-  errors.company = form.company.trim() ? undefined : leadForm.errors.company
   errors.phone = /^1[3-9]\d{9}$/.test(form.phone.trim()) ? undefined : leadForm.errors.phone
-  return !errors.name && !errors.company && !errors.phone
+  return !errors.name && !errors.phone
 }
 
 const reset = () => {
   form.name = ''
   form.company = ''
+  form.region = ''
   form.phone = ''
   form.interest = ''
   form.note = ''
   errors.name = undefined
-  errors.company = undefined
   errors.phone = undefined
   submitError.value = ''
   status.value = 'idle'
@@ -55,7 +56,13 @@ const onSubmit = async () => {
   status.value = 'submitting'
   submitError.value = ''
   try {
-    await submitLead({ ...form, name: form.name.trim(), company: form.company.trim(), phone: form.phone.trim() })
+    await submitLead({
+      ...form,
+      name: form.name.trim(),
+      company: form.company.trim(),
+      region: form.region.trim(),
+      phone: form.phone.trim(),
+    })
     status.value = 'done'
   } catch (err) {
     submitError.value = err instanceof Error ? err.message : leadForm.errors.submit
@@ -154,7 +161,9 @@ onBeforeUnmount(() => {
                 />
               </svg>
             </span>
-            <p class="mt-[16px] text-[16px] font-semibold text-ink-900">{{ leadForm.successTitle }}</p>
+            <p class="mt-[16px] text-[16px] font-semibold text-ink-900">
+              {{ leadForm.successTitle }}
+            </p>
             <p class="mt-[8px] text-[13px] leading-[22px] text-ink-600">
               {{ leadForm.successDesc }}
             </p>
@@ -167,12 +176,14 @@ onBeforeUnmount(() => {
             </button>
           </div>
 
-          <!-- 表单：手机单列，≥640 姓名和公司并排；各项间距 16px -->
+          <!-- 表单：手机单列，≥640 两列两行——上排姓名/公司、下排手机号/地区；各项间距 16px -->
           <form v-else class="mt-[24px]" @submit.prevent="onSubmit">
             <div class="grid gap-[16px] sm:grid-cols-2">
-              <!-- 名称两项：标签 13px，输入框高 44px、圆角 8px，聚焦时品牌橙描边 -->
+              <!-- 输入项：标签 13px，输入框高 44px、圆角 8px，聚焦时品牌橙描边 -->
               <label class="block">
-                <span class="text-[13px] font-medium text-ink-700">{{ leadForm.labels.name }} <em class="not-italic text-[#d9534f]">*</em></span>
+                <span class="text-[13px] font-medium text-ink-700"
+                  >{{ leadForm.labels.name }} <em class="not-italic text-[#d9534f]">*</em></span
+                >
                 <input
                   ref="nameEl"
                   v-model="form.name"
@@ -184,45 +195,68 @@ onBeforeUnmount(() => {
                     errors.name ? 'border-[#e05b3f]' : 'border-ink-200 hover:border-ink-300',
                   ]"
                 />
-                <span v-if="errors.name" class="mt-[4px] block text-[12px] text-[#d9534f]">{{ errors.name }}</span>
+                <span v-if="errors.name" class="mt-[4px] block text-[12px] text-[#d9534f]">{{
+                  errors.name
+                }}</span>
               </label>
 
+              <!-- 公司：选填，只有姓名和手机号卡提交 -->
               <label class="block">
-                <span class="text-[13px] font-medium text-ink-700">{{ leadForm.labels.company }} <em class="not-italic text-[#d9534f]">*</em></span>
+                <span class="text-[13px] font-medium text-ink-700"
+                  >{{ leadForm.labels.company }}
+                  <span class="font-normal text-ink-400">{{ leadForm.optionalTip }}</span></span
+                >
                 <input
                   v-model="form.company"
                   type="text"
                   maxlength="40"
                   :placeholder="leadForm.placeholders.company"
+                  class="mt-[6px] h-[44px] w-full rounded-lg border border-ink-200 bg-white px-[12px] text-sm text-ink-900 outline-none transition-colors duration-200 placeholder:text-ink-400 hover:border-ink-300 focus:border-brand-500"
+                />
+              </label>
+
+              <!-- 手机号：type=tel 唤起数字键盘，inputmode 数字 -->
+              <label class="block">
+                <span class="text-[13px] font-medium text-ink-700"
+                  >{{ leadForm.labels.phone }} <em class="not-italic text-[#d9534f]">*</em></span
+                >
+                <input
+                  v-model="form.phone"
+                  type="tel"
+                  inputmode="numeric"
+                  maxlength="11"
+                  :placeholder="leadForm.placeholders.phone"
                   :class="[
                     'mt-[6px] h-[44px] w-full rounded-lg border bg-white px-[12px] text-sm text-ink-900 outline-none transition-colors duration-200 placeholder:text-ink-400 focus:border-brand-500',
-                    errors.company ? 'border-[#e05b3f]' : 'border-ink-200 hover:border-ink-300',
+                    errors.phone ? 'border-[#e05b3f]' : 'border-ink-200 hover:border-ink-300',
                   ]"
                 />
-                <span v-if="errors.company" class="mt-[4px] block text-[12px] text-[#d9534f]">{{ errors.company }}</span>
+                <span v-if="errors.phone" class="mt-[4px] block text-[12px] text-[#d9534f]">{{
+                  errors.phone
+                }}</span>
+              </label>
+
+              <!-- 地区：选填，方便顾问就近安排 -->
+              <label class="block">
+                <span class="text-[13px] font-medium text-ink-700"
+                  >{{ leadForm.labels.region }}
+                  <span class="font-normal text-ink-400">{{ leadForm.optionalTip }}</span></span
+                >
+                <input
+                  v-model="form.region"
+                  type="text"
+                  maxlength="30"
+                  :placeholder="leadForm.placeholders.region"
+                  class="mt-[6px] h-[44px] w-full rounded-lg border border-ink-200 bg-white px-[12px] text-sm text-ink-900 outline-none transition-colors duration-200 placeholder:text-ink-400 hover:border-ink-300 focus:border-brand-500"
+                />
               </label>
             </div>
 
-            <!-- 手机号：单独一行，type=tel 唤起数字键盘，inputmode 数字 -->
-            <label class="mt-[16px] block">
-              <span class="text-[13px] font-medium text-ink-700">{{ leadForm.labels.phone }} <em class="not-italic text-[#d9534f]">*</em></span>
-              <input
-                v-model="form.phone"
-                type="tel"
-                inputmode="numeric"
-                maxlength="11"
-                :placeholder="leadForm.placeholders.phone"
-                :class="[
-                  'mt-[6px] h-[44px] w-full rounded-lg border bg-white px-[12px] text-sm text-ink-900 outline-none transition-colors duration-200 placeholder:text-ink-400 focus:border-brand-500',
-                  errors.phone ? 'border-[#e05b3f]' : 'border-ink-200 hover:border-ink-300',
-                ]"
-              />
-              <span v-if="errors.phone" class="mt-[4px] block text-[12px] text-[#d9534f]">{{ errors.phone }}</span>
-            </label>
-
             <!-- 关注产品：单选胶囊，选中品牌橙描边 + 浅橙底；不选也能提交 -->
             <div class="mt-[16px]">
-              <span class="text-[13px] font-medium text-ink-700">{{ leadForm.labels.interests }}</span>
+              <span class="text-[13px] font-medium text-ink-700">{{
+                leadForm.labels.interests
+              }}</span>
               <div class="mt-[8px] flex flex-wrap gap-[8px]">
                 <button
                   v-for="item in leadForm.interests"
@@ -243,7 +277,10 @@ onBeforeUnmount(() => {
 
             <!-- 备注：选填，三行高，右下角字数提示 -->
             <label class="mt-[16px] block">
-              <span class="text-[13px] font-medium text-ink-700">{{ leadForm.labels.note }} <span class="font-normal text-ink-400">{{ leadForm.optionalTip }}</span></span>
+              <span class="text-[13px] font-medium text-ink-700"
+                >{{ leadForm.labels.note }}
+                <span class="font-normal text-ink-400">{{ leadForm.optionalTip }}</span></span
+              >
               <textarea
                 v-model="form.note"
                 rows="3"
@@ -256,7 +293,9 @@ onBeforeUnmount(() => {
             <p v-if="submitError" class="mt-[12px] text-[13px] text-[#d9534f]">{{ submitError }}</p>
 
             <!-- 页脚：左侧电话兜底，右侧取消 + 提交；分割线上留 24 -->
-            <div class="mt-[24px] flex flex-wrap items-center justify-between gap-[12px] border-t border-ink-100 pt-[20px]">
+            <div
+              class="mt-[24px] flex flex-wrap items-center justify-between gap-[12px] border-t border-ink-100 pt-[20px]"
+            >
               <a
                 :href="siteConfig.contact.phoneHref"
                 class="text-[13px] text-ink-500 transition-colors duration-200 hover:text-brand-500"
