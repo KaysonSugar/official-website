@@ -16,19 +16,26 @@ import texture from '@/assets/products/logistics/images/texture-dots.webp'
 /**
  * 奶油底三卡。图标是现成的 Icon Box PNG（浅绿圆角盒 + 深绿线性图形，192px）。
  * Texture 02 是稀疏浅绿点弧纹理（本身够淡），铺右上角当装饰，压在卡片下面。
+ * hover 时卡片只浮投影、图标放大 6%——两级反馈，跟首页服务卡同一套。
  */
 const { ledger } = siteConfig.logistics
 
-const iconMap = { '01': icon01, '02': icon02, '03': icon03 }
+// icon 短名 → 素材，换图只动这里；键名跟 config 里的 icon 一一对应
+const iconMap: Record<(typeof ledger.cards)[number]['icon'], string> = {
+  '01': icon01,
+  '02': icon02,
+  '03': icon03,
+}
 
 const root = useTemplateRef<HTMLElement>('root')
 useReveal(root)
 </script>
 
 <template>
-  <!-- 奶油底（原型采的 #fff9f5），配物流暖色系 -->
+  <!-- 区块：奶油底 #fff9f5（原型采的暖色），上下留白各 96px；overflow-hidden 裁掉探出去的纹理 -->
   <section ref="root" class="relative overflow-hidden bg-[#fff9f5] pb-[96px] pt-[96px]">
-    <!-- 装饰纹理：右上角露一半，pointer-events-none 防挡交互 -->
+    <!-- 装饰纹理：右上角 640px 宽、右探 -60px、下压 36px，lg 以上才显示；
+         pointer-events-none 防挡交互，loading=lazy 不占首屏带宽 -->
     <img
       :src="texture"
       alt=""
@@ -39,18 +46,21 @@ useReveal(root)
     />
 
     <div class="container-page relative">
+      <!-- 眉题：11px/16px 加粗、字距 0.05em（sm 起 0.2em）、brand-500 橙 -->
       <p
         class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ ledger.eyebrow }}
       </p>
+      <!-- 标题：mt-[20px] 与眉题间距 20px；32px/42px 加粗 ink-900 -->
       <h2
         class="reveal mt-[20px] text-[32px] font-bold leading-[42px] text-ink-900"
         style="--d: 80ms"
       >
         {{ ledger.title }}
       </h2>
+      <!-- 说明：mt-[14px] 与标题间距 14px，max-w 760px；14px/24px 灰绿 -->
       <p
         class="reveal mt-[14px] max-w-[760px] text-[14px] leading-[24px] text-[#5e7169]"
         style="--d: 160ms"
@@ -58,8 +68,8 @@ useReveal(root)
         {{ ledger.desc }}
       </p>
 
-      <!-- 三张白卡：图标与标题同行，暖色细描边。
-           hover 换全局 card-lift（投影浮现、卡片不动），跟首页同款 -->
+      <!-- 三张白卡：mt-[40px] 与说明间距 40px、gap 24px，手机单列 → md 三列，每张错峰 90ms；
+           暖色细描边 #f3e9e0 + 轻投影，跟奶油底同族 -->
       <div class="mt-[40px] grid gap-[24px] md:grid-cols-3">
         <article
           v-for="(card, i) in ledger.cards"
@@ -67,6 +77,7 @@ useReveal(root)
           class="reveal card-lift rounded-[16px] border border-[#f3e9e0] bg-white p-[28px] shadow-[0_18px_44px_-30px_rgba(120,80,40,0.25)]"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
+          <!-- 卡头：46×46 图标跟标题横排 gap 14px；hover 时图标放大 1.06（样式见末尾） -->
           <div class="flex items-center gap-[14px]">
             <img
               :src="iconMap[card.icon]"
@@ -76,8 +87,10 @@ useReveal(root)
               loading="lazy"
               decoding="async"
             />
+            <!-- 卡标题：17px/24px 加粗 -->
             <h3 class="text-[17px] font-bold leading-[24px] text-[#13322a]">{{ card.title }}</h3>
           </div>
+          <!-- 卡正文：mt-[14px] 与标题行间距 14px；13px/22px 灰绿 -->
           <p class="mt-[14px] text-[13px] leading-[22px] text-[#5e7169]">{{ card.body }}</p>
         </article>
       </div>
@@ -86,8 +99,6 @@ useReveal(root)
 </template>
 
 <style scoped>
-/* 卡片 hover 时图标轻放大 6%：跟首页法规卡/功能卡同款两级反馈（投影浮现 + 图标放大）。
-   曲线用起停都缓的 0.4/0/0.2/1，260ms，全站 hover 统一节奏 */
 .card-lift img {
   transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -96,7 +107,6 @@ useReveal(root)
   transform: scale(1.06);
 }
 
-/* 减弱动效：图标别缩放，只留投影浮现 */
 @media (prefers-reduced-motion: reduce) {
   .card-lift img {
     transition: none;

@@ -16,12 +16,14 @@ import { siteConfig } from '@/config/site'
  * 左右各缩进半列（8.33%）正好从首点到末点，列数变了这段要跟着改。
  * 六列在手机上放不下，整卡套 overflow-x-auto + min-w 横滚，跟货源表格一个处理。
  *
- * 时间轴序列动画（2026-11-09）：蹭根元素 .in 触发（scoped 里写 .in 后代选择器），
- * 连线 scaleX 从苏州画到北京 → 圆点跟着线头逐站回弹弹出 → 城市行/货物行随各自
- * 站点浮现（延迟跟同列圆点对齐）→ 底部橙条最后回弹落定。全部一次性动画，
- * reduced-motion 交给全局 0.01ms 规则压平，不用自己写 media query。
- * 光点滑行（2026-11-09）：照服务支持流程轴同款，白点沿线来回滑，两层拆分
- * （track 位移 linear / bead 显隐 ease），2s 起跑给进场序列让路。
+ * 进场序列：蹭根元素 .in 触发，初始态写死在类上（透明 / 缩到 0），fill-mode both 让延迟期
+ * 保持首帧、播完保持终帧，全部一次性动画（reduced-motion 交给全局 0.01ms 规则）。
+ * 节奏：卡头 320ms → 连线 420ms 起画 0.75s → 圆点 480ms 起每站 +130ms 回弹弹出
+ * → 城市/事件/货物三行跟同列圆点错 40/80/120ms 浮现 → 橙条 1450ms 从 0.96 回弹落定。
+ *
+ * 光点滑行照服务支持流程轴同款：track 管位移（linear 匀速）、bead 管显隐（ease），
+ * 两层拆开是因为一个 animation 塞不下两种曲线；7s 一轮里 3.2s（46%）走完，延迟 2s
+ * 给进场序列让路。infinite 动画在 reduced-motion 下必须自己关，全局规则会把它压成疯狂空转。
  */
 const { carpool } = siteConfig.logistics
 
@@ -34,21 +36,24 @@ useReveal(root)
 </script>
 
 <template>
+  <!-- 区块：深绿纵向渐变 #0d1c17→#12211a，上下留白各 96px -->
   <section ref="root" class="bg-gradient-to-b from-[#0d1c17] to-[#12211a] pb-[96px] pt-[96px]">
     <div class="container-page">
-      <!-- 眉题：品牌橙 #ff833f，全站统一；这屏主题色本身就是拼车橙 -->
+      <!-- 眉题：11px/16px 加粗、字距 0.05em（sm 起 0.2em）、深底上仍用品牌橙 -->
       <p
         class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ carpool.eyebrow }}
       </p>
+      <!-- 标题：mt-[20px] 与眉题间距 20px；32px/42px 加粗纯白 -->
       <h2
         class="reveal mt-[20px] text-[32px] font-bold leading-[42px] text-white"
         style="--d: 80ms"
       >
         {{ carpool.title }}
       </h2>
+      <!-- 说明：mt-[14px] 与标题间距 14px，max-w 760px；14px/24px 浅灰绿 -->
       <p
         class="reveal mt-[14px] max-w-[760px] text-[14px] leading-[24px] text-[#bacec5]"
         style="--d: 160ms"
@@ -56,26 +61,29 @@ useReveal(root)
         {{ carpool.desc }}
       </p>
 
+      <!-- 两栏：mt-[56px] 与说明间距 56px；手机单列 gap 36px，lg 起 4:7、列距 64px -->
       <div
         class="reveal mt-[56px] grid items-center gap-[36px] lg:grid-cols-[4fr_7fr] lg:gap-[64px]"
         style="--d: 240ms"
       >
         <!-- 左列：橙色小标签 + 说明段 -->
         <div>
+          <!-- 小标签：深橙底 #3f2313 + 浅橙字 #f2a25c，rounded 10px、px 18 / py 8，外圈半透明橙描边 -->
           <span
             class="inline-block rounded-[10px] bg-[#3f2313] px-[18px] py-[8px] text-[14px] font-bold leading-[20px] text-[#f2a25c] ring-1 ring-[#8a4f26]/50"
           >
             {{ carpool.tag }}
           </span>
+          <!-- 说明段：mt-[22px] 与标签间距 22px；14px/26px 浅灰绿 -->
           <p class="mt-[22px] text-[14px] leading-[26px] text-[#bacec5]">{{ carpool.detail }}</p>
         </div>
 
-        <!-- 右侧拼车方案卡：窄屏横滚 -->
+        <!-- 右列：拼车方案卡，min-w 760px 保证六列不挤，窄屏靠这层 overflow-x-auto 横滚 -->
         <div class="overflow-x-auto pb-[6px]">
           <div
             class="min-w-[760px] rounded-[16px] bg-white p-[28px] shadow-[0_28px_70px_-30px_rgba(0,0,0,0.55)]"
           >
-            <!-- 卡头：方案名 + 起终点 + 绿徽标 + 汇总，整体淡入在时间轴之前 -->
+            <!-- 卡头：方案名 + 起终点 + 绿徽标 + 汇总，横排换行 gap-x 14px；300ms 前先淡入 -->
             <div
               class="carpool-head flex flex-wrap items-center gap-x-[14px] gap-y-[8px]"
               style="--d: 320ms"
@@ -84,6 +92,7 @@ useReveal(root)
               <span class="text-[15px] font-bold text-[#13322a]">
                 {{ carpool.card.from }} → {{ carpool.card.to }}
               </span>
+              <!-- 徽标：浅绿底 #eaf7f0 + 深绿字，rounded 6px、px 9 / py 3 -->
               <span
                 class="rounded-[6px] bg-[#eaf7f0] px-[9px] py-[3px] text-[12px] font-medium leading-[17px] text-[#3d8f74]"
               >
@@ -92,7 +101,7 @@ useReveal(root)
               <span class="text-[13px] text-[#8aa094]">{{ carpool.card.summary }}</span>
             </div>
 
-            <!-- 时间轴：城市 / 事件 / 圆点行 / 货物去向，四行都用同一个六列 grid 对齐 -->
+            <!-- 时间轴：mt-[28px] 与卡头间距 28px；城市 / 事件 / 圆点 / 货物四行都用同一个六列 grid 对齐 -->
             <div class="mt-[28px]">
               <div class="grid grid-cols-6">
                 <p
@@ -114,15 +123,14 @@ useReveal(root)
                   {{ stop.event }}
                 </p>
               </div>
-              <!-- 圆点行：连线 absolute 压底，首尾缩进半列（1/12 ≈ 8.33%）；线从首站画到末站 -->
+              <!-- 圆点行：mt-[6px] 与事件行间距 6px；连线 absolute 压底，首尾各缩进半列（1/12 ≈ 8.33%） -->
               <div class="relative mt-[6px] grid grid-cols-6">
                 <span
                   class="carpool-line absolute left-[8.33%] right-[8.33%] top-1/2 h-[2px] -translate-y-1/2 bg-[#f6c9a6]"
                   aria-hidden="true"
                 />
-                <!-- 光点：照服务支持流程轴同款，白点橙描边沿线滑行。
-                     track 同层 100% 宽、位移用自身宽度百分比（0→100%），跟线实际宽度无关；
-                     外壳 overflow-hidden 裁掉滑出线两端的部分。z 夹在线和站点点（z-10）之间 -->
+                <!-- 光点：白点橙描边沿线滑行。track 同层 100% 宽、位移用自身宽度百分比（0→100%），
+                     跟线实际宽度无关；外壳 overflow-hidden 裁掉滑出线两端的部分，z 夹在线和圆点（z-10）之间 -->
                 <div
                   class="pointer-events-none absolute left-[8.33%] right-[8.33%] top-1/2 z-[5] h-[19px] -translate-y-1/2 overflow-hidden"
                   aria-hidden="true"
@@ -134,6 +142,7 @@ useReveal(root)
                     />
                   </div>
                 </div>
+                <!-- 站点圆点：13px 橙点 + 3px 白圈，逐站回弹弹出 -->
                 <span
                   v-for="(stop, i) in carpool.card.stops"
                   :key="`dot-${stop.city}`"
@@ -146,6 +155,8 @@ useReveal(root)
                   />
                 </span>
               </div>
+              <!-- 货物行：mt-[10px] 与圆点行间距 10px；12px/18px 灰绿
+                   （下面紧跟的货物行同理，跟圆点错 120ms 浮现） -->
               <div class="mt-[10px] grid grid-cols-6">
                 <p
                   v-for="(stop, i) in carpool.card.stops"
@@ -158,7 +169,7 @@ useReveal(root)
               </div>
             </div>
 
-            <!-- 底部橙条：加粗引子 + 全程路线，整条时间轴走完后回弹落定 -->
+            <!-- 底部橙条：mt-[24px] 与时间轴间距 24px；浅橙底 #fff4ec，引子加粗 + 路线 13px，1450ms 回弹落定 -->
             <div
               class="carpool-strip mt-[24px] flex flex-wrap items-center gap-x-[16px] rounded-[10px] bg-[#fff4ec] px-[20px] py-[12px]"
             >
@@ -177,12 +188,6 @@ useReveal(root)
 </template>
 
 <style scoped>
-/* ---- 时间轴序列动画：蹭根元素 .in 触发，全部一次性动画（reduced-motion 交给全局 0.01ms 规则）----
-   初始态写死在类上（透明 / 缩到 0），.in 后才开播；fill-mode both 让延迟期保持首帧、
-   播完保持终帧。节奏：卡头 320 → 线 420 起画 0.75s → 圆点 480 起每站 +130ms 回弹弹出
-   → 城市/事件/货物三行跟同列圆点错 40/80/120ms 浮现 → 橙条 1450ms 回弹收尾 */
-
-/* 卡头与文字单元：淡入 + 从上往下 6px 落位（挂到圆点下方的感觉） */
 .carpool-head,
 .carpool-cell {
   opacity: 0;
@@ -205,7 +210,6 @@ useReveal(root)
   }
 }
 
-/* 连线：从苏州端向北京端画开；transform-origin left + scaleX，不动 layout */
 .carpool-line {
   transform: scaleX(0);
   transform-origin: left center;
@@ -224,7 +228,6 @@ useReveal(root)
   }
 }
 
-/* 圆点：跟着线头逐站弹出，回弹曲线和浮层弹入同一族 */
 .carpool-dot {
   transform: scale(0);
 }
@@ -242,7 +245,6 @@ useReveal(root)
   }
 }
 
-/* 底部橙条：整条时间轴走完后轻轻回弹落定（缩放起点 0.96，别太夸张） */
 .carpool-strip {
   opacity: 0;
 }
@@ -262,17 +264,11 @@ useReveal(root)
   }
 }
 
-/* ---- 光点滑行：照服务支持流程轴同款 ----
-   track 负责位移（0 → 100% 自身宽度 = 整根线），bead 只管淡入淡出，
-   两层拆开是因为位移要 linear 匀速、显隐要缓入缓出，一个 animation 塞不下两种曲线。
-   7s 一轮里 3.2s（46%）走完，剩下静息，跟支持页同节奏。
-   delay 2s 给进场序列让路（橙条 1450ms 落定后光点才开跑）；
-   infinite 动画必须自己关 reduced-motion，全局 0.01ms 规则会把它压成疯狂空转 */
 .carpool-bead-track {
   animation: carpool-slide 7s linear infinite;
   animation-delay: 2s;
   animation-fill-mode: backwards;
-  animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
+  animation-play-state: paused;
 }
 
 .in .carpool-bead-track {
@@ -281,11 +277,11 @@ useReveal(root)
 
 @keyframes carpool-slide {
   0% {
-    transform: translateX(0); /* 从苏州端起步 */
+    transform: translateX(0);
   }
   46%,
   100% {
-    transform: translateX(100%); /* 走到北京端停住等下一轮 */
+    transform: translateX(100%);
   }
 }
 
@@ -302,7 +298,7 @@ useReveal(root)
 
 @keyframes carpool-bead-fade {
   0% {
-    opacity: 0; /* 一开始不可见，别在左端突然冒出来 */
+    opacity: 0;
   }
   3% {
     opacity: 1;
@@ -312,7 +308,7 @@ useReveal(root)
   }
   46%,
   100% {
-    opacity: 0; /* 走到终点前淡出，别在右端生硬消失 */
+    opacity: 0;
   }
 }
 
@@ -323,7 +319,7 @@ useReveal(root)
   }
 
   .carpool-bead {
-    opacity: 0; /* 关动效后光点彻底隐藏 */
+    opacity: 0;
   }
 }
 </style>

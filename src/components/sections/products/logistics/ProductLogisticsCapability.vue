@@ -14,30 +14,43 @@ import { siteConfig } from '@/config/site'
  * 面板渐变 #f0fdff→#fff、运单卡 #e0fafa→#fff、选中 #d8ffff + #21e3a5 边框、
  * 数据格 #fffdfc→#fff1e8 + #ffc19d 边框、按钮 #2fb188。数据是编造的明文假数据。
  * 窗口内容约 1150px 起，手机端套 overflow-x-auto 横滚。
+ *
+ * 演示窗口里的字段标签、占位符、按钮字全在 console.labels 里，模板只写 {{ L.xxx }}，
+ * 换文案不用进组件翻。
+ *
+ * 窗口内的小部件全照源码 dispatchDesk 的 scss 复刻：假控件（.fake-*）按 el-select mini
+ * 的比例缩到 22px 高，车辆格 label 定宽 46px 靠 text-align-last 两端对齐撑开「车 牌」，
+ * 冒号单独一个 span 不参与对齐（.cal-colon）。
  */
 const { capability } = siteConfig.logistics
 const consoleData = capability.console
+
+// 标签常量：模板里统一写 L.xxx，少打一截前缀
+const L = consoleData.labels
 
 const root = useTemplateRef<HTMLElement>('root')
 useReveal(root)
 </script>
 
 <template>
+  <!-- 区块：白底，上下留白各 96px -->
   <section ref="root" class="bg-white pb-[96px] pt-[96px]">
     <div class="container-page">
-      <!-- 眉题 / 标题 / 描述 -->
+      <!-- 眉题：11px/16px 加粗、字距 0.05em（sm 起 0.2em）、brand-500 橙 -->
       <p
         class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
       >
         {{ capability.eyebrow }}
       </p>
+      <!-- 标题：mt-[20px] 与眉题间距 20px；32px/42px 加粗 ink-900 -->
       <h2
         class="reveal mt-[20px] text-[32px] font-bold leading-[42px] text-ink-900"
         style="--d: 80ms"
       >
         {{ capability.title }}
       </h2>
+      <!-- 说明：mt-[14px] 与标题间距 14px，max-w 720px；14px/24px 灰绿 -->
       <p
         class="reveal mt-[14px] max-w-[720px] text-[14px] leading-[24px] text-[#5e7169]"
         style="--d: 160ms"
@@ -45,8 +58,8 @@ useReveal(root)
         {{ capability.desc }}
       </p>
 
-      <!-- 三张能力卡：浅绿灰底、无边框（原型就是色块不描边）。
-           hover 换全局 card-lift（投影浮现、卡片不动），跟首页同款 -->
+      <!-- 三张能力卡：mt-[40px] 与说明间距 40px、gap 24px，手机单列 → md 三列，每张错峰 90ms；
+           浅绿灰底 #f7fbfa、无边框（原型就是色块不描边），hover 走全局 card-lift -->
       <div class="mt-[40px] grid gap-[24px] md:grid-cols-3">
         <article
           v-for="(card, i) in capability.cards"
@@ -54,22 +67,26 @@ useReveal(root)
           class="reveal card-lift rounded-[16px] bg-[#f7fbfa] p-[28px]"
           :style="{ '--d': `${240 + i * 90}ms` }"
         >
+          <!-- 卡标题：17px/24px 加粗 -->
           <h3 class="text-[17px] font-bold leading-[24px] text-[#13322a]">{{ card.title }}</h3>
+          <!-- 卡正文：mt-[12px] 与标题间距 12px；13px/22px 灰绿 -->
           <p class="mt-[12px] text-[13px] leading-[22px] text-[#5e7169]">{{ card.body }}</p>
+          <!-- 小结行：mt-[14px] 与正文间距 14px；12px/20px 绿字，前缀加粗 -->
           <p class="mt-[14px] text-[12px] leading-[20px] text-[#1c8a66]">
             <span class="font-bold">{{ card.noteTag }}：</span>{{ card.note }}
           </p>
         </article>
       </div>
 
-      <!-- 调度台窗口：手机横滚（滚动条隐藏，桌面不露条）。窗口底色 #f5f5f5（面板间缝隙色） -->
+      <!-- 调度台窗口：mt-[48px] 与卡片间距 48px；窗口底色 #f5f5f5 是面板之间的缝隙色，
+           min-w 1180px 撑住三栏，手机靠 hide-scrollbar 横滚但不露条 -->
       <div class="reveal hide-scrollbar mt-[48px] overflow-x-auto" style="--d: 240ms">
         <div
           class="min-w-[1180px] overflow-hidden rounded-[14px] bg-[#f5f5f5] p-[10px] shadow-[0_28px_70px_-30px_rgba(19,50,42,0.35)] ring-1 ring-black/5"
         >
-          <!-- 窗口顶栏：mac 三点 + 标题 + 时间；底部多留空隙跟面板隔开 -->
+          <!-- 窗口顶栏：mac 三点 + 标题 + 时间，px 10 / pt 6 / pb 12（底部留空跟面板隔开） -->
           <div class="flex items-center gap-[10px] px-[10px] pb-[12px] pt-[6px]">
-            <!-- mac 三点：经典红黄绿 -->
+            <!-- mac 三点：9px 经典红黄绿 -->
             <span class="flex gap-[6px]" aria-hidden="true">
               <span class="h-[9px] w-[9px] rounded-full bg-[#ff5f57]" />
               <span class="h-[9px] w-[9px] rounded-full bg-[#febc2e]" />
@@ -150,7 +167,7 @@ useReveal(root)
                   <!-- 运单编号：蓝色复制图标照源码 #1890ff -->
                   <p class="mt-[8px] flex items-center">
                     <span class="w-[56px] shrink-0 text-[10px] leading-[15px] text-black"
-                      >运单编号：</span
+                      >{{ L.orderNo }}：</span
                     >
                     <svg
                       viewBox="0 0 24 24"
@@ -181,7 +198,7 @@ useReveal(root)
                   <div class="mt-[6px] grid grid-cols-2 gap-x-[8px] gap-y-[5px]">
                     <p class="flex items-center overflow-hidden">
                       <span class="w-[56px] shrink-0 text-[10px] leading-[15px] text-black"
-                        >货物类别：</span
+                        >{{ L.category }}：</span
                       >
                       <span class="truncate text-[10px] leading-[15px] text-black">{{
                         order.category
@@ -189,7 +206,7 @@ useReveal(root)
                     </p>
                     <p class="flex items-center overflow-hidden">
                       <span class="w-[56px] shrink-0 text-[10px] leading-[15px] text-black"
-                        >货物总重：</span
+                        >{{ L.weight }}：</span
                       >
                       <span class="truncate text-[10px] leading-[15px] text-black">{{
                         order.weight
@@ -197,7 +214,7 @@ useReveal(root)
                     </p>
                     <p class="flex items-center overflow-hidden">
                       <span class="w-[56px] shrink-0 text-[10px] leading-[15px] text-black"
-                        >车辆类型：</span
+                        >{{ L.vehicleType }}：</span
                       >
                       <span class="truncate text-[10px] leading-[15px] text-black">{{
                         order.vehicleType
@@ -205,7 +222,7 @@ useReveal(root)
                     </p>
                     <p class="flex items-center overflow-hidden">
                       <span class="w-[56px] shrink-0 text-[10px] leading-[15px] text-black"
-                        >运输里程：</span
+                        >{{ L.mileage }}：</span
                       >
                       <span class="truncate text-[10px] leading-[15px] text-black">{{
                         order.mileage
@@ -214,7 +231,7 @@ useReveal(root)
                   </div>
                   <p class="mt-[5px] flex items-center overflow-hidden">
                     <span class="w-[56px] shrink-0 text-[10px] leading-[15px] text-black"
-                      >装货时间：</span
+                      >{{ L.loadTime }}：</span
                     >
                     <span class="truncate text-[10px] leading-[15px] text-black">{{
                       order.loadTime
@@ -260,30 +277,34 @@ useReveal(root)
                 class="mt-[4px] flex flex-wrap items-center gap-x-[10px] gap-y-[6px] px-[14px] pb-[6px]"
               >
                 <span class="fake-field"
-                  >发货地：<span class="fake-select w-[68px]">请选择</span>省<span
-                    class="fake-select w-[68px]"
-                    >请选择</span
-                  >市</span
+                  >{{ L.from }}：<span class="fake-select w-[68px]">{{ L.pickPlease }}</span
+                  >{{ L.province }}<span class="fake-select w-[68px]">{{ L.pickPlease }}</span
+                  >{{ L.city }}</span
                 >
                 <span class="fake-field"
-                  >卸货地：<span class="fake-select w-[68px]">请选择</span>省<span
-                    class="fake-select w-[68px]"
-                    >请选择</span
-                  >市</span
+                  >{{ L.to }}：<span class="fake-select w-[68px]">{{ L.pickPlease }}</span
+                  >{{ L.province }}<span class="fake-select w-[68px]">{{ L.pickPlease }}</span
+                  >{{ L.city }}</span
                 >
                 <span class="fake-field"
-                  >经营范围：<span class="fake-select w-[108px]">请选择</span></span
+                  >{{ L.scope }}：<span class="fake-select w-[108px]">{{
+                    L.pickPlease
+                  }}</span></span
                 >
               </div>
               <div class="flex flex-nowrap items-center gap-[10px] px-[14px] pb-[4px]">
                 <span class="fake-field"
-                  >车辆类型：<span class="fake-select w-[108px]">请选择</span></span
+                  >{{ L.truckType }}：<span class="fake-select w-[108px]">{{
+                    L.pickPlease
+                  }}</span></span
                 >
                 <span class="fake-field"
-                  >车牌：<span class="fake-input w-[108px]">请输入</span></span
+                  >{{ L.plate }}：<span class="fake-input w-[108px]">{{
+                    L.inputPlease
+                  }}</span></span
                 >
-                <span class="fake-btn-solid">🔍 搜索</span>
-                <span class="fake-btn-line">⟳ 重置</span>
+                <span class="fake-btn-solid">{{ L.search }}</span>
+                <span class="fake-btn-line">{{ L.reset }}</span>
               </div>
 
               <!-- 可拼单栏（源码 pagination）：图例方块 #73f2db + 绿字，中 Tag，右上一周/下一周 -->
@@ -291,7 +312,7 @@ useReveal(root)
                 <span class="flex items-center gap-[6px]">
                   <span class="h-[13px] w-[13px] rounded-[3px] bg-[#73f2db]" aria-hidden="true" />
                   <span class="text-[13px] font-bold leading-[18px] text-[#2fc797]"
-                    >可拼单 : {{ consoleData.board.pinCount }}</span
+                    >{{ L.combine }} : {{ consoleData.board.pinCount }}</span
                   >
                 </span>
                 <span
@@ -315,7 +336,7 @@ useReveal(root)
                 >
                   <!-- 源码 btn-group 是 el-icon-arrow 实心折线箭头 -->
                   <span class="flex items-center gap-[3px] px-[8px]"
-                    >上一周
+                    >{{ L.prevWeek }}
                     <svg
                       viewBox="0 0 24 24"
                       class="h-[11px] w-[11px]"
@@ -335,7 +356,7 @@ useReveal(root)
                     >
                       <path d="M9 4l8 8-8 8-1.8-1.8L13.4 12 7.2 5.8z" />
                     </svg>
-                    下一周
+                    {{ L.nextWeek }}
                   </span>
                 </span>
               </div>
@@ -349,7 +370,7 @@ useReveal(root)
                 }"
               >
                 <!-- 表头：青色渐变加粗（源码 header-vehicle / header-date） -->
-                <div class="cal-head font-bold">车辆信息</div>
+                <div class="cal-head font-bold">{{ L.vehicleInfo }}</div>
                 <div
                   v-for="day in consoleData.board.days"
                   :key="day"
@@ -374,10 +395,10 @@ useReveal(root)
                       class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-[25deg] text-[17px] font-bold tracking-[2px] text-[rgba(49,202,154,0.55)]"
                       aria-hidden="true"
                     >
-                      可拼单
+                      {{ L.combine }}
                     </span>
                     <p class="relative flex items-center overflow-hidden">
-                      <span class="cal-label">车牌</span>
+                      <span class="cal-label">{{ L.plate }}</span>
                       <span class="cal-colon">：</span>
                       <span
                         class="min-w-0 flex-1 truncate text-[10px] font-semibold leading-[15px] text-black"
@@ -385,14 +406,14 @@ useReveal(root)
                       >
                     </p>
                     <p class="mt-[4px] flex items-center overflow-hidden">
-                      <span class="cal-label">载重</span>
+                      <span class="cal-label">{{ L.load }}</span>
                       <span class="cal-colon">：</span>
                       <span class="truncate text-[10px] font-semibold leading-[15px] text-black">{{
                         vehicle.weight
                       }}</span>
                     </p>
                     <p class="mt-[4px] flex items-center overflow-hidden">
-                      <span class="cal-label">经营范围</span>
+                      <span class="cal-label">{{ L.scope }}</span>
                       <span class="cal-colon">：</span>
                       <span
                         class="min-w-0 flex-1 truncate text-[10px] font-semibold leading-[15px] text-black"
@@ -400,7 +421,7 @@ useReveal(root)
                       >
                     </p>
                     <p class="mt-[7px] flex justify-end">
-                      <span class="assign-btn">☝ 指派</span>
+                      <span class="assign-btn">{{ L.assign }}</span>
                     </p>
                   </div>
 
@@ -501,18 +522,24 @@ useReveal(root)
               <!-- 筛选（源码 free-vehicle .search：label 55px + select 100px / input 82px），label 带冒号 -->
               <div class="mt-[2px] flex flex-col gap-[8px] px-[12px]">
                 <div class="flex flex-nowrap items-center gap-[6px]">
-                  <span class="shrink-0 text-[10px] leading-[15px] text-black">车辆类型：</span>
-                  <span class="fake-select min-w-0 flex-1">请选择</span>
-                  <span class="shrink-0 text-[10px] leading-[15px] text-black">前车牌：</span>
-                  <span class="fake-input min-w-0 flex-1">请输入</span>
+                  <span class="shrink-0 text-[10px] leading-[15px] text-black"
+                    >{{ L.vehicleType }}：</span
+                  >
+                  <span class="fake-select min-w-0 flex-1">{{ L.pickPlease }}</span>
+                  <span class="shrink-0 text-[10px] leading-[15px] text-black"
+                    >{{ L.frontPlate }}：</span
+                  >
+                  <span class="fake-input min-w-0 flex-1">{{ L.inputPlease }}</span>
                 </div>
                 <div class="flex flex-nowrap items-center gap-[6px]">
-                  <span class="shrink-0 text-[10px] leading-[15px] text-black">载重范围：</span>
-                  <span class="fake-select min-w-0 flex-1">请选择</span>
-                  <span class="fake-btn-solid shrink-0">🔍 搜索</span>
-                  <span class="fake-btn-line shrink-0">⟳ 重置</span>
+                  <span class="shrink-0 text-[10px] leading-[15px] text-black"
+                    >{{ L.loadRange }}：</span
+                  >
+                  <span class="fake-select min-w-0 flex-1">{{ L.pickPlease }}</span>
+                  <span class="fake-btn-solid shrink-0">{{ L.search }}</span>
+                  <span class="fake-btn-line shrink-0">{{ L.reset }}</span>
                 </div>
-                <span class="fake-select mt-[2px] w-[110px]">装货地优先</span>
+                <span class="fake-select mt-[2px] w-[110px]">{{ L.loadFirst }}</span>
               </div>
 
               <!-- 车卡：free-card 渐变 + #b1d6dc 阴影 -->
@@ -522,9 +549,9 @@ useReveal(root)
                 class="mx-[12px] mt-[14px] rounded-[8px] border border-[#e0fafa] bg-gradient-to-b from-[#e0fafa] to-white p-[12px] shadow-[0_2px_4px_#b1d6dc]"
               >
                 <p class="flex items-center">
-                  <span class="w-[52px] shrink-0 text-[11px] font-bold leading-[16px] text-black"
-                    >车牌</span
-                  >
+                  <span class="w-[52px] shrink-0 text-[11px] font-bold leading-[16px] text-black">{{
+                    L.plate
+                  }}</span>
                   <span class="text-[11px] font-bold leading-[16px] text-black">：</span>
                   <span
                     class="min-w-0 flex-1 truncate text-[11px] font-bold leading-[16px] text-black"
@@ -546,34 +573,34 @@ useReveal(root)
                   </span>
                 </p>
                 <p class="mt-[9px] flex items-center overflow-hidden">
-                  <span class="w-[52px] shrink-0 text-[11px] leading-[16px] text-black"
-                    >载&emsp;重</span
-                  >
+                  <span class="w-[52px] shrink-0 text-[11px] leading-[16px] text-black">{{
+                    L.load
+                  }}</span>
                   <span class="text-[11px] leading-[16px] text-black">：</span>
                   <span class="truncate text-[11px] leading-[16px] text-black">{{
                     card.weight
                   }}</span>
                 </p>
                 <p class="mt-[7px] flex items-center overflow-hidden">
-                  <span class="w-[52px] shrink-0 text-[11px] leading-[16px] text-black"
-                    >联系电话</span
-                  >
+                  <span class="w-[52px] shrink-0 text-[11px] leading-[16px] text-black">{{
+                    L.phone
+                  }}</span>
                   <span class="text-[11px] leading-[16px] text-black">：</span>
                   <span class="truncate text-[11px] leading-[16px] text-black">{{
                     card.phone
                   }}</span>
                 </p>
                 <p class="mt-[7px] flex items-center overflow-hidden">
-                  <span class="w-[52px] shrink-0 text-[11px] leading-[16px] text-black"
-                    >经营范围</span
-                  >
+                  <span class="w-[52px] shrink-0 text-[11px] leading-[16px] text-black">{{
+                    L.scope
+                  }}</span>
                   <span class="text-[11px] leading-[16px] text-black">：</span>
                   <span class="truncate text-[11px] leading-[16px] text-black">{{
                     card.scope
                   }}</span>
                 </p>
                 <p class="mt-[10px] flex justify-end">
-                  <span class="assign-btn">☝ 指派</span>
+                  <span class="assign-btn">{{ L.assign }}</span>
                 </p>
               </div>
             </div>
@@ -581,7 +608,7 @@ useReveal(root)
         </div>
       </div>
 
-      <!-- 图下说明 -->
+      <!-- 图下说明：mt-[16px] 与窗口间距 16px；12px/20px 弱化灰 -->
       <p class="reveal mt-[16px] text-[12px] leading-[20px] text-[#8aa094]" style="--d: 320ms">
         {{ consoleData.caption }}
       </p>
@@ -590,7 +617,6 @@ useReveal(root)
 </template>
 
 <style scoped>
-/* 隐藏横向滚动条：手机端横滚能力保留，但视觉上不出条（桌面截图里露底条不好看） */
 .hide-scrollbar {
   scrollbar-width: none;
 }
@@ -599,7 +625,6 @@ useReveal(root)
   display: none;
 }
 
-/* 面板底：三个面板共用源码里的 linear-gradient(to bottom,#f0fdff,#fff) + 白边 + 绿色淡阴影 */
 .panel {
   border: 1px solid #ffffff;
   border-radius: 10px;
@@ -607,7 +632,6 @@ useReveal(root)
   box-shadow: 0 4px 12px rgba(47, 177, 136, 0.1);
 }
 
-/* 车辆格/表头格的 label：源码 title 定宽 + text-align-last 两端对齐撑开「车 牌」间距，宽度收窄到 46px */
 .cal-label {
   width: 46px;
   flex-shrink: 0;
@@ -618,7 +642,6 @@ useReveal(root)
   color: #000;
 }
 
-/* justify 拉开后的冒号：源码 title + 独立「：」span，冒号不参与两端对齐 */
 .cal-colon {
   flex-shrink: 0;
   margin-right: 3px;
@@ -627,7 +650,6 @@ useReveal(root)
   color: #000;
 }
 
-/* 表头格：源码 header-vehicle / header-date 的青色渐变 */
 .cal-head {
   display: flex;
   align-items: center;
@@ -639,7 +661,6 @@ useReveal(root)
   color: #000;
 }
 
-/* 指派按钮：源码 .assign-btn #2fb188 圆角 15px padding 5px 16px */
 .assign-btn {
   display: inline-flex;
   align-items: center;
@@ -653,7 +674,6 @@ useReveal(root)
   color: #fff;
 }
 
-/* 假筛选框/输入框/按钮：源码是 el-select mini（高 25px 上下），这里按演示窗口比例缩到 22px */
 .fake-select {
   display: inline-flex;
   align-items: center;
@@ -687,7 +707,6 @@ useReveal(root)
   white-space: nowrap;
 }
 
-/* 搜索/重置按钮：源码 btn1 #2fb188 白字、btn2 白底绿字绿边，圆角 10px */
 .fake-btn-solid {
   display: inline-flex;
   align-items: center;
@@ -711,7 +730,6 @@ useReveal(root)
   background: #fff;
 }
 
-/* 字段行：label 和控件的组合行 */
 .fake-field {
   display: inline-flex;
   align-items: center;

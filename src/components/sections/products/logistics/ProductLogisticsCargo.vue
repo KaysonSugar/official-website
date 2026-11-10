@@ -36,22 +36,26 @@ useReveal(root)
 useCountUp(statsEl)
 
 // 徽标配色沿用站点既有绿/橙两档浅底
-const badgeTone = {
+type BadgeTone = (typeof cargo.card.badges)[number]['tone']
+
+const badgeTone: Record<BadgeTone, string> = {
   green: 'bg-[#e2f3ea] text-[#1c8a66]',
   orange: 'bg-[#ffeede] text-[#e9611f]',
-} as const
+}
 </script>
 
 <template>
+  <!-- 区块：浅灰绿底 #f1f7f3，上下留白各 88px -->
   <section ref="root" class="bg-[#f1f7f3] py-[88px]">
     <div class="container-page">
-      <!-- 标题区 -->
+      <!-- 标题区：max-w 900px 限宽；眉题 12px、大标题手机 28px/40px（md 36px/52px）、说明 15px/28px -->
       <div class="reveal max-w-[900px]">
         <p
           class="text-[12px] font-semibold leading-[18px] tracking-[0.05em] text-brand-500 sm:tracking-[0.08em]"
         >
           {{ cargo.eyebrow }}
         </p>
+        <!-- 大标题三段拼一行：黑 + 橙（原型只强调了 5,000+）+ 黑 -->
         <h2
           class="mt-[14px] text-[28px] font-bold leading-[40px] text-ink-900 md:text-[36px] md:leading-[52px]"
         >
@@ -62,7 +66,7 @@ const badgeTone = {
         <p class="mt-[16px] text-[15px] leading-[28px] text-[#5e7169]">{{ cargo.desc }}</p>
       </div>
 
-      <!-- 统计行：左四组数字（组间距按原型拉开），右注释与数字行对齐。
+      <!-- 统计行：mt-[36px] 与标题区间距 36px，组间距 48px（lg 80px），底部对齐；
            能拆出数字的初始渲染 0+尾巴，滚进视口从 0 数上去 -->
       <div
         ref="stats"
@@ -70,6 +74,7 @@ const badgeTone = {
         style="--d: 120ms"
       >
         <div v-for="(stat, i) in cargo.stats" :key="stat.label">
+          <!-- 统计数值：手机 28px/36px、md 32px/40px，加粗 + 等宽数字；前三个绿、0 元橙 -->
           <p
             class="text-[28px] font-bold leading-[36px] tabular-nums md:text-[32px] md:leading-[40px]"
             :class="stat.tone === 'green' ? 'text-[#008c5a]' : 'text-[#f2590c]'"
@@ -85,11 +90,11 @@ const badgeTone = {
           >
             {{ statsView[i].num !== null ? `0${statsView[i].rest}` : statsView[i].rest }}
           </p>
+          <!-- 统计名：mt-[4px] 与数值间距 4px；12px/18px 灰绿 -->
           <p class="mt-[4px] text-[12px] leading-[18px] text-[#5e7169]">{{ stat.label }}</p>
         </div>
-        <!-- 注释：三段分开摆（原型里圆点是独立分隔符），间隔 20→14；
-             圆点加重到 16px 加粗深灰，别细得像没有；
-             整组往左靠，离「0 元」60（原 120 太远，右边一大片空） -->
+        <!-- 注释组：lg 才显示，离「0 元」60px（原型 120px 右边空一大片）；
+             三段之间用 16px 加粗的 · 分隔，别细得像没有；pb-[24px] 跟数字基线对齐 -->
         <p
           class="hidden text-[12px] leading-[18px] text-[#8aa094] lg:flex lg:ml-[60px] lg:items-center lg:self-end lg:gap-x-[14px] lg:pb-[24px]"
         >
@@ -104,12 +109,12 @@ const badgeTone = {
         </p>
       </div>
 
-      <!-- 货源表格卡 -->
+      <!-- 货源表格卡：mt-[40px] 与统计行间距 40px；白底 rounded 16px + 1px 淡边 + 大柔影，内边距 20px（md 24px） -->
       <article
         class="reveal mt-[40px] rounded-[16px] border border-[#e3ebe6] bg-white p-[20px] shadow-[0_24px_60px_-28px_rgba(36,63,49,0.22)] md:p-[24px]"
         style="--d: 200ms"
       >
-        <!-- 卡头：标题 + 徽标 | 更新时间 + 条数 -->
+        <!-- 卡头：标题 + 两枚徽标在左，更新时间与条数 ml-auto 贴右，换行时 gap-y 8px -->
         <div class="flex flex-wrap items-center gap-x-[16px] gap-y-[8px]">
           <h3 class="text-[16px] font-bold leading-[24px] text-[#13322a]">
             {{ cargo.card.title }}
@@ -127,7 +132,7 @@ const badgeTone = {
           </span>
         </div>
 
-        <!-- 筛选行：假输入框撑样子，重置/搜索贴右 -->
+        <!-- 筛选行：mt-[16px] 起、gap 10px；输入框是撑样子的假框（34px 高、150px 宽，md 170px），重置/搜索贴右 -->
         <div class="mt-[16px] flex flex-wrap items-center gap-[10px]">
           <label
             v-for="filter in cargo.card.filters"
@@ -141,21 +146,23 @@ const badgeTone = {
               {{ filter.placeholder }}
             </span>
           </label>
+          <!-- 两个假按钮：重置白底、搜索薄荷绿实底，34px 高、px 18 -->
           <div class="ml-auto flex items-center gap-[10px]">
             <span
               class="flex h-[34px] cursor-pointer items-center rounded-[8px] border border-[#e3ebe6] bg-white px-[18px] text-[12px] leading-[18px] text-[#5e7169] transition-colors duration-200 hover:bg-[#f3f7f5]"
             >
-              重置
+              {{ cargo.card.actions.reset }}
             </span>
             <span
               class="flex h-[34px] cursor-pointer items-center rounded-[8px] bg-mint-500 px-[18px] text-[12px] leading-[18px] font-medium text-white transition-colors duration-200 hover:bg-mint-600"
             >
-              搜索
+              {{ cargo.card.actions.search }}
             </span>
           </div>
         </div>
 
-        <!-- 货源表：窄屏横向滚动；双数行（0 起数的 1、3）浅绿斑马底 -->
+        <!-- 货源表：mt-[8px] 起，min-w 880px 保证八列不挤，窄屏靠 overflow-x-auto 横向滚动；
+             双数行浅绿斑马底，整行 hover 加深 -->
         <div class="mt-[8px] overflow-x-auto">
           <table class="w-full min-w-[880px] border-collapse text-[12px] leading-[18px]">
             <thead>
@@ -210,7 +217,7 @@ const badgeTone = {
           </table>
         </div>
 
-        <!-- 卡底：合计说明 | 查看全部 -->
+        <!-- 卡底：mt-[14px] 起，左合计说明、右「查看全部」链接（绿色 12px） -->
         <div class="mt-[14px] flex flex-wrap items-center justify-between gap-[8px]">
           <p class="text-[12px] leading-[18px] text-[#8aa094]">{{ cargo.card.foot }}</p>
           <span class="text-[12px] font-medium leading-[18px] text-[#1c8a66]"

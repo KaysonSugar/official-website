@@ -22,21 +22,28 @@ export interface LogisticsConfig {
     brandSub: string
     /** 侧栏菜单，第一项渲染为白底选中态；vip 的项挂橙色 VIP 徽标 */
     menus: { label: string; vip?: boolean }[]
+    /** 顶栏左侧标题 */
+    topbarLeft: string
     /** 顶栏右侧的「下载中心 + 日期」文字 */
     topbarRight: string
-    /** 欢迎卡：用户名与问候语 */
-    welcome: { name: string; hello: string }
+    /** 菜单里 VIP 徽标的文字 */
+    vipLabel: string
+    /** 两张运单统计卡右上角的时间维度切换，左选中右未选中 */
+    period: { active: string; idle: string }
+    /** 欢迎卡：头像文字、用户名与问候语 */
+    welcome: { avatar: string; name: string; hello: string }
     /** 合作运单卡：四个统计 */
     coop: { title: string; stats: { label: string; value: string }[] }
     /** 非合作运单卡：三个统计 */
     nonCoop: { title: string; stats: { label: string; value: string }[] }
-    /** 待办卡：计数徽标 + 两条待办 */
+    /** 待办卡：标题 + 计数徽标 + 两条待办 */
     todo: {
+      title: string
       badges: { label: string; count: string; tone: 'green' | 'orange' | 'gray' }[]
       rows: { no: string; route: string; badge: string; tone: 'orange' | 'green' }[]
     }
-    /** 今日货源简讯卡：右侧「更多 →」组件里写死 */
-    brief: { title: string; rows: { route: string; meta: string }[] }
+    /** 今日货源简讯卡：右上「更多」链接文案也放这里 */
+    brief: { title: string; more: string; rows: { route: string; meta: string }[] }
   }
   /** 第二屏「免费货源广场」（原型 B 免费货源广场）：表格卡 DOM 重建（Cargo Card.png 已删） */
   cargo: {
@@ -60,6 +67,8 @@ export interface LogisticsConfig {
       count: string
       /** 筛选行：label + 输入框占位文字 */
       filters: { label: string; placeholder: string }[]
+      /** 筛选行右侧的两个按钮，只是演示用的假按钮 */
+      actions: { reset: string; search: string }
       columns: string[]
       rows: {
         route: string
@@ -89,6 +98,40 @@ export interface LogisticsConfig {
       title: string
       time: string
       caption: string
+      /** 演示窗口里所有固定的字段标签、占位符和按钮字；组件只从这里取，不写死在模板里 */
+      labels: {
+        /** 左侧运单卡的六个字段名 */
+        orderNo: string
+        category: string
+        weight: string
+        vehicleType: string
+        mileage: string
+        loadTime: string
+        /** 中栏筛选行 */
+        from: string
+        to: string
+        scope: string
+        truckType: string
+        plate: string
+        province: string
+        city: string
+        pickPlease: string
+        inputPlease: string
+        search: string
+        reset: string
+        /** 排班表 */
+        vehicleInfo: string
+        load: string
+        assign: string
+        combine: string
+        prevWeek: string
+        nextWeek: string
+        /** 右栏空闲车辆的两个额外字段 */
+        frontPlate: string
+        loadRange: string
+        loadFirst: string
+        phone: string
+      }
       /** 左栏：待调度运单，active 卡是绿框高亮的第一张（#d8ffff 渐变 + #21e3a5 边框） */
       orders: {
         title: string

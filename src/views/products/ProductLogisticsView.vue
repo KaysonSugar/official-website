@@ -1,3 +1,9 @@
+<!--
+ * @Author: takaixin
+ * @Email: takaixin@outlook.com
+ * @StartDate: 2026.11.03
+ * @Name: 物流调度页
+-->
 <script setup lang="ts">
 import CtaBanner from '@/components/sections/common/CtaBanner.vue'
 import ProductLogisticsCapability from '@/components/sections/products/logistics/ProductLogisticsCapability.vue'

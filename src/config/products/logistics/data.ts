@@ -34,8 +34,11 @@ export const logistics: LogisticsConfig = {
       { label: '车辆管理' },
       { label: '司机管理' },
     ],
+    topbarLeft: '首页',
     topbarRight: '下载中心　2026-10-29 星期四',
-    welcome: { name: '张三 · 威易达物流', hello: '早上好，欢迎登录本系统' },
+    vipLabel: 'VIP',
+    period: { active: '本月', idle: '本年' },
+    welcome: { avatar: '张', name: '张三 · 威易达物流', hello: '早上好，欢迎登录本系统' },
     coop: {
       title: '合作运单',
       stats: [
@@ -54,6 +57,7 @@ export const logistics: LogisticsConfig = {
       ],
     },
     todo: {
+      title: '待办',
       badges: [
         { label: '待处理', count: '8', tone: 'green' },
         { label: '待报价', count: '128', tone: 'orange' },
@@ -66,6 +70,7 @@ export const logistics: LogisticsConfig = {
     },
     brief: {
       title: '今日货源简讯',
+      more: '更多 →',
       rows: [
         { route: '北京市 → 内蒙古自治区', meta: '一类 · 15 吨' },
         { route: '定远县济东化工 → 上海市金山区', meta: '八类 · 17.6 吨' },
@@ -98,6 +103,7 @@ export const logistics: LogisticsConfig = {
         { label: '卸货地', placeholder: '请选择卸货地' },
         { label: '类别', placeholder: '请选择类别' },
       ],
+      actions: { reset: '重置', search: '搜索' },
       columns: [
         '序号',
         '装卸地址',
@@ -191,6 +197,35 @@ export const logistics: LogisticsConfig = {
       time: '2026-10-29 周四 10:00',
       caption:
         '调度台：左侧为待调度运单（含品类、总量、运距与装货时间），中间按车辆与日期排班并可拼单，右侧显示空闲车辆与可承运品类。',
+      labels: {
+        orderNo: '运单编号',
+        category: '货物类别',
+        weight: '货物总重',
+        vehicleType: '车辆类型',
+        mileage: '运输里程',
+        loadTime: '装货时间',
+        from: '发货地',
+        to: '卸货地',
+        scope: '经营范围',
+        truckType: '车辆类型',
+        plate: '车牌',
+        province: '省',
+        city: '市',
+        pickPlease: '请选择',
+        inputPlease: '请输入',
+        search: '🔍 搜索',
+        reset: '⟳ 重置',
+        vehicleInfo: '车辆信息',
+        load: '载重',
+        assign: '☝ 指派',
+        combine: '可拼单',
+        prevWeek: '上一周',
+        nextWeek: '下一周',
+        frontPlate: '前车牌',
+        loadRange: '载重范围',
+        loadFirst: '装货地优先',
+        phone: '联系电话',
+      },
       // 演示数据是编造的明文：原型截图里车牌/单号打码是真实数据脱敏，官网展示不用学
       orders: {
         title: '待调度运单',
