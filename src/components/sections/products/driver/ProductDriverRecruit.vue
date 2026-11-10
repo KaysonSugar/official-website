@@ -85,13 +85,18 @@ useCountUp(statsEl)
 
           <!-- 二维码块：裸二维码 + 右侧说明（白卡描边按反馈去掉，图本身白底不缺衬托） -->
           <div class="reveal mt-[32px] flex items-center gap-[18px]" style="--d: 320ms">
-            <img
-              :src="qrDownload"
-              alt="司机端下载二维码"
-              class="w-[104px] shrink-0 select-none"
-              loading="lazy"
-              decoding="async"
-            />
+            <!-- 呼吸灯：二维码自身一动不动（码跟着缩会发虚、不好扫），
+                 在它外面套一圈白色灯管 + 薄荷外光，靠明暗与微微涨缩做呼吸 -->
+            <div class="relative shrink-0">
+              <span class="drv-qr-glow" aria-hidden="true" />
+              <img
+                :src="qrDownload"
+                alt="司机端下载二维码"
+                class="relative w-[104px] select-none"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
             <div>
               <p class="text-[15px] font-bold leading-[21px] text-ink-900">
                 {{ recruit.qr.title }}
@@ -121,3 +126,34 @@ useCountUp(statsEl)
     </div>
   </section>
 </template>
+
+<style scoped>
+.drv-qr-glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.95),
+    0 0 26px 8px rgba(47, 174, 133, 0.5);
+  animation: drv-qr-breathe 2.6s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes drv-qr-breathe {
+  from {
+    opacity: 0.2;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drv-qr-glow {
+    animation: none;
+    opacity: 0.55;
+  }
+}
+</style>
