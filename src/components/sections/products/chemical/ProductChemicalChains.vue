@@ -25,10 +25,15 @@ import iconFinance from '@/assets/products/chemical/icons/chain-finance.webp'
  * 连接线（竖线、分叉肘线、跨支虚线、全部箭头）收进一张 SVG，节点是绝对定位的 DOM
  * ——之前用 span + calc 百分比拼线，渲染时隐时现。垂直坐标固定 478，
  * 水平坐标走 viewBox 480 等比拉伸，卡片铺满右列；改节点数量/文案要同步改 SVG 坐标。
+ *
+ * 两处动效都由 useReveal 的 .in 触发，视口外不空转：
+ * 跨支虚线用 dashoffset 走「行军蚁」，主链节点 0/450/900/1350ms 依次点亮（7s 一轮）。
+ * infinite 动画在 reduced-motion 下必须自己关——全局 0.01ms 规则会把它压成疯狂空转。
  */
 const { chains } = siteConfig.chemical
 
-const iconMap = {
+// icon 短名 → 素材，换图只动这里；键名跟 config 里的 icon 一一对应
+const iconMap: Record<(typeof chains.cards)[number]['icon'], string> = {
   production: iconProduction,
   material: iconMaterial,
   finance: iconFinance,
@@ -36,7 +41,9 @@ const iconMap = {
 
 // tone → 卡底 / 编号标题色 / 描述与链路行色（照 Chain Rows.png 采样）。
 // 卡底极淡接近白，各配一圈同色系略深的细边框把轮廓托出来
-const toneClass = {
+type CardTone = (typeof chains.cards)[number]['tone']
+
+const toneClass: Record<CardTone, { card: string; head: string; desc: string; chain: string }> = {
   orange: {
     card: 'border border-[#f4e8dd] bg-[#fff9f5]',
     head: 'text-[#c4520f]',
@@ -55,17 +62,19 @@ const toneClass = {
     desc: 'text-[#6b7d75]',
     chain: 'text-[#6b7d75]',
   },
-} as const
+}
 
 // 主链节点配色（Flow Panel.png 采样）：销售订单橙、生产计划/物料清单绿
-const mainTone = {
+type MainTone = (typeof chains.flow.main)[number]['tone']
+
+const mainTone: Record<MainTone, string> = {
   orange: 'bg-[#fbeedf] text-[#b05a15]',
   green: 'bg-[#e4f4ea] text-[#1c6b4d]',
-} as const
+}
 
-// ---- FLOW 画布几何：垂直坐标固定，水平坐标全部等比（viewBox 480 宽 → 容器实际宽度）。
-// SVG 加 preserveAspectRatio="none" 横向拉伸，节点用百分比定位，卡片能铺满右列。
-// 改节点数量/文案要同步改 SVG 里的路径坐标（单位：480×478 画布）----
+// FLOW 画布几何：垂直坐标写死，水平坐标全部等比（viewBox 480 宽 → 容器实际宽度）。
+// SVG 加 preserveAspectRatio="none" 横向拉伸，节点用百分比定位，卡片能铺满右列；
+// 改节点数量或文案要同步改 SVG 里的路径坐标（单位：480×478 画布）
 const FLOW_W = 480
 const FLOW_H = 478
 const LEFT_CX = '22.5%' // 左列中心（列宽 45% 的一半）
@@ -76,10 +85,10 @@ const BRANCH_TOP = 292 // 两支首节点 top（节点高 36，间隔 14 → 步
 
 // 主链节点点亮配色：静息底色必须跟 mainTone 的 Tailwind 类一字不差，
 // 不然 delay 窗口（fill-mode: backwards 压 0% 帧）和关动画时会跳色
-const nodePulse = {
+const nodePulse: Record<MainTone, { bg: string; on: string; ring: string }> = {
   orange: { bg: '#fbeedf', on: '#f7e0c2', ring: 'rgba(176, 90, 21, 0.4)' },
   green: { bg: '#e4f4ea', on: '#d1ebdc', ring: 'rgba(28, 107, 77, 0.4)' },
-} as const
+}
 
 // 主链节点绝对定位样式：水平居中；顺带捎上波次变量——
 // --nd 是波到它的时刻（0/450/900ms），--nd-* 是点亮配色（keyframes 里 var() 取）
@@ -108,8 +117,10 @@ useReveal(root)
 </script>
 
 <template>
+  <!-- 区块：白底，上留白 96px、下 64px（下面接深绿的界面展示屏） -->
   <section ref="root" class="bg-white pb-[64px] pt-[96px]">
     <div class="container-page">
+      <!-- 眉题：11px/16px 加粗、字距 0.05em（sm 起 0.2em）、brand-500 橙 -->
       <p
         class="reveal text-[11px] font-semibold leading-[16px] tracking-[0.05em] text-brand-500 sm:tracking-[0.2em]"
         style="--d: 0ms"
@@ -117,6 +128,7 @@ useReveal(root)
         {{ chains.eyebrow }}
       </p>
 
+      <!-- 标题：mt-[24px] 与眉题间距 24px；32px/42px 加粗 ink-900 -->
       <h2
         class="reveal mt-[24px] text-[32px] font-bold leading-[42px] text-ink-900"
         style="--d: 80ms"
@@ -124,9 +136,10 @@ useReveal(root)
         {{ chains.title }}
       </h2>
 
-      <!-- 左右按原型比例 696:560 分配宽度（右面板内容固定 528px，窄屏横向滚动） -->
+      <!-- 两栏：mt-[36px] 与标题间距 36px；手机竖排 gap 20px，lg 起横排 gap 24px，
+           宽度按原型 696:560 分（右面板内容固定 528px，窄屏横向滚动） -->
       <div class="mt-[36px] flex flex-col gap-[20px] lg:flex-row lg:items-stretch lg:gap-[24px]">
-        <!-- 左列：三张链路卡，hover 用全局 card-lift（只浮投影，卡片不动） -->
+        <!-- 左列：三张链路卡竖排 gap 16px，lg 下 flex-[696] 按比例占宽 -->
         <div class="flex min-w-0 flex-1 flex-col gap-[16px] lg:flex-[696]">
           <article
             v-for="(card, i) in chains.cards"
@@ -135,7 +148,7 @@ useReveal(root)
             :class="toneClass[card.tone].card"
             :style="{ '--d': `${240 + i * 90}ms` }"
           >
-            <!-- 图标素材自带浅色圆角底 -->
+            <!-- 图标：52×52，素材自带浅色圆角底；lg 下跟文字横排，手机竖排 -->
             <img
               loading="lazy"
               decoding="async"
@@ -145,14 +158,16 @@ useReveal(root)
               class="h-[52px] w-[52px] shrink-0 select-none"
             />
             <div class="mt-[14px] lg:mt-0">
+              <!-- 卡标题：16px/24px 加粗，编号 mr 10px、等宽数字 -->
               <h3 class="text-[16px] font-bold leading-[24px]" :class="toneClass[card.tone].head">
                 <span class="mr-[10px] tabular-nums">{{ card.no }}</span
                 >{{ card.title }}
               </h3>
+              <!-- 卡描述：mt-[10px] 与标题间距 10px；13px/22px -->
               <p class="mt-[10px] text-[13px] leading-[22px]" :class="toneClass[card.tone].desc">
                 {{ card.desc }}
               </p>
-              <!-- 链路行：步骤用 → 串联 -->
+              <!-- 链路行：mt-[10px] 与描述间距 10px；12px/20px，步骤用 → 串联 -->
               <p class="mt-[10px] text-[12px] leading-[20px]" :class="toneClass[card.tone].chain">
                 {{ card.steps.join(' → ') }}
               </p>
@@ -160,8 +175,8 @@ useReveal(root)
           </article>
         </div>
 
-        <!-- 右列：FLOW 流程面板。卡片铺满右列宽度，画布水平等比拉伸；
-             lg 以下保底 528px 靠外层 overflow-x-auto 横向滚动 -->
+        <!-- 右列：FLOW 面板，lg 下 flex-[560]；卡片铺满列宽，画布水平等比拉伸，
+             lg 以下保底 528px 靠这层 overflow-x-auto 横向滚动 -->
         <div
           class="reveal overflow-x-auto pb-[4px] lg:min-w-0 lg:flex-[560] lg:overflow-visible"
           style="--d: 400ms"
@@ -169,13 +184,14 @@ useReveal(root)
           <div
             class="w-full min-w-[528px] rounded-[16px] border border-[#e2ebe4] bg-white p-[24px] shadow-[0_24px_60px_-28px_rgba(36,63,49,0.22)]"
           >
+            <!-- 面板小标：12px/18px 加粗深绿 -->
             <p class="text-[12px] font-semibold leading-[18px] text-[#1f6e4e]">
               {{ chains.flow.label }}
             </p>
 
-            <!-- 画布：一张 SVG 画全部连接线（竖线/肘线/虚线/箭头），DOM 节点绝对定位其上。
-                 SVG 按 viewBox 480 宽横向拉伸（preserveAspectRatio none），路径坐标不变；
-             vector-effect 让线宽不跟着拉伸变粗 -->
+            <!-- 画布：mt-[16px] 起、478px 固定高；SVG 画全部连接线（竖线 / 肘线 / 虚线 / 箭头），
+                 DOM 节点绝对定位压在上面。preserveAspectRatio=none 横向拉伸，
+                 vector-effect 让线宽不跟着一起变粗 -->
             <div class="relative mt-[16px] h-[478px] w-full">
               <svg
                 class="absolute inset-0 h-full w-full"
@@ -236,8 +252,8 @@ useReveal(root)
                 <polygon points="368,386 376,386 372,392" fill="#a9c0b2" />
                 <polygon points="368,436 376,436 372,442" fill="#a9c0b2" />
 
-                <!-- 跨支虚线：物料入库右缘 → 中缝上行 → 汇入生成领料单左缘。
-                     flow-march 让虚线沿这个方向慢慢爬（行军蚁），= 物料在回流 -->
+                <!-- 跨支虚线：物料入库右缘 → 中缝上行 → 汇入生成领料单左缘；
+                     flow-march 每 1.1s 把 dashoffset 挪 -8（正好 4+4 一个虚线周期）无缝循环，看着就是物料在回流 -->
                 <path
                   class="flow-march"
                   d="M216 410H240V310H258"
@@ -249,7 +265,8 @@ useReveal(root)
                 <polygon points="258,306 258,314 264,310" fill="#c0d5c7" />
               </svg>
 
-              <!-- 主链节点（绝对定位，水平居中）+ 线旁小字 -->
+              <!-- 主链节点：绝对定位水平居中，高 34px、px 28；0 / 450 / 900ms 依次点亮（7s 一轮），
+                   静息底色走 mainTone 的类，点亮色走行内 --nd-*，两种 tone 共用一份 keyframes -->
               <template v-for="(node, i) in chains.flow.main" :key="node.text">
                 <div
                   class="flow-node absolute left-1/2 flex h-[34px] -translate-x-1/2 items-center justify-center whitespace-nowrap rounded-[7px] px-[28px] text-[13px] font-semibold leading-[20px]"
@@ -337,12 +354,9 @@ useReveal(root)
 </template>
 
 <style scoped>
-/* 跨支虚线「行军蚁」：dashoffset 每轮挪 8（= 4+4 正好一个虚线周期），无缝循环。
-   负值 = 虚线沿路径正方向爬：从物料入库右缘上行汇入生成领料单，正是物料回流的方向。
-   只重绘这一条约 300px 的细线，每帧成本可忽略 */
 .flow-march {
   animation: flow-march 1.1s linear infinite;
-  animation-play-state: paused; /* 视口外不空转，useReveal 加 .in 才开跑 */
+  animation-play-state: paused;
 }
 
 .in .flow-march {
@@ -355,15 +369,12 @@ useReveal(root)
   }
 }
 
-/* 主链节点顺序点亮：销售订单 → 生产计划 → 物料需求清单 → 菱形判断，
-   0/450/900/1350ms 依次到，跟首页流程图箭头波、服务支持圆点同一套 7s 节奏。
-   配色走行内 --nd-*（两种 tone 共用一份 keyframes），静息底色 = Tailwind 类的值 */
 .flow-node,
 .flow-diamond {
   animation-duration: 7s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
-  animation-fill-mode: backwards; /* delay 窗口里就压 0% 帧，否则亮着等波、到点跳变 */
+  animation-fill-mode: backwards;
   animation-delay: var(--nd, 0ms);
   animation-play-state: paused;
 }
@@ -385,11 +396,11 @@ useReveal(root)
   0%,
   100% {
     background-color: var(--nd-bg);
-    box-shadow: 0 0 0 0 transparent; /* 静息没有描边环 */
+    box-shadow: 0 0 0 0 transparent;
   }
   4% {
-    background-color: var(--nd-on); /* 底色加深一档 */
-    box-shadow: 0 0 0 3px var(--nd-ring); /* 同色系细环把轮廓托出来 */
+    background-color: var(--nd-on);
+    box-shadow: 0 0 0 3px var(--nd-ring);
   }
   11% {
     background-color: var(--nd-bg);
@@ -397,7 +408,6 @@ useReveal(root)
   }
 }
 
-/* 菱形是深绿实底 SVG 多边形，点亮就把 fill 提亮一档，白字不动 */
 @keyframes flow-diamond {
   0%,
   100% {
@@ -411,8 +421,6 @@ useReveal(root)
   }
 }
 
-/* reduced-motion：infinite 动画必须自己关（全局 0.01ms 规则会把它压成疯狂空转）。
-   关掉后虚线静止、节点落回 Tailwind 类底色，跟原型一致 */
 @media (prefers-reduced-motion: reduce) {
   .flow-march,
   .flow-node,

@@ -13,9 +13,14 @@ import ProductChemicalTour from '@/components/sections/products/chemical/Product
 </script>
 
 <template>
+  <!-- 首屏：左文案 + 右「资金流水」演示卡 -->
   <ProductChemicalHero />
+
+  <!-- 正文三屏：三条主线（白）→ 界面实录（深绿）→ 报表中心（浅绿），深浅交替隔开层次 -->
   <ProductChemicalChains />
   <ProductChemicalTour />
   <ProductChemicalReport />
+
+  <!-- 结尾：全站统一 CTA 横幅 -->
   <CtaBanner />
 </template>
