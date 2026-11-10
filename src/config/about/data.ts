@@ -12,8 +12,8 @@
 
 import type { AboutConfig } from './types'
 
-// 关于我们页（原型 About Hero + S1~S3）。首屏文案在 pages 的 /about 条目里，
-// 简介与使命同构（眉题+标题+段落）共用一个组件；段落逐字照原型，含原型原有的标点缺失。
+// 段落逐字照原型，连原型漏的标点也照抄（简介里「…组织目标近年来我国…」中间缺句号），
+// 校对时别顺手补——要改文案先跟设计稿确认
 export const about: AboutConfig = {
   intro: {
     eyebrow: 'INTRODUCTION / 简介',

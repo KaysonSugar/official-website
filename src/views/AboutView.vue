@@ -15,7 +15,11 @@ const { about } = siteConfig
 </script>
 
 <template>
+  <!-- 首屏：矮横条，右侧服务器云插画，文案从 brand/data.ts 的 pages 里取 -->
   <AboutHero />
+
+  <!-- 正文三屏：简介（白）→ 企业理念（浅绿）→ 公司使命（白）；
+       简介与使命结构相同，共用 AboutText，只换数据 -->
   <AboutText :eyebrow="about.intro.eyebrow" :title="about.intro.title" :paras="about.intro.paras" />
   <AboutPhilosophy />
   <AboutText
@@ -24,6 +28,6 @@ const { about } = siteConfig
     :paras="about.mission.paras"
   />
 
-  <!-- 底部行动号召：内页共用 -->
+  <!-- 结尾：全站统一 CTA 横幅 -->
   <CtaBanner />
 </template>
