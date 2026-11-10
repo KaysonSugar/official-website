@@ -5,11 +5,6 @@
  * @Name: 品牌与全局内容数据
  */
 
-/**
- * 全站共用的内容：品牌、联系方式、顶部导航、各页首屏文案、CTA 横幅与页脚。
- * 字段形状在 ./types.ts；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
- */
-
 import type {
   BrandInfo,
   ContactInfo,
@@ -31,14 +26,12 @@ export const contact: ContactInfo = {
   ctaLabel: '预约演示',
 }
 
-/** 外链确认弹层的固定文案（说明文字因目标而异，由调用方传入） */
 export const leaveConfirm: LeaveConfirmConfig = {
   title: '即将前往外部网站',
   cancel: '取消',
   confirm: '继续访问',
 }
 
-/** 预约演示表单弹层的文案与选项（表单结构在 LeadFormModal，这里只改字） */
 export const leadForm: LeadFormConfig = {
   title: '预约产品演示',
   desc: '留下联系方式，顾问将在 1 个工作日内与您联系。',
@@ -73,16 +66,12 @@ export const leadForm: LeadFormConfig = {
   phoneTip: '或直接致电',
 }
 
-/** 产品矩阵下挂的三条业务线（与导航下拉同源，改这里两处一起变） */
 const productLines: NavChild[] = [
   { label: '化工生产', desc: '生产与经营管理', to: '/products/chemical' },
   { label: '物流调度', desc: '调度与合规', to: '/products/logistics' },
   { label: '司机作业', desc: '接单与作业', to: '/products/driver' },
 ]
 
-// 一级导航四项（对应定稿原型 01 首页顶栏）；「产品矩阵」带下拉，
-// 化工 / 物流 / 司机是它的二级项，不是一级导航。
-// 「平台架构」不在导航里了，页面保留（页脚与首页次按钮还链过去）
 export const navItems: NavItem[] = [
   { label: '首页', to: '/' },
   { label: '产品矩阵', to: '/products', children: productLines },
@@ -90,13 +79,6 @@ export const navItems: NavItem[] = [
   { label: '关于我们', to: '/about' },
 ]
 
-/**
- * 各页面首屏文案
- *
- * 有原型画板的直接用画板标题（威易达化工：生产与经营管理 / 威易达物流：调度与合规 /
- * 威易达司机：接单与作业 / 服务支持）；
- * 平台架构、产品矩阵、关于我们三页的原型尚未提供，标题与描述为占位，上线前替换。
- */
 export const pages: PageIntro[] = [
   {
     to: '/platform',
@@ -148,8 +130,6 @@ export const pages: PageIntro[] = [
   },
 ]
 
-// 原型 CTA Card：文案逐字照原型。注意电话是原型上的 400-828-1988，
-// 与 contact.phone（400-001-8355）不一致，用哪个等用户拍板
 export const cta: CtaConfig = {
   title: '约一次演示，用你的单据跑一遍',
   desc: '演示会基于你所在行业的 BOM 结构和实际运输场景，从接单、排产、出入库到发运、回单逐环节走一遍，约 40 分钟。',
@@ -167,7 +147,7 @@ export const footer: FooterConfig = {
         { label: '威易达化工', to: '/products/chemical' },
         { label: '威易达物流', to: '/products/logistics' },
         { label: '威易达司机', to: '/products/driver' },
-        // 报表看板尚无独立页面，先指向平台架构（数据能力所在）；后续补页时改这里
+
         { label: '报表与数据看板', to: '/platform' },
       ],
     },
@@ -184,7 +164,7 @@ export const footer: FooterConfig = {
       items: [
         { label: '公司介绍', to: '/about' },
         { label: '实施与服务', to: '/about' },
-        // 设计稿为「联系我们」，站内暂无联系页，直接拨号更实用
+
         { label: '联系我们', to: 'tel:4000018355' },
       ],
     },

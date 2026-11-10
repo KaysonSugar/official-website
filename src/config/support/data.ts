@@ -5,11 +5,6 @@
  * @Name: 服务支持页内容数据
  */
 
-/**
- * 服务支持页（/solutions）五屏：首屏、八项交付内容、七节点流程、实施计费、服务承诺。
- * 字段形状在 ./types.ts；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
- */
-
 import type { SupportConfig } from './types'
 
 export const support: SupportConfig = {
@@ -93,9 +88,8 @@ export const support: SupportConfig = {
       },
     ],
   },
-  // 第三屏（原型 S2）：七个节点单数在轴上方、双数在下方，07 是深绿卡
+
   process: {
-    // 眉题全站统一品牌橙 #ff833f，这一屏原来单独用绿，已随全局统一
     eyebrow: 'PROCESS / 实施流程',
     title: '七个节点，从需求调研到转入维保',
     desc: '每个节点都有对应的交付物与确认动作，客户确认后进入下一阶段。未签订实施协议、未结清费用，不启动上门与深度实施。',
@@ -111,7 +105,7 @@ export const support: SupportConfig = {
     afterLabel: '验收之后',
     afterText: '签字移交后转入运维，7×24 技术支持持续推进。',
   },
-  // 第四屏（原型 S3）：线下上门那张是暖橙卡，其余白卡
+
   pricing: {
     eyebrow: 'DELIVERY & PRICING / 实施方式与计费',
     title: '线上远程与线下上门，按方式分别计费',
@@ -146,7 +140,7 @@ export const support: SupportConfig = {
       },
     ],
   },
-  // 第五屏「服务承诺」（原型 S4）：深绿底，四张准则卡 + 底部一行硬指标
+
   commitment: {
     eyebrow: 'COMMITMENT / 服务承诺',
     title: '四项交付准则，写入服务范围',

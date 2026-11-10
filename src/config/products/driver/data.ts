@@ -5,15 +5,8 @@
  * @Name: 司机作业页内容数据
  */
 
-/**
- * 司机作业页（/products/driver）五屏：手机演示首屏、平台优势、接单四步、核心界面、司机招募。
- * 字段形状在 ./types.ts；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
- */
-
 import type { DriverConfig } from './types'
 
-// 司机作业页五屏（原型 Driver Hero + B 平台优势 + D 接单作业四步 + E 核心界面一览 + F 司机招募）。
-// 文案逐字照原型转录；主色是品牌橙，手机演示与浮动徽标整屏 DOM 重建（Chip/Phone Mock 位图已删）
 export const driver: DriverConfig = {
   ctaLabel: '下载司机端',
   hero: {

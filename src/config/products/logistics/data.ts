@@ -5,20 +5,11 @@
  * @Name: 物流调度页内容数据
  */
 
-/**
- * 物流调度页（/products/logistics）五屏：调度台演示卡、货源广场、核心功能、智能拼车、车辆司机管理。
- * 字段形状在 ./types.ts；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
- */
-
 import type { LogisticsConfig } from './types'
 
-// 物流调度页（原型 Logistics Hero + B 免费货源广场）。调度台卡与货源表格都是 DOM
-// 重建（用户传的 Dispatch Mock.png / Cargo Card.png 是烘焙文字参考图，已删）。
-// 表格行数据逐字照 Cargo Card.png 转录，含原型里同一电话出现两行的细节
 export const logistics: LogisticsConfig = {
   ctaLabel: '预约调度演示',
   heroDash: {
-    // 品牌名照原型：产品名 + 副标，不是公司全名
     brand: '威易达',
     brandSub: '物流工作台',
     menus: [
@@ -165,9 +156,7 @@ export const logistics: LogisticsConfig = {
       more: '查看全部货源',
     },
   },
-  // 第三屏文字逐字照「L 三项核心能力.png」转录。调度台窗口整窗 DOM 重建
-  // （原参考图 调度台截图区.png 已删）：打码字段照原型保留成灰色色块，
-  // 行数据逐格转录，第五张运单卡在原型里就被面板底边裁掉一半，照做
+
   capability: {
     eyebrow: 'CORE CAPABILITIES / 运输链核心功能',
     title: '资质校验、派单、线路规划',
@@ -226,7 +215,7 @@ export const logistics: LogisticsConfig = {
         loadFirst: '装货地优先',
         phone: '联系电话',
       },
-      // 演示数据是编造的明文：原型截图里车牌/单号打码是真实数据脱敏，官网展示不用学
+
       orders: {
         title: '待调度运单',
         cards: [
@@ -426,7 +415,7 @@ export const logistics: LogisticsConfig = {
       },
     },
   },
-  // 第四屏文字逐字照「L 智能拼车.png」转录；右侧时间轴卡 DOM 重建（拼车路线图.png 是参考图）
+
   carpool: {
     eyebrow: 'SMART CARPOOLING / 智能拼车',
     title: '智能拼车',
@@ -452,7 +441,7 @@ export const logistics: LogisticsConfig = {
       stripRoute: '苏州 → 无锡 → 淮安 → 济南 → 沧州 → 北京',
     },
   },
-  // 第五屏文字逐字照「L 电子台账.png」转录
+
   ledger: {
     eyebrow: 'VEHICLE / 车辆及司机管理',
     title: '车辆及司机管理',

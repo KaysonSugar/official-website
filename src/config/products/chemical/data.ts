@@ -5,15 +5,8 @@
  * @Name: 化工生产页内容数据
  */
 
-/**
- * 化工生产页（/products/chemical）四屏：资金流水演示卡、三条主线、界面实录、报表中心。
- * 字段形状在 ./types.ts；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
- */
-
 import type { ChemicalConfig } from './types'
 
-// 化工生产页（原型 Product Hero + P 三条主线）。资金流水卡与流程面板都是 DOM 重建
-// （用户传的 Flow Panel.png / Module Card.png 是烘焙文字参考图，已删）。
 export const chemical: ChemicalConfig = {
   ctaLabel: '立即体验',
   heroCard: {
@@ -125,7 +118,7 @@ export const chemical: ChemicalConfig = {
       },
     },
   },
-  // 原型 P 界面实录：四块系统面板 DOM 重建（tour-*.webp 位图已删），演示数据照截图逐字转录
+
   tour: {
     eyebrow: 'PRODUCT TOUR / 界面实录',
     title: '界面展示',
@@ -295,7 +288,7 @@ export const chemical: ChemicalConfig = {
       },
     ],
   },
-  // 原型 P 报表中心：四张维度卡，标题/对勾跟卡 tone 走色（资金、采购是橙勾）
+
   report: {
     eyebrow: 'REPORT CENTER / 智慧报表',
     title: '报表中心：四个维度自动成表',

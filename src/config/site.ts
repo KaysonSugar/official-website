@@ -33,7 +33,6 @@ import { chemical } from './products/chemical/data'
 import { logistics } from './products/logistics/data'
 import { driver } from './products/driver/data'
 
-/** 实际内容 */
 export const siteConfig: SiteConfig = {
   brand,
   contact,
@@ -61,11 +60,6 @@ export const siteConfig: SiteConfig = {
   footer,
 }
 
-/**
- * 按路由路径取页面首屏配置
- *
- * 各 View 用它拿文案，写错路径会在开发时立刻抛错，而不是渲染出一片空白。
- */
 export function getPage(to: string): PageIntro {
   const page = siteConfig.pages.find((item) => item.to === to)
   if (!page) {

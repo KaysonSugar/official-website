@@ -5,11 +5,6 @@
  * @Name: 首页内容数据
  */
 
-/**
- * 首页 11 屏（首屏到服务屏）的文案与演示数据。
- * 字段形状在 ./types.ts；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
- */
-
 import type {
   HomeHero,
   HomeIndustry,
@@ -27,8 +22,7 @@ import type {
 export const hero: HomeHero = {
   badge: '对标 2026 版《危险化学品安全法》',
   badgeHint: '点击查看',
-  leaveTip:
-    '您将离开威易达官网，前往共产党员网查看《危险化学品安全法》相关内容，请注意信息安全。',
+  leaveTip: '您将离开威易达官网，前往共产党员网查看《危险化学品安全法》相关内容，请注意信息安全。',
   floats: {
     compliance: { title: '合规校验通过', desc: '危化品运输资质已核验' },
     transit: { title: '在途运输 12 辆', desc: '4 单待签收' },
@@ -41,11 +35,11 @@ export const hero: HomeHero = {
   stats: [
     { value: '10', label: '大业务模块' },
     { value: '1', label: '个数据库' },
-    // 这两条不递增：0.9s 动画里会闪过「6 天 / 6×24」，6×24 语义就不对
+
     { value: '7 天', label: '完成上线部署', noCount: true },
     { value: '7×24', label: '技术支持响应', noCount: true },
   ],
-  // 工作台看板演示数据，照 workbench-body 位图逐字转录（位图已删，整卡 DOM 重建）
+
   workbench: {
     brand: { name: '威易达化工', sub: 'WEIYIDAHUAGONG' },
     menus: [
@@ -103,7 +97,6 @@ export const hero: HomeHero = {
   },
 }
 
-// 原型 02 的四张卡片按新法条款顺序排，icon 名对应 assets/home/icons/ 下的 png
 export const industry: HomeIndustry = {
   eyebrow: 'INDUSTRY & COMPLIANCE / 行业背景与法规驱动',
   title: '行业背景与法规驱动',
@@ -137,7 +130,6 @@ export const industry: HomeIndustry = {
   note: '平台响应：对标新法要求，将合规要求内置于系统流程，以全生命周期信息化手段，帮助企业轻松应对监管挑战，实现安全与合规一体化落地。',
 }
 
-// 原型 03：轻量化平台。icon 名即 assets/home/icons/ 下的文件名（不含 .png）
 export const lightweight: HomeLightweight = {
   eyebrow: 'LIGHTWEIGHT PLATFORM / 轻量化平台',
   title: '减负提效，轻量合规',
@@ -215,8 +207,6 @@ export const lightweight: HomeLightweight = {
   ],
 }
 
-// 原型 04：平台功能结构。暗色分层图，layers 顺序即从上到下；
-// 业务层用 modules（四张棕卡，层名 highlight 提亮），其余层用 blocks（等宽文字块）
 export const architecture: HomeArchitecture = {
   eyebrow: 'PLATFORM ARCHITECTURE / 平台架构',
   title: '平台功能结构',
@@ -256,9 +246,6 @@ export const architecture: HomeArchitecture = {
   note: '新法的监管逻辑是源头防控、全程监督、智能预警、永久溯源。平台按这项顶层组织功能，生产与运输共用同一套客户、数据与算法。',
 }
 
-// 原型 05：三端业务运转模式。流程图为 DOM/SVG 绘制（原位图已弃用），
-// 节点与线的几何坐标在 MatrixFlowDiagram.vue 里，这里的文字改完即生效；
-// 卡片的 href 是三个外部系统入口；司机端还没上线，故意不给 href
 export const matrix: HomeMatrix = {
   eyebrow: 'PRODUCT MATRIX / 产品矩阵',
   title: '三端业务运转模式',
@@ -321,8 +308,6 @@ export const matrix: HomeMatrix = {
   ],
 }
 
-// 原型 06：核心功能详解。六张卡按业务流顺序排（订单 → BOM → 库存 → 采购 → 投产 → 销售），
-// icon 名对应 assets/home/icons/ 下的 fn-*.png（素材自带浅色圆角底，橙绿交替）
 export const capabilities: HomeCapabilities = {
   eyebrow: 'CORE CAPABILITIES / 核心功能详解',
   title: '业务流程闭环',
@@ -361,12 +346,11 @@ export const capabilities: HomeCapabilities = {
   ],
 }
 
-// 原型 07：生产主流程图。纯文字流程图无图标：顶部四节点 → 菱形判断 → 左右两条分支
 export const workflow: HomeWorkflow = {
   eyebrow: 'WORKFLOW / 生产主流程图',
   title: '生产主流程管理',
   desc: '流程中只有一个判断点：即时库存是否满足。不足生成采购单，齐套生成领料单，两条分支最终都在成品入库与发货环节汇合。',
-  // 顶部主流程节点，arrow 前置表示节点右侧跟一个 →
+
   topNodes: [
     { text: '销售订单', tone: 'orange', arrow: true },
     { text: '生产计划（绑定成品和 BOM）', tone: 'green', arrow: true },
@@ -374,7 +358,7 @@ export const workflow: HomeWorkflow = {
     { text: '物料需求（半成品 / 原料 / 包材）', tone: 'green', arrow: false },
   ],
   judge: '库存可用量',
-  // 两条分支：head 分支名条、steps 中间步骤、tail 收尾条（tone=solid 是深绿实心）
+
   branches: [
     {
       head: '库存不足 → 采购分支',
@@ -401,15 +385,14 @@ export const collab: HomeCollab = {
     sub: '订单 · 运单 · 回单 同步',
     note: '一次录入，四方可见',
   },
-  // 坐标量自设计图 2480×1195：上 7.2%、右 71.5%、下 92.8%、左 29.3%，
-  // 四张卡的连线（圆环）在组件里按圆心 (1239, 605) 半径 514 的 SVG 圆画
+
   nodes: [
     { name: '化工企业', sub: '发布运单、选择合作物流', tone: 'light', x: 50, y: 7.2 },
     { name: '威易达化工', sub: '比价 · 合同 · 结算', tone: 'orange', x: 71.5, y: 50 },
     { name: '威易达物流', sub: '派单 · 调度 · 在途监控', tone: 'green', x: 50, y: 92.8 },
     { name: '威易达司机', sub: '社会运力 · 接单 · 电子回单', tone: 'light', x: 29.3, y: 49.9 },
   ],
-  // 四个流向标签贴在四个箭头上方，顺时针读：下单询价 → 转单派车 → 接单承运 → 回单结算
+
   flows: [
     { text: '回单结算', x: 32.9, y: 14.9 },
     { text: '下单询价', x: 66.9, y: 14.9 },
@@ -507,8 +490,6 @@ export const advantage: HomeAdvantage = {
   note: '全流程记录在一处可查：管理层看得见瓶颈工序，合规岗调得出批次台账，客户查得到货物去向。',
 }
 
-// 原型 09：降本增效。处罚行按原型保留「处罚 5-50 万元 · 停产整顿」的写法，
-// 连接符用短横线；四张卡文字长短不一，靠栅格等宽对齐
 export const costEfficiency: HomeCostEfficiency = {
   eyebrow: 'COST & EFFICIENCY / 为企业降本增效',
   title: '违规风险前置拦截，人工成本逐项下降',
@@ -559,7 +540,6 @@ export const costEfficiency: HomeCostEfficiency = {
   ],
 }
 
-// 原型 10：我们的服务。图标素材自带浅橙/浅绿圆角底，直接当图片用
 export const service: HomeService = {
   eyebrow: 'OUR SERVICE / 我们的服务',
   title: '实施、定制与运维，三类服务内容',

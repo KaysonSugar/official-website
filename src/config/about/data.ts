@@ -5,15 +5,8 @@
  * @Name: 关于我们页内容数据
  */
 
-/**
- * 关于我们页（/about）：简介、企业理念、公司使命；首屏文案在 brand/data.ts 的 pages 里。
- * 字段形状在 ./types.ts；组装出口在 site.ts，组件统一从 '@/config/site' 拿数据，不要直接引本文件。
- */
-
 import type { AboutConfig } from './types'
 
-// 段落逐字照原型，连原型漏的标点也照抄（简介里「…组织目标近年来我国…」中间缺句号），
-// 校对时别顺手补——要改文案先跟设计稿确认
 export const about: AboutConfig = {
   intro: {
     eyebrow: 'INTRODUCTION / 简介',
