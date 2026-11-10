@@ -5,9 +5,8 @@
  * @Name: 首页第五屏：三端业务运转模式
 -->
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue'
+import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
-import { useLeaveConfirm } from '@/composables/useLeaveConfirm'
 import { siteConfig } from '@/config/site'
 import MatrixFlowDiagram from './MatrixFlowDiagram.vue'
 import logoChemical from '@/assets/home/images/brand-chemical.webp'
@@ -27,14 +26,8 @@ const iconMap = { chemical: logoChemical, logistics: logoLogistics, driver: logo
 const glowMap = [glowOrange, glowMint, glowGreen]
 const ringMap = [ringOrange, ringMint, ringGreen]
 
-// 司机端没上线：点了链接位就把文案换成「正在上线中」
-const comingSoon = ref(false)
-
 const root = useTemplateRef<HTMLElement>('root')
 useReveal(root)
-
-// 卡片外链：点击先弹全站确认层，确认后才开新标签
-const { openLeaveConfirm } = useLeaveConfirm()
 
 // 流程图入场单独触发：区块太高，跟着根的 .in 会在标题探头时就播完，
 // 滚到流程图露出 35% 才点亮（与第四屏架构图同一套门控）
@@ -91,7 +84,7 @@ useReveal(flowPanel, 0.12)
         <article
           v-for="(card, i) in matrix.cards"
           :key="card.title"
-          class="reveal card-lift relative rounded-[16px] border border-ink-100 bg-white px-[28px] pb-[28px] pt-[36px] text-center shadow-[0_18px_40px_-30px_rgba(26,26,26,0.12)]"
+          class="reveal card-lift relative flex flex-col rounded-[16px] border border-ink-100 bg-white px-[28px] pb-[28px] pt-[36px] text-center shadow-[0_18px_40px_-30px_rgba(26,26,26,0.12)]"
           :style="{ '--d': `${340 + i * 80}ms` }"
         >
           <!-- 卡：rounded-[16px]、border-ink-100、白底 + 极淡投影；
@@ -129,7 +122,8 @@ useReveal(flowPanel, 0.12)
             />
           </div>
 
-          <div class="relative">
+          <!-- 内容层：flex-1 撑满卡高 + 竖排 flex，底部链接才能用 mt-auto 钉到同一条线 -->
+          <div class="relative flex flex-1 flex-col">
             <!-- 品牌图标：mx-auto 居中、64×64、drop-shadow 轻投影。
                  hover 放大 1.06 挂在 matrix-logo 类上（不能写 .card-lift img，
                  否则光斑圆环装饰图会跟着缩放穿帮） -->
@@ -142,10 +136,11 @@ useReveal(flowPanel, 0.12)
               class="matrix-logo mx-auto h-[64px] w-[64px] select-none drop-shadow-[0_6px_14px_rgba(26,26,26,0.08)]"
             />
 
-            <!-- 小胶囊标签：inline-block、rounded-full 全圆角、px-[12px] py-[4px]；
+            <!-- 小胶囊标签：self-center 收成内容宽（父级是 flex 列，不写会被 stretch 拉满一整行）；
+                 rounded-full 全圆角、px-[12px] py-[4px]；
                  白底 + shadow-[0_2px_6px] 极淡投影跟白卡分开；文字色按 tone 分橙 / 绿 -->
             <p
-              class="mt-[16px] inline-block rounded-full bg-white px-[12px] py-[4px] text-[12px] leading-[18px] shadow-[0_2px_6px_rgba(26,26,26,0.06)]"
+              class="mt-[16px] inline-block self-center rounded-full bg-white px-[12px] py-[4px] text-[12px] leading-[18px] shadow-[0_2px_6px_rgba(26,26,26,0.06)]"
               :class="card.tone === 'orange' ? 'text-[#bc6a30]' : 'text-[#2f8f62]'"
             >
               {{ card.label }}
@@ -171,31 +166,17 @@ useReveal(flowPanel, 0.12)
               </span>
             </div>
 
-            <!-- 底部链接：mt-[20px] 与胶囊间距 20px；13px/20px 加粗；
-                 有 href 先弹全站外链确认层（确认才新标签打开外部系统），
-                 没有则点一下换「正在上线中」 -->
-            <a
-              v-if="card.href"
-              :href="card.href"
-              class="mt-[20px] inline-block text-[13px] font-semibold leading-[20px]"
+            <!-- 底部链接：mt-auto 吃掉剩余高度（胶囊换行多一行也不会把链接顶下去，
+                 三张卡的链接始终齐线）、pt-[20px] 与胶囊至少留 20px；
+                 self-center 让点击区跟着文字宽度，不铺满整行；
+                 13px/20px 加粗，点进对应产品矩阵页 -->
+            <RouterLink
+              :to="card.to"
+              class="mt-auto inline-block self-center pt-[20px] text-[13px] font-semibold leading-[20px]"
               :class="card.tone === 'orange' ? 'text-brand-600' : 'text-[#2f8f62]'"
-              @click.prevent="openLeaveConfirm(card.href, matrix.leaveDesc)"
             >
               {{ matrix.linkPrefix }}{{ card.title }}{{ matrix.linkArrow }}
-            </a>
-            <button
-              v-else
-              type="button"
-              class="mt-[20px] inline-block cursor-pointer text-[13px] font-semibold leading-[20px]"
-              :class="comingSoon ? 'text-ink-400' : 'text-[#2f8f62]'"
-              @click="comingSoon = true"
-            >
-              {{
-                comingSoon
-                  ? matrix.comingSoonLabel
-                  : matrix.linkPrefix + card.title + matrix.linkArrow
-              }}
-            </button>
+            </RouterLink>
           </div>
         </article>
       </div>

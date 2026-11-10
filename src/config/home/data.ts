@@ -276,8 +276,6 @@ export const matrix: HomeMatrix = {
   },
   linkPrefix: '了解',
   linkArrow: ' →',
-  comingSoonLabel: '正在上线中…',
-  leaveDesc: '您将离开威易达官网，前往威易达线上业务系统（新标签打开），请注意信息安全。',
   cards: [
     {
       icon: 'chemical',
@@ -286,7 +284,7 @@ export const matrix: HomeMatrix = {
       title: '威易达化工',
       desc: '把销售、采购、仓储、合同、资金、生产、质检与安检环节装进一套系统，订单驱动排产，BOM 精准算料，一物一码追溯从原料入厂到成品出库。',
       tags: ['销售管理', '采购管理', '仓储管理', '生产 BOM', '质安检', '报表分析'],
-      href: 'https://prod.weihuayunshu.com/producer/',
+      to: '/products/chemical',
     },
     {
       icon: 'logistics',
@@ -295,7 +293,7 @@ export const matrix: HomeMatrix = {
       title: '威易达物流',
       desc: '把线下调度搬上系统：资质前置校验、智能派单、合规线路规划、在途动态监控全部线上完成，运单全程留痕，可随时导出对账。',
       tags: ['运单调度', '车辆司机', '资质校验', '在途监控', '电子回单', '对账结算'],
-      href: 'https://prod.weihuayunshu.com/carrier/',
+      to: '/products/logistics',
     },
     {
       icon: 'driver',
@@ -304,6 +302,7 @@ export const matrix: HomeMatrix = {
       title: '威易达司机',
       desc: '一手货源看得见：一键接单、在线报备、电子回单、禁配与线路提示，把过去靠电话沟通的环节压缩成几次点击。',
       tags: ['找货接单', '在线报备', '电子回单', '合规提示', '安全培训'],
+      to: '/products/driver',
     },
   ],
 }

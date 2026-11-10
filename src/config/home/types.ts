@@ -134,8 +134,6 @@ export interface HomeMatrix {
   flow: HomeFlow
   linkPrefix: string
   linkArrow: string
-  comingSoonLabel: string
-  leaveDesc: string
   cards: {
     icon: 'chemical' | 'logistics' | 'driver'
     tone: 'orange' | 'green'
@@ -143,7 +141,7 @@ export interface HomeMatrix {
     title: string
     desc: string
     tags: string[]
-    href?: string
+    to: string
   }[]
 }
 
