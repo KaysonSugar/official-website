@@ -13,6 +13,8 @@ const page = getPage('/platform')
 </script>
 
 <template>
+  <!-- 首屏：标题 + 说明 + 主按钮 -->
   <PageHero :eyebrow="page.eyebrow" :title="page.title" :desc="page.desc" :align="page.align" />
+  <!-- 结尾：底部行动号召 -->
   <CtaBanner />
 </template>

@@ -10,12 +10,7 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import { siteConfig } from '@/config/site'
 import { useLeadForm } from '@/composables/useLeadForm'
 
-/**
- * 内页首屏：小标签 + 大标题 + 一句话 + 主按钮。
- * 生产/物流/司机三页左对齐（右边配卡片），服务支持页居中，
- * 对齐方式从 site.ts 的 align 读，组件里不写死。
- * 右侧卡片区是默认插槽，还没设计稿的页面先空着。
- */
+/** 内页首屏：小标签 + 大标题 + 一句话 + 主按钮，右侧插槽放各页示意图 */
 interface Props {
   /** 标题上方的小标签 */
   eyebrow: string
@@ -23,84 +18,87 @@ interface Props {
   title: string
   /** 标题下的一句话 */
   desc: string
-  /** 左对齐 / 居中 */
+  /** 对齐方式，不传左对齐 */
   align?: 'left' | 'center'
-  /** 按钮文案覆盖；不传用全站默认的「预约产品演示」（服务支持页是「预约实施评估」） */
+  /** 按钮文案覆盖，不传用全站默认 */
   ctaLabel?: string
-  /** 按钮下的服务方式胶囊（橙点 + 文字）；不传就不渲染 */
+  /** 按钮下的服务方式胶囊，不传就不渲染 */
   features?: string[]
 }
 
 const { openLeadForm } = useLeadForm()
 
+// 空串和空数组都当没传，渲染时回落到全站默认值
 const props = withDefaults(defineProps<Props>(), {
   align: 'left',
-  // 空串/空数组都当「没传」，渲染时回落到全站默认值
   ctaLabel: '',
   features: () => [],
 })
 
 const slots = useSlots()
-// 没给插槽就不留右侧占位，免得左对齐版式里多出一块空
 const hasAside = computed(() => Boolean(slots.default))
 const isCenter = computed(() => props.align === 'center')
 </script>
 
 <template>
-  <!-- 首屏：relative 给光斑定位，overflow-hidden 裁掉溢出的色块；
-       底是浅橙到白的纵向渐变，和首页首屏同一套，切页不断层 -->
+  <!-- 首屏：浅橙到白渐变底，relative 给光斑定位，overflow-hidden 裁掉探出角 -->
   <section class="relative overflow-hidden bg-gradient-to-b from-brand-50 via-brand-50/40 to-white">
-    <!-- 右上橙光斑：手机 288、≥640 384，blur-3xl 糊开；-z-10 压到文字下面，不挡点击 -->
+    <!-- 右上橙光斑：288px / sm 384px，各探出 96px，blur 糊开并压到文字下 -->
     <div
-      class="pointer-events-none absolute -right-24 -top-24 -z-10 h-72 w-72 rounded-full bg-brand-200/40 blur-3xl sm:h-96 sm:w-96"
+      class="pointer-events-none absolute -right-[96px] -top-[96px] -z-10 h-[288px] w-[288px] rounded-full bg-brand-200/40 blur-3xl sm:h-[384px] sm:w-[384px]"
       aria-hidden="true"
     />
 
-    <!-- 内容容器：和顶栏同一条基准线；上下留白 手机 56 / ≥640 64 / ≥1024 80 -->
-    <div class="container-page py-14 sm:py-16 lg:py-20" :class="isCenter ? 'text-center' : ''">
-      <!-- 左对齐且有插槽时走两栏；左 6 右 4，照服务支持首屏原型量的比例，别改回 1:1 -->
-      <div :class="hasAside && !isCenter ? 'grid items-center gap-12 lg:grid-cols-[3fr_2fr]' : ''">
+    <!-- 内容容器：和顶栏同一条基准线，上下留白 56 / 64 / 80px -->
+    <div
+      class="container-page py-[56px] sm:py-[64px] lg:py-[80px]"
+      :class="isCenter ? 'text-center' : ''"
+    >
+      <!-- 左对齐且有插槽时两栏：左 3 右 2，列距 48px -->
+      <div
+        :class="hasAside && !isCenter ? 'grid items-center gap-[48px] lg:grid-cols-[3fr_2fr]' : ''"
+      >
+        <!-- 居中版限宽 768px，左对齐版限宽 576px -->
         <div :class="isCenter ? 'mx-auto max-w-3xl' : 'max-w-xl'">
-          <!-- 小标签：12px、品牌橙、0.18em 宽字距 -->
-          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand-500">
+          <!-- 小标签：12px 品牌橙，字距 0.18em -->
+          <p class="text-[12px] font-semibold uppercase tracking-[0.18em] text-brand-500">
             {{ props.eyebrow }}
           </p>
 
-          <!-- 主标题：手机 30、≥640 36、桌面 44（按画板量级），行高收紧 -->
+          <!-- 主标题：30 / 36 / 44px，与标签间距 16px -->
           <h1
-            class="mt-4 text-3xl font-bold leading-tight tracking-tight text-ink-900 sm:text-4xl lg:text-[44px]"
+            class="mt-[16px] text-[30px] font-bold leading-tight tracking-tight text-ink-900 sm:text-[36px] lg:text-[44px]"
           >
             {{ props.title }}
           </h1>
 
-          <!-- 说明：和标题隔 1.25rem，次级灰，行高 1.625 -->
-          <p class="mt-5 text-base leading-relaxed text-ink-600 lg:text-lg">
+          <!-- 说明：16 / 18px，与标题间距 20px -->
+          <p class="mt-[20px] text-[16px] leading-relaxed text-ink-600 lg:text-[18px]">
             {{ props.desc }}
           </p>
 
-          <!-- 主按钮：文案可被 ctaLabel 覆盖，点击唤起全站预约表单弹层 -->
-          <div class="mt-8">
+          <!-- 主按钮：与说明间距 32px，点击唤起全站预约弹层 -->
+          <div class="mt-[32px]">
             <BaseButton size="lg" @click="openLeadForm">
               {{ props.ctaLabel || siteConfig.contact.ctaLabel }}
             </BaseButton>
           </div>
 
-          <!-- 服务方式胶囊：mt-[36px] 与按钮间距 36px、gap-[10px] 胶囊间距；
-               白底 80%、ink-100 描边，py 7 / pl 12 / pr 14，hover 规格走全局 .feature-pill（跟首页首屏同一份） -->
+          <!-- 服务方式胶囊：与按钮间距 36px，胶囊间距 10px，hover 走全局 .feature-pill -->
           <ul v-if="props.features.length" class="mt-[36px] flex flex-wrap gap-[10px]">
             <li
               v-for="feature in props.features"
               :key="feature"
-              class="feature-pill flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-sm font-medium text-ink-700"
+              class="feature-pill flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-[14px] font-medium text-ink-700"
             >
-              <!-- 橙点：6px，垂直居中靠 flex，不用管基线 -->
+              <!-- 6px 橙点 -->
               <span class="h-[6px] w-[6px] shrink-0 rounded-full bg-brand-500" aria-hidden="true" />
               {{ feature }}
             </li>
           </ul>
         </div>
 
-        <!-- 右侧示意图，由各页面塞进来 -->
+        <!-- 右侧示意图插槽 -->
         <div v-if="hasAside && !isCenter">
           <slot />
         </div>

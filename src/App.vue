@@ -14,14 +14,14 @@ import SiteFooter from '@/components/layout/SiteFooter.vue'
 </script>
 
 <template>
+  <!-- 顶栏固定，main 用 pt 让出高度（手机 64px / lg 84px） -->
   <SiteHeader />
   <main class="pt-16 lg:pt-[84px]">
     <RouterView />
   </main>
   <SiteFooter />
+  <!-- 回到顶部 + 两个全站弹层，都不占布局 -->
   <BackToTop />
-  <!-- 预约演示表单：全站只挂这一个，各页按钮调 useLeadForm 唤起 -->
   <LeadFormModal />
-  <!-- 外链确认层：全站只挂这一个，法规胶囊 / 产品卡外链调 useLeaveConfirm 唤起 -->
   <LeaveConfirmModal />
 </template>

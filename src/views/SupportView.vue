@@ -19,7 +19,7 @@ const { support } = siteConfig
 </script>
 
 <template>
-  <!-- 首屏：公共 PageHero，右侧插槽挂「典型项目节奏」白卡 -->
+  <!-- 首屏：标题 + 服务方式胶囊，右侧项目节奏卡 -->
   <PageHero
     :eyebrow="page.eyebrow"
     :title="page.title"
@@ -30,13 +30,14 @@ const { support } = siteConfig
   >
     <SupportTimeline />
   </PageHero>
-
-  <!-- 正文四屏：服务内容（白）→ 实施流程（浅灰绿）→ 实施计费（白）→ 服务承诺（深绿） -->
+  <!-- 第二屏：服务内容 -->
   <SupportScope />
+  <!-- 第三屏：实施流程 -->
   <SupportProcess />
+  <!-- 第四屏：实施方式与计费 -->
   <SupportPricing />
+  <!-- 第五屏：服务承诺 -->
   <SupportCommitment />
-
-  <!-- 结尾：全站统一 CTA 横幅 -->
+  <!-- 结尾：底部行动号召 -->
   <CtaBanner />
 </template>
