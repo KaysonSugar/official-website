@@ -6,9 +6,8 @@
 -->
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
+import HeroCta from '@/components/ui/HeroCta.vue'
 import { siteConfig } from '@/config/site'
-import { useLeadForm } from '@/composables/useLeadForm'
 
 /** 内页首屏：小标签 + 大标题 + 一句话 + 主按钮，右侧插槽放各页示意图 */
 interface Props {
@@ -25,8 +24,6 @@ interface Props {
   /** 按钮下的服务方式胶囊，不传就不渲染 */
   features?: string[]
 }
-
-const { openLeadForm } = useLeadForm()
 
 // 空串和空数组都当没传，渲染时回落到全站默认值
 const props = withDefaults(defineProps<Props>(), {
@@ -79,9 +76,7 @@ const isCenter = computed(() => props.align === 'center')
 
           <!-- 主按钮：与说明间距 32px，点击唤起全站预约弹层 -->
           <div class="mt-[32px]">
-            <BaseButton size="lg" @click="openLeadForm">
-              {{ props.ctaLabel || siteConfig.contact.ctaLabel }}
-            </BaseButton>
+            <HeroCta :label="props.ctaLabel || siteConfig.contact.ctaLabel" />
           </div>
 
           <!-- 服务方式胶囊：与按钮间距 36px，胶囊间距 10px，hover 走全局 .feature-pill -->

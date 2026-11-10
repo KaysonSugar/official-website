@@ -6,9 +6,8 @@
 -->
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
+import HeroCta from '@/components/ui/HeroCta.vue'
 import { useCountUp } from '@/composables/useCountUp'
-import { useLeadForm } from '@/composables/useLeadForm'
 import { useLeaveConfirm } from '@/composables/useLeaveConfirm'
 import { siteConfig } from '@/config/site'
 import HomeWorkbench from './HomeWorkbench.vue'
@@ -21,9 +20,6 @@ import dividerImg from '@/assets/home/images/hero-bottom-divider.webp'
 // 确认后才开新标签，避免用户误点跳出官网
 const LAW_URL = 'https://www.12371.cn/2025/12/28/ARTI1766892782459341.shtml'
 const { openLeaveConfirm } = useLeaveConfirm()
-
-// 预约演示按钮：唤起 App.vue 里那份全站表单弹层
-const { openLeadForm } = useLeadForm()
 
 // 数字条：拆成「数字 + 尾巴」，尾巴里没有数字才做递增（10、7 天 行，7×24 不行）。
 // 递增本体在 useCountUp（从这里的内联实现抽的，司机招募/物流货源广场共用）
@@ -106,19 +102,9 @@ useCountUp(statsEl)
             {{ siteConfig.hero.desc }}
           </p>
 
-          <!-- 主按钮：mt-[30px] 与说明间距 30px；lg 下高 50px、宽 360px，手机满宽；
-               hero-cta 挂流星描边和 hover 呼吸（样式见末尾，只作用于这一颗） -->
+          <!-- 主按钮：mt-[30px] 与说明间距 30px -->
           <div class="rise mt-[30px]" :style="{ animationDelay: '210ms' }">
-            <BaseButton
-              size="lg"
-              class="hero-cta w-full sm:w-auto lg:h-[50px] lg:w-[360px]"
-              @click="openLeadForm"
-            >
-              <span class="hero-cta-ring" aria-hidden="true">
-                <span class="hero-cta-comet" />
-              </span>
-              {{ siteConfig.hero.primaryCta }}
-            </BaseButton>
+            <HeroCta :label="siteConfig.hero.primaryCta" />
           </div>
 
           <!-- 卖点列表：mt-[36px] 与按钮间距 36px，flex-wrap 换行，gap-[10px] 胶囊间距；
@@ -319,91 +305,6 @@ useCountUp(statsEl)
 @media (prefers-reduced-motion: reduce) {
   .breathe {
     animation: none;
-  }
-}
-
-.hero-cta {
-  position: relative;
-}
-
-.hero-cta::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow:
-    0 0 0 5px rgba(255, 255, 255, 0.55),
-    0 16px 40px -8px rgba(233, 97, 31, 0.6);
-  opacity: 0;
-  transition: opacity 260ms ease;
-  pointer-events: none;
-}
-
-.hero-cta:hover::after {
-  animation: hero-cta-glow 1.4s ease-in-out infinite alternate;
-}
-
-@keyframes hero-cta-glow {
-  from {
-    opacity: 0.12;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.hero-cta-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 2px;
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.hero-cta-comet {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 440px;
-  height: 440px;
-  margin: -220px 0 0 -220px;
-  background: conic-gradient(
-    transparent 0turn,
-    transparent 0.62turn,
-    rgba(255, 236, 214, 0.25) 0.82turn,
-    rgba(255, 255, 255, 0.8) 0.955turn,
-    #fff 0.995turn,
-    transparent 1turn
-  );
-  animation: hero-meteor 4.2s linear infinite;
-}
-
-@keyframes hero-meteor {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-cta-comet,
-  .hero-cta::after {
-    animation: none;
-  }
-
-  .hero-cta:hover::after {
-    opacity: 0.75;
   }
 }
 

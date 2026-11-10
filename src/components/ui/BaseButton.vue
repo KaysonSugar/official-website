@@ -8,20 +8,13 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 
-/**
- * 按钮。原型里只有一种主按钮：品牌橙底 + 白字 + 小圆角；
- * outline / ghost / light 是给后面区块留的次要态，省得各写一遍。
- *
- * 传 to 走路由（RouterLink，切页不刷新），传 href 走原生 a（外链、tel、mailto），
- * 都不传就是个点不动的占位，留着对比设计稿。
- */
 interface Props {
   /** 站内路径，比如 /production；传了就用 RouterLink */
   to?: string
   /** 站外链接、锚点或 tel: */
   href?: string
-  /** primary 主行动，green 物流页绿色主行动（原型按钮是绿不是橙），outline 次要，ghost 纯文字，light 用在深底/橙底上 */
-  variant?: 'primary' | 'green' | 'outline' | 'ghost' | 'light'
+  /** primary 主行动，outline 次要，ghost 纯文字，light 用在深底/橙底上 */
+  variant?: 'primary' | 'outline' | 'ghost' | 'light'
   /** sm 顶栏用，md 正文用，lg 首屏用 */
   size?: 'sm' | 'md' | 'lg'
   /** 撑满父容器，移动端菜单里用 */
@@ -41,9 +34,6 @@ const props = withDefaults(defineProps<Props>(), {
 const variantClass: Record<NonNullable<Props['variant']>, string> = {
   primary:
     'bg-brand-500 text-white shadow-[0_10px_30px_-12px_rgba(26,26,26,0.28)] hover:bg-brand-600 focus-visible:outline-brand-500',
-  // 绿色主行动：物流页原型按钮是薄荷绿（#26BC8C），阴影跟 primary 同一套只换色相
-  green:
-    'bg-mint-500 text-white shadow-[0_10px_30px_-12px_rgba(24,124,92,0.4)] hover:bg-mint-600 focus-visible:outline-mint-500',
   outline:
     'border border-ink-200 text-ink-900 hover:border-brand-500 hover:text-brand-500 focus-visible:outline-brand-500',
   ghost: 'text-ink-700 hover:text-brand-500 focus-visible:outline-brand-500',
@@ -74,6 +64,7 @@ const classes = computed(() => [
 
 // 有 to 走路由，有 href 走原生 a，都没有就渲染 button（给「点开弹层」这类纯交互按钮用）
 const tag = computed(() => (props.to ? RouterLink : props.href ? 'a' : 'button'))
+
 const linkAttrs = computed(() => {
   if (props.to) return { to: props.to }
   if (props.href) return { href: props.href }

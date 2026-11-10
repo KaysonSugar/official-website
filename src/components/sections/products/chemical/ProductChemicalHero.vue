@@ -7,9 +7,8 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
-import BaseButton from '@/components/ui/BaseButton.vue'
+import HeroCta from '@/components/ui/HeroCta.vue'
 import { getPage, siteConfig } from '@/config/site'
-import { useLeadForm } from '@/composables/useLeadForm'
 
 /**
  * 化工生产首屏（原型 Product Hero）：浅橙白渐变背景 + 左文案 + 右资金流水卡。
@@ -18,7 +17,6 @@ import { useLeadForm } from '@/composables/useLeadForm'
  * 高亮统计卡浅橙底（label #a9611f、数字 #a94f12），普通卡灰绿底 #f8faf9。
  */
 const page = getPage('/products/chemical')
-const { openLeadForm } = useLeadForm()
 const { heroCard, ctaLabel } = siteConfig.chemical
 
 const root = useTemplateRef<HTMLElement>('root')
@@ -60,9 +58,9 @@ useReveal(root)
             {{ page.desc }}
           </p>
 
-          <!-- 主按钮：mt-[32px] 与说明间距 32px，点击唤起全站预约表单 -->
+          <!-- 主按钮：mt-[32px] 与说明间距 32px -->
           <div class="reveal mt-[32px]" style="--d: 240ms">
-            <BaseButton size="lg" @click="openLeadForm">{{ ctaLabel }}</BaseButton>
+            <HeroCta :label="ctaLabel" />
           </div>
         </div>
 
