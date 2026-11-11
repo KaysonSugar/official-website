@@ -124,16 +124,16 @@ export const pages: PageIntro[] = [
     label: '关于我们',
     eyebrow: 'ABOUT US / 关于我们',
     title: '同心图治，坚持创新，追求卓越',
-    desc: '苏州翔瑞成信息技术有限公司',
+    desc: '苏州翔瑞成信息科技有限公司',
     align: 'left',
   },
 ]
 
 export const cta: CtaConfig = {
-  title: '约一次演示，用你的单据跑一遍',
-  desc: '演示会基于你所在行业的 BOM 结构和实际运输场景，从接单、排产、出入库到发运、回单逐环节走一遍，约 40 分钟。',
+  title: '约一次演示，用您的单据跑一遍',
+  desc: '演示会基于您所在行业的 BOM 结构和实际运输场景，从接单、排产、出入库到发运、回单逐环节走一遍，约 40 分钟。',
   button: '预约产品演示',
-  phoneNote: '或致电 400-828-1988（工作日 9:00-18:00）',
+  phoneNote: '或致电 400-001-8355（工作日 9:00-18:00）',
 }
 
 export const footer: FooterConfig = {

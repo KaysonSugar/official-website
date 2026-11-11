@@ -41,7 +41,7 @@ export const hero: HomeHero = {
   ],
 
   workbench: {
-    brand: { name: '威易达化工', sub: 'WEIYIDAHUAGONG' },
+    brand: { name: '威易达化工', sub: 'WEIYIDA HUAGONG' },
     menus: [
       '首页',
       '销售管理',
