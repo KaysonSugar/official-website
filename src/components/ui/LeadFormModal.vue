@@ -6,12 +6,16 @@
 -->
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, reactive, ref, useTemplateRef, watch } from 'vue'
-import { submitLead, type LeadPayload } from '@/api/lead'
+import { useRoute } from 'vue-router'
+import { productTypesForRoute, submitLead, type LeadPayload } from '@/api/lead'
 import { useLeadForm } from '@/composables/useLeadForm'
 import { siteConfig } from '@/config/site'
 import logoMark from '@/assets/brand/logo.webp'
 
 const { open, closeLeadForm } = useLeadForm()
+
+// 产品页打开弹窗就带上那条产品线，其余页面按整体方案提交
+const route = useRoute()
 
 // 文案和选项都在 config/brand/data.ts 的 leadForm 里，这里不写死
 const { leadForm } = siteConfig
@@ -60,13 +64,16 @@ const onSubmit = async () => {
   status.value = 'submitting'
   submitError.value = ''
   try {
-    await submitLead({
-      ...form,
-      name: form.name.trim(),
-      company: form.company.trim(),
-      region: form.region.trim(),
-      phone: form.phone.trim(),
-    })
+    await submitLead(
+      {
+        ...form,
+        name: form.name.trim(),
+        company: form.company.trim(),
+        region: form.region.trim(),
+        phone: form.phone.trim(),
+      },
+      productTypesForRoute(route.path),
+    )
     status.value = 'done'
   } catch (err) {
     submitError.value = err instanceof Error ? err.message : leadForm.errors.submit
