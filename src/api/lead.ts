@@ -47,23 +47,31 @@ const ENDPOINT =
   (import.meta.env.VITE_LEAD_ENDPOINT as string | undefined) ??
   '/producer/api/official/lead/leadIntent/create'
 
+/** 网络层失败（断网、开发代理没起、证书不对）单独抛一种，弹层好换成配置里的中文提示 */
+export class LeadNetworkError extends Error {}
+
 // 后端要的是 companyName / remark，跟表单字段不一样，这里映射一次
 export async function submitLead(payload: LeadPayload, productTypes: number[]): Promise<void> {
-  const res = await fetch(ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      appType: '10',
-    },
-    body: JSON.stringify({
-      name: payload.name,
-      companyName: payload.company,
-      region: payload.region,
-      phone: payload.phone,
-      productTypes,
-      remark: payload.note,
-    }),
-  })
+  let res: Response
+  try {
+    res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        appType: '10',
+      },
+      body: JSON.stringify({
+        name: payload.name,
+        companyName: payload.company,
+        region: payload.region,
+        phone: payload.phone,
+        productTypes,
+        remark: payload.note,
+      }),
+    })
+  } catch {
+    throw new LeadNetworkError('network')
+  }
 
   // 后端约定 code 200 才算成功，其余把 msg 透出去给弹层显示
   const json = (await res.json().catch(() => null)) as { code?: number; msg?: string } | null

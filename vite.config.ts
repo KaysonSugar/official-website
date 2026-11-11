@@ -23,6 +23,12 @@ export default defineConfig({
         target: 'https://dev.weihuayunshu.com:8443',
         changeOrigin: true,
         secure: false,
+        // 转发失败时浏览器只有一句 Failed to fetch，这里把真实原因打到终端才好查
+        configure: (proxy) => {
+          proxy.on('error', (err) => {
+            console.error('[proxy] /producer 转发失败：', err.message)
+          })
+        },
       },
     },
   },
