@@ -7,9 +7,10 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, reactive, ref, useTemplateRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { LeadApiError, productTypesForRoute, submitLead, type LeadPayload } from '@/api/lead'
 import { useLeadForm } from '@/composables/useLeadForm'
+import { useScrollLock } from '@/composables/useScrollLock'
 import { siteConfig } from '@/config/site'
+import { LeadApiError, productTypesForRoute, submitLead, type LeadForm } from './api'
 import logoMark from '@/assets/brand/logo.webp'
 
 const { open, closeLeadForm } = useLeadForm()
@@ -20,7 +21,7 @@ const route = useRoute()
 // 文案和选项都在 config/brand/data.ts 的 leadForm 里，这里不写死
 const { leadForm } = siteConfig
 
-const form = reactive<LeadPayload>({
+const form = reactive<LeadForm>({
   name: '',
   company: '',
   region: '',
@@ -91,19 +92,19 @@ watch(open, (isOpen) => {
   }
 })
 
-// 弹层打开时锁滚动 + Esc 关闭，关闭时把 body 的 overflow 原样还回去
+// 弹层打开时锁滚动 + Esc 关闭（锁走共用计数，见 useScrollLock，别在这直接写 body.overflow）
+useScrollLock(open)
+
 const onKeydown = (e: KeyboardEvent) => {
   if (e.key === 'Escape') closeLeadForm()
 }
 
 watch(open, (isOpen) => {
-  document.body.style.overflow = isOpen ? 'hidden' : ''
   if (isOpen) window.addEventListener('keydown', onKeydown)
   else window.removeEventListener('keydown', onKeydown)
 })
 
 onBeforeUnmount(() => {
-  document.body.style.overflow = ''
   window.removeEventListener('keydown', onKeydown)
 })
 </script>

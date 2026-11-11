@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import BackToTop from '@/components/ui/BackToTop.vue'
-import LeadFormModal from '@/components/ui/LeadFormModal.vue'
+import LeadFormModal from '@/components/ui/LeadFormModal/index.vue'
 import LeaveConfirmModal from '@/components/ui/LeaveConfirmModal.vue'
 import SiteHeader from '@/components/layout/SiteHeader.vue'
 import SiteFooter from '@/components/layout/SiteFooter.vue'
