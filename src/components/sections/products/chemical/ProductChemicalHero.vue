@@ -10,13 +10,8 @@ import { useReveal } from '@/composables/useReveal'
 import HeroCta from '@/components/ui/HeroCta.vue'
 import { getPage, siteConfig } from '@/config/site'
 
-/**
- * 化工生产首屏（原型 Product Hero）：浅橙白渐变背景 + 左文案 + 右资金流水卡。
- * 右卡整体 DOM 重建（用户给的 Module Card.png 是烘焙文字位图，已删），
- * 统计小卡 / 页签 / 台账 / 合计行全部照原型采的色：
- * 高亮统计卡浅橙底（label #a9611f、数字 #a94f12），普通卡灰绿底 #f8faf9。
- */
 const page = getPage('/products/chemical')
+
 const { heroCard, ctaLabel } = siteConfig.chemical
 
 const root = useTemplateRef<HTMLElement>('root')

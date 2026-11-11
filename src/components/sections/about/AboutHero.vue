@@ -12,11 +12,6 @@ import heroImg from '@/assets/about/images/about-hero-1656w.webp'
 import heroSm from '@/assets/about/images/about-hero-828w.webp'
 import heroLg from '@/assets/about/images/about-hero-2384w.webp'
 
-/**
- * 关于我们首屏（原型 About Hero）：矮横条，右侧服务器云插画，左侧叠文字。
- * 背景整图没有烘焙文字（核对过），所以文字走 DOM 叠加，非整数缩放也不糊。
- * 高度由文字的上下留白撑开（不是 aspect 比例锁死），视口变宽时插画照常 object-cover 铺满。
- */
 const page = getPage('/about')
 
 const root = useTemplateRef<HTMLElement>('root')

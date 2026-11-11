@@ -101,7 +101,6 @@ const onCta = () => {
 </template>
 
 <style scoped>
-/* 展开：跟着顶栏的下滑方向走，淡入 + 下滑 8px；收起反向。200ms 和桌面下拉一致 */
 .menu-enter-active,
 .menu-leave-active {
   transition:

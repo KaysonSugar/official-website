@@ -9,13 +9,6 @@ import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 
-/**
- * 界面展示（原型 P 界面实录）：深绿底、四行图文交替。
- * 四块面板原来是位图截图，按「烘焙文字必糊」的铁律整块 DOM 重建（tour-*.webp 已删），
- * 演示数据在 siteConfig.chemical.tour.rows[].panel，按 kind 可辨识联合分派。
- * 文字列两种形态：01 仓储是「名 + 描述」两栏行，02~04 是绿点列表。
- * 面板在右（默认）、flip 时 lg 下挪到左，手机端全部退化为上下堆叠。
- */
 const { tour } = siteConfig.chemical
 
 const root = useTemplateRef<HTMLElement>('root')

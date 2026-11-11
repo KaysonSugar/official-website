@@ -13,12 +13,6 @@ import glowWarm from '@/assets/products/logistics/images/glow-warm.webp'
 import ringOuter from '@/assets/products/logistics/images/ring-outer.webp'
 import logoMark from '@/assets/products/logistics/icons/logo-mark.webp'
 
-/**
- * 物流调度首屏（原型 Logistics Hero）：浅薄荷绿渐变背景 + 左文案 + 右调度台。
- * 右卡整体 DOM 重建（用户给的 Dispatch Mock.png 是烘焙文字位图，已删）：
- * 绿渐变侧栏（第一项白底选中态、货源广场挂 VIP）+ 主区五张白卡。
- * 徽标沿用站点既有绿/橙/灰三档浅底色。
- */
 const page = getPage('/products/logistics')
 const dash = siteConfig.logistics.heroDash
 

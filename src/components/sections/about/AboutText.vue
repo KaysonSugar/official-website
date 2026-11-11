@@ -8,11 +8,6 @@
 import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 
-/**
- * 简介屏（原型 S1）和公司使命屏（原型 S3）结构一模一样：
- * 橙眉题 + 黑标题 + 灰绿正文若干段，纯白底——抽成一个组件，由 AboutView 传两份文案。
- * 正文 #5e7169、标题走全站 ink-900。
- */
 defineProps<{
   eyebrow: string
   title: string

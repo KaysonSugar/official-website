@@ -3,11 +3,6 @@
  * @Email: takaixin@outlook.com
  * @StartDate: 2026.11.06
  * @Name: 司机端核心界面 · 四个手机界面用 DOM 画
- *
- * 为什么不用导出的位图：位图在 274px 列宽里被浏览器压到 1/4.5，
- * 中文小字一律糊成灰块；DOM 在任意缩放比下都是矢量清晰的字形。
- * 做法=固定设计画布 610×822（源位图 1220×1644 的一半，1:1 抄量出来的坐标），
- * 整块 transform: scale(容器宽/610)，内部全部写 px 绝对值，不做响应式断点。
 -->
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'

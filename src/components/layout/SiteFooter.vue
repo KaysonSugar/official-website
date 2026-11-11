@@ -7,14 +7,12 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import logoMark from '@/assets/brand/logo.webp'
-// 页脚素材全在 brand/ 下，带 footer- 前缀区分（页脚是全局组件，不算页面素材）
-// 二维码统一用 webp 无损：原图是 JPG，硬边图形被有损压缩吃掉 300KB 流量还有扫码识别风险；
-// 显示只有 100px，缩到 200px 留 2 倍屏余量
 import qrWechat from '@/assets/brand/footer-qr-gzh.webp'
 import qrDouyin from '@/assets/brand/footer-qr-dy.webp'
 import qrKuaishou from '@/assets/brand/footer-qr-ks.webp'
 import qrApp from '@/assets/brand/footer-app-download.png'
 import { siteConfig } from '@/config/site'
+
 /** 四张二维码。图在这里 import，Vite 才会做哈希命名 */
 const qrcodes = [
   { src: qrWechat, label: '微信公众号', alt: '威易达化工微信公众号二维码' },
@@ -128,20 +126,12 @@ const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
 </template>
 
 <style scoped>
-/* ≥1440 的五栏版式。
-   这里得写原生媒体查询：Tailwind v4 会把自定义断点的媒体查询排在核心断点前面，
-   同特异性下 lg: 反而赢——之前实测 1440 下拿到的还是 grid-cols-3，二维码被压到 67px。
-   scoped 选择器带 data-v，特异性能稳稳压过工具类。
-
-   数值来自 1440×343 画板：品牌栏吃掉剩余空间（约 358），三个链接栏 87/87/62、栏距 58，
-   二维码栏 430 = 四张 100 + 三个 10，右边缘贴容器。 */
 @media (min-width: 1440px) {
   .footer-main {
     grid-template-columns: minmax(0, 1fr) auto auto auto 430px;
     column-gap: 58px;
   }
 
-  /* 品牌栏和二维码栏各占一列，盖掉 lg 的 col-span-3 */
   .footer-brand,
   .footer-social {
     grid-column: auto;

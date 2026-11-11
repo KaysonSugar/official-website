@@ -13,10 +13,6 @@ import iconRoundtrip from '@/assets/products/driver/icons/roundtrip.webp'
 import iconSafer from '@/assets/products/driver/icons/safer.webp'
 import iconEarn from '@/assets/products/driver/icons/earn-more.webp'
 
-/**
- * 平台优势（原型 B 平台优势）：眉题右侧一根细线拉通，
- * 下面四列居中排——圆形插画 + 标题 + 一句说明。插画是现成素材图。
- */
 const { advantage } = siteConfig.driver
 
 const root = useTemplateRef<HTMLElement>('root')

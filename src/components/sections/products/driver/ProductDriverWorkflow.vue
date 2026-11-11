@@ -9,11 +9,6 @@ import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 
-/**
- * 接单作业四步（原型 D）：四张步骤卡 + 深绿横幅。
- * 卡片底色：01 浅橙 / 02 03 白卡描边 / 04 浅薄荷；
- * 编号颜色照原型前两步橙、后两步绿（跟卡片底色不完全对应，别"修"它）。
- */
 const { workflow } = siteConfig.driver
 
 const root = useTemplateRef<HTMLElement>('root')

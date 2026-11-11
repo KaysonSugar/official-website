@@ -9,19 +9,6 @@ import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 
-/**
- * 三张能力卡 + 调度台演示窗口。配色/布局全部对照 wyd-h5-carrier 调度台源码还原：
- * 面板渐变 #f0fdff→#fff、运单卡 #e0fafa→#fff、选中 #d8ffff + #21e3a5 边框、
- * 数据格 #fffdfc→#fff1e8 + #ffc19d 边框、按钮 #2fb188。数据是编造的明文假数据。
- * 窗口内容约 1150px 起，手机端套 overflow-x-auto 横滚。
- *
- * 演示窗口里的字段标签、占位符、按钮字全在 console.labels 里，模板只写 {{ L.xxx }}，
- * 换文案不用进组件翻。
- *
- * 窗口内的小部件全照源码 dispatchDesk 的 scss 复刻：假控件（.fake-*）按 el-select mini
- * 的比例缩到 22px 高，车辆格 label 定宽 46px 靠 text-align-last 两端对齐撑开「车 牌」，
- * 冒号单独一个 span 不参与对齐（.cal-colon）。
- */
 const { capability } = siteConfig.logistics
 const consoleData = capability.console
 

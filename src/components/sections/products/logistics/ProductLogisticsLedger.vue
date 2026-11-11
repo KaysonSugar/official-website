@@ -13,11 +13,6 @@ import icon02 from '@/assets/products/logistics/icons/icon-box-02.webp'
 import icon03 from '@/assets/products/logistics/icons/icon-box-03.webp'
 import texture from '@/assets/products/logistics/images/texture-dots.webp'
 
-/**
- * 奶油底三卡。图标是现成的 Icon Box PNG（浅绿圆角盒 + 深绿线性图形，192px）。
- * Texture 02 是稀疏浅绿点弧纹理（本身够淡），铺右上角当装饰，压在卡片下面。
- * hover 时卡片只浮投影、图标放大 6%——两级反馈，跟首页服务卡同一套。
- */
 const { ledger } = siteConfig.logistics
 
 // icon 短名 → 素材，换图只动这里；键名跟 config 里的 icon 一一对应

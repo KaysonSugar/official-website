@@ -9,22 +9,6 @@ import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 
-/**
- * 深绿屏，左文右卡（约 4:7）。
- * 右侧拼车时间轴卡整卡 DOM 重建（拼车路线图.png 是烘焙文字参考图）：
- * 六列等宽 grid，连线是绝对定位的细线压在圆点行背后，
- * 左右各缩进半列（8.33%）正好从首点到末点，列数变了这段要跟着改。
- * 六列在手机上放不下，整卡套 overflow-x-auto + min-w 横滚，跟货源表格一个处理。
- *
- * 进场序列：蹭根元素 .in 触发，初始态写死在类上（透明 / 缩到 0），fill-mode both 让延迟期
- * 保持首帧、播完保持终帧，全部一次性动画（reduced-motion 交给全局 0.01ms 规则）。
- * 节奏：卡头 320ms → 连线 420ms 起画 0.75s → 圆点 480ms 起每站 +130ms 回弹弹出
- * → 城市/事件/货物三行跟同列圆点错 40/80/120ms 浮现 → 橙条 1450ms 从 0.96 回弹落定。
- *
- * 光点滑行照服务支持流程轴同款：track 管位移（linear 匀速）、bead 管显隐（ease），
- * 两层拆开是因为一个 animation 塞不下两种曲线；7s 一轮里 3.2s（46%）走完，延迟 2s
- * 给进场序列让路。infinite 动画在 reduced-motion 下必须自己关，全局规则会把它压成疯狂空转。
- */
 const { carpool } = siteConfig.logistics
 
 // 圆点弹出节奏：线 420ms 起画（0.75s 画完），每站间隔 130ms 差不多贴着线头走

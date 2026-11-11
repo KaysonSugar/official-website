@@ -13,11 +13,6 @@ import iconPersist from '@/assets/about/icons/phil-persist.webp'
 import iconExecute from '@/assets/about/icons/phil-execute.webp'
 import iconExcel from '@/assets/about/icons/phil-excel.webp'
 
-/**
- * 企业理念（原型 S2）：浅绿底 #f5faf7，四个圆底图标横排 + 下方标签。
- * 图标素材自带白色圆底（原图 560px 转的 webp），桌面显示 120px、手机 104px；
- * hover 时图标放大 6%——这四个没有卡片外壳，只放大图片本身，不动文字。
- */
 const { philosophy } = siteConfig.about
 
 // icon 短名 → 素材，换图只动这里；键名跟 config 里的 icon 一一对应，少写一个编译就报错

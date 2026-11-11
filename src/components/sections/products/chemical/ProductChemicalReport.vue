@@ -13,11 +13,6 @@ import iconFinance from '@/assets/products/chemical/icons/report-finance.webp'
 import iconPurchase from '@/assets/products/chemical/icons/report-purchase.webp'
 import iconProduction from '@/assets/products/chemical/icons/report-production.webp'
 
-/**
- * 报表中心（原型 P 报表中心）：浅绿底，四张白卡各管一个报表维度。
- * 卡素材自带的圆角 tile 图标直接用；标题与对勾跟 tone 走色——
- * 物资/生产与销售是绿，资金/采购是橙，对勾是浅色圆底 + 彩色勾。
- */
 const { report } = siteConfig.chemical
 
 // icon 短名 → 素材，换图只动这里；键名跟 config 里的 icon 一一对应

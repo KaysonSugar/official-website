@@ -12,24 +12,6 @@ import iconProduction from '@/assets/products/chemical/icons/chain-production.we
 import iconMaterial from '@/assets/products/chemical/icons/chain-material.webp'
 import iconFinance from '@/assets/products/chemical/icons/chain-finance.webp'
 
-/**
- * 三条主线（原型 Chain Rows.png + Flow Panel.png）：左边三张链路卡，
- * 右边 FLOW 订单驱动全流程面板。
- *
- * 链路卡底色照原型采的极淡三色：暖白 #fff9f5 / 绿白 #f7fbf9 / 灰白 #fbfcfb，
- * 层次感全靠图标自带的色底和标题色，卡片本身接近白。
- * hover 跟首页同一套 card-lift：卡片不动，只有伪元素投影浮起来
- * （不要用 hover:-translate-y-2，transform 过渡会进合成层，13~16px 中文发虚）。
- *
- * FLOW 面板整体 DOM+SVG 重建（Flow Panel.png 是烘焙文字参考图，已删）。
- * 连接线（竖线、分叉肘线、跨支虚线、全部箭头）收进一张 SVG，节点是绝对定位的 DOM
- * ——之前用 span + calc 百分比拼线，渲染时隐时现。垂直坐标固定 478，
- * 水平坐标走 viewBox 480 等比拉伸，卡片铺满右列；改节点数量/文案要同步改 SVG 坐标。
- *
- * 两处动效都由 useReveal 的 .in 触发，视口外不空转：
- * 跨支虚线用 dashoffset 走「行军蚁」，主链节点 0/450/900/1350ms 依次点亮（7s 一轮）。
- * infinite 动画在 reduced-motion 下必须自己关——全局 0.01ms 规则会把它压成疯狂空转。
- */
 const { chains } = siteConfig.chemical
 
 // icon 短名 → 素材，换图只动这里；键名跟 config 里的 icon 一一对应

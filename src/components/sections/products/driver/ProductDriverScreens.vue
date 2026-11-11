@@ -10,10 +10,6 @@ import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import DriverScreenMock from './DriverScreenMock.vue'
 
-/**
- * 核心界面一览（原型 E）：四列「编号 + 场景名 + 手机界面」。
- * 四个界面不用导出位图，改用 DriverScreenMock 以 DOM 画（位图压到 1/4.5 后中文全糊）。
- */
 const { screens } = siteConfig.driver
 
 const root = useTemplateRef<HTMLElement>('root')

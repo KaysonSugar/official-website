@@ -127,9 +127,6 @@ watch(activePath, () => {
 </template>
 
 <style scoped>
-/* 下拉展开：淡入 + 下滑 8px，200ms 够了，太慢会显得拖沓。
-   位移写 8px 不写 6px：6×1.25(缩放率)=7.5 物理像素，半像素会让面板里的字重采样发虚。
-   过渡写在里层卡片上——外层挂着居中用的 -translate-x-1/2，不能碰 transform */
 .drop-enter-active,
 .drop-leave-active {
   transition:

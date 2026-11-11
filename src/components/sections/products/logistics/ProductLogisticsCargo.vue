@@ -10,12 +10,6 @@ import { useCountUp } from '@/composables/useCountUp'
 import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 
-/**
- * 免费货源广场（原型 B 免费货源广场）：浅灰绿整屏底 + 四统计 + 货源表格卡。
- * 表格卡 DOM 重建（用户给的 Cargo Card.png 是烘焙文字位图，已删）：
- * 标题两枚徽标、筛选行假输入框、双数行浅绿斑马底、电话列绿字。
- * 四个统计数字滚进视口从 0 数上去（useCountUp，与首页/司机招募同款）。
- */
 const cargo = siteConfig.logistics.cargo
 
 // 拆数字和尾巴：「5,000+」→ num 5000 / rest「+」/ 千位分组，「100%」→ 100 /「%」。
