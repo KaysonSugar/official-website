@@ -286,12 +286,13 @@ useReveal(root)
                 :style="{ top: `${DIAMOND_TOP}px` }"
               >
                 <svg viewBox="0 0 150 76" class="absolute inset-0 h-full w-full" aria-hidden="true">
-                  <!-- flow-diamond：波走完主链最后点亮它，fill 提亮一档 -->
+                  <!-- 菱形双层：底层常驻底色，上层 flow-diamond-on 动 opacity 点亮（fill 动画每帧重绘 SVG） -->
+                  <polygon points="75,0 150,38 75,76 0,38" fill="#14332a" />
                   <polygon
-                    class="flow-diamond"
+                    class="flow-diamond-on"
                     :style="{ '--nd': '1350ms' }"
                     points="75,0 150,38 75,76 0,38"
-                    fill="#14332a"
+                    fill="#1d5440"
                   />
                 </svg>
                 <span
@@ -351,62 +352,70 @@ useReveal(root)
   }
 }
 
-.flow-node,
-.flow-diamond {
+/* 点亮波走覆盖层动 opacity（合成层）：底色/box-shadow 直接动画会每帧重绘整块节点 */
+.flow-node::before,
+.flow-diamond-on {
   animation-duration: 7s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
-  animation-fill-mode: backwards;
   animation-delay: var(--nd, 0ms);
   animation-play-state: paused;
 }
 
-.flow-node {
+.flow-node::before {
   animation-name: flow-node;
 }
 
-.flow-diamond {
+.flow-diamond-on {
   animation-name: flow-diamond;
 }
 
-.in .flow-node,
-.in .flow-diamond {
+.flow-node::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--nd-on);
+  box-shadow: 0 0 0 3px var(--nd-ring);
+  opacity: 0;
+  z-index: -1;
+}
+
+.in .flow-node::before,
+.in .flow-diamond-on {
   animation-play-state: running;
 }
 
 @keyframes flow-node {
   0%,
   100% {
-    background-color: var(--nd-bg);
-    box-shadow: 0 0 0 0 transparent;
+    opacity: 0;
   }
   4% {
-    background-color: var(--nd-on);
-    box-shadow: 0 0 0 3px var(--nd-ring);
+    opacity: 1;
   }
   11% {
-    background-color: var(--nd-bg);
-    box-shadow: 0 0 0 0 transparent;
+    opacity: 0;
   }
 }
 
 @keyframes flow-diamond {
   0%,
   100% {
-    fill: #14332a;
+    opacity: 0;
   }
   4% {
-    fill: #1d5440;
+    opacity: 1;
   }
   11% {
-    fill: #14332a;
+    opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .flow-march,
-  .flow-node,
-  .flow-diamond {
+  .flow-node::before,
+  .flow-diamond-on {
     animation: none;
   }
 }

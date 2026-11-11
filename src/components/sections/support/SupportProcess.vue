@@ -380,35 +380,47 @@ const dotWave = [1500, 1950, 2450, 2900, 3350, 3800, 4250]
   }
 }
 
+/* 点亮色放 ::before 上动 opacity（合成层），直接动 background-color 每帧重绘圆点 */
 .proc-dot {
+  position: relative;
+  isolation: isolate;
   background-color: var(--dot-bg);
+}
+
+.proc-dot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: var(--dot-on);
+  opacity: 0;
+  z-index: -1;
   animation: proc-dot 7s ease-in-out infinite;
   animation-delay: var(--wd, 0ms);
-  animation-fill-mode: backwards;
   animation-play-state: paused;
 }
 
-.in .proc-dot {
+.in .proc-dot::before {
   animation-play-state: running;
 }
 
 @keyframes proc-dot {
   0%,
   100% {
-    background-color: var(--dot-bg);
+    opacity: 0;
   }
   3% {
-    background-color: var(--dot-on);
+    opacity: 1;
   }
   9% {
-    background-color: var(--dot-bg);
+    opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .proc-track,
   .proc-bead,
-  .proc-dot {
+  .proc-dot::before {
     animation: none;
   }
 

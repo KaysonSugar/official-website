@@ -179,7 +179,11 @@
      !important 是必须的：各组件里 .in .xxx { animation-play-state: running } 的
      选择器权重更高，不加压不住。切换瞬间停/续，动画本身不跳位。 */
   .is-idle,
-  .is-idle * {
+  .is-idle::before,
+  .is-idle::after,
+  .is-idle *,
+  .is-idle *::before,
+  .is-idle *::after {
     animation-play-state: paused !important;
   }
 }

@@ -90,6 +90,7 @@ useReveal(root)
             <span
               v-if="node.arrow"
               class="flow-arrow hidden shrink-0 px-[6px] text-[16px] text-[#82bda2] lg:block"
+              data-glyph="→"
               :style="{ '--wd': `${i * 400}ms` }"
               aria-hidden="true"
               >→</span
@@ -102,6 +103,7 @@ useReveal(root)
         <div class="reveal mt-[6px] flex flex-col items-center" style="--d: 300ms">
           <span
             class="flow-arrow text-[16px] leading-[20px] text-[#82bda2]"
+            data-glyph="↓"
             :style="{ '--wd': '1200ms' }"
             aria-hidden="true"
             >↓</span
@@ -122,6 +124,7 @@ useReveal(root)
                  采购和生产本来并行，波不该有先后 -->
             <span
               class="flow-arrow mb-[8px] hidden text-center text-[16px] leading-[20px] text-[#82bda2] md:block"
+              data-glyph="↓"
               :style="{ '--wd': '1600ms' }"
               aria-hidden="true"
               >↓</span
@@ -140,6 +143,7 @@ useReveal(root)
             <template v-for="(step, s) in branch.steps" :key="step">
               <span
                 class="flow-arrow my-[5px] text-center text-[16px] leading-[18px] text-[#82bda2]"
+                data-glyph="↓"
                 :style="{ '--wd': `${2000 + s * 400}ms` }"
                 aria-hidden="true"
                 >↓</span
@@ -156,6 +160,7 @@ useReveal(root)
             <!-- 收尾条：tail.tone 为 tinted 时沿用分支色调（左浅橙 / 右绿实心） -->
             <span
               class="flow-arrow my-[5px] text-center text-[16px] leading-[18px] text-[#82bda2]"
+              data-glyph="↓"
               :style="{ '--wd': '3200ms' }"
               aria-hidden="true"
               >↓</span
@@ -192,7 +197,18 @@ useReveal(root)
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
 
+/* 点亮箭头：::after 叠同字符亮色层动 opacity（合成层），color 动画每帧重绘字形 */
 .flow-arrow {
+  position: relative;
+}
+
+.flow-arrow::after {
+  content: attr(data-glyph);
+  position: absolute;
+  inset: 0;
+  padding: inherit;
+  color: #2f9e66;
+  opacity: 0;
   animation: flow-pulse 7s ease-in-out infinite;
   animation-delay: var(--wd, 0ms);
   animation-play-state: paused;
@@ -201,22 +217,22 @@ useReveal(root)
 @keyframes flow-pulse {
   0%,
   100% {
-    color: #82bda2;
+    opacity: 0;
   }
   5% {
-    color: #2f9e66;
+    opacity: 1;
   }
   13% {
-    color: #82bda2;
+    opacity: 0;
   }
 }
 
-.in .flow-arrow {
+.in .flow-arrow::after {
   animation-play-state: running;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flow-arrow {
+  .flow-arrow::after {
     animation: none;
   }
 }
