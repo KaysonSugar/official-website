@@ -162,9 +162,10 @@ export const footer: FooterConfig = {
       title: '关于威易达',
       items: [
         { label: '公司介绍', to: '/about' },
-        { label: '实施与服务', to: '/about' },
+        { label: '实施与服务', to: '/solutions' },
 
-        { label: '联系我们', to: 'tel:4000018355' },
+        // lead 是约定值：页脚渲染成按钮，点击弹预约演示弹窗
+        { label: '联系我们', to: 'lead' },
       ],
     },
   ],

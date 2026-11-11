@@ -36,10 +36,11 @@ function handleClick() {
 </script>
 
 <template>
-  <!-- 按钮：lg 下高 50px、宽 360px，手机满宽 -->
+  <!-- 按钮：lg 下高 50px、宽 360px，手机满宽；
+       纵向微渐变（顶亮底深）+ 同色柔投影替代平面色块，尺寸与位置不变 -->
   <BaseButton
     size="lg"
-    class="hero-cta w-full sm:w-auto lg:h-[50px] lg:w-[360px]"
+    class="hero-cta w-full bg-gradient-to-b from-[#ff944a] via-[#ff833f] to-[#ef6d1e] shadow-[0_14px_34px_-12px_rgba(242,106,33,0.55)]! sm:w-auto lg:h-[50px] lg:w-[360px]"
     @click="handleClick"
   >
     <span class="hero-cta-ring" aria-hidden="true">

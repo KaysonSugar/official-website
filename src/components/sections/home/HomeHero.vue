@@ -91,9 +91,9 @@ useReveal(heroEl)
             </span>
           </div>
 
-          <!-- 标题：手机 28px/1.35，sm 36px，lg 48px/1.5；mt-[30px] 与胶囊间距 30px -->
+          <!-- 标题：手机 28px/1.35，sm 36px，lg 48px/1.4；tracking-tight 收字距让标题更「紧致」 -->
           <h1
-            class="rise mt-[30px] text-[28px] font-bold leading-[1.35] text-ink-900 sm:text-4xl lg:text-[48px] lg:leading-[1.5]"
+            class="rise mt-[30px] text-[28px] font-bold leading-[1.35] tracking-tight text-ink-900 sm:text-4xl lg:text-[48px] lg:leading-[1.4]"
             :style="{ animationDelay: '70ms' }"
           >
             {{ siteConfig.hero.title }}
@@ -269,11 +269,13 @@ useReveal(heroEl)
 }
 
 .rise {
-  animation: hero-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  /* 试过 blur 消融（WorkBuddy 官网同款）：6 个文字元素 + 大图同时跑 filter 每帧重栅格化，卡。
+     退回纯位移+透明度，合成器动画零重绘 */
+  animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 .slide-in {
-  animation: hero-slide 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation: hero-slide 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 .pop-in {

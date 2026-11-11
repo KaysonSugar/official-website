@@ -12,6 +12,9 @@ import qrDouyin from '@/assets/brand/footer-qr-dy.webp'
 import qrKuaishou from '@/assets/brand/footer-qr-ks.webp'
 import qrApp from '@/assets/brand/footer-app-download.png'
 import { siteConfig } from '@/config/site'
+import { useLeadForm } from '@/composables/useLeadForm'
+
+const { openLeadForm } = useLeadForm()
 
 /** 四张二维码。图在这里 import，Vite 才会做哈希命名 */
 const qrcodes = [
@@ -21,7 +24,8 @@ const qrcodes = [
   { src: qrApp, label: '扫码下载APP', alt: '威易达化工 App 下载二维码' },
 ]
 
-/** 页脚条目有可能是 tel:/mailto: 这类外链，据此决定渲染 RouterLink 还是 a */
+/** lead 是约定值：渲染成按钮，点了弹预约演示弹窗；tel:/mailto:/https: 走原生 a */
+const isLead = (to: string) => to === 'lead'
 const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
 </script>
 
@@ -54,14 +58,14 @@ const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
           <p
             v-for="(line, i) in siteConfig.footer.desc"
             :key="i"
-            class="max-w-[330px] text-[13px] leading-[22px] text-night-300"
+            class="max-w-[330px] text-[13px] leading-[22px] text-white/70"
             :class="i === 0 ? 'mt-6' : 'mt-0'"
           >
             {{ line }}
           </p>
 
           <!-- 理念：几个短语用中点连起来，12px 最弱色 -->
-          <p class="mt-5 text-xs leading-[18px] text-night-400">
+          <p class="mt-5 text-xs leading-[18px] text-white/45">
             {{ siteConfig.footer.slogan.join(' · ') }}
           </p>
         </div>
@@ -76,17 +80,26 @@ const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
           <ul class="mt-2.5 space-y-3">
             <li v-for="item in group.items" :key="item.label">
               <!-- block 别省：a 是 inline 时 li 的行盒会被父级 line-height 撑到 24，
-                   比文字本身多 6px，四行累计能把页脚顶高十几像素 -->
+                   比文字本身多 6px，四行累计能把页脚顶高十几像素；
+                   button 默认居中，补 text-left 对齐其他条目 -->
+              <button
+                v-if="isLead(item.to)"
+                type="button"
+                class="block text-left text-[13px] leading-[18px] text-white/70 transition-colors duration-200 hover:text-white"
+                @click="openLeadForm()"
+              >
+                {{ item.label }}
+              </button>
               <RouterLink
-                v-if="!isExternal(item.to)"
+                v-else-if="!isExternal(item.to)"
                 :to="item.to"
-                class="block text-[13px] leading-[18px] text-night-300 transition-colors duration-200 hover:text-white"
+                class="block text-[13px] leading-[18px] text-white/70 transition-colors duration-200 hover:text-white"
                 >{{ item.label }}</RouterLink
               >
               <a
                 v-else
                 :href="item.to"
-                class="block text-[13px] leading-[18px] text-night-300 transition-colors duration-200 hover:text-white"
+                class="block text-[13px] leading-[18px] text-white/70 transition-colors duration-200 hover:text-white"
                 >{{ item.label }}</a
               >
             </li>
@@ -108,7 +121,7 @@ const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
                 loading="lazy"
                 decoding="async"
               />
-              <p class="mt-2 text-center text-xs leading-[18px] text-night-300">{{ qr.label }}</p>
+              <p class="mt-2 text-center text-xs leading-[18px] text-white/70">{{ qr.label }}</p>
             </li>
           </ul>
         </div>
@@ -118,8 +131,8 @@ const isExternal = (to: string) => /^(tel:|mailto:|https?:)/.test(to)
       <div
         class="mt-8 flex flex-col gap-2 border-t border-night-800 pt-9 pb-9 sm:flex-row sm:items-center sm:justify-between"
       >
-        <p class="text-xs leading-[18px] text-night-400">{{ siteConfig.footer.copyright }}</p>
-        <p class="text-xs leading-[18px] text-night-400">{{ siteConfig.footer.tagline }}</p>
+        <p class="text-xs leading-[18px] text-white/45">{{ siteConfig.footer.copyright }}</p>
+        <p class="text-xs leading-[18px] text-white/45">{{ siteConfig.footer.tagline }}</p>
       </div>
     </div>
   </footer>
