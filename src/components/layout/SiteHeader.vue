@@ -136,18 +136,25 @@ onUnmounted(() => {
 /* 顶栏预约按钮的呼吸光环：声呐环扩散淡出（纯 opacity/transform 合成层），诱导点击 */
 .cta-breathe {
   position: relative;
-  animation: cta-breathe 2.6s ease-in-out infinite;
+  animation: cta-breathe 4.2s ease-in-out infinite;
 }
 
+.cta-breathe::before,
 .cta-breathe::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: 0 0 0 4px rgba(245, 130, 31, 0.4);
+  box-shadow:
+    0 0 0 1.5px rgba(245, 130, 31, 0.5),
+    0 0 12px rgba(245, 130, 31, 0.28);
   opacity: 0;
-  animation: cta-ping 2.6s cubic-bezier(0.33, 0, 0.67, 1) infinite;
+  animation: cta-ping 3.4s cubic-bezier(0.3, 0.55, 0.4, 1) infinite;
   pointer-events: none;
+}
+
+.cta-breathe::after {
+  animation-delay: -1.7s;
 }
 
 @keyframes cta-breathe {
@@ -156,23 +163,23 @@ onUnmounted(() => {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.02);
+    transform: scale(1.015);
   }
 }
 
 @keyframes cta-ping {
   0% {
-    opacity: 0.7;
+    opacity: 0.55;
     transform: scale(1);
   }
-  70%,
   100% {
     opacity: 0;
-    transform: scale(1.28);
+    transform: scale(1.35);
   }
 }
 
 /* 悬停时停掉光环，别在指尖底下闪 */
+.cta-breathe:hover::before,
 .cta-breathe:hover::after {
   animation-play-state: paused;
   opacity: 0;
@@ -180,6 +187,7 @@ onUnmounted(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .cta-breathe,
+  .cta-breathe::before,
   .cta-breathe::after {
     animation: none;
   }
