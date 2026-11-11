@@ -133,62 +133,39 @@ onUnmounted(() => {
   }
 }
 
-/* 顶栏预约按钮的呼吸光环：声呐环扩散淡出（纯 opacity/transform 合成层），诱导点击 */
+/* 顶栏预约按钮的呼吸光环：暖光缓慢明暗（纯 opacity 合成层），诱导点击 */
 .cta-breathe {
   position: relative;
-  animation: cta-breathe 4.2s ease-in-out infinite;
 }
 
-.cta-breathe::before,
-.cta-breathe::after {
+.cta-breathe::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow:
-    0 0 0 1.5px rgba(245, 130, 31, 0.5),
-    0 0 12px rgba(245, 130, 31, 0.28);
-  opacity: 0;
-  animation: cta-ping 3.4s cubic-bezier(0.3, 0.55, 0.4, 1) infinite;
+  box-shadow: 0 0 14px 2px rgba(245, 130, 31, 0.45);
+  opacity: 0.25;
+  animation: cta-glow 3.2s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
-.cta-breathe::after {
-  animation-delay: -1.7s;
-}
-
-@keyframes cta-breathe {
-  0%,
-  100% {
-    transform: scale(1);
+@keyframes cta-glow {
+  from {
+    opacity: 0.25;
   }
-  50% {
-    transform: scale(1.015);
-  }
-}
-
-@keyframes cta-ping {
-  0% {
-    opacity: 0.55;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.35);
+  to {
+    opacity: 0.7;
   }
 }
 
 /* 悬停时停掉光环，别在指尖底下闪 */
-.cta-breathe:hover::before,
-.cta-breathe:hover::after {
+.cta-breathe:hover::before {
   animation-play-state: paused;
   opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cta-breathe,
-  .cta-breathe::before,
-  .cta-breathe::after {
+  .cta-breathe::before {
     animation: none;
   }
 }
