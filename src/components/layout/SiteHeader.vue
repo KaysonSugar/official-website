@@ -80,7 +80,7 @@ onUnmounted(() => {
         <!-- 主按钮：外面包一层 div 控显隐。<640 隐藏写在 div 上，
              不能直接写 BaseButton —— 它自带 inline-flex，同属 display 会被盖掉（375 下实测按钮还露着） -->
         <div class="hidden sm:block">
-          <BaseButton size="md" @click="openLeadForm">
+          <BaseButton size="md" class="cta-breathe" @click="openLeadForm">
             {{ siteConfig.contact.ctaLabel }}
           </BaseButton>
         </div>
@@ -130,6 +130,58 @@ onUnmounted(() => {
   from {
     opacity: 0;
     transform: translateY(-16px);
+  }
+}
+
+/* 顶栏预约按钮的呼吸光环：声呐环扩散淡出（纯 opacity/transform 合成层），诱导点击 */
+.cta-breathe {
+  position: relative;
+  animation: cta-breathe 2.6s ease-in-out infinite;
+}
+
+.cta-breathe::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 4px rgba(245, 130, 31, 0.4);
+  opacity: 0;
+  animation: cta-ping 2.6s cubic-bezier(0.33, 0, 0.67, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes cta-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes cta-ping {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.28);
+  }
+}
+
+/* 悬停时停掉光环，别在指尖底下闪 */
+.cta-breathe:hover::after {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-breathe,
+  .cta-breathe::after {
+    animation: none;
   }
 }
 </style>
