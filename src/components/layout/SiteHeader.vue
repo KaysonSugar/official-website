@@ -70,10 +70,10 @@ onUnmounted(() => {
 
       <!-- 右：电话 + 主按钮 + 汉堡 -->
       <div class="flex shrink-0 items-center gap-3 lg:gap-6">
-        <!-- 电话：≥768 显示，768 以下交给菜单，同屏只留一个入口 -->
+        <!-- 电话：≥768 显示，768 以下交给菜单，同屏只留一个入口；桌面端只展示，触屏才可拨 -->
         <a
           :href="siteConfig.contact.phoneHref"
-          class="hidden font-medium text-ink-900 transition-colors duration-200 hover:text-brand-500 md:block lg:text-[14px]"
+          class="phone-link hidden font-medium text-ink-900 md:block lg:text-[14px]"
           >{{ siteConfig.contact.phone }}</a
         >
 
@@ -130,6 +130,14 @@ onUnmounted(() => {
   from {
     opacity: 0;
     transform: translateY(-16px);
+  }
+}
+
+/* 有鼠标的桌面端电话只展示不响应点击，拨号交给触屏设备 */
+@media (hover: hover) and (pointer: fine) {
+  .phone-link {
+    pointer-events: none;
+    cursor: default;
   }
 }
 
