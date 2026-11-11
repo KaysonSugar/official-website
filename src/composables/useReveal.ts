@@ -9,6 +9,7 @@ import { onMounted, onUnmounted, type ShallowRef } from 'vue'
 /**
  * 区块滚进视口才给根元素加 .in，子元素的 .reveal 依次浮上来。
  * 动画本体在 style.css 的全局 .reveal，各屏别再各写一份 keyframes。
+ * 滑出视口再加 .is-idle，把块里的无限动画按暂停（见 style.css）。
  * 用法：<section ref="root">…</section> + useReveal(useTemplateRef('root'))
  */
 export function useReveal(target: Readonly<ShallowRef<HTMLElement | null>>, threshold = 0.02) {
@@ -27,19 +28,23 @@ export function useReveal(target: Readonly<ShallowRef<HTMLElement | null>>, thre
       return
     }
 
-    // 一露头就触发，别等整块露出 15%——1000px 高的屏要再滚 150px 才动，看着就是迟钝
+    // 一露头就触发，别等整块露出 15%——1000px 高的屏要再滚 150px 才动，看着就是迟钝。
+    // 进场后不停观察：滑出去就挂 .is-idle 停动画，滚回来再摘掉。
+    // rootMargin 提前 120px 恢复，免得动画在视口边缘才"咔"地重新开始。
     observer = new IntersectionObserver(
       (entries) => {
-        // 播一次就断开，省得来回滚反复触发
-        if (!entries.some((e) => e.isIntersecting)) return
-        el.classList.add('in')
-        observer?.disconnect()
+        const hit = entries[entries.length - 1].isIntersecting
+        if (hit) {
+          el.classList.remove('is-idle')
+          el.classList.add('in')
+        } else if (el.classList.contains('in')) {
+          el.classList.add('is-idle')
+        }
       },
-      { threshold },
+      { threshold, rootMargin: '120px 0px' },
     )
     observer.observe(el)
   })
 
-  // 还没滚到就切路由，记得解绑，不然 observer 一直挂着整个 DOM
   onUnmounted(() => observer?.disconnect())
 }

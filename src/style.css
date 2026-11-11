@@ -172,6 +172,16 @@
       animation: none;
     }
   }
+
+  /* 区块滑出视口后（useReveal 挂 .is-idle）整块停掉动画。
+     不写这条的话，首页滚到页脚时还有 90 多个无限动画在跑（流光、呼吸、圆环旋转），
+     屏幕外看不见却照样占着合成器和 GPU，手机一滑就掉帧、还费电。
+     !important 是必须的：各组件里 .in .xxx { animation-play-state: running } 的
+     选择器权重更高，不加压不住。切换瞬间停/续，动画本身不跳位。 */
+  .is-idle,
+  .is-idle * {
+    animation-play-state: paused !important;
+  }
 }
 
 /* 卖点 / 服务方式胶囊：hover 时整体上浮 2px、描边转品牌橙、底色转纯白，投影跟着浮现。

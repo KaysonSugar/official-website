@@ -32,7 +32,9 @@ onBeforeUnmount(() => {
 })
 
 const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  // 系统开了减少动效就直接跳，别硬滑 3 屏
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' })
 }
 </script>
 
@@ -61,7 +63,6 @@ const scrollToTop = () => {
 </template>
 
 <style scoped>
-/* 显隐过渡只动 opacity/transform；reduced-motion 下直接切，不做动画 */
 .btt-enter-active,
 .btt-leave-active {
   transition:

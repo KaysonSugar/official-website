@@ -13,12 +13,8 @@ import DesktopNav from '@/components/layout/DesktopNav.vue'
 import MobileMenu from '@/components/layout/MobileMenu.vue'
 import { siteConfig } from '@/config/site'
 import { useLeadForm } from '@/composables/useLeadForm'
+import { useScrollLock } from '@/composables/useScrollLock'
 
-/**
- * 顶栏。这边只留壳：品牌 / 主导航 / 电话 + 按钮三段，加滚动前后的两种背景。
- * 桌面下拉在 DesktopNav，移动菜单在 MobileMenu；
- * 汉堡的状态只能放这儿——按钮和菜单不在一个组件里。
- */
 const scrolled = ref(false)
 const menuOpen = ref(false)
 const { openLeadForm } = useLeadForm()
@@ -34,9 +30,7 @@ const closeMenu = () => {
 }
 
 // 菜单开着时锁住页面滚动，不然背景跟着滑
-watch(menuOpen, (open) => {
-  document.body.style.overflow = open ? 'hidden' : ''
-})
+useScrollLock(menuOpen)
 
 // 切页后收起菜单（桌面下拉归位在 DesktopNav 自己的 watch 里）
 watch(
@@ -51,8 +45,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
-  // 菜单开着的时候离开页面，得把 overflow 还原，否则 body 一直是锁死状态
-  document.body.style.overflow = ''
 })
 </script>
 
@@ -130,8 +122,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* 入场：整条顶栏从上滑落 16px 淡入。曲线和时长对齐首屏那套，
-   不加 delay——顶栏要先落定，首屏内容 150ms 后再进场 */
 .nav-in {
   animation: nav-drop 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }

@@ -9,6 +9,7 @@ import { computed, useTemplateRef } from 'vue'
 import HeroCta from '@/components/ui/HeroCta.vue'
 import { useCountUp } from '@/composables/useCountUp'
 import { useLeaveConfirm } from '@/composables/useLeaveConfirm'
+import { useReveal } from '@/composables/useReveal'
 import { siteConfig } from '@/config/site'
 import HomeWorkbench from './HomeWorkbench.vue'
 import truckIcon from '@/assets/home/images/hero-truck.webp'
@@ -39,11 +40,16 @@ const stats = computed(() =>
 // 动画启动又跳回 0 重数，肉眼看是闪一下「7 天 → 0 天 → …」
 // 滚动计数交给 useCountUp：露出一半再数，关动效/老浏览器直接填终值
 useCountUp(statsEl)
+
+// 首屏的进场动画自己走（不挂 .in），这里只用它滑出视口后暂停：
+// 光晕呼吸、圆弧旋转、按钮流光是一直跑的无限动画，滚下去看别的屏时没必要继续烧
+const heroEl = useTemplateRef<HTMLElement>('heroEl')
+useReveal(heroEl)
 </script>
 
 <template>
   <!-- 首屏：relative 给装饰元素定位，overflow-hidden 裁掉探出视口的圆环，背景渐变见末尾 .hero-bg -->
-  <section id="home" class="hero-bg relative overflow-hidden">
+  <section id="home" ref="heroEl" class="hero-bg relative overflow-hidden">
     <!-- container-page：内容宽度上限 + 左右留白，和顶栏同一条基准线 -->
     <div class="container-page relative">
       <!-- 栅格：手机单列 gap 56px；lg(≥1024) 分两栏 11:10、列距 24px、上留白 67px -->

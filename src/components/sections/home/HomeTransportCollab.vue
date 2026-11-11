@@ -223,7 +223,6 @@ useReveal(root)
   transform-origin: 1239px 605px;
   animation: collab-spin 28s linear infinite;
   animation-play-state: paused;
-  will-change: transform;
 }
 
 .in .collab-spin {

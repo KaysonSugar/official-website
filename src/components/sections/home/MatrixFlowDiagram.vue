@@ -243,6 +243,15 @@ function lineDelay(i: number): string {
   animation-delay: var(--d, 0ms), calc(var(--d, 0ms) + 1.5s);
 }
 
+/* 虚线流动改的是 stroke-dashoffset，动不了合成层，等于整张 1920 宽的图每帧重画一遍。
+   窄屏上画布被 overflow-x 裁掉三分之二，效果基本看不见、代价却照付，直接只留淡入。 */
+@media (max-width: 1023px) {
+  .in .flow-line {
+    animation: flow-fade 0.4s ease backwards;
+    animation-delay: var(--d, 0ms);
+  }
+}
+
 @keyframes flow-fade {
   from {
     opacity: 0;

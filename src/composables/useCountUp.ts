@@ -4,7 +4,7 @@
  * @StartDate: 2026.11.06
  * @Name: 统计数字滚动
  */
-import { onMounted, type ShallowRef } from 'vue'
+import { onMounted, onUnmounted, type ShallowRef } from 'vue'
 
 // 0.9s，配合 easeOutCubic 先快后慢，比匀速舒服
 const DURATION = 900
@@ -15,6 +15,10 @@ const DURATION = 900
  * 用法：<p data-num="1500" data-rest="+">0+</p> + useCountUp(useTemplateRef('stats'))
  */
 export function useCountUp(target: Readonly<ShallowRef<HTMLElement | null>>, threshold = 0.5) {
+  let io: IntersectionObserver | null = null
+  // 数到一半被切页时要能停下来，不然一直在往已卸载的节点里写文本
+  const rafs = new Set<number>()
+
   onMounted(() => {
     const root = target.value
     if (!root) return
@@ -31,31 +35,38 @@ export function useCountUp(target: Readonly<ShallowRef<HTMLElement | null>>, thr
       return
     }
 
-    const io = new IntersectionObserver(
+    io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue
-          io.unobserve(entry.target)
-          animate(entry.target as HTMLElement)
+          io?.unobserve(entry.target)
+          animate(entry.target as HTMLElement, rafs)
         }
       },
       { threshold },
     )
-    els.forEach((el) => io.observe(el))
+    els.forEach((el) => io?.observe(el))
+  })
+
+  onUnmounted(() => {
+    io?.disconnect()
+    rafs.forEach(cancelAnimationFrame)
+    rafs.clear()
   })
 }
 
 // 单个数字从 0 数到终值
-function animate(el: HTMLElement) {
+function animate(el: HTMLElement, rafs: Set<number>) {
   const num = Number(el.dataset.num)
   const start = performance.now()
-
-  const tick = (now: number) => {
+  // 每帧只管住自己这一次的 id，结束就把它从集合里摘掉
+  let id = requestAnimationFrame(function tick(now: number) {
     const p = Math.min((now - start) / DURATION, 1)
     el.textContent = format(el, Math.round(num * (1 - (1 - p) ** 3)))
-    if (p < 1) requestAnimationFrame(tick)
-  }
-  requestAnimationFrame(tick)
+    rafs.delete(id)
+    if (p < 1) rafs.add((id = requestAnimationFrame(tick)))
+  })
+  rafs.add(id)
 }
 
 // 终值或每帧文本：按需千位分组，再拼尾巴

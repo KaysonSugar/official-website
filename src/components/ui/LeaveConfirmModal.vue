@@ -8,23 +8,21 @@
 import { watch } from 'vue'
 import { siteConfig } from '@/config/site'
 import { useLeaveConfirm, confirmLeave } from '@/composables/useLeaveConfirm'
+import { useScrollLock } from '@/composables/useScrollLock'
 
 const { visible, url, desc, closeLeaveConfirm } = useLeaveConfirm()
 const { leaveConfirm } = siteConfig
 
-// Esc 关闭；关闭时解锁 body 滚动
+// Esc 关闭；滚动锁交给共用计数（和顶栏菜单、预约弹层互不顶掉）
 function onKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape') closeLeaveConfirm()
 }
 
+useScrollLock(visible)
+
 watch(visible, (open) => {
-  if (open) {
-    document.body.style.overflow = 'hidden'
-    window.addEventListener('keydown', onKeydown)
-  } else {
-    document.body.style.overflow = ''
-    window.removeEventListener('keydown', onKeydown)
-  }
+  if (open) window.addEventListener('keydown', onKeydown)
+  else window.removeEventListener('keydown', onKeydown)
 })
 </script>
 
