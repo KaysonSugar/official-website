@@ -17,6 +17,14 @@ export default defineConfig({
     port: 5173,
     // 启动开发服务器自动开浏览器
     open: true,
+    proxy: {
+      // 开发态把 /producer 转给后端网关，线上由 nginx 做同样的事；secure:false 放行自签证书
+      '/producer': {
+        target: 'https://dev.weihuayunshu.com:8443',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   build: {
     // 静态托管时把根目录指向 dist 即可

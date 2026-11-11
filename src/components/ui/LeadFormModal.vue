@@ -21,7 +21,6 @@ const form = reactive<LeadPayload>({
   company: '',
   region: '',
   phone: '',
-  interest: '',
   note: '',
 })
 
@@ -30,7 +29,7 @@ const status = ref<'idle' | 'submitting' | 'done'>('idle')
 const submitError = ref('')
 const nameEl = useTemplateRef<HTMLInputElement>('nameEl')
 
-// 五个输入项共用一套皮：10px 圆角，聚焦亮橙描边 + 3px 淡橙光圈（比只换边框色更抓眼）；
+// 四个输入项共用一套皮：10px 圆角，聚焦亮橙描边 + 3px 淡橙光圈（比只换边框色更抓眼）；
 // 高度不写进来，单行框给 46px、备注框自己给最小高度
 const fieldClass =
   'mt-[8px] w-full rounded-[10px] border border-ink-200 bg-white px-[14px] text-sm text-ink-900 outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-ink-400 hover:border-ink-300 focus:border-brand-500 focus:ring-[3px] focus:ring-brand-500/15'
@@ -49,7 +48,6 @@ const reset = () => {
   form.company = ''
   form.region = ''
   form.phone = ''
-  form.interest = ''
   form.note = ''
   errors.name = undefined
   errors.phone = undefined
@@ -130,7 +128,7 @@ onBeforeUnmount(() => {
                 <h3 id="lead-title" class="text-[20px] font-semibold leading-[28px] text-ink-900">
                   {{ leadForm.title }}
                 </h3>
-                <p class="mt-[6px] text-[13px] leading-[22px] text-ink-500">
+                <p class="mt-[4px] text-[13px] leading-[22px] text-ink-500 sm:mt-[6px]">
                   {{ leadForm.desc }}
                 </p>
               </div>
@@ -182,8 +180,8 @@ onBeforeUnmount(() => {
             </button>
           </div>
 
-          <!-- 表单：mt-[28px] 跟头部拉开；手机单列，≥640 两列两行——上排姓名/公司、下排手机号/地区 -->
-          <form v-else class="mt-[28px]" @submit.prevent="onSubmit">
+          <!-- 表单：手机 mt-[20px] 跟头部拉开（桌面 28px）；手机单列，≥640 两列两行——上排姓名/公司、下排手机号/地区 -->
+          <form v-else class="mt-[20px] sm:mt-[28px]" @submit.prevent="onSubmit">
             <div class="grid gap-[16px] sm:grid-cols-2">
               <label class="block">
                 <span class="text-[13px] font-medium text-ink-700"
@@ -251,31 +249,8 @@ onBeforeUnmount(() => {
               </label>
             </div>
 
-            <!-- 关注产品：胶囊 py-[7px]，选中浅橙底 + 橙描边；不选也能提交 -->
-            <div class="mt-[18px]">
-              <span class="text-[13px] font-medium text-ink-700">{{
-                leadForm.labels.interests
-              }}</span>
-              <div class="mt-[10px] flex flex-wrap gap-[8px]">
-                <button
-                  v-for="item in leadForm.interests"
-                  :key="item"
-                  type="button"
-                  :class="[
-                    'rounded-full border px-[14px] py-[7px] text-[13px] leading-none transition-colors duration-200',
-                    form.interest === item
-                      ? 'border-brand-500 bg-[#fff1e8] font-medium text-[#c4520f]'
-                      : 'border-ink-200 text-ink-600 hover:border-ink-300 hover:text-ink-900',
-                  ]"
-                  @click="form.interest = form.interest === item ? '' : item"
-                >
-                  {{ item }}
-                </button>
-              </div>
-            </div>
-
-            <!-- 备注：选填，三行高，最小 104px -->
-            <label class="mt-[18px] block">
+            <!-- 备注：选填，手机最小 96px、桌面 104px，都刚好放下三行 -->
+            <label class="mt-[14px] block sm:mt-[18px]">
               <span class="text-[13px] font-medium text-ink-700"
                 >{{ leadForm.labels.note }}
                 <span class="font-normal text-ink-400">{{ leadForm.optionalTip }}</span></span
@@ -285,15 +260,19 @@ onBeforeUnmount(() => {
                 rows="3"
                 maxlength="200"
                 :placeholder="leadForm.notePlaceholder"
-                :class="[fieldClass, 'min-h-[104px] resize-none py-[12px] leading-[22px]']"
+                :class="[
+                  fieldClass,
+                  'min-h-[96px] resize-none py-[12px] leading-[22px] sm:min-h-[104px]',
+                ]"
               />
             </label>
 
             <p v-if="submitError" class="mt-[12px] text-[13px] text-[#d9534f]">{{ submitError }}</p>
 
-            <!-- 页脚：左边电话兜底，右边取消 + 提交；按钮统一 42px 高、10px 圆角 -->
+            <!-- 页脚：左边电话兜底，右边取消 + 提交；按钮统一 42px 高、10px 圆角。
+                 手机把上间距和分割线留白各收一档，整窗才在 844 高的屏里放得下 -->
             <div
-              class="mt-[28px] flex flex-wrap items-center justify-between gap-[12px] border-t border-ink-100 pt-[22px]"
+              class="mt-[20px] flex flex-wrap items-center justify-between gap-[12px] border-t border-ink-100 pt-[16px] sm:mt-[28px] sm:pt-[22px]"
             >
               <a
                 :href="siteConfig.contact.phoneHref"

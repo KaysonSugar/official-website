@@ -25,13 +25,11 @@ export interface LeaveConfirmConfig {
 export interface LeadFormConfig {
   title: string
   desc: string
-  interests: string[]
   labels: {
     name: string
     company: string
     region: string
     phone: string
-    interests: string
     note: string
   }
   placeholders: {

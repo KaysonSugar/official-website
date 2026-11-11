@@ -35,13 +35,11 @@ export const leaveConfirm: LeaveConfirmConfig = {
 export const leadForm: LeadFormConfig = {
   title: '预约产品演示',
   desc: '留下联系方式，顾问将在 3 个工作日内与您联系。',
-  interests: ['化工生产', '物流调度', '司机端', '整体方案'],
   labels: {
     name: '姓名',
     company: '公司',
     region: '地区',
     phone: '手机号',
-    interests: '想了解的产品',
     note: '需求备注',
   },
   placeholders: {
