@@ -45,7 +45,7 @@ const scrollToTop = () => {
       v-show="visible"
       type="button"
       aria-label="回到顶部"
-      class="fixed bottom-[60px] right-[32px] z-[1000] flex h-[44px] w-[44px] items-center justify-center rounded-full border border-ink-100 bg-white text-ink-600 shadow-[0_10px_28px_-10px_rgba(26,26,26,0.25)] transition-colors duration-200 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-500"
+      class="fixed bottom-[60px] right-[32px] z-[1000] flex h-[44px] w-[44px] items-center justify-center rounded-full border border-ink-200/60 bg-transparent text-ink-600 transition-colors duration-200 hover:border-brand-300 hover:bg-brand-50/80 hover:text-brand-500"
       @click="scrollToTop"
     >
       <!-- 箭头：一根 2px 圆头折线，跟首屏卖点胶囊的对勾同一笔法 -->
