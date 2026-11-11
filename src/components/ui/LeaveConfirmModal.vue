@@ -30,36 +30,34 @@ watch(visible, (open) => {
 
 <template>
   <!-- 全站唯一外链确认层：Teleport 到 body，避开各 section 的 overflow-hidden 与层级；
-       fixed inset-0 满屏遮罩，z-[100] 盖住顶栏，bg-ink-900/50 + 2px backdrop-blur；
-       点遮罩空白处或 Esc 关闭，确认后才开新标签 -->
+       fixed inset-0 满屏遮罩，z-[100]，点遮罩空白处或 Esc 关闭，确认后才开新标签 -->
   <Teleport to="body">
     <Transition name="leave-tip">
       <div
         v-if="visible"
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-ink-900/50 px-[20px] backdrop-blur-[2px]"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-ink-900/40 px-[20px] backdrop-blur-[3px]"
         @click.self="closeLeaveConfirm"
       >
-        <!-- 弹窗卡片：宽上限 460px、内边距 32px、圆角 16px，深投影 -->
+        <!-- 弹窗卡片：宽上限 440px、内边距 32px、圆角 20px，跟预约弹层同一套尺子 -->
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="leave-tip-title"
-          class="w-full max-w-[460px] rounded-2xl bg-white p-[32px] shadow-[0_40px_90px_-30px_rgba(26,26,26,0.55)]"
+          class="w-full max-w-[440px] rounded-[20px] bg-white p-[32px] shadow-[0_40px_100px_-32px_rgba(26,26,26,0.45)]"
         >
-          <!-- 头部：flex 横排，gap-[16px] 图标与文字间距，items-start 顶部对齐 -->
-          <div class="flex items-start gap-[16px]">
-            <!-- 图标托底：48px 圆角方块（rounded-xl=12px），浅橙底 + 1px 橙描边，白卡片上不糊，shrink-0 不被文字挤压 -->
+          <!-- 头部：44px 浅橙圆角托住跳出图标，标题 20px、说明 13px 中灰，顶部对齐 -->
+          <div class="flex items-start gap-[14px]">
             <span
-              class="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-xl bg-[#fff1e8] ring-1 ring-[#ffdfcc]"
+              class="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-[13px] bg-[#fff1e8]"
               aria-hidden="true"
             >
-              <!-- 跳出图标：28px 见方，2px 品牌橙描边，方框开口 + 右上箭头表示新标签打开 -->
+              <!-- 跳出图标：24px 见方，1.8px 品牌橙描边，方框开口 + 右上箭头表示新标签打开 -->
               <svg
-                class="h-[28px] w-[28px]"
+                class="h-[22px] w-[22px]"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#e9611f"
-                stroke-width="2"
+                stroke-width="1.8"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 aria-hidden="true"
@@ -71,39 +69,40 @@ watch(visible, (open) => {
             </span>
             <!-- 文字区：min-w-0 允许收缩，长说明不会把弹窗撑宽 -->
             <div class="min-w-0">
-              <!-- 标题：18px 半粗，行高 26px -->
-              <h3 id="leave-tip-title" class="text-[18px] font-semibold leading-[26px] text-ink-900">
+              <h3
+                id="leave-tip-title"
+                class="text-[20px] font-semibold leading-[28px] text-ink-900"
+              >
                 {{ leaveConfirm.title }}
               </h3>
-              <!-- 说明：14px、行高 24px，mt-[8px] 与标题间距 8px；文案由调用方传入 -->
-              <p class="mt-[8px] text-sm leading-[24px] text-ink-600">
+              <!-- 说明：13px、行高 22px，mt-[6px] 跟标题贴合；文案由调用方传入 -->
+              <p class="mt-[6px] text-[13px] leading-[22px] text-ink-500">
                 {{ desc }}
               </p>
             </div>
           </div>
 
-          <!-- 链接框：mt-[20px]，浅灰底，px 16 / py 12 内边距；等宽字体，
-               break-all 让长链接强制折行不撑宽弹窗 -->
+          <!-- 链接框：mt-[24px]，浅灰底 10px 圆角；等宽小字，break-all 让长链接强制折行不撑宽弹窗 -->
           <p
-            class="mt-[20px] rounded-lg bg-[#f6f7f6] px-[16px] py-[12px] font-mono text-[13px] leading-[20px] break-all text-ink-500"
+            class="mt-[24px] rounded-[10px] bg-[#f6f7f6] px-[14px] py-[10px] font-mono text-[12px] leading-[18px] break-all text-ink-500"
           >
             {{ url }}
           </p>
 
-          <!-- 页脚：mt-[28px] + pt-[24px]，border-t 顶部分割线，gap-[12px] 按钮间距，右对齐 -->
-          <div class="mt-[28px] flex items-center justify-end gap-[12px] border-t border-ink-100 pt-[24px]">
-            <!-- 取消：描边按钮，px 22 / py 9，hover 描边与底色加深 -->
+          <!-- 页脚：mt-[24px] + pt-[22px]，顶部分割线，按钮右对齐、统一 42px 高 -->
+          <div
+            class="mt-[24px] flex items-center justify-end gap-[10px] border-t border-ink-100 pt-[22px]"
+          >
             <button
               type="button"
-              class="rounded-lg border border-ink-200 px-[22px] py-[9px] text-sm font-medium text-ink-700 transition-colors duration-200 hover:border-ink-300 hover:bg-ink-50 hover:text-ink-900"
+              class="h-[42px] min-w-[80px] rounded-[10px] border border-ink-200 px-[20px] text-sm font-medium text-ink-700 transition-colors duration-200 hover:border-ink-300 hover:bg-ink-50 hover:text-ink-900"
               @click="closeLeaveConfirm"
             >
               {{ leaveConfirm.cancel }}
             </button>
-            <!-- 继续访问：品牌橙实底，px 22 / py 9，带橙色投影 -->
             <button
               type="button"
-              class="rounded-lg bg-brand-500 px-[22px] py-[9px] text-sm font-medium text-white shadow-[0_6px_16px_-6px_rgba(233,97,31,0.55)] transition-colors duration-200 hover:bg-brand-600"
+              class="h-[42px] min-w-[112px] rounded-[10px] bg-brand-500 px-[22px] text-sm font-medium text-white shadow-[0_10px_24px_-10px_rgba(233,97,31,0.6)] transition-colors duration-200 hover:bg-brand-600"
               @click="confirmLeave"
             >
               {{ leaveConfirm.confirm }}
