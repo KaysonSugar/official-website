@@ -6,19 +6,9 @@
  * 走 erp-h5-producer 那套网关前缀，头里带 appType: 10 标识官网来源；这个接口不要 token。
  */
 
-/** 弹层里收集到的内容，字段名按页面语义写，提交前再映射成后端字段 */
-export interface LeadPayload {
-  /** 联系人姓名 */
-  name: string
-  /** 公司名称，选填 */
-  company: string
-  /** 所在地区，选填 */
-  region: string
-  /** 手机号，已通过前端校验 */
-  phone: string
-  /** 需求备注，选填 */
-  note: string
-}
+import type { LeadPayload, LeadResponse } from './types'
+
+export type { LeadPayload, LeadResponse } from './types'
 
 /** 产品线枚举，跟后端 productTypes 约定一致 */
 const PRODUCT_TYPE = { chemical: 1, logistics: 2, driver: 3 } as const
@@ -47,10 +37,16 @@ const ENDPOINT =
   (import.meta.env.VITE_LEAD_ENDPOINT as string | undefined) ??
   '/producer/api/official/lead/leadIntent/create'
 
-/** 网络层失败（断网、开发代理没起、证书不对）单独抛一种，弹层好换成配置里的中文提示 */
+// 兜底一：10 秒超时，后端挂了不让用户对着提交中无限等
+const TIMEOUT_MS = 10_000
+
+/** 网络层失败（断网、代理没起、超时），弹层换成配置里的中文提示 */
 export class LeadNetworkError extends Error {}
 
-// 后端要的是 companyName / remark，跟表单字段不一样，这里映射一次
+/** 后端明确拒绝（code != 200），message 是后端 msg，可能为空 */
+export class LeadApiError extends Error {}
+
+/** 后端要的是 companyName / remark，跟表单字段不一样，这里映射一次 */
 export async function submitLead(payload: LeadPayload, productTypes: number[]): Promise<void> {
   let res: Response
   try {
@@ -68,14 +64,17 @@ export async function submitLead(payload: LeadPayload, productTypes: number[]): 
         productTypes,
         remark: payload.note,
       }),
+      signal: AbortSignal.timeout(TIMEOUT_MS),
     })
   } catch {
+    // fetch 只要在传输层断掉都算网络错误（含超时 abort），别把英文原话甩给用户
     throw new LeadNetworkError('network')
   }
 
-  // 后端约定 code 200 才算成功，其余把 msg 透出去给弹层显示
-  const json = (await res.json().catch(() => null)) as { code?: number; msg?: string } | null
+  // 兜底二：响应体不是合法 JSON（网关回了 HTML 错误页之类）也吞掉，走统一失败分支
+  const json = (await res.json().catch(() => null)) as LeadResponse | null
   if (!res.ok || json?.code !== 200) {
-    throw new Error(json?.msg || `提交失败（${res.status}）`)
+    // 兜底三：后端没给 msg 就传空串，展示文案的兜底留给弹层配置
+    throw new LeadApiError(json?.msg || '')
   }
 }

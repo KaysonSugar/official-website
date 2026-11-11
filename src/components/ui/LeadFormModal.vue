@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, reactive, ref, useTemplateRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { LeadNetworkError, productTypesForRoute, submitLead, type LeadPayload } from '@/api/lead'
+import { LeadApiError, productTypesForRoute, submitLead, type LeadPayload } from '@/api/lead'
 import { useLeadForm } from '@/composables/useLeadForm'
 import { siteConfig } from '@/config/site'
 import logoMark from '@/assets/brand/logo.webp'
@@ -76,13 +76,9 @@ const onSubmit = async () => {
     )
     status.value = 'done'
   } catch (err) {
-    // 断网 / 代理不通这类不是业务错误，别把浏览器的 "Failed to fetch" 甩给用户
+    // 后端拒绝优先透出 msg；断网 / 超时 / msg 为空都回落到配置的兜底文案
     submitError.value =
-      err instanceof LeadNetworkError
-        ? leadForm.errors.submit
-        : err instanceof Error
-          ? err.message || leadForm.errors.submit
-          : leadForm.errors.submit
+      err instanceof LeadApiError && err.message ? err.message : leadForm.errors.submit
     status.value = 'idle'
   }
 }
