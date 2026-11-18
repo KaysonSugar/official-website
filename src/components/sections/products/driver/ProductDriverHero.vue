@@ -57,7 +57,7 @@ const chipPos = {
     />
     <div class="container-page relative">
       <!-- 超宽屏整块等比放大（zoom 见 directives/heroZoom），文字样机同步铺满不留中间空白 -->
-      <div v-hero-zoom class="grid items-center gap-[48px] lg:grid-cols-[1fr_480px]">
+      <div v-hero-zoom class="grid items-center gap-[48px] lg:grid-cols-[1fr_540px]">
         <!-- 左列 -->
         <div>
           <p
@@ -114,19 +114,19 @@ const chipPos = {
         </div>
 
         <!-- 右列：手机演示，整屏 DOM 重建。鼠标进入上浮 8px（8×1.25=10 物理像素，整数不糊） -->
-        <div class="reveal relative mx-auto w-[330px] pb-[24px]" style="--d: 200ms">
-          <!-- 薄荷光晕：照原型量直径约 520（=1.58 倍手机宽），左侧露出约 0.36 卡宽
+        <div class="reveal relative mx-auto w-[330px] pb-[24px] sm:w-[400px]" style="--d: 200ms">
+          <!-- 薄荷光晕：直径 1.58 倍手机宽（400→630），左侧露出约 0.36 卡宽
                （圆心比手机中心左 35、竖直中心在卡高 44% 处），圆顶比卡顶高 8。
-               max-w-none 必须带：preflight 给 img 的 max-width:100% 会把它钳到 330 列宽，
+               max-w-none 必须带：preflight 给 img 的 max-width:100% 会把它钳到列宽，
                之前 570 一直没生效就是这个原因，画面上只剩圆环在撑。
                挂在这一列里跟着手机走 —— 早先按视口写死 right 定位，窗口一变卡就漂，左右露出的宽度对不上 -->
           <img
             :src="glowMint"
             alt=""
             aria-hidden="true"
-            class="pointer-events-none absolute left-[calc(50%-35px)] top-[-8px] hidden w-[520px] max-w-none -translate-x-1/2 select-none lg:block"
+            class="pointer-events-none absolute left-[calc(50%-35px)] top-[-8px] hidden w-[630px] max-w-none -translate-x-1/2 select-none lg:block"
           />
-          <!-- 细圆环：照原型量直径 1.48 倍手机宽（330→490）、圆心正对手机中线（原型环心 x
+          <!-- 细圆环：照原型量直径 1.48 倍手机宽（400→595）、圆心正对手机中线（原型环心 x
                与一键接单按钮中心只差 1px，不要偏移）、竖直中心在卡高 43% 处——
                顶弧出卡顶 ~10px，底弧藏在卡后（距卡底还差 ~20px），整圈只露上半圈，
                之前 574 + 底部下垂的画法整圈都露，视觉比原型大一圈。
@@ -134,7 +134,7 @@ const chipPos = {
                外层 span 定位，里层 img 只跑 scale 呼吸动画，transform 分层不互相覆盖 -->
           <span
             aria-hidden="true"
-            class="pointer-events-none absolute left-1/2 top-[-10px] w-[min(490px,calc(100vw-24px))] -translate-x-1/2"
+            class="pointer-events-none absolute left-1/2 top-[-10px] w-[min(595px,calc(100vw-24px))] -translate-x-1/2"
           >
             <img :src="ringOuter" alt="" class="drv-breathe w-full select-none" />
           </span>
