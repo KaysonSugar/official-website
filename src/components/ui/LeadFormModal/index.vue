@@ -5,17 +5,24 @@
  * @Name: 预约产品演示表单弹层（全站唯一实例，挂在 App.vue）
 -->
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, reactive, ref, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, reactive, ref, useTemplateRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLeadForm } from '@/composables/useLeadForm'
 import { useScrollLock } from '@/composables/useScrollLock'
 import { siteConfig } from '@/config/site'
-import { LeadApiError, productTypesForRoute, submitLead, type LeadForm } from './api'
+import {
+  ALL_PRODUCT_TYPES,
+  LeadApiError,
+  PRODUCT_TYPE,
+  productTypesForRoute,
+  submitLead,
+  type LeadForm,
+} from './api'
 import logoMark from '@/assets/brand/logo.webp'
 
 const { open, closeLeadForm } = useLeadForm()
 
-// 产品页打开弹窗就带上那条产品线，其余页面按整体方案提交
+// 产品页打开弹窗预选那条产品线，其余页面预选整体方案
 const route = useRoute()
 
 // 文案和选项都在 config/brand/data.ts 的 leadForm 里，这里不写死
@@ -29,6 +36,25 @@ const form = reactive<LeadForm>({
   note: '',
 })
 
+// 选中的产品线（后端约定的数字集合），打开弹窗时按路由预选，提交时原样传走
+const selectedTypes = ref<number[]>([])
+
+// 三条全选中 = 整体方案，与后端 ALL_PRODUCT_TYPES 语义一致
+const isOverall = computed(() => selectedTypes.value.length === ALL_PRODUCT_TYPES.length)
+
+// 点产品线：选中就摘掉、没选就加上；摘到空时回整体方案，避免提交空集合
+const toggleType = (type: number) => {
+  const next = selectedTypes.value.includes(type)
+    ? selectedTypes.value.filter((t) => t !== type)
+    : [...selectedTypes.value, type]
+  selectedTypes.value = next.length ? next : [...ALL_PRODUCT_TYPES]
+}
+
+// 整体方案：一键回到三条全选
+const selectOverall = () => {
+  selectedTypes.value = [...ALL_PRODUCT_TYPES]
+}
+
 const errors = reactive<{ name?: string; phone?: string }>({})
 const status = ref<'idle' | 'submitting' | 'done'>('idle')
 const submitError = ref('')
@@ -39,6 +65,12 @@ const nameEl = useTemplateRef<HTMLInputElement>('nameEl')
 const fieldClass =
   'mt-[8px] w-full rounded-[12px] border border-ink-200 bg-white px-[16px] text-sm text-ink-900 outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-ink-400 hover:border-ink-300 focus:border-brand-500 focus:ring-[3px] focus:ring-brand-500/15'
 const fieldError = 'border-[#e05b3f] focus:border-[#e05b3f] focus:ring-[#e05b3f]/15'
+
+// 产品胶囊两种皮：选中橙描边浅橙底橙字，未选灰描边白底灰字、hover 描边深一档
+const chipBase =
+  'h-[34px] rounded-full border px-[14px] text-[13px] font-medium transition-colors duration-200'
+const chipActive = 'border-brand-500 bg-[#fff1e8] text-brand-600'
+const chipIdle = 'border-ink-200 bg-white text-ink-600 hover:border-ink-300'
 
 // 只在提交时校验，填的过程中不打断；公司、地区选填不拦。
 // 手机号四段：1 开头、第二位 3-9、共 11 位
@@ -73,7 +105,7 @@ const onSubmit = async () => {
         region: form.region.trim(),
         phone: form.phone.trim(),
       },
-      productTypesForRoute(route.path),
+      selectedTypes.value,
     )
     status.value = 'done'
   } catch (err) {
@@ -84,10 +116,11 @@ const onSubmit = async () => {
   }
 }
 
-// 打开时清空上一次的输入并聚焦姓名；关闭时全部复位，下次打开是干净表单
+// 打开时清空上一次的输入、按路由预选产品线并聚焦姓名；关闭时全部复位，下次打开是干净表单
 watch(open, (isOpen) => {
   if (isOpen) {
     reset()
+    selectedTypes.value = [...productTypesForRoute(route.path)]
     nextTick(() => nameEl.value?.focus())
   }
 })
@@ -192,6 +225,34 @@ onBeforeUnmount(() => {
 
           <!-- 表单：手机 mt-[20px] 跟头部拉开（桌面 28px）；手机一行一个，≥640 短字段两列、备注独占整行 -->
           <form v-else class="mt-[18px] sm:mt-[28px]" @submit.prevent="onSubmit">
+            <!-- 想了解的产品：三条产品线多选 + 整体方案一键全选，mb-[18px] 与下面的字段组拉开 -->
+            <div class="mb-[18px]">
+              <span class="text-[12px] font-medium text-ink-500">{{ leadForm.productsLabel }}</span>
+              <!-- 标签行：mt-[10px] 与标题间距，flex-wrap 窄屏换行，gap-[10px] 胶囊间距 -->
+              <div class="mt-[10px] flex flex-wrap gap-[10px]">
+                <button
+                  v-for="opt in leadForm.productOptions"
+                  :key="opt.key"
+                  type="button"
+                  :class="[
+                    chipBase,
+                    selectedTypes.includes(PRODUCT_TYPE[opt.key]) ? chipActive : chipIdle,
+                  ]"
+                  @click="toggleType(PRODUCT_TYPE[opt.key])"
+                >
+                  {{ opt.label }}
+                </button>
+                <!-- 整体方案：三条全选中时亮起 -->
+                <button
+                  type="button"
+                  :class="[chipBase, isOverall ? chipActive : chipIdle]"
+                  @click="selectOverall"
+                >
+                  {{ leadForm.overallLabel }}
+                </button>
+              </div>
+            </div>
+
             <div class="grid gap-[16px] sm:grid-cols-2 sm:gap-[18px]">
               <label class="block">
                 <span class="text-[12px] font-medium text-ink-500"

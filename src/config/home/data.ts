@@ -21,7 +21,6 @@ import type {
 
 export const hero: HomeHero = {
   badge: '对标 2026 版《危险化学品安全法》',
-  badgeHint: '点击查看',
   leaveTip: '您将离开威易达官网，前往共产党员网查看《危险化学品安全法》相关内容，请注意信息安全。',
   floats: {
     compliance: { title: '合规校验通过', desc: '危化品运输资质已核验' },

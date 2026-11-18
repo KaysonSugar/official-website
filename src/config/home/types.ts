@@ -7,7 +7,6 @@
 
 export interface HomeHero {
   badge: string
-  badgeHint: string
   leaveTip: string
   floats: {
     compliance: { title: string; desc: string }

@@ -21,8 +21,8 @@ export interface LeadResponse {
   data?: { id?: number }
 }
 
-/** 产品线枚举，跟后端 productTypes 约定一致 */
-const PRODUCT_TYPE = { chemical: 1, logistics: 2, driver: 3 } as const
+/** 产品线枚举，跟后端 productTypes 约定一致；key 供弹窗把配置选项映射成数字 */
+export const PRODUCT_TYPE = { chemical: 1, logistics: 2, driver: 3 } as const
 
 /** 三条线全选：非产品页打开弹窗时的默认值，等价于「整体方案」 */
 export const ALL_PRODUCT_TYPES: number[] = [

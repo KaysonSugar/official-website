@@ -25,6 +25,9 @@ export interface LeaveConfirmConfig {
 export interface LeadFormConfig {
   title: string
   desc: string
+  productsLabel: string
+  productOptions: { key: 'chemical' | 'logistics' | 'driver'; label: string }[]
+  overallLabel: string
   labels: {
     name: string
     company: string

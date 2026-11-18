@@ -58,9 +58,8 @@ useReveal(heroEl)
       >
         <!-- 左列：lg 下整体下移 10px（lg:mt-[10px]），让左列底和看板底齐平 -->
         <div class="lg:mt-[10px]">
-          <!-- 胶囊容器：relative inline-block 收窄到内容宽，右侧提示靠它定位；
-               group 供子元素用 group-hover 联动 -->
-          <div class="rise group relative inline-block" :style="{ animationDelay: '0ms' }">
+          <!-- 胶囊入场动画容器 -->
+          <div class="rise inline-block" :style="{ animationDelay: '0ms' }">
             <!-- 胶囊：inline-flex 横排，h-8 高 32px，gap 8px 圆点与文字间距，rounded-full 全圆角，
                  pl 12 / pr 14 内边距，13px 字号；hover 描边、底色各深一档 -->
             <a
@@ -71,24 +70,6 @@ useReveal(heroEl)
               <span class="h-[6px] w-[6px] rounded-full bg-[#2fb188]" aria-hidden="true" />
               {{ siteConfig.hero.badge }}
             </a>
-
-            <!-- 提示字：absolute 定位到胶囊右外 10px，top-1/2 + -translate-y-1/2 垂直居中，
-                 11px 灰字；pointer-events-none 不挡点击，group-hover 变品牌橙 -->
-            <span
-              class="pointer-events-none absolute left-[calc(100%+10px)] top-1/2 inline-flex -translate-y-1/2 items-center gap-[3px] whitespace-nowrap text-[11px] leading-none text-ink-400 transition-colors duration-200 group-hover:text-brand-500"
-              aria-hidden="true"
-            >
-              {{ siteConfig.hero.badgeHint }}
-              <svg class="h-[9px] w-[9px]" viewBox="0 0 10 10" fill="none">
-                <path
-                  d="M2.5 7.5 7.2 2.8M7.2 2.8H3.6M7.2 2.8v3.6"
-                  stroke="currentColor"
-                  stroke-width="1.4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </span>
           </div>
 
           <!-- 标题：手机 28px/1.35，sm 36px，lg 48px/1.4；tracking-tight 收字距让标题更「紧致」 -->
