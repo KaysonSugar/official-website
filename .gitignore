@@ -1,5 +1,6 @@
 # 依赖与构建产物
 node_modules
+erp-h5-official.releases
 dist
 dist-ssr
 

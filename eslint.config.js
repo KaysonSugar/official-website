@@ -8,7 +8,7 @@ import globals from 'globals'
 
 export default tseslint.config(
   // 忽略构建产物、依赖和 .workbuddy（里面是 memory、脚本、截图 profile，会刷出上千条报错）
-  { ignores: ['dist/**', 'node_modules/**', '*.config.js', '.workbuddy/**'] },
+  { ignores: ['erp-h5-official.releases/**', 'dist/**', 'node_modules/**', '*.config.js', '.workbuddy/**'] },
 
   // JS 基础推荐规则
   js.configs.recommended,
