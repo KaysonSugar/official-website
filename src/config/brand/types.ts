@@ -27,7 +27,6 @@ export interface LeadFormConfig {
   desc: string
   productsLabel: string
   productOptions: { key: 'chemical' | 'logistics' | 'driver'; label: string }[]
-  overallLabel: string
   labels: {
     name: string
     company: string

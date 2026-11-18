@@ -41,7 +41,6 @@ export const leadForm: LeadFormConfig = {
     { key: 'logistics', label: '物流调度' },
     { key: 'driver', label: '司机端' },
   ],
-  overallLabel: '整体方案',
   labels: {
     name: '姓名',
     company: '公司',

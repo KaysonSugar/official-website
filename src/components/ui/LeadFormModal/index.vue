@@ -5,7 +5,7 @@
  * @Name: 预约产品演示表单弹层（全站唯一实例，挂在 App.vue）
 -->
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, reactive, ref, useTemplateRef, watch } from 'vue'
+import { nextTick, onBeforeUnmount, reactive, ref, useTemplateRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLeadForm } from '@/composables/useLeadForm'
 import { useScrollLock } from '@/composables/useScrollLock'
@@ -39,20 +39,12 @@ const form = reactive<LeadForm>({
 // 选中的产品线（后端约定的数字集合），打开弹窗时按路由预选，提交时原样传走
 const selectedTypes = ref<number[]>([])
 
-// 三条全选中 = 整体方案，与后端 ALL_PRODUCT_TYPES 语义一致
-const isOverall = computed(() => selectedTypes.value.length === ALL_PRODUCT_TYPES.length)
-
-// 点产品线：选中就摘掉、没选就加上；摘到空时回整体方案，避免提交空集合
+// 点产品线：选中就摘掉、没选就加上；摘到空时回三条全选，避免提交空集合
 const toggleType = (type: number) => {
   const next = selectedTypes.value.includes(type)
     ? selectedTypes.value.filter((t) => t !== type)
     : [...selectedTypes.value, type]
   selectedTypes.value = next.length ? next : [...ALL_PRODUCT_TYPES]
-}
-
-// 整体方案：一键回到三条全选
-const selectOverall = () => {
-  selectedTypes.value = [...ALL_PRODUCT_TYPES]
 }
 
 const errors = reactive<{ name?: string; phone?: string }>({})
@@ -151,12 +143,12 @@ onBeforeUnmount(() => {
         class="fixed inset-0 z-[110] flex items-center justify-center bg-ink-900/40 px-[20px] py-[40px] backdrop-blur-[3px]"
         @click.self="closeLeadForm"
       >
-        <!-- 弹窗：上限 600px、内边距 32px、圆角 20px；两列排布把高度压到 600 以内，比例接近正方形才稳 -->
+        <!-- 弹窗：上限 660px、内边距 32px、圆角 20px；两列排布把高度压到 600 以内 -->
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="lead-title"
-          class="max-h-full w-full max-w-[600px] overflow-y-auto rounded-[20px] bg-white p-[24px] shadow-[0_40px_100px_-32px_rgba(26,26,26,0.45)] sm:p-[32px]"
+          class="max-h-full w-full max-w-[660px] overflow-y-auto rounded-[20px] bg-white p-[24px] shadow-[0_40px_100px_-32px_rgba(26,26,26,0.45)] sm:p-[32px]"
         >
           <!-- 头部：44px 浅橙圆角托住品牌标，标题 20px、说明 13px 中灰；关闭键贴右上 -->
           <div class="flex items-start justify-between gap-[16px]">
@@ -225,34 +217,6 @@ onBeforeUnmount(() => {
 
           <!-- 表单：手机 mt-[20px] 跟头部拉开（桌面 28px）；手机一行一个，≥640 短字段两列、备注独占整行 -->
           <form v-else class="mt-[18px] sm:mt-[28px]" @submit.prevent="onSubmit">
-            <!-- 想了解的产品：三条产品线多选 + 整体方案一键全选，mb-[18px] 与下面的字段组拉开 -->
-            <div class="mb-[18px]">
-              <span class="text-[12px] font-medium text-ink-500">{{ leadForm.productsLabel }}</span>
-              <!-- 标签行：mt-[10px] 与标题间距，flex-wrap 窄屏换行，gap-[10px] 胶囊间距 -->
-              <div class="mt-[10px] flex flex-wrap gap-[10px]">
-                <button
-                  v-for="opt in leadForm.productOptions"
-                  :key="opt.key"
-                  type="button"
-                  :class="[
-                    chipBase,
-                    selectedTypes.includes(PRODUCT_TYPE[opt.key]) ? chipActive : chipIdle,
-                  ]"
-                  @click="toggleType(PRODUCT_TYPE[opt.key])"
-                >
-                  {{ opt.label }}
-                </button>
-                <!-- 整体方案：三条全选中时亮起 -->
-                <button
-                  type="button"
-                  :class="[chipBase, isOverall ? chipActive : chipIdle]"
-                  @click="selectOverall"
-                >
-                  {{ leadForm.overallLabel }}
-                </button>
-              </div>
-            </div>
-
             <div class="grid gap-[16px] sm:grid-cols-2 sm:gap-[18px]">
               <label class="block">
                 <span class="text-[12px] font-medium text-ink-500"
@@ -318,6 +282,26 @@ onBeforeUnmount(() => {
                   :class="[fieldClass, 'h-[48px]']"
                 />
               </label>
+            </div>
+
+            <!-- 想了解的产品：三条产品线多选；mt 与备注同款分组间距，跟上面的联系方式分开 -->
+            <div class="mt-[18px] sm:mt-[22px]">
+              <span class="text-[12px] font-medium text-ink-500">{{ leadForm.productsLabel }}</span>
+              <!-- 标签行：mt-[10px] 与标题间距，flex-wrap 窄屏换行，gap-[10px] 胶囊间距 -->
+              <div class="mt-[10px] flex flex-wrap gap-[10px]">
+                <button
+                  v-for="opt in leadForm.productOptions"
+                  :key="opt.key"
+                  type="button"
+                  :class="[
+                    chipBase,
+                    selectedTypes.includes(PRODUCT_TYPE[opt.key]) ? chipActive : chipIdle,
+                  ]"
+                  @click="toggleType(PRODUCT_TYPE[opt.key])"
+                >
+                  {{ opt.label }}
+                </button>
+              </div>
             </div>
 
             <!-- 备注：mt-[22px] 比字段间距大一档，把「联系方式」和「备注」分成两组；固定 88px 够三行 -->
