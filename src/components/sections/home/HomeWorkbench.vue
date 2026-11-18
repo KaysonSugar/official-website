@@ -283,7 +283,9 @@ const dotLeft = ['3.5%', '38%', '62%']
                   :key="d.label"
                   class="flex flex-col items-center"
                 >
-                  <svg viewBox="0 0 36 36" class="w-[4.6cqw]" aria-hidden="true">
+                  <!-- overflow-visible：环半径 15.9 + 描边一半 2.75 = 18.65 超出 viewBox 半宽 18，
+                       默认会把环的边缘裁掉一点 -->
+                  <svg viewBox="0 0 36 36" class="w-[4.6cqw] overflow-visible" aria-hidden="true">
                     <circle
                       cx="18"
                       cy="18"
