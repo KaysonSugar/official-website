@@ -7,6 +7,7 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
+import { vHeroZoom } from '@/directives/heroZoom'
 import HeroCta from '@/components/ui/HeroCta.vue'
 import { getPage, siteConfig } from '@/config/site'
 import glowWarm from '@/assets/products/logistics/images/glow-warm.webp'
@@ -52,7 +53,8 @@ const badgeTone: Record<BadgeTone, string> = {
     />
     <div class="container-page relative">
       <!-- 两栏：手机单列 gap 48px；lg 右列 700px、xl 放宽到 780px（调度台五张卡要放得下） -->
-      <div class="grid items-center gap-[48px] lg:grid-cols-[1fr_700px] xl:grid-cols-[1fr_780px]">
+      <!-- 超宽屏整块等比放大（zoom 见 directives/heroZoom），文字样机同步铺满不留中间空白 -->
+      <div v-hero-zoom class="grid items-center gap-[48px] lg:grid-cols-[1fr_700px] xl:grid-cols-[1fr_780px]">
         <div>
           <!-- 眉题：12px/18px 加粗、字距 0.05em（sm 起 0.08em）、brand-500 橙 -->
           <p

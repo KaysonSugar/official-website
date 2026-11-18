@@ -30,8 +30,8 @@ const toneClass: Record<(typeof timeline.steps)[number]['tone'], string> = {
   <article
     class="rounded-[16px] bg-white p-[28px] shadow-[0_28px_70px_-24px_rgba(16,37,30,0.2)] ring-1 ring-black/5 transition-transform duration-500 ease-out hover:-translate-y-2"
   >
-    <!-- 标题行：两端对齐，gap 16px 防标题过长顶到徽标 -->
-    <div class="flex items-center justify-between gap-4">
+    <!-- 标题行：两端对齐，gap 16px 防标题过长顶到徽标（px 写法：首屏 zoom 缩放子树里 rem 档位会双重放大） -->
+    <div class="flex items-center justify-between gap-[16px]">
       <!-- 卡标题：18px/26px 加粗 ink-900 -->
       <h3 class="text-[18px] font-bold leading-[26px] text-ink-900">{{ timeline.title }}</h3>
       <!-- 工期徽标：浅橙底 #fff0e4 + 陶土橙字 #c2622a（比品牌橙灰一档，原图采的），

@@ -7,6 +7,7 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
 import HeroCta from '@/components/ui/HeroCta.vue'
+import { vHeroZoom } from '@/directives/heroZoom'
 import { siteConfig } from '@/config/site'
 
 /** 内页首屏：小标签 + 大标题 + 一句话 + 主按钮，右侧插槽放各页示意图 */
@@ -51,8 +52,9 @@ const isCenter = computed(() => props.align === 'center')
       class="container-page py-[56px] sm:py-[64px] lg:py-[80px]"
       :class="isCenter ? 'text-center' : ''"
     >
-      <!-- 左对齐且有插槽时两栏：左 3 右 2，列距 48px -->
+      <!-- 左对齐且有插槽时两栏：左 3 右 2，列距 48px；两栏时超宽屏整块等比放大（directives/heroZoom） -->
       <div
+        v-hero-zoom="hasAside && !isCenter"
         :class="hasAside && !isCenter ? 'grid items-center gap-[48px] lg:grid-cols-[3fr_2fr]' : ''"
       >
         <!-- 居中版限宽 768px，左对齐版限宽 576px -->

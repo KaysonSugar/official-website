@@ -7,6 +7,7 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
+import { vHeroZoom } from '@/directives/heroZoom'
 import HeroCta from '@/components/ui/HeroCta.vue'
 import { getPage, siteConfig } from '@/config/site'
 import glowMint from '@/assets/products/driver/images/glow-mint.webp'
@@ -55,7 +56,8 @@ const chipPos = {
       class="pointer-events-none absolute bottom-[-162px] left-[287px] hidden w-[540px] select-none opacity-80 lg:block"
     />
     <div class="container-page relative">
-      <div class="grid items-center gap-[48px] lg:grid-cols-[1fr_480px]">
+      <!-- 超宽屏整块等比放大（zoom 见 directives/heroZoom），文字样机同步铺满不留中间空白 -->
+      <div v-hero-zoom class="grid items-center gap-[48px] lg:grid-cols-[1fr_480px]">
         <!-- 左列 -->
         <div>
           <p
@@ -90,7 +92,7 @@ const chipPos = {
             <span
               v-for="pill in hero.pills"
               :key="pill"
-              class="feature-pill flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-sm font-medium text-ink-700"
+              class="feature-pill flex items-center gap-[8px] rounded-full border border-ink-100 bg-white/80 py-[7px] pl-[12px] pr-[14px] text-[14px] font-medium text-ink-700"
             >
               <svg
                 class="h-[14px] w-[14px] shrink-0"

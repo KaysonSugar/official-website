@@ -7,6 +7,7 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
 import { useReveal } from '@/composables/useReveal'
+import { vHeroZoom } from '@/directives/heroZoom'
 import HeroCta from '@/components/ui/HeroCta.vue'
 import { getPage, siteConfig } from '@/config/site'
 
@@ -27,7 +28,8 @@ useReveal(root)
     <div class="container-page">
       <!-- 两栏：手机单列 gap 48px；lg 起左列自适应、右列固定 660px
            （五张统计小卡要完整放下 15,008,876.00 这类长数字，550px 会溢出） -->
-      <div class="grid items-center gap-[48px] lg:grid-cols-[1fr_660px]">
+      <!-- 超宽屏整块等比放大（zoom 见 directives/heroZoom），文字样机同步铺满不留中间空白 -->
+      <div v-hero-zoom class="grid items-center gap-[48px] lg:grid-cols-[1fr_660px]">
         <div>
           <!-- 眉题：12px/18px 加粗、字距 0.05em（sm 起 0.08em）、brand-500 橙 -->
           <p
