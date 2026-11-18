@@ -34,7 +34,7 @@ export default defineConfig({
   },
   build: {
     // 静态托管时把根目录指向该目录即可
-    outDir: 'dist/erp-h5-official.releases',
+    outDir: 'dist/official.releases',
     assetsDir: 'assets',
     // 图标转 webp 后只有 1~3KB，默认内联进 JS 会白涨 26KB，关掉让它们单独走缓存
     assetsInlineLimit: 0,
