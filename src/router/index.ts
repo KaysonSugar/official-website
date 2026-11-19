@@ -4,7 +4,7 @@
  * @StartDate: 2026.11.03
  * @Name: 路由表
  */
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import { siteConfig } from '@/config/site'
 
@@ -20,7 +20,8 @@ const AboutView = () => import('@/views/AboutView.vue')
  * 路由表：URL 层级与导航层级一致
  */
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  // hash 路由：静态服务器不用配 SPA 回退，直接访问子路由也不会 404
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',

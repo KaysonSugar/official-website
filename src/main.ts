@@ -14,8 +14,8 @@ if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual'
 }
 
-// 首帧前把滚动归零，必须 instant，否则会被 smooth 滑回首屏
-if (!window.location.hash) {
+// 首帧前把滚动归零，必须 instant，否则会被 smooth 滑回首屏；hash 路由自带 #/path 不算锚点
+if (!window.location.hash || window.location.hash.startsWith('#/')) {
   window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
 }
 
