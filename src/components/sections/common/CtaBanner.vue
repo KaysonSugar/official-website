@@ -5,12 +5,18 @@
  * @Name: 底部行动号召
 -->
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { siteConfig } from '@/config/site'
 import { useLeadForm } from '@/composables/useLeadForm'
 
-/** 底部行动号召：橙渐变横幅 + 白按钮 + 电话小字，八个页面共用 siteConfig.cta 的文案 */
+/** 底部行动号召：默认共用 siteConfig.cta，overrides 按路由覆盖页面专属文案 */
 const { cta } = siteConfig
+const route = useRoute()
 const { openLeadForm } = useLeadForm()
+
+// 当前路由命中覆盖配置时合并出页面文案，未命中原样用默认
+const ctaView = computed(() => ({ ...cta, ...cta.overrides[route.path] }))
 </script>
 
 <template>
@@ -27,12 +33,12 @@ const { openLeadForm } = useLeadForm()
           <h2
             class="text-[26px] font-bold leading-[38px] text-white sm:text-[30px] sm:leading-[42px] lg:text-[32px]"
           >
-            {{ cta.title }}
+            {{ ctaView.title }}
           </h2>
 
           <!-- 说明：14px 纯白，不要半透明白，橙底上对比度不够 -->
           <p class="mt-[16px] text-[14px] leading-[24px] text-white">
-            {{ cta.desc }}
+            {{ ctaView.desc }}
           </p>
         </div>
 
@@ -44,11 +50,11 @@ const { openLeadForm } = useLeadForm()
             class="inline-flex items-center justify-center rounded-[10px] bg-white px-[30px] py-[16px] text-[15px] font-medium leading-[21px] text-brand-700 transition-colors duration-200 hover:bg-brand-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             @click="openLeadForm"
           >
-            {{ cta.button }}
+            {{ ctaView.button }}
           </button>
           <!-- 电话小字：12px 纯白，与按钮齐左 -->
           <p class="mt-[14px] text-[12px] leading-[18px] text-white">
-            {{ cta.phoneNote }}
+            {{ ctaView.phoneNote }}
           </p>
         </div>
       </div>

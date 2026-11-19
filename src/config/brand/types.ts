@@ -62,6 +62,8 @@ export interface CtaConfig {
   desc: string
   button: string
   phoneNote: string
+  /** 按路由覆盖文案：键为页面 path，命中的字段替换默认值，其余沿用 */
+  overrides: Record<string, Partial<Omit<CtaConfig, 'overrides'>>>
 }
 
 export interface FooterConfig {
