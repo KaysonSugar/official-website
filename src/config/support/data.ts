@@ -59,7 +59,7 @@ export const support: SupportConfig = {
       {
         icon: 'migrate',
         title: '历史数据迁移',
-        desc: '整理并清洗存量 Excel 数据，协助导入历史单据、往来账目与库存期初，完成试算平衡与差异调整后在新系统并行试运行。',
+        desc: '整理并清洗存量 Excel 数据，协助导入历史单据、往来账目与库存初期，完成试算平衡与差异调整后在新系统并行试运行。',
       },
       {
         icon: 'training',
@@ -97,7 +97,7 @@ export const support: SupportConfig = {
       { no: '01', title: '需求调研', desc: '确认流程与数据范围' },
       { no: '02', title: '方案确认', desc: '输出方案与交付清单' },
       { no: '03', title: '环境初始化', desc: '组织权限与基础档案' },
-      { no: '04', title: '数据迁移', desc: '清洗导入与期初建账' },
+      { no: '04', title: '数据迁移', desc: '清洗导入与初期建账' },
       { no: '05', title: '培训交付', desc: '管理员与岗位培训' },
       { no: '06', title: '试运行', desc: '全流程跑单与观察' },
       { no: '07', title: '验收转维保', desc: '逐项签字移交对接人', dark: true },

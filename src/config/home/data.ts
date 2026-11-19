@@ -242,7 +242,7 @@ export const architecture: HomeArchitecture = {
       blocks: ['云服务器 ECS', '负载均衡 SLB', '云数据库 RDS MySQL', '弹性公网 IP', '日志服务'],
     },
   ],
-  note: '新法的监管逻辑是源头防控、全程监督、智能预警、永久溯源。平台按这项顶层组织功能，生产与运输共用同一套客户、数据与算法。',
+  note: '新法的监管逻辑是源头防控、全程监督、智能预警、永久溯源。平台按这四项组织功能，生产与运输共用同一套客户、数据与算法。',
 }
 
 export const matrix: HomeMatrix = {
@@ -504,7 +504,7 @@ export const costEfficiency: HomeCostEfficiency = {
       guard: '防控：业务数据自动归档，加密云端长期留存',
     },
     {
-      title: '无证人车承单运输',
+      title: '无证人车派单运输',
       penalty: '处罚 5-50 万元 · 追究责任人',
       guard: '防控：资质到期自动冻结接单权限',
     },
