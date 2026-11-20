@@ -242,7 +242,7 @@ export const architecture: HomeArchitecture = {
       blocks: ['云服务器 ECS', '负载均衡 SLB', '云数据库 RDS MySQL', '弹性公网 IP', '日志服务'],
     },
   ],
-  note: '新法的监管逻辑是源头防控、全程监督、智能预警、永久溯源。平台按这四项组织功能，生产与运输共用同一套客户、数据与算法。',
+  note: '新法的监管逻辑是源头防控、全程监督、智能预警、永久溯源。平台按这四项组织功能，生产与运输共用同一套用户、数据与算法。',
 }
 
 export const matrix: HomeMatrix = {
@@ -319,7 +319,7 @@ export const capabilities: HomeCapabilities = {
     {
       icon: 'bom',
       title: 'BOM 多级展开，物料精准',
-      desc: '成品自动拆解到半成品与原材料，按定额与损耗系数计算需求量，杜绝漏算、多算。',
+      desc: '成品自动拆解到半成品与原材料，按配方与损耗系数计算需求量，杜绝漏算、多算。',
     },
     {
       icon: 'stock',
@@ -334,7 +334,7 @@ export const capabilities: HomeCapabilities = {
     {
       icon: 'process',
       title: '工序化投产，过程标准化',
-      desc: '投产工单与工序、工时绑定，投料量与实际产出双向核对，生产进度实时可见。',
+      desc: '投产工单与库位、工序绑定，投料量与实际产出双向核对，生产进度实时可见。',
     },
     {
       icon: 'sales',
